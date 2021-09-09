@@ -4,9 +4,10 @@ import {AxelarBridgeFacade, IAssetTransferObject, TransferAssetTypes} from "@axe
 
 import './App.css';
 
+const axelarBridgeFacade = new AxelarBridgeFacade("http://localhost:4000");
+
 const App = () => {
 
-	const axelarBridgeFacade = new AxelarBridgeFacade("http://localhost:4000");
 
 	const message: IAssetTransferObject = {
 		token1: "BTC",
@@ -14,7 +15,10 @@ const App = () => {
 		destinationAddress: "TBD"
 	}
 
-	const onClick = () => axelarBridgeFacade.transferAssets(TransferAssetTypes.BTC_TO_EVM, message);
+	const onClick = async () => {
+		const res = await axelarBridgeFacade.transferAssets(TransferAssetTypes.BTC_TO_EVM, message);
+		console.log("results",res);
+	}
 
 	return (
 		<div className="App">

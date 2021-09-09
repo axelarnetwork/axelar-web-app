@@ -1,18 +1,8 @@
 import {IAssetTransferObject, TRANSFER_RESULT} from "@axelar-network/axelarjs-sdk";
 
-exports.hello = function () {
-
-	this.emit("hello-back",'Hey there');
-};
-
-exports.newMessage = function (messageParam: string) {
-
-	console.log('Got messageParam', messageParam);
-};
-
 exports.btc2evm = async function (messageParam: IAssetTransferObject) {
 
-	console.log("messageParam",messageParam);
+	console.log("btc2evm messageParam",messageParam);
 
 	const res = await confirmBtcDeposit();
 
