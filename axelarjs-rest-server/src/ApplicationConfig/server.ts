@@ -4,6 +4,7 @@ import Hapi from "@hapi/hapi";
 import { Request, Server } from "@hapi/hapi";
 import { getPlugin } from "../Routes/getPlugin";
 import { socketRegister } from "../Routes/client-socket";
+import {HealthPlugin} from "hapi-k8s-health";
 
 export let server: Server;
 
@@ -30,6 +31,18 @@ export const init = async function(): Promise<Server> {
 			message: 'helloSocket'
 		}
 	});
+
+	await server.register({
+		plugin: HealthPlugin,
+		options: {
+			livenessProbes: {
+				status: () => Promise.resolve('Yeah !')
+			},
+			readinessProbes: {
+				health: () => Promise.resolve('ready TODO')
+			}
+		}
+	})
 
 
 	return server;
