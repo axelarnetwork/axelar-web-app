@@ -2,7 +2,7 @@ import { Server } from "@hapi/hapi";
 import { describe, it, beforeEach, afterEach } from "mocha";
 import { expect } from "chai";
 
-import { init } from "../src/server";
+import { init } from "../src/ApplicationConfig/server";
 
 describe("smoke test", async () => {
 

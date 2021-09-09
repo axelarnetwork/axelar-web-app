@@ -1,3 +1,3 @@
-import { init, start } from "./server";
+import { init, start } from "./ApplicationConfig/server";
 
 init().then(() => start());

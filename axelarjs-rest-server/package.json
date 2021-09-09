@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev:tsc": "tsc --watch -p .",
-    "dev:serve": "nodemon -e js -w lib lib/main.js",
+    "dev:serve": "nodemon -e js -w dist dist/index.js",
     "dev": "run-p dev:*",
     "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts"
   },
@@ -19,6 +19,7 @@
   "author": "Axelar Network",
   "license": "MIT",
   "dependencies": {
+    "@axelar-network/axelarjs-sdk": "file:../axelarjs-sdk",
     "@hapi/hapi": "^20.1.5",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",

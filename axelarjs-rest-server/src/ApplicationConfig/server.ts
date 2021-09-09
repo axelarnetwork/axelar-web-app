@@ -2,8 +2,8 @@
 
 import Hapi from "@hapi/hapi";
 import { Request, Server } from "@hapi/hapi";
-import { getPlugin } from "./routes/getPlugin";
-import { socketRegister } from "./routes/client-socket/index";
+import { getPlugin } from "../Routes/getPlugin";
+import { socketRegister } from "../Routes/client-socket";
 
 export let server: Server;
 
@@ -11,7 +11,10 @@ export const init = async function(): Promise<Server> {
 
 	server = Hapi.server({
 		port: process.env.PORT || 4000,
-		host: '0.0.0.0'
+		host: 'localhost',
+		routes: {
+			cors: true
+		}
 	});
 
 	await server.register({
@@ -20,8 +23,6 @@ export const init = async function(): Promise<Server> {
 			message: 'hello'
 		}
 	});
-
-	// await server.register(require("./routes/client-socket/index"));
 
 	await server.register({
 		plugin: socketRegister,
