@@ -16,7 +16,8 @@ const App = () => {
 	}
 
 	const onClick = async () => {
-		const res = await axelarBridgeFacade.transferAssets(message);
+
+		const res = await axelarBridgeFacade.transferAssets(message, console.log);
 		console.log("results",res);
 	}
 
