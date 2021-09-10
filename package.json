@@ -1,0 +1,30 @@
+{
+  "name": "axelar-web-app",
+  "version": "1.0.0",
+  "description": "To get everything running locally",
+  "main": "index.js",
+  "scripts": {
+    "install:rest": "cd axelarjs-rest-server && npm install",
+    "install:sdk": "cd axelarjs-sdk && npm install",
+    "install:ui": "cd axelarjs-ui && npm install",
+    "initiate:rest": "cd axelarjs-rest-server && npm run dev",
+    "initiate:sdk": "cd axelarjs-sdk && npm run dev",
+    "initiate:ui": "cd axelarjs-ui && npm start",
+    "postinstall": "run-p install:*",
+    "poststart": "run-p initiate:*",
+    "install-everything": "npm i && npm run postinstall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axelarnetwork/axelar-web-app.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/axelarnetwork/axelar-web-app/issues"
+  },
+  "homepage": "https://github.com/axelarnetwork/axelar-web-app#readme",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
