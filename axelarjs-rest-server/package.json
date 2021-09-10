@@ -20,7 +20,9 @@
   "license": "MIT",
   "dependencies": {
     "@axelar-network/axelarjs-sdk": "file:../axelarjs-sdk",
+    "@hapi/boom": "^9.1.4",
     "@hapi/hapi": "^20.1.5",
+    "@types/boom": "^7.3.1",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
     "chai": "^4.3.4",

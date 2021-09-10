@@ -10,8 +10,8 @@ const App = () => {
 
 
 	const message: IAssetTransferObject = {
-		token1: "BTC",
-		token2: "ETH",
+		sourceTokenSymbol: "BTC",
+		destinationTokenSymbol: "ETH",
 		destinationAddress: "TBD"
 	}
 
