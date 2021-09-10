@@ -19,11 +19,9 @@ export const transferAsset = {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
 
-			console.log("post request", payload);
-
 			const responseObj: IDepositAddressResponse = {
-				destinationTokenDepositAddress: "123456789", // TODO: will come from downstream service
-				destinationTokenSymbol: payload?.destinationTokenSymbol
+				sourceTokenDepositAddress: "123456789", // TODO: will come from downstream service
+				sourceTokenSymbol: payload?.sourceTokenSymbol
 			}
 
 			return h.response(responseObj);

@@ -1,10 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
-import {AxelarBridgeFacade, IAssetTransferObject, TransferAssetTypes} from "@axelar-network/axelarjs-sdk";
+import {IAssetTransferObject, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
 
 import './App.css';
 
-const axelarBridgeFacade = new AxelarBridgeFacade("http://localhost:4000");
+const axelarBridgeFacade = new TransferAssetBridge("http://localhost:4000");
 
 const App = () => {
 
@@ -16,7 +16,7 @@ const App = () => {
 	}
 
 	const onClick = async () => {
-		const res = await axelarBridgeFacade.transferAssets(TransferAssetTypes.BTC_TO_EVM, message);
+		const res = await axelarBridgeFacade.transferAssets(message);
 		console.log("results",res);
 	}
 
