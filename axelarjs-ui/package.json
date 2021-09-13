@@ -46,6 +46,7 @@
 		]
 	},
 	"devDependencies": {
-		"@types/styled-components": "^5.1.14"
+		"@types/styled-components": "^5.1.14",
+		"react-inlinesvg": "^2.3.0"
 	}
 }
