@@ -1,10 +1,29 @@
 import React from 'react';
 import {IAssetTransferObject, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
 
-import './App.css';
+import styled from "styled-components";
 
 
 const axelarBridgeFacade = new TransferAssetBridge("http://localhost:4000");
+
+const Header = styled.header`
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+`;
+
+const StyledLink = styled.a`
+  color: #61dafb;
+`;
+
+const StyledApp = styled.div`
+  text-align: center;
+`;
 
 const App = () => {
 
@@ -22,22 +41,21 @@ const App = () => {
 	}
 
 	return (
-		<div className="App">
-			<header className="App-header">
+		<StyledApp>
+			<Header>
 			<p>
 				Edit <code>src/App.tsx</code> and save to reload.
 			</p>
 			<div onClick={onClick}>Click me!</div>
-			<a
-				className="App-link"
+			<StyledLink
 				href="https://reactjs.org"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
 				Learn React
-			</a>
-			</header>
-		</div>
+			</StyledLink>
+			</Header>
+		</StyledApp>
   );
 }
 
