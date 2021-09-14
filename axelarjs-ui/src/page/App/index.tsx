@@ -1,33 +1,18 @@
 import React from 'react';
-import {IAssetTransferObject} from "@axelar-network/axelarjs-sdk";
 import PageHeader from "component/PageHeader";
 import SwapWindow from "page/SwapWindow";
-import {TransferAssetBridgeFacade} from "api/TransferAssetBridgeFacade";
-import {StyledContainer} from "./styles/StyledContainer";
-import {StyledBody} from "./styles/StyledBody";
+import {StyledAppContainer} from "./styles/StyledAppContainer";
+import {StyledAppBody} from "./styles/StyledAppBody";
 
 const App = () => {
 
-	const message: IAssetTransferObject = {
-		sourceTokenSymbol: "BTC",
-		destinationTokenSymbol: "ETH",
-		destinationAddress: "TBD"
-	}
-
-	const onClick = async () => {
-
-		const res = await TransferAssetBridgeFacade.transferAssets(message, console.log);
-		console.log("results", res);
-	}
-
 	return (
-		<StyledContainer>
+		<StyledAppContainer>
 			<PageHeader/>
-			<StyledBody>
+			<StyledAppBody>
 				<SwapWindow/>
-				<div onClick={onClick}>Click me!</div>
-			</StyledBody>
-		</StyledContainer>
+			</StyledAppBody>
+		</StyledAppContainer>
 	);
 }
 
