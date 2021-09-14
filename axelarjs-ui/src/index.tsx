@@ -1,37 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './page/app/App';
+import Index from './page/App';
 import reportWebVitals from './reportWebVitals';
 import {RecoilRoot} from "recoil";
-
-import { RecoilLogger } from 'recoil-devtools-logger';
+import {RecoilLogger} from 'recoil-devtools-logger';
 import {createGlobalStyle} from "styled-components";
+import {TransferAssetBridgeFacade} from "./api/TransferAssetBridgeFacade";
 
 const GlobalStyle = createGlobalStyle`
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+	body {
+		margin: 0;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	
+	code {
+	    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	}
 `;
 
+new TransferAssetBridgeFacade();
+
 ReactDOM.render(
-    <React.StrictMode>
-        <RecoilRoot>
-            <RecoilLogger />
-            <App />
-            <GlobalStyle />
-        </RecoilRoot>
-    </React.StrictMode>,
-    document.getElementById('root')
+	<React.StrictMode>
+		<RecoilRoot>
+			<RecoilLogger/>
+			<Index/>
+			<GlobalStyle/>
+		</RecoilRoot>
+	</React.StrictMode>,
+	document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

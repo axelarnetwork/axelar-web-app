@@ -1,0 +1,1 @@
+export const AXELAR_BRIDGE_HOST_URL: string = "http://localhost:4000";

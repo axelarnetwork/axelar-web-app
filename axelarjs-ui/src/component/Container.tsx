@@ -1,4 +1,4 @@
-import { ReactElement, HTMLAttributes } from 'react';
+import {ReactElement, HTMLAttributes} from 'react';
 import styled from 'styled-components';
 
 const StyledContainer = styled.div`
