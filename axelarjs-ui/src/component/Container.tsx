@@ -1,13 +1,22 @@
 import {ReactElement, HTMLAttributes} from 'react';
-import styled from 'styled-components';
+import styled, {ThemedStyledProps} from 'styled-components';
 
-const StyledContainer = styled.div`
-	width: 100%;
-  	height: 100%;
-  	margin: auto;
-`
+interface IStyledDivProps extends ThemedStyledProps<any, any>{
+	width: string;
+	height: string;
+}
+const StyledContainer = styled.div<IStyledDivProps>`
+	width: ${props => props.width || "100%"};
+	height: ${props => props.height || "100%"};
+  	margin: ${props => props.margin || "auto"};
+`;
 
-const Container = (props: HTMLAttributes<HTMLDivElement>): ReactElement => {
+interface IContainerProps extends HTMLAttributes<HTMLDivElement> {
+	width?: string;
+	height?: string;
+	margin?: string;
+}
+const Container = (props: IContainerProps): ReactElement => {
 	return <StyledContainer {...props} />
 }
 

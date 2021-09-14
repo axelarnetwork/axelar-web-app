@@ -11,6 +11,7 @@ const Link = ({children, href, className}: ILinkProps) => (
 		className={className}
 		href={href}
 		target={"_blank"}
+		rel="noreferrer"
 	>
 		{children}
 	</a>
