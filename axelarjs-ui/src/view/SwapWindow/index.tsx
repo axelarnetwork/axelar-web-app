@@ -1,25 +1,29 @@
-import React, {ReactElement}                       from "react";
-import {useRecoilValue}                            from "recoil";
-import {IAssetTransferObject, ISupportedChainType} from "@axelar-network/axelarjs-sdk";
-import {StyledSwapWindow}                          from "view/SwapWindow/styles/StyledSwapWIndow";
-import {TransferAssetBridgeFacade}                 from "api/TransferAssetBridgeFacade";
-import ChainSelector                               from "component/CompositeComponents/ChainSelector";
-import {FlexRow}                                   from "component/StyleComponents/FlexRow";
-import {NumberFormInput}                           from "component/CompositeComponents/NumberFormInput";
-import {FlexColumn}                                from "component/StyleComponents/FlexColumn";
-import {ChainSelection, DestinationAddress}        from "state/ChainSelection";
-import {Nullable}                                  from "interface/Nullable";
-import Button                                      from "react-bootstrap/Button";
-import {GridDisplay}                               from "component/StyleComponents/GridDisplay";
+import React, {ReactElement, useState}                 from "react";
+import {useRecoilState}                                from "recoil";
+import {IAssetTransferObject, IDepositAddressResponse} from "@axelar-network/axelarjs-sdk";
+import {StyledSwapWindow}                              from "view/SwapWindow/styles/StyledSwapWIndow";
+import {TransferAssetBridgeFacade}                     from "api/TransferAssetBridgeFacade";
+import ChainSelector                                   from "component/CompositeComponents/ChainSelector";
+import {FlexRow}                                       from "component/StyleComponents/FlexRow";
+import {NumberFormInput}                               from "component/CompositeComponents/NumberFormInput";
+import {FlexColumn}                                    from "component/StyleComponents/FlexColumn";
+import {ChainSelection, DestinationAddress}            from "state/ChainSelection";
+import {Nullable}                                      from "interface/Nullable";
+import Button                                          from "react-bootstrap/Button";
+import {GridDisplay}                                   from "component/StyleComponents/GridDisplay";
+import DismissableAlert                                from "component/Widgets/DismissableAlert";
+import BoldSpan                                        from "component/StyleComponents/BoldSpan";
 
 const SwapWindow = (): ReactElement => {
 
 	const sourceTokenKey: string = "first-chain-selection";
 	const destinationTokenKey: string = "second-chain-selection";
-	const sourceToken: Nullable<ISupportedChainType> = useRecoilValue(ChainSelection(sourceTokenKey));
-	const destinationToken: Nullable<ISupportedChainType> = useRecoilValue(ChainSelection(destinationTokenKey));
-	const destinationAddress: Nullable<string> = useRecoilValue(DestinationAddress);
+	const [sourceToken, setSourceToken] = useRecoilState(ChainSelection(sourceTokenKey));
+	const [destinationToken, setDestinationToken] = useRecoilState(ChainSelection(destinationTokenKey));
+	const [destinationAddress, setDestinationAddress] = useRecoilState(DestinationAddress);
 
+	const [showResultsScreen, setShowResultsScreen] = useState<boolean>(false);
+	const [depositAddress, setDepositAddress] = useState<Nullable<IDepositAddressResponse>>(null);
 	const onClick = async () => {
 		if (!(sourceToken?.symbol && destinationToken?.symbol && destinationAddress))
 			return;
@@ -28,8 +32,9 @@ const SwapWindow = (): ReactElement => {
 			destinationTokenSymbol: destinationToken.symbol,
 			destinationAddress
 		}
-		const res = await TransferAssetBridgeFacade.transferAssets(message, console.log);
-		console.log("results", res);
+		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets(message, console.log);
+		setDepositAddress(res);
+		setShowResultsScreen(true);
 	}
 
 	return <StyledSwapWindow>
@@ -40,7 +45,7 @@ const SwapWindow = (): ReactElement => {
 		<FlexColumn>
 			<NumberFormInput/>
 		</FlexColumn>
-		{sourceToken?.symbol && destinationToken?.symbol && destinationAddress &&
+		{sourceToken?.symbol && destinationToken?.symbol && destinationAddress && !showResultsScreen &&
         <GridDisplay>
             <Button
                 variant="secondary"
@@ -49,8 +54,25 @@ const SwapWindow = (): ReactElement => {
             >
                 Initiate Asset Transfer
             </Button>
-        </GridDisplay>
-		}
+        </GridDisplay>}
+		<GridDisplay>
+			<DismissableAlert
+				headerText={"Transfer In Progress..."}
+				bodyContent={<span>Next step: please deposit
+					<BoldSpan> {depositAddress?.sourceTokenSymbol} </BoldSpan>
+					to the following address:
+					<BoldSpan> {depositAddress?.sourceTokenDepositAddress}</BoldSpan>
+				.</span>}
+				closeCb={() => {
+					//TODO: is there a better place to reset these params?
+					setShowResultsScreen(false);
+					setSourceToken(null);
+					setDestinationToken(null);
+					setDestinationAddress(null);
+				}}
+				open={showResultsScreen}
+			/>
+		</GridDisplay>
 	</StyledSwapWindow>;
 }
 

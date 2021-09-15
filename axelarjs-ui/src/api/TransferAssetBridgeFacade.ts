@@ -1,5 +1,5 @@
-import {IAssetTransferObject, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
-import {AXELAR_BRIDGE_HOST_URL}                    from "../config";
+import {IAssetTransferObject, IDepositAddressResponse, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
+import {AXELAR_BRIDGE_HOST_URL}                                             from "../config";
 
 export class TransferAssetBridgeFacade {
 
@@ -11,7 +11,7 @@ export class TransferAssetBridgeFacade {
 		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.hostUrl);
 	}
 
-	public static transferAssets(message: IAssetTransferObject, waitCb: any): Promise<string> {
+	public static transferAssets(message: IAssetTransferObject, waitCb: any): Promise<IDepositAddressResponse> {
 		return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, waitCb);
 	}
 

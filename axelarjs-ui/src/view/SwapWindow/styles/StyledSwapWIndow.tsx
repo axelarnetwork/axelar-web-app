@@ -5,8 +5,8 @@ import {SCREEN_CONFIGS} from "config";
 export const StyledSwapWindow = styled(Container)`
 	margin-top: 50px;
 	width: 500px;
-	// max-width: 60%;
 	max-height: 60%;
+	min-height: 500px;
 	padding: 0;
 	background-color: black;
 	border-radius: 50px;
