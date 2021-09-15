@@ -3,8 +3,8 @@ import {
 	CLIENT_API_POST_TRANSFER_ASSET,
 	IAssetTransferObject,
 	IDepositAddressResponse
-} from "@axelar-network/axelarjs-sdk";
-import Boom from "@hapi/boom";
+}                                 from "@axelar-network/axelarjs-sdk";
+import Boom                       from "@hapi/boom";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -29,7 +29,7 @@ export const transferAsset = {
 		} catch (e: any) {
 
 			console.log(e);
-			throw Boom.boomify(e, { statusCode: 400 });
+			throw Boom.boomify(e, {statusCode: 400});
 
 		}
 

@@ -3,7 +3,7 @@ import {IAssetTransferObject, TRANSFER_RESULT} from "@axelar-network/axelarjs-sd
 // TODO: this is a mock implementation for now
 exports.btc2evm = async function (messageParam: IAssetTransferObject) {
 
-	console.log("btc2evm messageParam",messageParam);
+	console.log("btc2evm messageParam", messageParam);
 
 	let done: string = "still waiting";
 

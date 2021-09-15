@@ -1,11 +1,11 @@
-import React from "react";
+import React                                  from "react";
 import {ISupportedChainType, SupportedChains} from "@axelar-network/axelarjs-sdk";
-import {SVGImage} from "component/Widgets/SVGImage";
-import DropdownComponent, {IDropdownOption} from "component/Widgets/DropdownComponent";
-import Container from "component/StyleComponents/Container";
-import styled from "styled-components";
-import {useRecoilState} from "recoil";
-import {ChainSelection} from "../../state/ChainSelection";
+import {SVGImage}                             from "component/Widgets/SVGImage";
+import DropdownComponent, {IDropdownOption}   from "component/Widgets/DropdownComponent";
+import Container                              from "component/StyleComponents/Container";
+import styled                                 from "styled-components";
+import {useRecoilState}                       from "recoil";
+import {ChainSelection}                       from "../../state/ChainSelection";
 
 interface IChainComponentProps {
 	chainInfo: ISupportedChainType | null

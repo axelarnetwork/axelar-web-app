@@ -1,5 +1,6 @@
-import { Server } from "@hapi/hapi";
+import {Server}             from "@hapi/hapi";
 import {TransferAssetTypes} from "@axelar-network/axelarjs-sdk";
+
 const Handlers = require('./handlers');
 
 export const socketRegister = {
@@ -15,7 +16,7 @@ export const socketRegister = {
 		});
 
 		io.on('connection', function (socket: any) {
-			console.log('New connection!',socket?.id,server.settings.port);
+			console.log('New connection!', socket?.id, server.settings.port);
 			socket.on(TransferAssetTypes.BTC_TO_EVM, Handlers.btc2evm);
 			socket.on(TransferAssetTypes.EVM_TO_BTC, Handlers.btc2evm);
 		});

@@ -1,7 +1,7 @@
 'use strict';
 
 import {Request, Server} from "@hapi/hapi";
-import {transferAsset} from "./post/transferAsset";
+import {transferAsset}   from "./post/transferAsset";
 
 export const routes = {
 	name: 'routes',

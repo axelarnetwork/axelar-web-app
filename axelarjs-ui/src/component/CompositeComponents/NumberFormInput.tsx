@@ -1,6 +1,6 @@
-import Form from "react-bootstrap/Form";
-import styled from "styled-components";
-import {useSetRecoilState} from "recoil";
+import Form                 from "react-bootstrap/Form";
+import styled               from "styled-components";
+import {useSetRecoilState}  from "recoil";
 import {DestinationAddress} from "../../state/ChainSelection";
 
 const StyledForm = styled(Form)`
@@ -27,6 +27,6 @@ export const NumberFormInput = () => {
 	}
 	return <StyledForm onChange={onChange}>
 		Destination Address
-		<StyledFormControl type="text" placeholder="(Public Key)" size={"sm"} />
+		<StyledFormControl type="text" placeholder="(Public Key)" size={"sm"}/>
 	</StyledForm>;
 }

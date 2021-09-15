@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Container from "component/StyleComponents/Container";
+import styled           from "styled-components";
+import Container        from "component/StyleComponents/Container";
 import {SCREEN_CONFIGS} from "config";
 
 export const StyledSwapWindow = styled(Container)`
