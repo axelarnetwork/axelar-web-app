@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import Container from "../../../component/Container";
-import {SCREEN_CONFIGS} from "../../../config";
+import Container from "component/StyleComponents/Container";
+import {SCREEN_CONFIGS} from "config";
 
 export const StyledSwapWindow = styled(Container)`
 	margin-top: 50px;
-	max-width: 60%;
+	width: 500px;
+	// max-width: 60%;
 	max-height: 60%;
 	padding: 0;
 	background-color: black;

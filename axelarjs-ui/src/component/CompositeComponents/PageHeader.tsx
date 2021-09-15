@@ -1,10 +1,10 @@
-import Container from "../Container";
+import Container from "../StyleComponents/Container";
 import styled from "styled-components";
 import logo from "assets/logos/AXE.svg";
-import {SVGImage} from "../SVGImage";
-import Link from "../Link";
+import {SVGImage} from "../Widgets/SVGImage";
+import Link from "../Widgets/Link";
 import {GITHUB_LINK} from "../../config";
-import {FlexRow} from "../FlexRow";
+import {FlexRow} from "../StyleComponents/FlexRow";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
