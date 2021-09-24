@@ -1,9 +1,10 @@
 'use strict';
 
-import Hapi, {Server}   from "@hapi/hapi";
-import {routes}         from "../Plugins/client-rest-routes/routes";
-import {socketRegister} from "../Plugins/client-socket";
-import {HealthPlugin}   from "hapi-k8s-health";
+import Hapi, {Server}    from "@hapi/hapi";
+import {routes}          from "../Plugins/client-rest-routes/routes";
+import {socketRegister}  from "../Plugins/client-socket";
+import {HealthPlugin}    from "hapi-k8s-health";
+import {WebSocketClient} from "../services/WebSocketClient";
 
 export let server: Server;
 
@@ -41,7 +42,7 @@ export const init = async function (): Promise<Server> {
 				health: () => Promise.resolve('ready TODO')
 			}
 		}
-	})
+	});
 
 	return server;
 };

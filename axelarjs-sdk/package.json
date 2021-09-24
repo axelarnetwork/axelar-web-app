@@ -30,6 +30,7 @@
 		"typescript": "^4.4.2"
 	},
 	"devDependencies": {
+		"blockcypher": "^0.3.0",
 		"nodemon": "^2.0.12",
 		"npm-run-all": "^4.1.5"
 	}
