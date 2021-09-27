@@ -18,7 +18,7 @@ export class WaitingService {
 
 	}
 
-	public wait() {
+	public wait(...args: any[]) {
 		throw new Error("Method 'wait()' should be implemented.");
 	}
 
