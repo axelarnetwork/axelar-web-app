@@ -41,7 +41,7 @@ export default class EthersJsService extends WaitingService {
 		//TODO: what is the best provider to use?
 		this.provider = getEthersJsProvider("infura");
 		this.axelarBTCContract = new ethers.Contract(axelarBTCAddr, axelarBTCAbi, this.provider);
-		this.filter = this.axelarBTCContract.filters.Transfer(null, axelarBTCAddr);
+		this.filter = this.axelarBTCContract.filters.Transfer(null, depositAddress);
 	}
 
 	public wait(address: string, cb: any) {
