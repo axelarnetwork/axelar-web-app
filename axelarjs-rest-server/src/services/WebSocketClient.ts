@@ -17,6 +17,7 @@ export type TendermintEventType =
 	| 'NewBlock'
 	| 'NewBlockHeader'
 	| 'Evidence'
+	| 'Link'
 	| 'Tx'
 	| 'ValidatorSetUpdates'
 	| 'CompleteProposal'
@@ -34,15 +35,22 @@ export type TendermintEventType =
 
 type TendermintQueryOperand = string | number | Date;
 
+// export interface TendermintQuery {
+// 	[k: string]:
+// 		| TendermintQueryOperand
+// 		| ['>', number | Date]
+// 		| ['<', number | Date]
+// 		| ['<=', number | Date]
+// 		| ['>=', number | Date]
+// 		| ['CONTAINS', string]
+// 		| ['EXISTS'];
+// }
+
 export interface TendermintQuery {
 	[k: string]:
 		| TendermintQueryOperand
-		| ['>', number | Date]
-		| ['<', number | Date]
-		| ['<=', number | Date]
-		| ['>=', number | Date]
-		| ['CONTAINS', string]
-		| ['EXISTS'];
+		| ['ethereum']
+		| ['bitcoin'];
 }
 
 const escapeSingleQuotes = (str: string) => str.replace(/'/g, "\\'");
@@ -67,21 +75,9 @@ function makeQueryParams(query: TendermintQuery): string {
 			}
 		} else {
 			switch (value[0]) {
-				case '>':
-				case '<':
-				case '<=':
-				case '>=':
-					if (typeof value[1] !== 'number') {
-						queryItem = `${key}${value[0]}${value[1].toISOString()}`;
-					} else {
-						queryItem = `${key}${value[0]}${value[1]}`;
-					}
-					break;
-				case 'CONTAINS':
-					queryItem = `${key} CONTAINS '${escapeSingleQuotes(value[1])}'`;
-					break;
-				case 'EXISTS':
-					queryItem = `${key} EXISTS`;
+				case 'bitcoin':
+				case 'ethereum':
+					queryItem = `${key}=${value[0]}`;
 					break;
 			}
 		}
@@ -210,6 +206,7 @@ export class WebSocketClient extends EventEmitter {
 
 	private onClose() {
 		this.isConnected = false;
+		console.log("got disconnected");
 
 		if (
 			this.shouldAttemptReconnect &&

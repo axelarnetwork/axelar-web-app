@@ -4,7 +4,8 @@ import {
 	IAssetTransferObject,
 	IDepositAddressResponse
 }                                 from "@axelar-network/axelarjs-sdk";
-import Boom                       from "@hapi/boom";
+import Boom                                         from "@hapi/boom";
+import {startTendermintSocketForDestinationAddress} from "../../../services";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -13,14 +14,16 @@ interface AssetTransferRequest extends Request {
 export const transferAsset = {
 	method: 'POST',
 	path: CLIENT_API_POST_TRANSFER_ASSET,
-	handler: function (request: AssetTransferRequest, h: ResponseToolkit) {
+	handler: async function (request: AssetTransferRequest, h: ResponseToolkit) {
 
 		try {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
 
+			const sourceTokenDepositAddress: any = await startTendermintSocketForDestinationAddress();
+
 			const responseObj: IDepositAddressResponse = {
-				sourceTokenDepositAddress: "123456789", // TODO: will come from downstream service
+				sourceTokenDepositAddress,
 				sourceTokenSymbol: payload?.sourceTokenSymbol
 			}
 
