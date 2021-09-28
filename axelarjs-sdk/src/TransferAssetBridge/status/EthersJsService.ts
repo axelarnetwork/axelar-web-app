@@ -39,7 +39,7 @@ export default class EthersJsService extends WaitingService {
 		super(6, depositAddress);
 
 		//TODO: what is the best provider to use?
-		this.provider = getEthersJsProvider("infura");
+		this.provider = getEthersJsProvider("ropsten");
 		this.axelarBTCContract = new ethers.Contract(axelarBTCAddr, axelarBTCAbi, this.provider);
 		this.filter = this.axelarBTCContract.filters.Transfer(null, depositAddress);
 	}
