@@ -1,6 +1,6 @@
 import React                       from 'react';
 import ReactDOM                    from 'react-dom';
-import Index                       from './view/App';
+import App                         from './view/App';
 import reportWebVitals             from './reportWebVitals';
 import {RecoilRoot}                from "recoil";
 import {RecoilLogger}              from 'recoil-devtools-logger';
@@ -28,7 +28,7 @@ ReactDOM.render(
 	<React.StrictMode>
 		<RecoilRoot>
 			<RecoilLogger/>
-			<Index/>
+			<App/>
 			<GlobalStyle/>
 		</RecoilRoot>
 	</React.StrictMode>,

@@ -1,23 +1,26 @@
-import React, {ReactElement, useState}                 from "react";
-import {useRecoilState}                                                      from "recoil";
+import React, {ReactElement, useState} from "react";
+import {useRecoilState}                from "recoil";
 import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
 	IDepositAddressResponse
-} from "@axelar-network/axelarjs-sdk";
-import {StyledSwapWindow}                                                    from "view/SwapWindow/styles/StyledSwapWIndow";
-import {TransferAssetBridgeFacade}                     from "api/TransferAssetBridgeFacade";
-import ChainSelector                                   from "component/CompositeComponents/ChainSelector";
-import {FlexRow}                                       from "component/StyleComponents/FlexRow";
-import {NumberFormInput}                               from "component/CompositeComponents/NumberFormInput";
-import {FlexColumn}                                    from "component/StyleComponents/FlexColumn";
-import {ChainSelection, DestinationAddress}            from "state/ChainSelection";
-import {Nullable}                                      from "interface/Nullable";
-import Button                                          from "react-bootstrap/Button";
-import {GridDisplay}                                   from "component/StyleComponents/GridDisplay";
-import DismissableAlert                                from "component/Widgets/DismissableAlert";
-import BoldSpan                                        from "component/StyleComponents/BoldSpan";
+}                                      from "@axelar-network/axelarjs-sdk";
+import {StyledSwapWindow}              from "view/SwapWindow/styles/StyledSwapWIndow";
+import {TransferAssetBridgeFacade}     from "api/TransferAssetBridgeFacade";
+import ChainSelector                   from "component/CompositeComponents/ChainSelector";
+import {FlexRow}                       from "component/StyleComponents/FlexRow";
+import {NumberFormInput}               from "component/CompositeComponents/NumberFormInput";
+import {FlexColumn}                    from "component/StyleComponents/FlexColumn";
+import {
+	ChainSelection,
+	DestinationAddress
+}                                      from "state/ChainSelection";
+import {Nullable}                      from "interface/Nullable";
+import Button                          from "react-bootstrap/Button";
+import {GridDisplay}                   from "component/StyleComponents/GridDisplay";
+import DismissableAlert                from "component/Widgets/DismissableAlert";
+import BoldSpan                        from "component/StyleComponents/BoldSpan";
 
 const SwapWindow = (): ReactElement => {
 
@@ -39,7 +42,7 @@ const SwapWindow = (): ReactElement => {
 			destinationAddress
 		}
 		const getStatus: IBlockCypherResponse = (status: BlockCypherResponse): void => {
-			console.log("status+++++",status);
+			console.log("status+++++", status);
 			let confirms: Nullable<number> = null;
 			if (status.unconfirmed_txrefs)
 				confirms = 0;
