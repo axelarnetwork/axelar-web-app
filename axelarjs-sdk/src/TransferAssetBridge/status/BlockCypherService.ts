@@ -1,5 +1,7 @@
-import {WaitingService} from "./WaitingService";
-import {poll}           from "./utils";
+import {WaitingService}          from "./WaitingService";
+import {poll}                    from "./utils";
+import {IDepositAddressResponse}             from "../../interface";
+import {BlockCypherResponse, StatusResponse} from "../index";
 
 export default class BlockCypherService extends WaitingService {
 
@@ -8,20 +10,26 @@ export default class BlockCypherService extends WaitingService {
 		console.log(this.numConfirmations);
 	}
 
-	public wait() {
-
-		console.log("block cypher service is waiting");
+	public wait(depositAddress: IDepositAddressResponse, cb?: StatusResponse) {
+		console.log("block cypher service is polling", depositAddress.sourceTokenDepositAddress);
+		const canhsBTCTestAddress: string = 'moHY7VwRYhoNK5QwU4WpePWR8mhLb3DtpL';
+		const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${canhsBTCTestAddress}`; //TODO: use a real deposit address in devnet
 		const fn = (attempts: number) => new Promise(r => {
-			fetch("https://api.blockcypher.com/v1/btc/test3/addrs/moHY7VwRYhoNK5QwU4WpePWR8mhLb3DtpL").then((response: any) => response.json())
-			.then((data: any) => {
-				console.log("response data",data)
-				r(attempts + 1)
+			fetch(url, {
+				headers: {
+					'Accept': "*/*"
+				}
+			})
+			.then((response: any) => response.json())
+			.then((data: BlockCypherResponse) => {
+				cb && cb(data);
+				r(data);
 			})
 		});
 
 		const validate = (res: number) => res > 6;
-		const interval = 1000;
-		const maxAttempts = 100;
+		const interval = 2 * 60000; // every two minutes
+		const maxAttempts = 50;
 
 		poll({fn, validate, interval, maxAttempts});
 

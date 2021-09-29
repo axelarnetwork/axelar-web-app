@@ -1,7 +1,12 @@
 import React, {ReactElement, useState}                 from "react";
-import {useRecoilState}                                from "recoil";
-import {IAssetTransferObject, IDepositAddressResponse} from "@axelar-network/axelarjs-sdk";
-import {StyledSwapWindow}                              from "view/SwapWindow/styles/StyledSwapWIndow";
+import {useRecoilState}                                                      from "recoil";
+import {
+	BlockCypherResponse,
+	IAssetTransferObject,
+	IBlockCypherResponse,
+	IDepositAddressResponse
+} from "@axelar-network/axelarjs-sdk";
+import {StyledSwapWindow}                                                    from "view/SwapWindow/styles/StyledSwapWIndow";
 import {TransferAssetBridgeFacade}                     from "api/TransferAssetBridgeFacade";
 import ChainSelector                                   from "component/CompositeComponents/ChainSelector";
 import {FlexRow}                                       from "component/StyleComponents/FlexRow";
@@ -21,6 +26,7 @@ const SwapWindow = (): ReactElement => {
 	const [sourceToken, setSourceToken] = useRecoilState(ChainSelection(sourceTokenKey));
 	const [destinationToken, setDestinationToken] = useRecoilState(ChainSelection(destinationTokenKey));
 	const [destinationAddress, setDestinationAddress] = useRecoilState(DestinationAddress);
+	const [numConfirmations, setNumConfirmations] = useState<Nullable<number>>(null);
 
 	const [showResultsScreen, setShowResultsScreen] = useState<boolean>(false);
 	const [depositAddress, setDepositAddress] = useState<Nullable<IDepositAddressResponse>>(null);
@@ -32,7 +38,18 @@ const SwapWindow = (): ReactElement => {
 			destinationTokenSymbol: destinationToken.symbol,
 			destinationAddress
 		}
-		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets(message, console.log);
+		const getStatus: IBlockCypherResponse = (status: BlockCypherResponse): void => {
+			console.log("status+++++",status);
+			let confirms: Nullable<number> = null;
+			if (status.unconfirmed_txrefs)
+				confirms = 0;
+			if (status?.txrefs?.length)
+				confirms = status.txrefs[0].confirmations;
+			if (confirms)
+				setNumConfirmations(confirms);
+
+		};
+		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets(message, getStatus);
 		setDepositAddress(res);
 		setShowResultsScreen(true);
 	}
@@ -62,6 +79,7 @@ const SwapWindow = (): ReactElement => {
 					<BoldSpan> {depositAddress?.sourceTokenSymbol} </BoldSpan>
 					to the following address:
 					<BoldSpan> {depositAddress?.sourceTokenDepositAddress}</BoldSpan>
+					<BoldSpan> Number of confirms {numConfirmations}</BoldSpan>
 				.</span>}
 				closeCb={() => {
 					//TODO: is there a better place to reset these params?
