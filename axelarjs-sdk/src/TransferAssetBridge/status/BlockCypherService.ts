@@ -1,37 +1,46 @@
-import {WaitingService}          from "./WaitingService";
-import {poll}                    from "./utils";
-import {IDepositAddressResponse}             from "../../interface";
-import {BlockCypherResponse, StatusResponse} from "../index";
+import {WaitingService}                               from "./WaitingService";
+import {poll}                                         from "./utils";
+import {BlockCypherResponse, IDepositAddressResponse} from "../../interface";
+import {StatusResponse}                               from "../index";
 
 export default class BlockCypherService extends WaitingService {
+
+	private maxPollingAttempts: number = 2;
+	private pollingInterval: number = 5000;
 
 	constructor(depositAddress: string) {
 		super(6, depositAddress);
 		console.log(this.numConfirmations);
 	}
 
-	public wait(depositAddress: IDepositAddressResponse, cb?: StatusResponse) {
+	public async wait(depositAddress: IDepositAddressResponse, interimStatusCb?: StatusResponse) {
 		console.log("block cypher service is polling", depositAddress.sourceTokenDepositAddress);
 		const canhsBTCTestAddress: string = 'moHY7VwRYhoNK5QwU4WpePWR8mhLb3DtpL';
-		const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${canhsBTCTestAddress}`; //TODO: use a real deposit address in devnet
-		const fn = (attempts: number) => new Promise(r => {
+		const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${canhsBTCTestAddress}`; //TODO: use a real deposit address in devnet, i.e. depositAddress.sourceTokenDepositAddress
+		const asyncRequest = (attempts: number) => new Promise((res, rej) => {
 			fetch(url, {
-				headers: {
-					'Accept': "*/*"
-				}
+				headers: {'Accept': "*/*"}
 			})
 			.then((response: any) => response.json())
 			.then((data: BlockCypherResponse) => {
-				cb && cb(data);
-				r(data);
+				interimStatusCb && interimStatusCb(data);
+				res(data);
+			})
+			.catch((err: any) => {
+				rej(err);
 			})
 		});
 
-		const validate = (res: number) => res > 6;
-		const interval = 2 * 60000; // every two minutes
-		const maxAttempts = 50;
+		return await poll({
+			asyncRequest,
+			validate: this.validate,
+			interval: this.pollingInterval,
+			maxAttempts: this.maxPollingAttempts
+		});
 
-		poll({fn, validate, interval, maxAttempts});
+	}
 
+	private validate(res: BlockCypherResponse): boolean {
+		return !res.unconfirmed_txrefs && res.txrefs[0].confirmations >= this.numConfirmations;
 	}
 }

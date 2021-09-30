@@ -52,7 +52,7 @@ const SwapWindow = (): ReactElement => {
 				setNumConfirmations(confirms);
 
 		};
-		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets(message, getStatus);
+		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets(message, getStatus, console.log);
 		setDepositAddress(res);
 		setShowResultsScreen(true);
 	}

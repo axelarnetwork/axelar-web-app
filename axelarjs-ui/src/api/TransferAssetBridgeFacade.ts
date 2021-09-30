@@ -11,8 +11,8 @@ export class TransferAssetBridgeFacade {
 		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.hostUrl);
 	}
 
-	public static transferAssets(message: IAssetTransferObject, waitCb: any): Promise<IDepositAddressResponse> {
-		return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, waitCb);
+	public static transferAssets(message: IAssetTransferObject, waitCb: any, errCb: any): Promise<IDepositAddressResponse> {
+		return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, waitCb, errCb);
 	}
 
 }

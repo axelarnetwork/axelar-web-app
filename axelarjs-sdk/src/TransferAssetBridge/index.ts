@@ -1,53 +1,9 @@
-import {ClientSocketConnect}  from "./ClientSocketConnect";
-import {IAssetTransferObject} from "../interface/IAssetTransferObject";
-import {
-	CLIENT_API_POST_TRANSFER_ASSET,
-	IDepositAddressResponse,
-	TRANSFER_RESULT,
-	TransferAssetTypes
-}                             from "../interface";
-import {ClientRest}           from "./ClientRest";
-import getWaitingService      from "./status";
+import {ClientSocketConnect}                                                            from "./ClientSocketConnect";
+import {IAssetTransferObject}                                                           from "../interface/IAssetTransferObject";
+import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, IDepositAddressResponse,} from "../interface";
+import {ClientRest}                                                                     from "./ClientRest";
+import getWaitingService                                                                from "./status";
 
-export interface UnconfirmedTxRef {
-	address: string;
-	confirmations: number;
-	double_spend: boolean;
-	preference: string; //"low"
-	received: string; //"2021-09-29T01:49:51.656Z"
-	spent: boolean;
-	tx_hash: string;
-	tx_input_n: number;
-	tx_output_n: number;
-	value: number;
-}
-export interface TxRef {
-	block_height: number;
-	confirmations: number
-	confirmed: string; //"2021-09-23T16:05:05Z"
-	double_spend: boolean;
-	ref_balance: number;
-	spent: boolean;
-	tx_hash: string;
-	tx_input_n: number;
-	tx_output_n: number;
-	value: number;
-}
-export interface BlockCypherResponse {
-	address: string;
-	balance: number;
-	final_balance: number;
-	final_n_tx: number;
-	n_tx: number;
-	total_received: number;
-	total_sent: number;
-	tx_url: string;
-	txrefs: TxRef[];
-	unconfirmed_balance: 100000
-	unconfirmed_n_tx: 1
-	unconfirmed_txrefs: UnconfirmedTxRef[]
-}
-export type IBlockCypherResponse = (data: BlockCypherResponse) => any;
 export type StatusResponse = IBlockCypherResponse
 	| (() => void);
 
@@ -62,22 +18,23 @@ export class TransferAssetBridge {
 		this.clientRest = new ClientRest(resourceUrl);
 	}
 
-	public async transferAssets(message: IAssetTransferObject, waitCb: StatusResponse): Promise<IDepositAddressResponse> {
+	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<IDepositAddressResponse> {
 		const depositAddress: IDepositAddressResponse = await this.getDepositAddress(message);
-		this.listenForTransactionStatus(depositAddress, waitCb);
+		this.listenForTransactionStatus(depositAddress, successCb, errCb);
 		return depositAddress;
 	}
 
 	private async getDepositAddress(message: IAssetTransferObject): Promise<IDepositAddressResponse> {
-
-		// post to rest API with parameters for link transaction
-		// TODO: use websocketclient on rest-server to wait for deposit address
 		return await this.clientRest.post(CLIENT_API_POST_TRANSFER_ASSET, message);
 	}
 
-	private listenForTransactionStatus(depositAddress: IDepositAddressResponse, waitCb: StatusResponse): void {
+	private async listenForTransactionStatus(depositAddress: IDepositAddressResponse, waitCb: StatusResponse, errCb: any) {
 		const waitingService = getWaitingService("bitcoin");
-		waitingService.wait(depositAddress, waitCb);
+		try {
+			await waitingService.wait(depositAddress, waitCb);
+		} catch (e) {
+			errCb(e);
+		}
 	}
 
 }

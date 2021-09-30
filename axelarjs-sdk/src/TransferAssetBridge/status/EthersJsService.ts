@@ -1,4 +1,4 @@
-import { ethers }            from "ethers";
+import {ethers}              from "ethers";
 import {WaitingService}      from "./WaitingService";
 import {getEthersJsProvider} from "./utils/ethersjsProvider";
 import {formatEther}         from "ethers/lib/utils";
@@ -46,7 +46,7 @@ export default class EthersJsService extends WaitingService {
 
 	public wait(address: string, cb: any) {
 		this.axelarBTCContract.once(this.filter, (from, to, amount, event) => {
-			console.log(`Incoming amount of: ${ formatEther(amount) }, from: ${ from }.`);
+			console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`);
 		});
 	}
 }

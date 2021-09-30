@@ -5,7 +5,7 @@ type ProviderType =
 	| 'infura'
 	| 'ropsten';
 
-const providers: {[key: string]: ethers.providers.BaseProvider} = {};
+const providers: { [key: string]: ethers.providers.BaseProvider } = {};
 
 providers.ropsten = ethers.getDefaultProvider('ropsten');
 providers.infura = new ethers.providers.InfuraProvider('ropsten');
