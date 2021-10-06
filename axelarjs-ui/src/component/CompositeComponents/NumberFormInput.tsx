@@ -1,7 +1,7 @@
+import {useSetRecoilState}  from "recoil";
 import Form                 from "react-bootstrap/Form";
 import styled               from "styled-components";
-import {useSetRecoilState}  from "recoil";
-import {DestinationAddress} from "../../state/ChainSelection";
+import {DestinationAddress} from "state/ChainSelection";
 
 const StyledForm = styled(Form)`
 	margin-top: 30px;

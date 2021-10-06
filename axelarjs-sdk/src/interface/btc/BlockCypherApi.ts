@@ -25,6 +25,7 @@ export interface TxRef {
 }
 
 export interface BlockCypherResponse {
+	axelarRequiredNumConfirmations: number;
 	address: string;
 	balance: number;
 	final_balance: number;

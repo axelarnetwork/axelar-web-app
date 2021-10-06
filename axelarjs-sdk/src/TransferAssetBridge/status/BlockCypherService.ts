@@ -10,7 +10,6 @@ export default class BlockCypherService extends WaitingService {
 
 	constructor(depositAddress: string) {
 		super(6, depositAddress);
-		console.log(this.numConfirmations);
 	}
 
 	public async wait(depositAddress: IDepositAddressResponse, interimStatusCb?: StatusResponse) {
@@ -23,6 +22,7 @@ export default class BlockCypherService extends WaitingService {
 			})
 			.then((response: any) => response.json())
 			.then((data: BlockCypherResponse) => {
+				data.axelarRequiredNumConfirmations = this.numConfirmations;
 				interimStatusCb && interimStatusCb(data);
 				res(data);
 			})

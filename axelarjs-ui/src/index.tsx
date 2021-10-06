@@ -5,7 +5,7 @@ import reportWebVitals             from './reportWebVitals';
 import {RecoilRoot}                from "recoil";
 import {RecoilLogger}              from 'recoil-devtools-logger';
 import {createGlobalStyle}         from "styled-components";
-import {TransferAssetBridgeFacade} from "./api/TransferAssetBridgeFacade";
+import {TransferAssetBridgeFacade} from "api/TransferAssetBridgeFacade";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const GlobalStyle = createGlobalStyle`
