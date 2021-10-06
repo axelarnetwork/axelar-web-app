@@ -5,6 +5,7 @@ import {FlexColumn}                              from "component/StyleComponents
 import {NumberFormInput}                         from "component/CompositeComponents/NumberFormInput";
 import {GridDisplay}                             from "component/StyleComponents/GridDisplay";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "state/ChainSelection";
+import {FooterComponent}                         from "../../../component/StyleComponents/FooterComponent";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: any;
@@ -12,7 +13,7 @@ interface IUserInputWindowProps {
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
-	return <>
+	return <GridDisplay>
 		<FlexRow>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source"}/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination"}/>
@@ -20,12 +21,12 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		<FlexColumn>
 			<NumberFormInput />
 		</FlexColumn>
-		<GridDisplay>
+		<FooterComponent>
 			<Button variant="secondary" size="sm" onClick={handleSwapSubmit}>
 				Initiate Asset Transfer
 			</Button>
-		</GridDisplay>
-	</>;
+		</FooterComponent>
+	</GridDisplay>;
 }
 
 export default UserInputWindow;

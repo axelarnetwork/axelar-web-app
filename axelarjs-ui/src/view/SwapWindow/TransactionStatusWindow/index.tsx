@@ -1,13 +1,14 @@
-import React, {useEffect, useState}                from "react";
-import {useRecoilValue}                            from "recoil";
-import BoldSpan                                    from "component/StyleComponents/BoldSpan";
-import {GridDisplay}                               from "component/StyleComponents/GridDisplay";
-import {NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import useResetUserInputs                          from "hooks/useResetUserInputs";
-import {Step, Stepper}                             from "react-form-stepper";
+import React, {useEffect, useState}                              from "react";
+import {useRecoilValue}                                          from "recoil";
+import BoldSpan                                                  from "component/StyleComponents/BoldSpan";
+import {GridDisplay}                                             from "component/StyleComponents/GridDisplay";
+import {NumberConfirmations, SourceDepositAddress}               from "state/TransactionStatus";
+import useResetUserInputs                                        from "hooks/useResetUserInputs";
+import {Step, Stepper}                                           from "react-form-stepper";
 import {FlexRow}                                                 from "../../../component/StyleComponents/FlexRow";
 import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "../../../state/ChainSelection";
-import Button                                                    from "react-bootstrap/Button";
+import Button            from "react-bootstrap/Button";
+import {FooterComponent} from "../../../component/StyleComponents/FooterComponent";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -56,7 +57,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				</div>
 			}
 		</div>;
-		dict[2] = "Actively working...";
+		dict[2] = "Axelar Network is actively working on your request...";
 		dict[3] = "(TBD) Confirming ethereum transactions...";
 		return dict[activeStep];
 	}
@@ -83,10 +84,14 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			/>)}
 		</Stepper>
 		{ generateStatusBody(activeStep) }
-		{ activeStep >= 1 && <Button onClick={() => {
-			resetUserInputs();
-			closeResultsScreen();
-		}}>Go back and trust the process</Button>}
+		{ activeStep >= 1 &&
+			<FooterComponent>
+                <Button variant="secondary" onClick={() => {
+					resetUserInputs();
+					closeResultsScreen();
+				}}>Dismiss updates & trust the process</Button>
+			</FooterComponent>
+		}
 	</GridDisplay>
 }
 
