@@ -35,17 +35,6 @@ export type TendermintEventType =
 
 type TendermintQueryOperand = string | number | Date;
 
-// export interface TendermintQuery {
-// 	[k: string]:
-// 		| TendermintQueryOperand
-// 		| ['>', number | Date]
-// 		| ['<', number | Date]
-// 		| ['<=', number | Date]
-// 		| ['>=', number | Date]
-// 		| ['CONTAINS', string]
-// 		| ['EXISTS'];
-// }
-
 export interface TendermintQuery {
 	[k: string]:
 		| TendermintQueryOperand

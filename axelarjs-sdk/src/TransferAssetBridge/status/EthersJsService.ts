@@ -19,10 +19,10 @@ declare const window: any;
 
 //TODO: find a way to extract this from a repository instead of hard-coding
 // taken from https://axelardocs.vercel.app/testnet-releases
-const axelarBTCAddr: string = '0xffd3166c826C140acC66571025d76001D1293Df0';
+const axelarBTCTokenAddr: string = '0x361bBA6b22b66024CDa9F86aACDb9a4e03e64946';
 
 // taken from https://github.com/axelarnetwork/ethereum-bridge
-const axelarBTCAbi: string[] = [
+const abi: string[] = [
 	"function name() view returns (string)",
 	"function symbol() view returns (string)",
 	"function balanceOf(address) view returns (uint)", 	// Get the account balance
@@ -37,16 +37,22 @@ export default class EthersJsService extends WaitingService {
 
 	constructor(depositAddress: string) {
 		super(30, depositAddress);
-
-		//TODO: what is the best provider to use?
-		this.provider = getEthersJsProvider("ropsten");
-		this.axelarBTCContract = new ethers.Contract(axelarBTCAddr, axelarBTCAbi, this.provider);
-		this.filter = this.axelarBTCContract.filters.Transfer(null, depositAddress);
+		this.provider = getEthersJsProvider("infura");
+		this.axelarBTCContract = new ethers.Contract(axelarBTCTokenAddr, abi, this.provider);
+		this.filter = this.axelarBTCContract.filters.Transfer(null, depositAddress); //filter all transfers TO my address
 	}
 
 	public wait(address: string, cb: any) {
-		this.axelarBTCContract.once(this.filter, (from, to, amount, event) => {
-			console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`);
+
+		console.log("waiting on ethers", address);
+
+		return new Promise((resolve, reject) => {
+			this.axelarBTCContract.once(this.filter, (from, to, amount, event) => {
+				console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`);
+				resolve(event);
+			});
 		});
+
 	}
+
 }

@@ -1,20 +1,18 @@
-import {ClientSocketConnect}                                                            from "./ClientSocketConnect";
-import {IAssetTransferObject}                            from "../interface/IAssetTransferObject";
+import {ClientSocketConnect}                                                  from "./ClientSocketConnect";
+import {IAssetTransferObject}                                                 from "../interface/IAssetTransferObject";
 import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, ITokenAddress,} from "../interface";
 import {ClientRest}                                                           from "./ClientRest";
-import getWaitingService                                                                from "./status";
+import getWaitingService                                                      from "./status";
 
 export type StatusResponse = IBlockCypherResponse
 	| (() => void);
 
 export class TransferAssetBridge {
 
-	private clientSocketConnect: ClientSocketConnect;
 	private clientRest: ClientRest;
 
 	constructor(resourceUrl: string) {
 		console.log("TransferAssetBridge initiated");
-		this.clientSocketConnect = new ClientSocketConnect(resourceUrl);
 		this.clientRest = new ClientRest(resourceUrl);
 	}
 

@@ -5,8 +5,9 @@ import {GridDisplay}                               from "component/StyleComponen
 import {NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import useResetUserInputs                          from "hooks/useResetUserInputs";
 import {Step, Stepper}                             from "react-form-stepper";
-import {FlexRow}                          from "../../../component/StyleComponents/FlexRow";
-import {ChainSelection, SOURCE_TOKEN_KEY} from "../../../state/ChainSelection";
+import {FlexRow}                                                 from "../../../component/StyleComponents/FlexRow";
+import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "../../../state/ChainSelection";
+import Button                                                    from "react-bootstrap/Button";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -18,6 +19,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const resetUserInputs = useResetUserInputs();
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const [activeStep, setActiveStep] = useState(0);
 
 	const { numberConfirmations, numberRequiredConfirmations } = confirmationStatus;
@@ -47,13 +49,15 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 					<br />
 					<div><BoldSpan> {depositAddress?.tokenAddress}</BoldSpan></div>
 				</div>
-				: <div> Your transaction has been detected on the {sourceChain?.name} blockchain.
-					Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.
-					Sit back; this may take a while.
+				: <div> <p>Your transaction has been detected on the {sourceChain?.name} blockchain.
+					If you wish to follow along, sit back; this may take a while.</p>
+					<p>Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.</p>
+					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.name} tokens to hit your deposit account.</p>
 				</div>
 			}
 		</div>;
 		dict[2] = "Actively working...";
+		dict[3] = "(TBD) Confirming ethereum transactions...";
 		return dict[activeStep];
 	}
 
@@ -73,9 +77,16 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	return <GridDisplay>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
 		<Stepper activeStep={activeStep}>
-			{steps.map(stepDescription => <Step key={stepDescription} label={stepDescription} />)}
+			{steps.map((stepDescription, idx) => <Step
+				key={stepDescription}
+				label={activeStep >= idx ? stepDescription : ""}
+			/>)}
 		</Stepper>
 		{ generateStatusBody(activeStep) }
+		{ activeStep >= 1 && <Button onClick={() => {
+			resetUserInputs();
+			closeResultsScreen();
+		}}>Go back and trust the process</Button>}
 	</GridDisplay>
 }
 

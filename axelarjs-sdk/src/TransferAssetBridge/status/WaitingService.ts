@@ -11,6 +11,7 @@ export class WaitingService {
 	public constructor(numConfirmations: number, depositAddress: string) {
 
 		this.setNumConfirmations(numConfirmations);
+		this.setDepositAddress(depositAddress);
 
 		if (this.constructor == WaitingService) {
 			throw new Error("abstract class only.");

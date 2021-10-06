@@ -1,4 +1,4 @@
-import {WaitingService}                               from "./WaitingService";
+import {WaitingService}                     from "./WaitingService";
 import {poll}                               from "./utils";
 import {BlockCypherResponse, ITokenAddress} from "../../interface";
 import {StatusResponse}                     from "../index";
