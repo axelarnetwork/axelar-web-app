@@ -2,7 +2,7 @@ import {TendermintEventType, TendermintSubscriptionResponse, WebSocketClient} fr
 
 const client: WebSocketClient = new WebSocketClient("ws://localhost:26667/websocket");
 
-export const startTendermintSocketForDestinationAddress = () => {
+export const startTendermintSocketForDepositAddress = () => {
 
 	return new Promise(async (resolve, reject) => {
 

@@ -41,11 +41,11 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				? <div>
 					<div>
 		                Next step: please deposit
-		                <BoldSpan> {depositAddress?.sourceTokenSymbol} </BoldSpan>
+		                <BoldSpan> {depositAddress?.tokenSymbol} </BoldSpan>
 		                to the following address:
 		            </div>
 					<br />
-					<div><BoldSpan> {depositAddress?.sourceTokenDepositAddress}</BoldSpan></div>
+					<div><BoldSpan> {depositAddress?.tokenAddress}</BoldSpan></div>
 				</div>
 				: <div> Your transaction has been detected on the {sourceChain?.name} blockchain.
 					Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.

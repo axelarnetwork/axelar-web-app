@@ -2,10 +2,12 @@ import BlockCypherService from "./BlockCypherService";
 import EthersJsService    from "./EthersJsService";
 
 const waitingService: any = {
-	"bitcoin": BlockCypherService,
-	"ethereum": EthersJsService
+	"btc": BlockCypherService,
+	"eth": EthersJsService
 };
 
-const getWaitingService = (type: string) => new waitingService[type];
+const getWaitingService = (type: string) => {
+	return new waitingService[type.toLowerCase()];
+};
 
 export default getWaitingService;

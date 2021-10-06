@@ -36,7 +36,7 @@ export default class EthersJsService extends WaitingService {
 	private filter: any;
 
 	constructor(depositAddress: string) {
-		super(6, depositAddress);
+		super(30, depositAddress);
 
 		//TODO: what is the best provider to use?
 		this.provider = getEthersJsProvider("ropsten");

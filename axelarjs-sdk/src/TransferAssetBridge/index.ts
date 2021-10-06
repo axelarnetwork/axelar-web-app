@@ -1,7 +1,7 @@
 import {ClientSocketConnect}                                                            from "./ClientSocketConnect";
-import {IAssetTransferObject}                                                           from "../interface/IAssetTransferObject";
-import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, IDepositAddressResponse,} from "../interface";
-import {ClientRest}                                                                     from "./ClientRest";
+import {IAssetTransferObject}                            from "../interface/IAssetTransferObject";
+import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, ITokenAddress,} from "../interface";
+import {ClientRest}                                                           from "./ClientRest";
 import getWaitingService                                                                from "./status";
 
 export type StatusResponse = IBlockCypherResponse
@@ -18,20 +18,23 @@ export class TransferAssetBridge {
 		this.clientRest = new ClientRest(resourceUrl);
 	}
 
-	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<IDepositAddressResponse> {
-		const depositAddress: IDepositAddressResponse = await this.getDepositAddress(message);
-		this.listenForTransactionStatus(depositAddress, successCb, errCb);
+	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<ITokenAddress> {
+		const depositAddress: ITokenAddress = await this.getDepositAddress(message);
+		this.listenForTransactionStatus(depositAddress, successCb, errCb).then(() => {
+			this.listenForTransactionStatus(message.destinationTokenInfo as ITokenAddress, successCb, errCb);
+		})
+
 		return depositAddress;
 	}
 
-	private async getDepositAddress(message: IAssetTransferObject): Promise<IDepositAddressResponse> {
+	private async getDepositAddress(message: IAssetTransferObject): Promise<ITokenAddress> {
 		return await this.clientRest.post(CLIENT_API_POST_TRANSFER_ASSET, message);
 	}
 
-	private async listenForTransactionStatus(depositAddress: IDepositAddressResponse, waitCb: StatusResponse, errCb: any) {
-		const waitingService = getWaitingService("bitcoin");
+	private async listenForTransactionStatus(addressInformation: ITokenAddress, waitCb: StatusResponse, errCb: any) {
+		const waitingService = addressInformation?.tokenSymbol && getWaitingService(addressInformation.tokenSymbol);
 		try {
-			await waitingService.wait(depositAddress, waitCb);
+			await waitingService.wait(addressInformation, waitCb);
 		} catch (e) {
 			errCb(e);
 		}

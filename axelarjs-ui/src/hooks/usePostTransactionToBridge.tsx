@@ -3,7 +3,7 @@ import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
-	IDepositAddressResponse
+	ITokenAddress
 }                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
 import {useRecoilValue, useSetRecoilState} from "recoil";
@@ -55,10 +55,15 @@ export default function usePostTransactionToBridge() {
 
 		const failCb = (data: any): void => console.log(data);
 
-		const res: IDepositAddressResponse = await TransferAssetBridgeFacade.transferAssets({
-			sourceTokenSymbol: sourceToken.symbol,
-			destinationTokenSymbol: destinationToken.symbol,
-			destinationAddress
+		const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets({
+			sourceTokenInfo: {
+				tokenSymbol: sourceToken.symbol,
+				tokenAddress: null
+			},
+			destinationTokenInfo: {
+				tokenSymbol: destinationToken.symbol,
+				tokenAddress: destinationAddress
+			}
 		} as IAssetTransferObject, successCb, failCb);
 
 		setDepositAddress(res);
