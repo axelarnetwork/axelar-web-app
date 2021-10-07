@@ -11,8 +11,8 @@ export let server: Server;
 export const init = async function (): Promise<Server> {
 
 	server = Hapi.server({
-		port: process.env.PORT || 4000,
-		host: '0.0.0.0',
+		port: process.env.PORT,
+		host: process.env.HOST,
 		routes: {
 			cors: true
 		}
