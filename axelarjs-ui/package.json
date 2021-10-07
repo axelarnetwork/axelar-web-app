@@ -49,6 +49,7 @@
 		"@types/styled-components": "^5.1.14",
 		"bootstrap": "^5.1.0",
 		"react-bootstrap": "^2.0.0-beta.6",
+		"react-form-stepper": "^1.4.3",
 		"react-inlinesvg": "^2.3.0"
 	}
 }

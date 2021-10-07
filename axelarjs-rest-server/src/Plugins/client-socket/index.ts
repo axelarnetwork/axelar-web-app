@@ -1,8 +1,12 @@
+//TODO: I think this won't be needed so we can delete?
 import {Server}             from "@hapi/hapi";
 import {TransferAssetTypes} from "@axelar-network/axelarjs-sdk";
 
 const Handlers = require('./handlers');
 
+/**
+ * This plugin is used for the socket connection between the webapp and rest-server.
+ */
 export const socketRegister = {
 	name: "server-connection",
 	version: "1.0.0",
