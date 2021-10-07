@@ -4,9 +4,11 @@
   "description": "The UI entry point for Axelar Network",
   "main": "dist/index.js",
   "scripts": {
-    "dev:tsc": "tsc --watch -p .",
-    "dev:serve": "nodemon -e js -w dist dist/index.js",
+    "tsc": "tsc -p .",
+    "dev:tsc-watch": "tsc --watch -p .",
+    "dev:serve-watch": "nodemon -e js -w dist dist/index.js",
     "dev": "run-p dev:*",
+    "build-and-run": "tsc && node dist/index.js",
     "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [
@@ -19,13 +21,14 @@
   "author": "Axelar Network",
   "license": "MIT",
   "dependencies": {
-    "@axelar-network/axelarjs-sdk": "file:../axelarjs-sdk",
+    "@axelar-network/axelarjs-sdk": "^1.0.0",
     "@hapi/boom": "^9.1.4",
     "@hapi/hapi": "^20.1.5",
     "@types/boom": "^7.3.1",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
     "chai": "^4.3.4",
+    "ethers": "^5.4.7",
     "hapi-k8s-health": "^1.1.1",
     "mocha": "^9.1.1",
     "socket.io": "^4.2.0",

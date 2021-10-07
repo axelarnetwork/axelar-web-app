@@ -136,6 +136,7 @@ export class WebSocketClient extends EventEmitter {
 		private reconnectInterval = 1000
 	) {
 		super();
+		console.log("WebSocketClient");
 		this._reconnectCount = this.reconnectCount;
 		this.isConnected = false;
 		this.shouldAttemptReconnect = !!this.reconnectInterval;
