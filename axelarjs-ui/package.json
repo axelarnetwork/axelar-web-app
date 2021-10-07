@@ -22,7 +22,10 @@
 		"web-vitals": "^1.1.2"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "REACT_APP_STAGE=local react-scripts start",
+		"devNet": "REACT_APP_STAGE=devNet react-scripts start",
+		"testNet": "REACT_APP_STAGE=testNet react-scripts start",
+		"mainNet": "REACT_APP_STAGE=mainNet react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"

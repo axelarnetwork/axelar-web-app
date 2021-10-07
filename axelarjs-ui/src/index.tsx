@@ -7,6 +7,7 @@ import {RecoilLogger}              from 'recoil-devtools-logger';
 import {createGlobalStyle}         from "styled-components";
 import {TransferAssetBridgeFacade} from "api/TransferAssetBridgeFacade";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import downstreamServices          from "./config/downstreamServices";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -22,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 	}
 `;
 
-new TransferAssetBridgeFacade();
+new TransferAssetBridgeFacade(downstreamServices.getEnvironmentBasedConfigs(process.env.REACT_APP_STAGE || "")?.AXELAR_BRIDGE_URL);
 
 ReactDOM.render(
 	<React.StrictMode>
