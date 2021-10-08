@@ -1,5 +1,5 @@
 import {IAssetTransferObject, ITokenAddress, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
-import {AXELAR_BRIDGE_HOST_URL}                                             from "../config";
+import {AXELAR_BRIDGE_HOST_URL}                                   from "../config";
 
 export class TransferAssetBridgeFacade {
 

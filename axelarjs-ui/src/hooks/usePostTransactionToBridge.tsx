@@ -1,23 +1,20 @@
-import {useCallback, useState}             from "react";
+import {useCallback, useState}                                                       from "react";
 import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
 	ITokenAddress
-}                                          from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+}                                                                                    from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade}                                                   from "api/TransferAssetBridgeFacade";
+import {useRecoilValue, useSetRecoilState}                              from "recoil";
 import {
 	ChainSelection,
 	DESTINATION_TOKEN_KEY,
 	DestinationAddress,
-	SOURCE_TOKEN_KEY
-}                                          from "state/ChainSelection";
-import {
-	IConfirmationStatus,
-	NumberConfirmations,
-	SourceDepositAddress
-} from "state/TransactionStatus";
+	SOURCE_TOKEN_KEY,
+	SourceAsset
+}                                                                       from "state/ChainSelection";
+import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 
 export default function usePostTransactionToBridge() {
 
@@ -27,10 +24,11 @@ export default function usePostTransactionToBridge() {
 	const destinationAddress = useRecoilValue(DestinationAddress);
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
 	const setNumConfirmations = useSetRecoilState(NumberConfirmations);
+	const sourceAsset = useRecoilValue(SourceAsset);
 
 	const handleTransactionSubmission = useCallback(async () => {
 
-		if (!(sourceToken?.symbol && destinationToken?.symbol && destinationAddress))
+		if (!(sourceToken?.symbol && destinationToken?.symbol && destinationAddress && sourceAsset))
 			return;
 
 		setShowTransactionStatusWindow(true);
@@ -55,16 +53,18 @@ export default function usePostTransactionToBridge() {
 
 		const failCb = (data: any): void => console.log(data);
 
-		const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets({
+		const msg: IAssetTransferObject = {
 			sourceTokenInfo: {
 				tokenSymbol: sourceToken.symbol,
 				tokenAddress: null
 			},
+			sourceAsset,
 			destinationTokenInfo: {
 				tokenSymbol: destinationToken.symbol,
 				tokenAddress: destinationAddress
 			}
-		} as IAssetTransferObject, successCb, failCb);
+		}
+		const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
 
 		setDepositAddress(res);
 

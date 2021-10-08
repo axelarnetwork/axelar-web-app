@@ -22,7 +22,7 @@ const SelectedChainComponent = (props: IChainComponentProps) => {
 			margin={"15px"}
 		/>
 		: null;
-	return <Container width={"80px"} height={"80px"}>
+	return <Container width={"80px"} height={"80px"} margin={"0px"}>
 		{image}
 	</Container>
 }
@@ -33,7 +33,6 @@ const StyledChainSelector = styled(Container)`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin-top: 20px;
 `;
 
 interface IChainSelectorProps {
