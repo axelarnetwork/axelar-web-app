@@ -2,7 +2,7 @@ import React, {ReactElement}      from "react";
 import {StyledSwapWindow}         from "view/SwapWindow/styles/StyledSwapWIndow";
 import UserInputWindow            from "./UserInputWindow";
 import usePostTransactionToBridge from "hooks/usePostTransactionToBridge";
-import TransactionStatusWindow from "./TransactionStatusWindow";
+import TransactionStatusWindow    from "./TransactionStatusWindow";
 
 const SwapWindow = (): ReactElement => {
 

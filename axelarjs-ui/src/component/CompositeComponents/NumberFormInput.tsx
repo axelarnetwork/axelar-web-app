@@ -26,7 +26,6 @@ export const NumberFormInput = () => {
 		setDestinationAddress(e?.target?.value);
 	}
 	return <StyledForm onChange={onChange}>
-		Destination Address
-		<StyledFormControl type="text" placeholder="(Public Key)" size={"sm"}/>
+		<StyledFormControl type="text" placeholder="Destination Address (Public Key)" size={"sm"}/>
 	</StyledForm>;
 }

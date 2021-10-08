@@ -7,13 +7,14 @@ import useResetUserInputs                                        from "hooks/use
 import {Step, Stepper}                                           from "react-form-stepper";
 import {FlexRow}                                                 from "../../../component/StyleComponents/FlexRow";
 import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "../../../state/ChainSelection";
-import Button            from "react-bootstrap/Button";
-import {FooterComponent} from "../../../component/StyleComponents/FooterComponent";
+import Button                                                    from "react-bootstrap/Button";
+import {FooterComponent}                                         from "../../../component/StyleComponents/FooterComponent";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
 	closeResultsScreen: any;
 }
+
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
 	const confirmationStatus = useRecoilValue(NumberConfirmations);
@@ -23,37 +24,37 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const [activeStep, setActiveStep] = useState(0);
 
-	const { numberConfirmations, numberRequiredConfirmations } = confirmationStatus;
+	const {numberConfirmations, numberRequiredConfirmations} = confirmationStatus;
 
 	useEffect(() => {
 		//TODO: clean this up
 		if (depositAddress && numberConfirmations && numberRequiredConfirmations && numberConfirmations > numberRequiredConfirmations) {
 			setActiveStep(2);
-		}
-		else if(depositAddress){
+		} else if (depositAddress) {
 			setActiveStep(1);
 		}
 	}, [depositAddress, numberConfirmations, numberRequiredConfirmations]);
 
 	const generateStatusBody = (activeStep: number) => {
-		const { numberConfirmations, numberRequiredConfirmations } = confirmationStatus;
+		const {numberConfirmations, numberRequiredConfirmations} = confirmationStatus;
 		const dict: any = {};
 		dict[0] = null;
 		dict[1] = <div>
-			{ !numberConfirmations
+			{!numberConfirmations
 				? <div>
 					<div>
-		                Next step: please deposit
-		                <BoldSpan> {depositAddress?.tokenSymbol} </BoldSpan>
-		                to the following address:
-		            </div>
-					<br />
+						Next step: please deposit
+						<BoldSpan> {depositAddress?.tokenSymbol} </BoldSpan>
+						to the following address:
+					</div>
+					<br/>
 					<div><BoldSpan> {depositAddress?.tokenAddress}</BoldSpan></div>
 				</div>
-				: <div> <p>Your transaction has been detected on the {sourceChain?.name} blockchain.
+				: <div><p>Your transaction has been detected on the {sourceChain?.name} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
 					<p>Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.</p>
-					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.name} tokens to hit your deposit account.</p>
+					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.name} tokens to
+						hit your deposit account.</p>
 				</div>
 			}
 		</div>;
@@ -83,18 +84,17 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				label={activeStep >= idx ? stepDescription : ""}
 			/>)}
 		</Stepper>
-		{ generateStatusBody(activeStep) }
-		{ activeStep >= 1 &&
-			<FooterComponent>
-                <Button variant="secondary" onClick={() => {
-					resetUserInputs();
-					closeResultsScreen();
-				}}>Dismiss updates & trust the process</Button>
-			</FooterComponent>
+		{generateStatusBody(activeStep)}
+		{activeStep >= 1 &&
+        <FooterComponent>
+            <Button variant="secondary" onClick={() => {
+				resetUserInputs();
+				closeResultsScreen();
+			}}>Dismiss updates & trust the process</Button>
+        </FooterComponent>
 		}
 	</GridDisplay>
 }
-
 
 
 export default TransactionStatusWindow;
