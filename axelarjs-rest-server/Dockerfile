@@ -8,5 +8,5 @@ WORKDIR /src
 COPY . .
 RUN npm install
 RUN rm -f .npmrc
-CMD ["npm", "run", "dev"]
-EXPOSE 4000
+CMD ["npm", "run", "start"]
+EXPOSE 3000

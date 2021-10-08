@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  axelar-bridge-ui:
+    container_name: axelar-bridge-ui
+    hostname: axelar-bridge
+    image: axelar/axelar-bridge-ui:latest
+    restart: unless-stopped
+    working_dir: /axelarjs-ui
+    depends_on:
+      - "axelar-bridge-rest-server"
+    network_mode: host
+
+  axelar-bridge-rest-server:
+    container_name: axelar-bridge-rest-server
+    hostname: axelar-bridge
+    image: axelar/axelar-bridge-rest-server:latest
+    restart: unless-stopped
+    working_dir: /axelarjs-rest-server
+    network_mode: host
