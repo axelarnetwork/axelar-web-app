@@ -57,5 +57,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
   -p 3001:3000 \
   --network axelarate_default \
   -e CHOKIDAR_USEPOLLING=true \
-  --env NPM_TOKEN=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 \
+  --env NPM_TOKEN=${NPM_TOKEN} \
   axelar-bridge-ui
