@@ -6,11 +6,12 @@ const AXELAR_BRIDGE_URL: string = "AXELAR_BRIDGE_URL";
 interface IDownstreamServicesConfigs {
 	AXELAR_BRIDGE_URL: string;
 }
+
 const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 	AXELAR_BRIDGE_URL
 })
 
-const configsByEnvironment: {[key: string]: IDownstreamServicesConfigs} = {};
+const configsByEnvironment: { [key: string]: IDownstreamServicesConfigs } = {};
 
 configsByEnvironment.local = setConfigs("http://localhost:4000");
 configsByEnvironment.devNet = setConfigs("");

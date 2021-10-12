@@ -1,20 +1,24 @@
-import {useCallback, useState}                                                       from "react";
+import {useCallback, useState}             from "react";
 import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
 	ITokenAddress
-}                                                                                    from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}                                                   from "api/TransferAssetBridgeFacade";
-import {useRecoilValue, useSetRecoilState}                              from "recoil";
+}                                          from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {
 	ChainSelection,
 	DESTINATION_TOKEN_KEY,
 	DestinationAddress,
 	SOURCE_TOKEN_KEY,
 	SourceAsset
-}                                                                       from "state/ChainSelection";
-import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+}                                          from "state/ChainSelection";
+import {
+	IConfirmationStatus,
+	NumberConfirmations,
+	SourceDepositAddress
+}                                          from "state/TransactionStatus";
 
 export default function usePostTransactionToBridge() {
 
@@ -68,7 +72,7 @@ export default function usePostTransactionToBridge() {
 
 		setDepositAddress(res);
 
-	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations]);
+	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset]);
 
 	const closeResultsScreen = () => {
 		setShowTransactionStatusWindow(false);

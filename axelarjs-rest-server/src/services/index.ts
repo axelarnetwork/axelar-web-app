@@ -1,6 +1,9 @@
 import {TendermintEventType, TendermintSubscriptionResponse, WebSocketClient} from "./WebSocketClient";
 
-const client: WebSocketClient = new WebSocketClient(process.env.WEBSOCKET_URL as string);
+const connectionString: string = process.env.WEBSOCKET_URL as string;
+console.log("websocket connection string: ", connectionString);
+
+const client: WebSocketClient = new WebSocketClient(connectionString);
 
 export const startTendermintSocketForDepositAddress = () => {
 

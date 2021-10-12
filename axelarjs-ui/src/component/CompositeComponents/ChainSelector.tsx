@@ -1,11 +1,11 @@
-import React                                  from "react";
-import {ISupportedChainType, SupportedChains} from "@axelar-network/axelarjs-sdk";
-import {SVGImage}                             from "component/Widgets/SVGImage";
-import DropdownComponent, {IDropdownOption}   from "component/Widgets/DropdownComponent";
-import Container                              from "component/StyleComponents/Container";
-import styled                                 from "styled-components";
-import {useRecoilState}                       from "recoil";
-import {ChainSelection}                       from "../../state/ChainSelection";
+import React                                                    from "react";
+import {ISupportedChainType, SupportedChains}                   from "@axelar-network/axelarjs-sdk";
+import {SVGImage}                                               from "component/Widgets/SVGImage";
+import DropdownComponent, {IDropdownOption}                     from "component/Widgets/DropdownComponent";
+import Container                                                from "component/StyleComponents/Container";
+import styled                                                   from "styled-components";
+import {useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
+import {ChainSelection, SOURCE_TOKEN_KEY, SourceAsset}          from "state/ChainSelection";
 
 interface IChainComponentProps {
 	chainInfo: ISupportedChainType | null
@@ -43,12 +43,26 @@ interface IChainSelectorProps {
 const ChainSelector = (props: IChainSelectorProps) => {
 
 	const [selectedChain, setSelectedChain] = useRecoilState<ISupportedChainType | null>(ChainSelection(props.id));
+	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
+	const resetSourceAsset = useResetRecoilState(SourceAsset);
 
 	const dropdownOptions: IDropdownOption[] = SupportedChains
 	.map((supportedChain: ISupportedChainType) => ({
 		title: supportedChain.name,
 		active: false,
-		action: (param: IDropdownOption) => setSelectedChain(supportedChain)
+		action: (param: IDropdownOption) => {
+			setSelectedChain(supportedChain);
+
+			/*
+			if the selected chain is the source token and the chain only
+			has a single asset, select that asset
+			* */
+			if (props.id === SOURCE_TOKEN_KEY) {
+				supportedChain?.assets?.length === 1
+					? setSourceAsset(supportedChain.assets[0])
+					: !sourceAsset && resetSourceAsset();
+			}
+		}
 	}));
 
 	return <StyledChainSelector width="100px">

@@ -2,11 +2,21 @@ version: '3.7'
 
 services:
   axelar-bridge-ui:
+#    build:
+#      context: .
+#      dockerfile: ./axelarjs-ui/Dockerfile
     container_name: axelar-bridge-ui
     hostname: axelar-bridge
-    image: axelar/axelar-bridge-ui:latest
+#    volumes:
+#      - ./axelarjs-ui:/src
+#      - ./public/assets:/public/assets
+#      - /src/node_modules
+    image: axelar-bridge-ui:latest
     restart: unless-stopped
-    working_dir: /axelarjs-ui
+    environment:
+      - NPM_TOKEN=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
+    working_dir: /ui
+    command: "/bin/bash -c 'cd /ui && NPM_TOKEN=${NPM_TOKEN}'"
     depends_on:
       - "axelar-bridge-rest-server"
     network_mode: host
@@ -14,7 +24,13 @@ services:
   axelar-bridge-rest-server:
     container_name: axelar-bridge-rest-server
     hostname: axelar-bridge
-    image: axelar/axelar-bridge-rest-server:latest
+#    volumes:
+#      - ./axelarjs-rest-server:/src
+#      - /src/node_modules
+    stdin_open: true
+    image: axelar-bridge-rest-server:latest
     restart: unless-stopped
-    working_dir: /axelarjs-rest-server
+    environment:
+      - NPM_TOKEN=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
+    working_dir: /rest
     network_mode: host
