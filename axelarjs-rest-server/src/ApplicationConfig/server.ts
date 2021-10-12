@@ -4,7 +4,7 @@ import Hapi, {Server}    from "@hapi/hapi";
 import {routes}          from "../Plugins/client-rest-routes/routes";
 import {socketRegister}  from "../Plugins/client-socket";
 import {HealthPlugin}    from "hapi-k8s-health";
-import {WebSocketClient} from "../services/WebSocketClient";
+import {WebSocketClient} from "../services/DepositAddressListener/WebSocketClient";
 
 export let server: Server;
 
