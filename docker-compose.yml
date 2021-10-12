@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  axelar-bridge-ui:
+    build:
+      context: .
+      dockerfile: ./axelarjs-ui/Dockerfile
+    container_name: axelar-bridge-ui
+    hostname: axelar-bridge
+    networks:
+      - axelar
+    ports:
+      - 3001:3000
+    image: axelar-bridge-ui:latest
+    restart: unless-stopped
+    environment:
+      - NPM_TOKEN=${NPM_TOKEN}
+      - CHOKIDAR_USEPOLLING=true
+    working_dir: /app
+    stdin_open: true
+    depends_on:
+      - "axelar-bridge-rest-server"
+    command: npm start
+
+  axelar-bridge-rest-server:
+    container_name: axelar-bridge-rest-server
+    hostname: axelar-bridge
+    ports:
+      - 4000:4000
+    stdin_open: true
+    image: axelar-bridge-rest-server:latest
+    restart: unless-stopped
+    environment:
+      - NPM_TOKEN=${NPM_TOKEN}
+    working_dir: /rest
+    networks:
+      - axelar
+
+networks:
+  axelar:
+    name: axelarate_default

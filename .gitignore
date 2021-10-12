@@ -108,3 +108,5 @@ dist
 *.DS_store
 /dist
 /node_modules
+
+/axelarjs-rest-server/.env*
