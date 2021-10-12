@@ -8,7 +8,7 @@ export class AxelarMicroservices {
 	private LINK_URL: string = "default/msg";
 
 	constructor() {
-		this.MICROSERVICES_HOSTNAME = (process.env.MICROSERVICES_URL + "/") as string;
+		this.MICROSERVICES_HOSTNAME = process.env.MICROSERVICES_URL as string;
 		this.axios = require("axios")
 			.create({
 				baseUrl: this.MICROSERVICES_HOSTNAME,
