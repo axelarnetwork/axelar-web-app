@@ -23,7 +23,7 @@ const useLoadRecaptcha = () => {
 			if (hasScriptDownloaded && cb) cb();
 		}
 
-		loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${downstreamServices.SITE_KEY}`, () => {
+		loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${downstreamServices.RECAPTCHA_SITE_KEY}`, () => {
 			setIsRecaptchaSet(true);
 			console.log("is recaptcha set", isRecaptchaSet);
 		});
