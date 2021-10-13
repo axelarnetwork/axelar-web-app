@@ -16,7 +16,7 @@ export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBo
 		} as INonSmartContractLinkRequestBody
 	} else {
 		bodyObj = {
-			"@type": LinkType.BITCOIN,
+			"@type": LinkType.EVM,
 			"sender": "",
 			"recipient_addr": payload.destinationTokenInfo.tokenAddress,
 			"recipient_chain": payload.destinationTokenInfo.tokenSymbol,
