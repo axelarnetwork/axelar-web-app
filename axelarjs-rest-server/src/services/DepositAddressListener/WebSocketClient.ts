@@ -3,8 +3,8 @@
 * */
 
 import { EventEmitter } from 'events';
-import WebSocket from 'ws';
-import { hashAmino } from './util/hash';
+import WebSocket     from 'ws';
+import { hashAmino } from '../util/hash';
 
 type Callback = (data: TendermintSubscriptionResponse) => void;
 
