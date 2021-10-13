@@ -34,7 +34,6 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		} else if (depositAddress) {
 			setActiveStep(1);
 		}
-		console.log("deposit address", depositAddress);
 	}, [depositAddress, numberConfirmations, numberRequiredConfirmations]);
 
 	const generateStatusBody = (activeStep: number) => {
