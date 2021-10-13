@@ -24,10 +24,10 @@
 	},
 	"scripts": {
 		"start": "REACT_APP_STAGE=local react-scripts start",
-		"devNet": "REACT_APP_STAGE=devNet react-scripts start",
-		"testNet": "REACT_APP_STAGE=testNet react-scripts start",
-		"mainNet": "REACT_APP_STAGE=mainNet react-scripts start",
-		"build": "REACT_APP_STAGE=local react-scripts build",
+		"devnet": "REACT_APP_STAGE=devnet react-scripts start",
+		"testnet": "REACT_APP_STAGE=testnet react-scripts start",
+		"mainnet": "REACT_APP_STAGE=mainnet react-scripts start",
+		"build": "REACT_APP_STAGE=devnet react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},

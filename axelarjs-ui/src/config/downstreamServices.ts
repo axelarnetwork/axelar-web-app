@@ -14,12 +14,12 @@ const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 const configsByEnvironment: { [key: string]: IDownstreamServicesConfigs } = {};
 
 configsByEnvironment.local = setConfigs("http://localhost:4000");
-configsByEnvironment.devNet = setConfigs("");
-configsByEnvironment.testNet = setConfigs("");
-configsByEnvironment.mainNet = setConfigs("");
+configsByEnvironment.devnet = setConfigs("");
+configsByEnvironment.testnet = setConfigs("");
+configsByEnvironment.mainnet = setConfigs("");
 
 const getEnvironmentBasedConfigs = (environment: string) => {
-	return configsByEnvironment[environment || "devNet"];
+	return configsByEnvironment[environment || "devnet"];
 }
 
 const configs = {
