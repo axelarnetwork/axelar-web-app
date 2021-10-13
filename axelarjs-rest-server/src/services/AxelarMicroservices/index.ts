@@ -1,5 +1,5 @@
 import {AxiosInstance, AxiosRequestConfig}                               from "axios";
-import {INonSmartContractLinkRequestBody, ISmartContractLinkRequestBody} from "@axelar-network/axelarjs-sdk";
+import {IBTCLinkRequestBody, IEVMLinkRequestBody} from "@axelar-network/axelarjs-sdk";
 
 export class AxelarMicroservices {
 
@@ -18,7 +18,7 @@ export class AxelarMicroservices {
 			} as AxiosRequestConfig);
 	}
 
-	public async link(body: INonSmartContractLinkRequestBody | ISmartContractLinkRequestBody) {
+	public async link(body: IBTCLinkRequestBody | IEVMLinkRequestBody) {
 		try {
 			const res = await this.axios.post(this.MICROSERVICES_HOSTNAME + this.LINK_URL, body)
 			return res.data;
