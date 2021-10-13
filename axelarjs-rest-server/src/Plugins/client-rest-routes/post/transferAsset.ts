@@ -19,7 +19,8 @@ export const transferAsset = {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
 
-			if (!((await handleRecaptcha(request.payload.recaptchaToken) as any)?.success)) {
+			const recaptchaResult: any = await handleRecaptcha(request.payload.recaptchaToken);
+			if (!recaptchaResult?.success || recaptchaResult?.score < 0.5) {
 				return Boom.forbidden("bad recaptcha verification");
 			}
 
