@@ -1,4 +1,4 @@
-import {AxiosInstance, AxiosRequestConfig}                               from "axios";
+import {AxiosInstance, AxiosRequestConfig}        from "axios";
 import {IBTCLinkRequestBody, IEVMLinkRequestBody} from "@axelar-network/axelarjs-sdk";
 
 export class AxelarMicroservices {
@@ -10,12 +10,13 @@ export class AxelarMicroservices {
 	constructor() {
 		this.MICROSERVICES_HOSTNAME = process.env.MICROSERVICES_URL as string;
 		this.axios = require("axios")
-			.create({
-				baseUrl: this.MICROSERVICES_HOSTNAME,
-				headers: {'Access-Control-Allow-Origin' : '*',
-					'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-				}
-			} as AxiosRequestConfig);
+		.create({
+			baseUrl: this.MICROSERVICES_HOSTNAME,
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+			}
+		} as AxiosRequestConfig);
 	}
 
 	public async link(body: IBTCLinkRequestBody | IEVMLinkRequestBody) {
