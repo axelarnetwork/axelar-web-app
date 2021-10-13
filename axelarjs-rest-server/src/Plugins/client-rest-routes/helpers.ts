@@ -1,7 +1,8 @@
 import {
 	IAssetTransferObject,
 	ILinkRequestBody,
-	INonSmartContractLinkRequestBody, ISmartContractLinkRequestBody,
+	IBTCLinkRequestBody,
+	IEVMLinkRequestBody,
 	LinkType
 } from "@axelar-network/axelarjs-sdk";
 
@@ -13,7 +14,7 @@ export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBo
 			"sender": "",
 			"recipient_addr": payload.destinationTokenInfo.tokenAddress,
 			"recipient_chain": payload.destinationTokenInfo.tokenSymbol
-		} as INonSmartContractLinkRequestBody
+		} as IBTCLinkRequestBody
 	} else {
 		bodyObj = {
 			"@type": LinkType.EVM,
@@ -22,7 +23,7 @@ export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBo
 			"recipient_chain": payload.destinationTokenInfo.tokenSymbol,
 			"chain": payload.sourceTokenInfo.tokenSymbol,
 			"asset": payload.sourceAsset.symbol,
-		} as ISmartContractLinkRequestBody
+		} as IEVMLinkRequestBody
 	}
 	return bodyObj;
 }
