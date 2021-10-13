@@ -1,14 +1,14 @@
-import React, {useEffect, useState}                              from "react";
-import {useRecoilValue}                                          from "recoil";
-import BoldSpan                                                  from "component/StyleComponents/BoldSpan";
-import {GridDisplay}                                             from "component/StyleComponents/GridDisplay";
-import {NumberConfirmations, SourceDepositAddress}               from "state/TransactionStatus";
-import useResetUserInputs                                        from "hooks/useResetUserInputs";
-import {Step, Stepper}                                           from "react-form-stepper";
-import {FlexRow}                                                 from "../../../component/StyleComponents/FlexRow";
-import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "../../../state/ChainSelection";
-import Button                                                    from "react-bootstrap/Button";
-import {FooterComponent}                                         from "../../../component/StyleComponents/FooterComponent";
+import React, {useEffect, useState}                                          from "react";
+import {useRecoilValue}                                                      from "recoil";
+import BoldSpan                                                              from "component/StyleComponents/BoldSpan";
+import {GridDisplay}                                                         from "component/StyleComponents/GridDisplay";
+import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import useResetUserInputs                                                    from "hooks/useResetUserInputs";
+import {Step, Stepper}                                                       from "react-form-stepper";
+import {FlexRow}                                                             from "../../../component/StyleComponents/FlexRow";
+import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "../../../state/ChainSelection";
+import Button                                                                from "react-bootstrap/Button";
+import {FooterComponent}                                                     from "../../../component/StyleComponents/FooterComponent";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -22,7 +22,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const resetUserInputs = useResetUserInputs();
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
-	const [activeStep, setActiveStep] = useState(0);
+	const [activeStep, setActiveStep] = useState<number>(0);
+	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 
 	const {numberConfirmations, numberRequiredConfirmations} = confirmationStatus;
 
@@ -33,6 +34,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		} else if (depositAddress) {
 			setActiveStep(1);
 		}
+		console.log("deposit address", depositAddress);
 	}, [depositAddress, numberConfirmations, numberRequiredConfirmations]);
 
 	const generateStatusBody = (activeStep: number) => {
@@ -78,20 +80,25 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	];
 	return <GridDisplay>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
-		<Stepper activeStep={activeStep}>
-			{steps.map((stepDescription, idx) => <Step
-				key={stepDescription}
-				label={activeStep >= idx ? stepDescription : ""}
-			/>)}
-		</Stepper>
-		{generateStatusBody(activeStep)}
-		{activeStep >= 1 &&
-        <FooterComponent>
-            <Button variant="secondary" onClick={() => {
-				resetUserInputs();
-				closeResultsScreen();
-			}}>Dismiss updates & trust the process</Button>
-        </FooterComponent>
+		{isRecaptchaAuthenticated
+			? <><Stepper activeStep={activeStep}>
+				{steps.map((stepDescription, idx) => <Step
+					key={stepDescription}
+					label={activeStep >= idx ? stepDescription : ""}
+				/>)}
+			</Stepper>
+				{generateStatusBody(activeStep)}
+				{activeStep >= 1 &&
+                <FooterComponent>
+                    <Button variant="secondary" onClick={() => {
+						resetUserInputs();
+						closeResultsScreen();
+					}}>Dismiss updates & trust the process</Button>
+                </FooterComponent>
+				}</>
+			: <FlexRow><br/>The transaction was not initiated.
+				Some error occurred, potentially including a failed recaptcha authentication
+			</FlexRow>
 		}
 	</GridDisplay>
 }

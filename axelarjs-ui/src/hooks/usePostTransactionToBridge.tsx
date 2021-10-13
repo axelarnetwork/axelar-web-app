@@ -19,6 +19,7 @@ import {
 	NumberConfirmations,
 	SourceDepositAddress
 }                                          from "state/TransactionStatus";
+import useRecaptchaAuthenticate            from "./auth/useRecaptchaAuthenticate";
 
 export default function usePostTransactionToBridge() {
 
@@ -29,6 +30,7 @@ export default function usePostTransactionToBridge() {
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
 	const setNumConfirmations = useSetRecoilState(NumberConfirmations);
 	const sourceAsset = useRecoilValue(SourceAsset);
+	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 
 	const handleTransactionSubmission = useCallback(async () => {
 
@@ -69,11 +71,16 @@ export default function usePostTransactionToBridge() {
 			},
 			recaptchaToken: null
 		}
-		const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
 
-		setDepositAddress(res);
+		authenticateWithRecaptcha().then(async (token: any) => {
+			if (isRecaptchaAuthenticated) {
+				msg.recaptchaToken = token;
+				const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
+				setDepositAddress(res);
+			}
+		})
 
-	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset]);
+	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset, isRecaptchaAuthenticated, authenticateWithRecaptcha]);
 
 	const closeResultsScreen = () => {
 		setShowTransactionStatusWindow(false);

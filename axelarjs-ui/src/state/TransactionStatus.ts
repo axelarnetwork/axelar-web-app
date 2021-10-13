@@ -19,3 +19,8 @@ export const NumberConfirmations = atom<IConfirmationStatus>({
 		numberRequiredConfirmations: null
 	},
 });
+
+export const IsRecaptchaAuthenticated = atom<boolean>({
+	key: "IsRecaptchaAuthenticated",
+	default: true,
+});

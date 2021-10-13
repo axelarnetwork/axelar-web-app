@@ -1,9 +1,7 @@
 import {useEffect, useState} from "react";
-import downstreamServices    from "../config/downstreamServices";
+import downstreamServices    from "config/downstreamServices";
 
-
-
-const useRequireAuth = () => {
+const useLoadRecaptcha = () => {
 
 	const [isRecaptchaSet, setIsRecaptchaSet] = useState(false);
 
@@ -27,11 +25,11 @@ const useRequireAuth = () => {
 
 		loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${downstreamServices.SITE_KEY}`, () => {
 			setIsRecaptchaSet(true);
-			console.log("is recaptcha set",isRecaptchaSet);
+			console.log("is recaptcha set", isRecaptchaSet);
 		});
 	}, [isRecaptchaSet]);
 
 	return isRecaptchaSet;
 }
 
-export default useRequireAuth;
+export default useLoadRecaptcha;

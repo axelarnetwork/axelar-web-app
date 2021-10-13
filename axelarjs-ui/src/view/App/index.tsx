@@ -2,11 +2,11 @@ import PageHeader           from "component/CompositeComponents/PageHeader";
 import SwapWindow           from "view/SwapWindow";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 import {StyledAppBody}      from "view/App/styles/StyledAppBody";
-import useRequireAuth       from "hooks/useRequireAuth";
+import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
 
 const App = () => {
 
-	useRequireAuth();
+	useLoadRecaptcha();
 
 	return (
 		<StyledAppContainer>
