@@ -27,7 +27,7 @@ smart-contract
 * */
 export enum LinkType {
 	BITCOIN = "/bitcoin.v1beta1.LinkRequest",
-	ETHEREUM = "/evm.v1beta1.LinkRequest"
+	EVM = "/evm.v1beta1.LinkRequest"
 }
 
 export interface ILinkRequestBody {
