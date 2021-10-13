@@ -66,7 +66,8 @@ export default function usePostTransactionToBridge() {
 			destinationTokenInfo: {
 				tokenSymbol: destinationToken.symbol,
 				tokenAddress: destinationAddress
-			}
+			},
+			recaptchaToken: null
 		}
 		const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
 
