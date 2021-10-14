@@ -2,6 +2,7 @@
 FROM node:12-alpine
 
 ARG NPM_TOKEN
+
 COPY .npmrc .npmrc
 RUN apk add --no-cache python g++ make
 WORKDIR /rest
