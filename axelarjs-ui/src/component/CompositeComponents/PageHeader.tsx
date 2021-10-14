@@ -10,7 +10,7 @@ const StyledPageHeader = styled(Container)`
 	position: fixed;
 	width: 100%;
 	height: 80px;
-	background-color: darkgrey;
+	background-color: #424952;
 	overflow: hidden;
 	top: 0;
 	display: flex;
