@@ -24,6 +24,7 @@ export class AxelarMicroservices {
 			const res = await this.axios.post(this.MICROSERVICES_HOSTNAME + this.LINK_URL, body)
 			return res.data;
 		} catch (e: any) {
+			console.log("error hitting link",e);
 			return e;
 		}
 	}

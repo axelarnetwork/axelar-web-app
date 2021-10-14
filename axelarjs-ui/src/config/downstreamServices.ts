@@ -13,8 +13,8 @@ const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 
 const configsByEnvironment: { [key: string]: IDownstreamServicesConfigs } = {};
 
-configsByEnvironment.local = setConfigs("http://localhost:4000");
-configsByEnvironment.devnet = setConfigs("http://a912ec02169164f248dc169a80538f78-147755604.us-east-2.elb.amazonaws.com/");
+configsByEnvironment.local = setConfigs("https://murmuring-chamber-60098.herokuapp.com");
+configsByEnvironment.devnet = setConfigs("https://murmuring-chamber-60098.herokuapp.com");
 configsByEnvironment.testnet = setConfigs("http://localhost:4000");
 configsByEnvironment.mainnet = setConfigs("http://localhost:4000");
 
