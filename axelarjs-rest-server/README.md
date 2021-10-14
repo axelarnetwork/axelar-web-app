@@ -10,7 +10,7 @@ Can test by:
 
 download Firecamp extension and connect to port 4000
 
-## Deployment notes
+## k8s Deployment notes
 
 Docker build:
 docker build --build-arg NPM_TOKEN=${NPM_TOKEN} -t axelarnet/axelar-bridge-rest-server:latest . --platform linux/amd64
@@ -47,3 +47,20 @@ kubectl delete pod -n rest-server-devnet axelar-bridge-rest-server-56595bcd59-wp
 
 #get services and see what the external IP of the deployment is
 kubectl get svc -n rest-server-devnet  
+
+## Heroku deployment notes
+
+# to create heroku instance
+heroku create
+
+# to track newly-created-app
+heroku git:remote -a $(app name from previous step)
+
+# to set environment variables
+heroku config:set ENV_VAR=$(ENV_VAR)
+
+# to deploy: node server only, i.e. only rest-server directory
+git subtree push --prefix axelarjs-rest-server heroku main  
+
+# to open app
+heroku open
