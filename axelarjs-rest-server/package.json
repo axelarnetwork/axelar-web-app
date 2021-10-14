@@ -19,7 +19,8 @@
     "testnet": "run-p testnet:*",
     "build-and-run-once-locally": "tsc && node dist/index.js",
     "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts",
-    "start": "npm run devnet"
+    "build": "npm run devnet:tsc",
+    "start": "npm run devnet:serve"
   },
   "keywords": [
     "axelar",
