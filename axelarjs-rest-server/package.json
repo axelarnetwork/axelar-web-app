@@ -1,6 +1,6 @@
 {
   "name": "@axelar-network/axelarjs-rest-server",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "The rest server interface for the Axelar Network",
   "main": "dist/index.js",
   "scripts": {
@@ -18,7 +18,8 @@
     "testnet:serve":  "DOTENV_CONFIG_PATH=.env.testnet node -r dotenv/config dist dist/index.js",
     "testnet": "run-p testnet:*",
     "build-and-run-once-locally": "tsc && node dist/index.js",
-    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts"
+    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts",
+    "start": "npm run devnet"
   },
   "keywords": [
     "axelar",

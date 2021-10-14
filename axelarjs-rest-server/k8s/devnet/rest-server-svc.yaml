@@ -13,3 +13,6 @@ spec:
     - name: web
       port: 80
       targetPort: 4000
+    - name: secure-web
+      port: 443
+      targetPort: 4000
