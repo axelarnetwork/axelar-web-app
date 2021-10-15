@@ -1,8 +1,8 @@
+
 import {Request, ResponseToolkit}                                     from "@hapi/hapi";
-import {CLIENT_API_POST_TRANSFER_ASSET, IAsset, IAssetTransferObject} from "@axelar-network/axelarjs-sdk";
+import {CLIENT_API_POST_TRANSFER_ASSET, IAsset, IAssetTransferObject, validateDestinationAddress} from "@axelar-network/axelarjs-sdk";
 import Boom                                                           from "@hapi/boom";
-import DepositAddressListener
-                                                                      from "../../../services/TendermintWebsocket/DepositAddressListener";
+import DepositAddressListener 	from "../../../services/TendermintWebsocket/DepositAddressListener";
 import {AxelarMicroservices}                from "../../../services/AxelarMicroservices";
 import {constructLinkBody, handleRecaptcha} from "../../helpers";
 import {toProperCase}                       from "../../../services/util/toProperCase";
@@ -19,6 +19,9 @@ export const transferAsset = {
 		try {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
+
+			if (!validateDestinationAddress(payload?.selectedDestinationAsset))
+				throw Boom.badRequest("bad destination address");
 
 			const recaptchaResult: any = await handleRecaptcha(request.payload.recaptchaToken);
 			if (!recaptchaResult?.success || recaptchaResult?.score < 0.5) {

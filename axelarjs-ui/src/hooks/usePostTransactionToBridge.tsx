@@ -1,4 +1,4 @@
-import {useCallback, useState}             from "react";
+import {useCallback, useState}     from "react";
 import {
 	BlockCypherResponse,
 	IAsset,
@@ -13,7 +13,7 @@ import {
 	DestinationAddress,
 	SOURCE_TOKEN_KEY,
 	SourceAsset
-}                                          from "state/ChainSelection";
+}                                  from "state/ChainSelection";
 import {
 	IConfirmationStatus,
 	NumberConfirmations,

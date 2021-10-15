@@ -1,5 +1,7 @@
 // TODO: all miscellaneous topics go here for now
 
+import {SupportedTokenSymbols} from "../constants";
+
 export const TRANSFER_RESULT: string = "socket-transfer-result";
 
 // POST REQUEST CONSTS
