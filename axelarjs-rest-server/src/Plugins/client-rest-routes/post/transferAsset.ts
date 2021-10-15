@@ -1,10 +1,14 @@
-import {Request, ResponseToolkit}                                            from "@hapi/hapi";
-import {CLIENT_API_POST_TRANSFER_ASSET, IAssetTransferObject, ITokenAddress} from "@axelar-network/axelarjs-sdk";
-import Boom                                                                  from "@hapi/boom";
-import DepositAddressListener
-                                                                             from "../../../services/DepositAddressListener";
-import {AxelarMicroservices}                                                 from "../../../services/AxelarMicroservices";
-import {constructLinkBody}                                                   from "../helpers";
+import {Request, ResponseToolkit} from "@hapi/hapi";
+import {
+	CLIENT_API_POST_TRANSFER_ASSET,
+	IAssetTransferObject,
+	ITokenAddress,
+	validateDestinationAddress
+}                                 from "@axelar-network/axelarjs-sdk";
+import Boom                       from "@hapi/boom";
+import DepositAddressListener     from "../../../services/DepositAddressListener";
+import {AxelarMicroservices}      from "../../../services/AxelarMicroservices";
+import {constructLinkBody}        from "../helpers";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -19,6 +23,9 @@ export const transferAsset = {
 		try {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
+
+			if (!validateDestinationAddress(payload?.destinationTokenInfo))
+				throw Boom.badRequest("bad destination address");
 
 			const link = await new AxelarMicroservices().link(constructLinkBody(payload));
 

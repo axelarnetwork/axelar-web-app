@@ -3,6 +3,7 @@ import {IAssetTransferObject}                                                 fr
 import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, ITokenAddress,} from "../interface";
 import {ClientRest}                                                           from "./ClientRest";
 import getWaitingService                                                      from "./status";
+import {validateDestinationAddress}                                           from "../utils";
 
 export type StatusResponse = IBlockCypherResponse
 	| (() => void);
@@ -17,7 +18,12 @@ export class TransferAssetBridge {
 	}
 
 	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<ITokenAddress> {
+
+		if (!validateDestinationAddress(message?.destinationTokenInfo))
+			throw new Error(`invalid destination address in ${message?.destinationTokenInfo?.tokenSymbol}`);
+
 		const depositAddress: ITokenAddress = await this.getDepositAddress(message);
+
 		this.listenForTransactionStatus(depositAddress, successCb, errCb).then(() => {
 			this.listenForTransactionStatus(message.destinationTokenInfo as ITokenAddress, successCb, errCb);
 		})

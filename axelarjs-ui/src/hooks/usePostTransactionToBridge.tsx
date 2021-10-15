@@ -1,24 +1,28 @@
-import {useCallback, useState}             from "react";
+import {useCallback, useState}     from "react";
 import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
-	ITokenAddress
-}                                          from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+	ITokenAddress,
+	SupportedTokenSymbols
+}                                  from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade} from "api/TransferAssetBridgeFacade";
+import {
+	useRecoilValue,
+	useSetRecoilState
+}                                  from "recoil";
 import {
 	ChainSelection,
 	DESTINATION_TOKEN_KEY,
 	DestinationAddress,
 	SOURCE_TOKEN_KEY,
 	SourceAsset
-}                                          from "state/ChainSelection";
+}                                  from "state/ChainSelection";
 import {
 	IConfirmationStatus,
 	NumberConfirmations,
 	SourceDepositAddress
-}                                          from "state/TransactionStatus";
+}                                  from "state/TransactionStatus";
 
 export default function usePostTransactionToBridge() {
 
@@ -59,12 +63,12 @@ export default function usePostTransactionToBridge() {
 
 		const msg: IAssetTransferObject = {
 			sourceTokenInfo: {
-				tokenSymbol: sourceToken.symbol,
+				tokenSymbol: sourceToken.symbol as SupportedTokenSymbols,
 				tokenAddress: null
 			},
 			sourceAsset,
 			destinationTokenInfo: {
-				tokenSymbol: destinationToken.symbol,
+				tokenSymbol: destinationToken.symbol as SupportedTokenSymbols,
 				tokenAddress: destinationAddress
 			}
 		}
