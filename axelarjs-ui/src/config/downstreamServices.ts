@@ -1,4 +1,5 @@
 const GITHUB_LINK: string = "https://github.com/axelarnetwork/axelar-web-app";
+const RECAPTCHA_SITE_KEY: string = "6LcxwsocAAAAANQ1t72JEcligfeSr7SSq_pDC9vR"; //this is intentionally public
 
 // eslint-disable-next-line
 const AXELAR_BRIDGE_URL: string = "AXELAR_BRIDGE_URL";
@@ -24,6 +25,7 @@ const getEnvironmentBasedConfigs = (environment: string) => {
 
 const configs = {
 	GITHUB_LINK,
+	RECAPTCHA_SITE_KEY,
 	getEnvironmentBasedConfigs
 }
 
