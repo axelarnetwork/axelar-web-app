@@ -1,10 +1,11 @@
 import {
 	IAssetTransferObject,
-	ILinkRequestBody,
 	IBTCLinkRequestBody,
 	IEVMLinkRequestBody,
+	ILinkRequestBody,
 	LinkType
-} from "@axelar-network/axelarjs-sdk";
+}            from "@axelar-network/axelarjs-sdk";
+import axios from "axios";
 
 export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBody => {
 	let bodyObj: ILinkRequestBody;
@@ -27,3 +28,16 @@ export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBo
 	}
 	return bodyObj;
 }
+
+export const handleRecaptcha = (token: string): Promise<any> => {
+
+	const secret_key = process.env.GOOGLE_RECAPTCHA_V3_SECRET_KEY;
+	const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
+
+	return new Promise((resolve, reject) => {
+		axios.post(url)
+		.then(google_response => resolve(google_response.data))
+		.catch(error => reject({error}));
+	});
+
+};

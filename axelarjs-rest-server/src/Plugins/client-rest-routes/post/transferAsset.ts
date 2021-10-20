@@ -4,12 +4,11 @@ import Boom                                                                  fro
 import DepositAddressListener
                                                                              from "../../../services/DepositAddressListener";
 import {AxelarMicroservices}                                                 from "../../../services/AxelarMicroservices";
-import {constructLinkBody}                                                   from "../helpers";
+import {constructLinkBody, handleRecaptcha}                                  from "../helpers";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
 }
-
 
 export const transferAsset = {
 	method: 'POST',
@@ -19,6 +18,11 @@ export const transferAsset = {
 		try {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
+
+			const recaptchaResult: any = await handleRecaptcha(request.payload.recaptchaToken);
+			if (!recaptchaResult?.success || recaptchaResult?.score < 0.5) {
+				return Boom.forbidden("bad recaptcha verification");
+			}
 
 			const link = await new AxelarMicroservices().link(constructLinkBody(payload));
 
