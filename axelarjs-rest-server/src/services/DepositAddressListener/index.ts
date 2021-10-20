@@ -37,9 +37,9 @@ export default class DepositAddressListener {
 	private parseDestinationAddress(data: any): string {
 		//TODO: ... is there a better (less brittle) way of doing this?
 		return JSON.parse(data.value.TxResult.result.log)[0]
-			.events[0]
+		.events[0]
 		.attributes
 		.find((attribute: any) => attribute.key === 'depositAddress')
-			?.value;
+		?.value;
 	}
 }
