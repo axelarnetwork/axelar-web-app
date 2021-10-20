@@ -3,7 +3,7 @@ import {
 	BlockCypherResponse,
 	IAssetTransferObject,
 	IBlockCypherResponse,
-	ITokenAddress
+	IAsset
 }                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
 import {useRecoilValue, useSetRecoilState} from "recoil";
@@ -24,8 +24,8 @@ import useRecaptchaAuthenticate            from "./auth/useRecaptchaAuthenticate
 export default function usePostTransactionToBridge() {
 
 	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useState(false);
-	const sourceToken = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const destinationToken = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
 	const setNumConfirmations = useSetRecoilState(NumberConfirmations);
@@ -34,7 +34,7 @@ export default function usePostTransactionToBridge() {
 
 	const handleTransactionSubmission = useCallback(async () => {
 
-		if (!(sourceToken?.symbol && destinationToken?.symbol && destinationAddress && sourceAsset))
+		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset))
 			return;
 
 		setShowTransactionStatusWindow(true);
@@ -60,14 +60,11 @@ export default function usePostTransactionToBridge() {
 		const failCb = (data: any): void => console.log(data);
 
 		const msg: IAssetTransferObject = {
-			sourceTokenInfo: {
-				tokenSymbol: sourceToken.symbol,
-				tokenAddress: null
-			},
-			sourceAsset,
-			destinationTokenInfo: {
-				tokenSymbol: destinationToken.symbol,
-				tokenAddress: destinationAddress
+			sourceChainInfo: {...sourceChain, assets: undefined},
+			selectedSourceAsset: sourceAsset,
+			destinationChainInfo: {...destinationChain, assets: undefined},
+			selectedDestinationAsset: {
+				assetAddress: destinationAddress
 			},
 			recaptchaToken: null
 		}
@@ -75,12 +72,12 @@ export default function usePostTransactionToBridge() {
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
 				msg.recaptchaToken = token;
-				const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
+				const res: IAsset = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
 				setDepositAddress(res);
 			}
 		})
 
-	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset, isRecaptchaAuthenticated, authenticateWithRecaptcha]);
+	}, [sourceChain, destinationChain, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset, isRecaptchaAuthenticated, authenticateWithRecaptcha]);
 
 	const closeResultsScreen = () => {
 		setShowTransactionStatusWindow(false);

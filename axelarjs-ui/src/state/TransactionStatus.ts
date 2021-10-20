@@ -1,8 +1,8 @@
 import {atom}          from "recoil";
-import {Nullable}      from "../interface/Nullable";
-import {ITokenAddress} from "@axelar-network/axelarjs-sdk";
+import {Nullable} from "../interface/Nullable";
+import {IAsset}   from "@axelar-network/axelarjs-sdk";
 
-export const SourceDepositAddress = atom<Nullable<ITokenAddress>>({
+export const SourceDepositAddress = atom<Nullable<IAsset>>({
 	key: "SourceDepositAddress",
 	default: null,
 });

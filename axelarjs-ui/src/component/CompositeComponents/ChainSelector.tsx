@@ -13,10 +13,10 @@ interface IChainComponentProps {
 
 const SelectedChainComponent = (props: IChainComponentProps) => {
 
-	const chainId: string | undefined = props.chainInfo?.symbol;
+	const chainId: string | undefined = props.chainInfo?.chainSymbol;
 	const image = chainId
 		? <SVGImage
-			src={require(`assets/logos/${props.chainInfo?.symbol}.svg`)?.default}
+			src={require(`assets/logos/${props.chainInfo?.chainSymbol}.svg`)?.default}
 			height={"50px"}
 			width={"50px"}
 			margin={"15px"}
@@ -48,7 +48,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 
 	const dropdownOptions: IDropdownOption[] = SupportedChains
 	.map((supportedChain: ISupportedChainType) => ({
-		title: supportedChain.name,
+		title: supportedChain.chainName,
 		active: false,
 		action: (param: IDropdownOption) => {
 			setSelectedChain(supportedChain);

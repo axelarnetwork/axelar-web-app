@@ -1,16 +1,18 @@
-import {ITokenAddress} from "./IMiscTopics";
-import {IAsset}        from "../constants";
+import {IAsset, ISupportedChainType} from "../constants";
 
 export interface IAssetTransferObject {
-	sourceTokenInfo: ITokenAddress;
-	sourceAsset: IAsset;
-	destinationTokenInfo: ITokenAddress;
+	sourceChainInfo: ISupportedChainType;
+	selectedSourceAsset: IAsset;
+	destinationChainInfo: ISupportedChainType;
+	selectedDestinationAsset: IAsset;
 	recaptchaToken?: any;
 }
 
 export enum LinkType {
 	BITCOIN = "/bitcoin.v1beta1.LinkRequest",
-	EVM = "/evm.v1beta1.LinkRequest"
+	EVM = "/evm.v1beta1.LinkRequest",
+	COS = "/cos.v1beta1.LinkRequest",
+	ERROR = "error"
 }
 
 export interface ILinkRequestBody {
@@ -25,7 +27,6 @@ export interface IEVMLinkRequestBody extends ILinkRequestBody {
 	"chain": string; //source chain
 	"asset": string;
 }
-
 export interface ICOSLinkRequestBody extends ILinkRequestBody {
 	"asset": string;
 }

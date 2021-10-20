@@ -25,11 +25,11 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 		</FlexRow>
-		{sourceChainSelection && sourceChainSelection?.assets?.length > 1 &&
+		{sourceChainSelection && sourceChainSelection?.assets && sourceChainSelection?.assets?.length > 1 &&
         <FlexRow>
             <AssetSelector
                 selectedToken={sourceChainAsset}
-                allTokens={SupportedChains?.find(chain => chain?.name === sourceChainSelection?.name)?.assets || []}
+                allTokens={SupportedChains?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}
                 handleChange={(asset) => setSourceChainAsset(asset)}
             />
         </FlexRow>

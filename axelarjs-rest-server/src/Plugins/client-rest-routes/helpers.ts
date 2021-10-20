@@ -1,32 +1,43 @@
 import {
 	IAssetTransferObject,
-	IBTCLinkRequestBody,
+	IBTCLinkRequestBody, ICOSLinkRequestBody,
 	IEVMLinkRequestBody,
 	ILinkRequestBody,
 	LinkType
-}            from "@axelar-network/axelarjs-sdk";
+} from "@axelar-network/axelarjs-sdk";
 import axios from "axios";
 
+const linkRequestTypes: { [key: string]: (payload: IAssetTransferObject) => ILinkRequestBody } = {}
+
+linkRequestTypes.btc = (payload: IAssetTransferObject) => ({
+	"@type": LinkType.BITCOIN,
+	"sender": "",
+	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
+	"recipient_chain": payload.destinationChainInfo.chainSymbol
+} as IBTCLinkRequestBody)
+
+linkRequestTypes.eth = (payload: IAssetTransferObject) => ({
+	"@type": LinkType.EVM,
+	"sender": "",
+	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
+	"recipient_chain": payload.destinationChainInfo.chainSymbol,
+	"chain": payload.sourceChainInfo.chainSymbol,
+	"asset": payload.selectedSourceAsset.assetSymbol
+} as IEVMLinkRequestBody)
+
+linkRequestTypes.cos = (payload: IAssetTransferObject) => ({
+	"@type": LinkType.COS,
+	"sender": "",
+	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
+	"recipient_chain": payload.destinationChainInfo.chainSymbol,
+	"asset": payload.selectedSourceAsset.assetSymbol
+} as ICOSLinkRequestBody)
+
 export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBody => {
-	let bodyObj: ILinkRequestBody;
-	if (payload?.sourceTokenInfo?.tokenSymbol === "BTC") {
-		bodyObj = {
-			"@type": LinkType.BITCOIN,
-			"sender": "",
-			"recipient_addr": payload.destinationTokenInfo.tokenAddress,
-			"recipient_chain": payload.destinationTokenInfo.tokenSymbol
-		} as IBTCLinkRequestBody
-	} else {
-		bodyObj = {
-			"@type": LinkType.EVM,
-			"sender": "",
-			"recipient_addr": payload.destinationTokenInfo.tokenAddress,
-			"recipient_chain": payload.destinationTokenInfo.tokenSymbol,
-			"chain": payload.sourceTokenInfo.tokenSymbol,
-			"asset": payload.sourceAsset.symbol,
-		} as IEVMLinkRequestBody
-	}
-	return bodyObj;
+	if (!linkRequestTypes[payload?.sourceChainInfo?.chainSymbol?.toLowerCase()])
+		throw new Error("link not does not exist");
+
+	return linkRequestTypes[payload?.sourceChainInfo?.chainSymbol?.toLowerCase()](payload);
 }
 
 export const handleRecaptcha = (token: string): Promise<any> => {

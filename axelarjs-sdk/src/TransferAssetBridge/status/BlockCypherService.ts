@@ -1,7 +1,8 @@
-import {WaitingService}                     from "./WaitingService";
-import {poll}                               from "./utils";
-import {BlockCypherResponse, ITokenAddress} from "../../interface";
-import {StatusResponse}                     from "../index";
+import {WaitingService}      from "./WaitingService";
+import {poll}                from "./utils";
+import {BlockCypherResponse} from "../../interface";
+import {StatusResponse}      from "../index";
+import {IAsset}              from "../../constants";
 
 export default class BlockCypherService extends WaitingService {
 
@@ -12,8 +13,8 @@ export default class BlockCypherService extends WaitingService {
 		super(6, depositAddress);
 	}
 
-	public async wait(depositAddress: ITokenAddress, interimStatusCb?: StatusResponse) {
-		console.log("block cypher service is polling", depositAddress.tokenAddress);
+	public async wait(depositAddress: IAsset, interimStatusCb?: StatusResponse) {
+		console.log("block cypher service is polling", depositAddress.assetAddress);
 		const canhsBTCTestAddress: string = 'moHY7VwRYhoNK5QwU4WpePWR8mhLb3DtpL';
 		const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${canhsBTCTestAddress}`; //TODO: use a real deposit address in devnet, i.e. depositAddress.sourceTokenDepositAddress
 		const asyncRequest = (attempts: number) => new Promise((res, rej) => {

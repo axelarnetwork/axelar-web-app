@@ -1,8 +1,8 @@
-import {ClientSocketConnect}                                                  from "./ClientSocketConnect";
-import {IAssetTransferObject}                                                 from "../interface/IAssetTransferObject";
-import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse, ITokenAddress,} from "../interface";
-import {ClientRest}                                                           from "./ClientRest";
-import getWaitingService                                                      from "./status";
+import {IAssetTransferObject}                                 from "../interface/IAssetTransferObject";
+import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse} from "../interface";
+import {ClientRest}                                           from "./ClientRest";
+import getWaitingService                                      from "./status";
+import {IAsset}                                               from "../constants";
 
 export type StatusResponse = IBlockCypherResponse
 	| (() => void);
@@ -16,21 +16,21 @@ export class TransferAssetBridge {
 		this.clientRest = new ClientRest(resourceUrl);
 	}
 
-	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<ITokenAddress> {
-		const depositAddress: ITokenAddress = await this.getDepositAddress(message);
+	public async transferAssets(message: IAssetTransferObject, successCb: StatusResponse, errCb: any): Promise<IAsset> {
+		const depositAddress: IAsset = await this.getDepositAddress(message);
 		this.listenForTransactionStatus(depositAddress, successCb, errCb).then(() => {
-			this.listenForTransactionStatus(message.destinationTokenInfo as ITokenAddress, successCb, errCb);
+			this.listenForTransactionStatus(message.selectedDestinationAsset as IAsset, successCb, errCb);
 		})
 
 		return depositAddress;
 	}
 
-	private async getDepositAddress(message: IAssetTransferObject): Promise<ITokenAddress> {
+	private async getDepositAddress(message: IAssetTransferObject): Promise<IAsset> {
 		return await this.clientRest.post(CLIENT_API_POST_TRANSFER_ASSET, message);
 	}
 
-	private async listenForTransactionStatus(addressInformation: ITokenAddress, waitCb: StatusResponse, errCb: any) {
-		const waitingService = addressInformation?.tokenSymbol && getWaitingService(addressInformation.tokenSymbol);
+	private async listenForTransactionStatus(addressInformation: IAsset, waitCb: StatusResponse, errCb: any) {
+		const waitingService = addressInformation?.assetSymbol && getWaitingService(addressInformation.assetSymbol);
 		try {
 			await waitingService.wait(addressInformation, waitCb);
 		} catch (e) {

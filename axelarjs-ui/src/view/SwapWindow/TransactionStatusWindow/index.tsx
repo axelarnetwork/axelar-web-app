@@ -45,16 +45,16 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				? <div>
 					<div>
 						Next step: please deposit
-						<BoldSpan> {depositAddress?.tokenSymbol} </BoldSpan>
+						<BoldSpan> {depositAddress?.assetSymbol} </BoldSpan>
 						to the following address:
 					</div>
 					<br/>
-					<div><BoldSpan> {depositAddress?.tokenAddress}</BoldSpan></div>
+					<div><BoldSpan> {depositAddress?.assetAddress}</BoldSpan></div>
 				</div>
-				: <div><p>Your transaction has been detected on the {sourceChain?.name} blockchain.
+				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
 					<p>Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.</p>
-					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.name} tokens to
+					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.chainName} tokens to
 						hit your deposit account.</p>
 				</div>
 			}

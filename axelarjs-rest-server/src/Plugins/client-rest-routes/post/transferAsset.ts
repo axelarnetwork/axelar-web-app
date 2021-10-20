@@ -1,10 +1,9 @@
-import {Request, ResponseToolkit}                                            from "@hapi/hapi";
-import {CLIENT_API_POST_TRANSFER_ASSET, IAssetTransferObject, ITokenAddress} from "@axelar-network/axelarjs-sdk";
-import Boom                                                                  from "@hapi/boom";
-import DepositAddressListener
-                                                                             from "../../../services/DepositAddressListener";
-import {AxelarMicroservices}                                                 from "../../../services/AxelarMicroservices";
-import {constructLinkBody, handleRecaptcha}                                  from "../helpers";
+import {Request, ResponseToolkit}                                     from "@hapi/hapi";
+import {CLIENT_API_POST_TRANSFER_ASSET, IAsset, IAssetTransferObject} from "@axelar-network/axelarjs-sdk";
+import Boom                                                           from "@hapi/boom";
+import DepositAddressListener                                 from "../../../services/DepositAddressListener";
+import {AxelarMicroservices}                                  from "../../../services/AxelarMicroservices";
+import {constructLinkBody, handleRecaptcha}                   from "../helpers";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -26,11 +25,11 @@ export const transferAsset = {
 
 			const link = await new AxelarMicroservices().link(constructLinkBody(payload));
 
-			const tokenAddress: any = await new DepositAddressListener().startTendermintSocketForDepositAddress();
+			const assetAddress: any = await new DepositAddressListener().startTendermintSocketForDepositAddress();
 
-			const responseObj: ITokenAddress = {
-				tokenAddress,
-				tokenSymbol: payload?.sourceTokenInfo?.tokenSymbol
+			const responseObj: IAsset = {
+				assetAddress,
+				assetSymbol: payload?.sourceChainInfo?.chainSymbol
 			}
 
 			return h.response(responseObj);
