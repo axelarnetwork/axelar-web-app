@@ -1,4 +1,4 @@
-import {atom}          from "recoil";
+import {atom}     from "recoil";
 import {Nullable} from "../interface/Nullable";
 import {IAsset}   from "@axelar-network/axelarjs-sdk";
 

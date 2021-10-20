@@ -22,11 +22,14 @@ export interface ILinkRequestBody {
 	"recipient_chain": string;
 }
 
-export interface IBTCLinkRequestBody extends ILinkRequestBody {}
+export interface IBTCLinkRequestBody extends ILinkRequestBody {
+}
+
 export interface IEVMLinkRequestBody extends ILinkRequestBody {
 	"chain": string; //source chain
 	"asset": string;
 }
+
 export interface ICOSLinkRequestBody extends ILinkRequestBody {
 	"asset": string;
 }

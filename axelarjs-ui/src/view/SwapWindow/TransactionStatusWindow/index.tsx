@@ -54,7 +54,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
 					<p>Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.</p>
-					<p>Alternatively, you can just trust the process and wait for the {destinationChain?.chainName} tokens to
+					<p>Alternatively, you can just trust the process and wait for
+						the {destinationChain?.chainName} tokens to
 						hit your deposit account.</p>
 				</div>
 			}

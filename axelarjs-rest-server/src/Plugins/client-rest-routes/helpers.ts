@@ -1,10 +1,11 @@
 import {
 	IAssetTransferObject,
-	IBTCLinkRequestBody, ICOSLinkRequestBody,
+	IBTCLinkRequestBody,
+	ICOSLinkRequestBody,
 	IEVMLinkRequestBody,
 	ILinkRequestBody,
 	LinkType
-} from "@axelar-network/axelarjs-sdk";
+}            from "@axelar-network/axelarjs-sdk";
 import axios from "axios";
 
 const linkRequestTypes: { [key: string]: (payload: IAssetTransferObject) => ILinkRequestBody } = {}

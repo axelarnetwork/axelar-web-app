@@ -1,9 +1,9 @@
 import {useCallback, useState}             from "react";
 import {
 	BlockCypherResponse,
+	IAsset,
 	IAssetTransferObject,
-	IBlockCypherResponse,
-	IAsset
+	IBlockCypherResponse
 }                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
 import {useRecoilValue, useSetRecoilState} from "recoil";

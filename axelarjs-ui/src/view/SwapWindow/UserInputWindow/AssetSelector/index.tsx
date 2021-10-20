@@ -30,7 +30,7 @@ const AssetSelector = ({selectedToken, allTokens, handleChange}: IAssetSelector)
 	return (<div className="token-selection-window">
 		<div className="selected-token-info">
 			<ModalWidget
-				modaltext={selectedToken ? `${selectedToken?.assetName} (${selectedToken?.assetSymbol})`  : "Select Asset"}
+				modaltext={selectedToken ? `${selectedToken?.assetName} (${selectedToken?.assetSymbol})` : "Select Asset"}
 				items={<TokenMenu/>}
 			/>
 		</div>

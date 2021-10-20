@@ -1,4 +1,4 @@
-import {IAssetTransferObject, IAsset, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
+import {IAsset, IAssetTransferObject, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
 
 export class TransferAssetBridgeFacade {
 
