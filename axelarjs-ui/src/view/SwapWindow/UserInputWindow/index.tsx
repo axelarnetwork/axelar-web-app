@@ -22,8 +22,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <GridDisplay>
 		<FlexRow>
-			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source"}/>
-			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination"}/>
+			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
+			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 		</FlexRow>
 		{sourceChainSelection && sourceChainSelection?.assets?.length > 1 &&
         <FlexRow>

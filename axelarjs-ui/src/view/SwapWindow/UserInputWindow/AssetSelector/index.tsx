@@ -30,7 +30,7 @@ const AssetSelector = ({selectedToken, allTokens, handleChange}: IAssetSelector)
 	return (<div className="token-selection-window">
 		<div className="selected-token-info">
 			<ModalWidget
-				modaltext={selectedToken?.symbol || "Select Asset"}
+				modaltext={(`${selectedToken?.name} (${selectedToken?.symbol})` ) || "Select Asset"}
 				items={<TokenMenu/>}
 			/>
 		</div>
@@ -45,7 +45,7 @@ interface ITokenOption {
 const TokenOption = (props: ITokenOption) => {
 	const {tokenInfo, onClick}: { tokenInfo: IAsset, onClick: any } = props;
 	return <div className="token-option" onClick={() => onClick(tokenInfo)}>
-		<h6>{tokenInfo?.symbol} - ({tokenInfo?.name})</h6>
+		<h6>{tokenInfo?.name} ({tokenInfo?.symbol})</h6>
 	</div>;
 }
 

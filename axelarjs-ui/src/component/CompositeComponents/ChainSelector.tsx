@@ -65,7 +65,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		}
 	}));
 
-	return <StyledChainSelector width="100px">
+	return <StyledChainSelector width="150px">
 		{props.label}
 		<SelectedChainComponent chainInfo={selectedChain}/>
 		{<DropdownComponent id={"dropdown-for-" + props.id} dropdownOptions={dropdownOptions}/>}

@@ -25,3 +25,7 @@ export interface IEVMLinkRequestBody extends ILinkRequestBody {
 	"chain": string; //source chain
 	"asset": string;
 }
+
+export interface ICOSLinkRequestBody extends ILinkRequestBody {
+	"asset": string;
+}
