@@ -11,8 +11,7 @@ export interface IAssetTransferObject {
 export enum LinkType {
 	BITCOIN = "/bitcoin.v1beta1.LinkRequest",
 	EVM = "/evm.v1beta1.LinkRequest",
-	COS = "/cos.v1beta1.LinkRequest",
-	ERROR = "error"
+	COS = "/cos.v1beta1.LinkRequest"
 }
 
 export interface ILinkRequestBody {
