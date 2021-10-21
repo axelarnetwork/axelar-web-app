@@ -20,8 +20,6 @@ export default class DepositAddressListener {
 			const query: any = {
 				'link.module': 'bitcoin',
 				'link.destinationChain': 'Ethereum',
-				// 'link.module': ['bitcoin'], TODO: needed?
-				// 'link.chain': 'bitcoin', TODO: needed?
 			};
 			const handler = (data: TendermintSubscriptionResponse) => {
 				resolve(this.parseDestinationAddress(data));
