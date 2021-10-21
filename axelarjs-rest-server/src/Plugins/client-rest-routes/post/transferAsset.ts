@@ -4,6 +4,7 @@ import Boom                                                           from "@hap
 import DepositAddressListener                                         from "../../../services/DepositAddressListener";
 import {AxelarMicroservices}                                          from "../../../services/AxelarMicroservices";
 import {constructLinkBody, handleRecaptcha}                           from "../helpers";
+import {toProperCase}                                                 from "../../../services/util/toProperCase";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -23,12 +24,15 @@ export const transferAsset = {
 				return Boom.forbidden("bad recaptcha verification");
 			}
 
-			const axelarMicroservices = new AxelarMicroservices();
-			const linkBody = constructLinkBody(payload);
-			linkBody.sender = await axelarMicroservices.getSender();
-			const link = await axelarMicroservices.link(linkBody);
+			// const axelarMicroservices = new AxelarMicroservices();
+			// const linkBody = constructLinkBody(payload);
+			// linkBody.sender = await axelarMicroservices.getSender();
+			// const link = await axelarMicroservices.link(linkBody);
 
-			const assetAddress: any = await new DepositAddressListener().startTendermintSocketForDepositAddress();
+			const assetAddress: any = await new DepositAddressListener().startTendermintSocketForDepositAddress(
+				payload.sourceChainInfo.chainName?.toLowerCase(),
+				toProperCase(payload.destinationChainInfo.chainName)
+			);
 
 			const responseObj: IAsset = {
 				assetAddress,
