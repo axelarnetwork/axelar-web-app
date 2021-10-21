@@ -24,7 +24,10 @@ export const transferAsset = {
 				return Boom.forbidden("bad recaptcha verification");
 			}
 
-			const link = await new AxelarMicroservices().link(constructLinkBody(payload));
+			const axelarMicroservices = new AxelarMicroservices();
+			const linkBody = constructLinkBody(payload);
+			linkBody.sender = await axelarMicroservices.getSender();
+			const link = await axelarMicroservices.link(linkBody);
 
 			const tokenAddress: any = await new DepositAddressListener().startTendermintSocketForDepositAddress();
 
