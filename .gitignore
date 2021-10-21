@@ -110,3 +110,5 @@ dist
 /node_modules
 
 /axelarjs-rest-server/.env*
+
+package-lock.json
