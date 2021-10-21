@@ -160,28 +160,6 @@ export class WebSocketClient extends EventEmitter {
 		this.socket.onerror = () => undefined;
 	}
 
-	public subscribe(
-		event: TendermintEventType,
-		query: TendermintQuery,
-		callback: Callback
-	): void {
-		console.log("~~~~~SUBSCRIBING");
-		this.queryParams = makeQueryParams({
-			'tm.event': event,
-			...query,
-		});
-		this.callback = callback;
-	}
-
-	public subscribeTx(query: TendermintQuery, callback: Callback): void {
-		const newCallback: Callback = d => {
-			d.value.TxResult.txhash = hashAmino(d.value.TxResult.tx);
-			return callback(d);
-		};
-
-		this.subscribe('Tx', query, newCallback);
-	}
-
 	private onOpen() {
 		this.isConnected = true;
 		console.log("is connected", this.isConnected);
@@ -237,4 +215,28 @@ export class WebSocketClient extends EventEmitter {
 			this.emit('destroyed');
 		}
 	}
+
+	public subscribe(
+		event: TendermintEventType,
+		query: TendermintQuery,
+		callback: Callback
+	): void {
+		const qp: any = makeQueryParams({
+			'tm.event': event,
+			...query,
+		})
+		console.log("~~~~~SUBSCRIBING", qp);
+		this.queryParams = qp;
+		this.callback = callback;
+	}
+
+	public subscribeTx(query: TendermintQuery, callback: Callback): void {
+		const newCallback: Callback = d => {
+			d.value.TxResult.txhash = hashAmino(d.value.TxResult.tx);
+			return callback(d);
+		};
+
+		this.subscribe('Tx', query, newCallback);
+	}
+
 }
