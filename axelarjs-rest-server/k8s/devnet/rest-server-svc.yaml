@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: axelar-bridge-rest-server
+  namespace: rest-server-devnet
+  labels:
+    app: axelar-bridge-rest-server
+spec:
+  type: LoadBalancer
+  selector:
+    app: axelar-bridge-rest-server
+  ports:
+    - name: web
+      port: 80
+      targetPort: 4000
+    - name: secure-web
+      port: 443
+      targetPort: 4000
