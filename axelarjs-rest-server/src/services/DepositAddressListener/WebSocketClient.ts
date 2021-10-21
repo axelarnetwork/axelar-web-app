@@ -221,11 +221,12 @@ export class WebSocketClient extends EventEmitter {
 		query: TendermintQuery,
 		callback: Callback
 	): void {
-		console.log("~~~~~SUBSCRIBING");
-		this.queryParams = makeQueryParams({
+		const qp: any = makeQueryParams({
 			'tm.event': event,
 			...query,
-		});
+		})
+		console.log("~~~~~SUBSCRIBING", qp);
+		this.queryParams = qp;
 		this.callback = callback;
 	}
 
