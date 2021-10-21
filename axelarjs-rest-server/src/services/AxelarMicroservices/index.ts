@@ -39,6 +39,7 @@ export class AxelarMicroservices {
 			})
 			return res.data;
 		} catch (e: any) {
+			console.log("error hitting link",e);
 			return e;
 		}
 	}

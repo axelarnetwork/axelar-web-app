@@ -2,6 +2,7 @@
 
 import {Request, Server} from "@hapi/hapi";
 import {transferAsset}   from "./post/transferAsset";
+const package_json = require("../../../package.json");
 
 export const routes = {
 	name: 'routes',
@@ -13,7 +14,7 @@ export const routes = {
 			path: '/',
 			handler: (request: Request): string => {
 				console.log("Processing request", request.info.id);
-				return "This is working!";
+				return `This is working! version: ${package_json.version}`;
 			}
 		});
 
