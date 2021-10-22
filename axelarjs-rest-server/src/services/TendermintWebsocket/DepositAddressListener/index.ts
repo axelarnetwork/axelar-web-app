@@ -1,23 +1,21 @@
-import {TendermintEventType, TendermintSubscriptionResponse, WebSocketClient} from "./WebSocketClient";
+import {TendermintEventType, TendermintSubscriptionResponse} from "../WebSocketClient";
+import {BaseListener}                                        from "../BaseListener";
 
-export default class DepositAddressListener {
+export default class DepositAddressListener extends BaseListener {
 
 	private static chainAliasMap: { [key: string]: string } = {
 		"cosmos": "axelarnet"
 	}
-	private client: WebSocketClient;
 
 	constructor() {
-		const connectionString: string = process.env.WEBSOCKET_URL as string;
-		console.log("websocket connection string: ", connectionString);
-		this.client = new WebSocketClient(connectionString);
+		super();
 	}
 
-	public startTendermintSocketForDepositAddress(sourceChain: string, destinationChain: string) {
+	public listen(sourceChain: string, destinationChain: string, destinationAddress: string) {
 
 		return new Promise(async (resolve, reject) => {
 
-			await this.client.initialize();
+			await super.initialize();
 
 			// a cosmos link is really an axelarnet link
 			if (DepositAddressListener.chainAliasMap[sourceChain])
@@ -26,16 +24,17 @@ export default class DepositAddressListener {
 			const event: TendermintEventType = "Tx";
 			const query: any = {
 				'message.module': sourceChain,
-				'message.destinationChain': destinationChain
+				'message.destinationChain': destinationChain,
+				'message.destinationAddress': destinationAddress
 			};
 			const handler = (data: TendermintSubscriptionResponse) => {
 				const destinationAddress: any = this.parseDestinationAddress(data);
 				console.log("destination address", destinationAddress);
 				resolve(destinationAddress);
-				this.client.destroy();
+				// this.client.destroy();
 			}
 
-			this.client.subscribe(event, query, handler);
+			super.subscribe(event, query, handler);
 
 		});
 
@@ -44,9 +43,9 @@ export default class DepositAddressListener {
 	private parseDestinationAddress(data: any): string {
 		//TODO: ... is there a better (less brittle) way of doing this?
 		return JSON.parse(data.value.TxResult.result.log)[0]
-			.events[0]
-			.attributes
-			.find((attribute: any) => attribute.key === 'depositAddress')
-			?.value;
+		.events[0]
+		.attributes
+		.find((attribute: any) => attribute.key === 'depositAddress')
+		?.value;
 	}
 }

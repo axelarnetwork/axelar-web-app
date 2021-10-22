@@ -181,14 +181,11 @@ export class WebSocketClient extends EventEmitter {
 		try {
 			const parsedData = JSON.parse(message.data.toString());
 
-			if (
-				this.callback &&
-				parsedData.result &&
-				parsedData.result.query === this.queryParams
-			) {
+			if (this.callback && parsedData.result && parsedData.result.query === this.queryParams) {
 				// this.emit('message', parsedData.result.data);
 				this.callback(parsedData.result.data);
 			}
+
 		} catch (err) {
 			this.emit('error', err);
 		}
@@ -227,16 +224,22 @@ export class WebSocketClient extends EventEmitter {
 		})
 		console.log("~~~~~SUBSCRIBING", qp);
 		this.queryParams = qp;
-		this.callback = callback;
+		this.callback = (data: TendermintSubscriptionResponse) => {
+			callback && callback(data);
+			this.unsubscribe(qp);
+		};
 	}
 
-	public subscribeTx(query: TendermintQuery, callback: Callback): void {
-		const newCallback: Callback = d => {
-			d.value.TxResult.txhash = hashAmino(d.value.TxResult.tx);
-			return callback(d);
-		};
-
-		this.subscribe('Tx', query, newCallback);
+	// NEED TO TEST ON ACTUAL SOCKET
+	public unsubscribe(queryParams: string) {
+		this.socket.send(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'unsubscribe',
+				params: [queryParams],
+				id: 1,
+			})
+		);
 	}
 
 }

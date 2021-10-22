@@ -13,7 +13,7 @@ export default class BlockCypherService extends WaitingService {
 		super(6, depositAddress);
 	}
 
-	public async wait(depositAddress: IAsset, interimStatusCb?: StatusResponse) {
+	public async wait(depositAddress: IAsset, interimStatusCb: StatusResponse) {
 		console.log("block cypher service is polling", depositAddress.assetAddress);
 		const url = `https://api.blockcypher.com/v1/btc/test3/addrs/${depositAddress.assetAddress}`;
 		const asyncRequest = (attempts: number) => new Promise((res, rej) => {

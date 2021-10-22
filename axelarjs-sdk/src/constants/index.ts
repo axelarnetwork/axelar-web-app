@@ -92,3 +92,4 @@ export const SupportedChains: ISupportedChainList = [
 	ethereum
 ]
 
+export const GREPTCHA_SITE_KEY = "6LcxwsocAAAAANQ1t72JEcligfeSr7SSq_pDC9vR"; //this is intentionally public
