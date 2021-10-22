@@ -13,13 +13,14 @@ import {
 	DestinationAddress,
 	SOURCE_TOKEN_KEY,
 	SourceAsset
-}                                  from "state/ChainSelection";
+}                               from "state/ChainSelection";
 import {
 	IConfirmationStatus,
 	NumberConfirmations,
 	SourceDepositAddress
-}                                          from "state/TransactionStatus";
-import useRecaptchaAuthenticate            from "./auth/useRecaptchaAuthenticate";
+}                               from "state/TransactionStatus";
+import useRecaptchaAuthenticate from "./auth/useRecaptchaAuthenticate";
+import {depositConfirmCbMap}    from "./helper";
 
 export default function usePostTransactionToBridge() {
 
@@ -44,14 +45,11 @@ export default function usePostTransactionToBridge() {
 			console.log("status+++++", status);
 
 			const confirms: IConfirmationStatus = {
-				numberConfirmations: null,
+				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations
 			};
 
-			if (status.unconfirmed_txrefs)
-				confirms.numberConfirmations = null;
-			else if (status?.txrefs?.length)
-				confirms.numberConfirmations = status.txrefs[0].confirmations;
+			console.log("confirmations",confirms);
 
 			setNumConfirmations(confirms);
 

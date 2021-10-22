@@ -29,7 +29,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 	useEffect(() => {
 		//TODO: clean this up
-		if (depositAddress && numberConfirmations && numberRequiredConfirmations && numberConfirmations > numberRequiredConfirmations) {
+		console.log("number of confirmations",numberConfirmations, numberRequiredConfirmations);
+		if (depositAddress && numberConfirmations && numberRequiredConfirmations && numberConfirmations >= numberRequiredConfirmations) {
 			setActiveStep(2);
 		} else if (depositAddress) {
 			setActiveStep(1);

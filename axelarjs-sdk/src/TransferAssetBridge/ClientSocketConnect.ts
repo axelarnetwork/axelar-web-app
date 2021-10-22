@@ -33,7 +33,7 @@ export class ClientSocketConnect {
 			return;
 		}
 
-		console.log("ClientSocketConnect connecting to socket");
+		console.log("ClientSocketConnect connecting to socket", this.resourceUrl, token);
 
 		this.socket = io(this.resourceUrl, {
 			reconnectionDelayMax: 10000,
@@ -58,7 +58,8 @@ export class ClientSocketConnect {
 			this.connect(() => {
 				this.emitMessage(triggerTopic, message);
 				this.awaitResponse(waitTopic, (data: any) => {
-					resolve(waitCb(data));
+					waitCb(data)
+					resolve(data);
 				});
 			})
 		});

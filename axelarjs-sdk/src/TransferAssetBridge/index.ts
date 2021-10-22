@@ -2,9 +2,9 @@
 import {IAssetTransferObject}                                 from "../interface/IAssetTransferObject";
 import {CLIENT_API_POST_TRANSFER_ASSET, IBlockCypherResponse} from "../interface";
 import {ClientRest}                                           from "./ClientRest";
-import getWaitingService                                      from "./status";
-import {IAsset}                                               from "../constants";
-import {ClientSocketConnect}                                  from "./ClientSocketConnect";
+import getWaitingService             from "./status";
+import {IAsset, ISupportedChainType} from "../constants";
+import {ClientSocketConnect}         from "./ClientSocketConnect";
 import {validateDestinationAddress}                                           from "../utils";
 
 
@@ -20,6 +20,7 @@ export class TransferAssetBridge {
 		console.log("TransferAssetBridge initiated");
 		this.clientRest = new ClientRest(resourceUrl);
 		this.clientSocketConnect = new ClientSocketConnect(resourceUrl);
+		// this.clientSocketConnect.connect();
 
 	}
 
@@ -30,8 +31,8 @@ export class TransferAssetBridge {
 
 		const depositAddress: IAsset = await this.getDepositAddress(message);
 
-		this.listenForTransactionStatus(depositAddress, successCb, errCb).then(() => {
-			this.listenForTransactionStatus(message.selectedDestinationAsset as IAsset, successCb, errCb);
+		this.listenForTransactionStatus(depositAddress, message.sourceChainInfo, successCb, errCb).then(() => {
+			this.listenForTransactionStatus(message.selectedDestinationAsset as IAsset, message.destinationChainInfo, successCb, errCb);
 		})
 
 		return depositAddress;
@@ -41,8 +42,8 @@ export class TransferAssetBridge {
 		return await this.clientRest.post(CLIENT_API_POST_TRANSFER_ASSET, message);
 	}
 
-	private async listenForTransactionStatus(addressInformation: IAsset, waitCb: StatusResponse, errCb: any) {
-		const waitingService = addressInformation?.assetSymbol && getWaitingService(addressInformation.assetSymbol);
+	private async listenForTransactionStatus(addressInformation: IAsset, chainInfo: ISupportedChainType, waitCb: StatusResponse, errCb: any) {
+		const waitingService = chainInfo?.chainSymbol && getWaitingService(chainInfo.chainSymbol);
 		try {
 			await waitingService.wait(addressInformation, waitCb, this.clientSocketConnect);
 		} catch (e) {

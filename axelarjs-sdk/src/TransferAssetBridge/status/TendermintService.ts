@@ -14,12 +14,16 @@ export default class TendermintService extends WaitingService {
 
 		await clientSocketConnect.connect();
 
-		return await clientSocketConnect.emitMessageAndWaitForReply(
+		const data: any = await clientSocketConnect.emitMessageAndWaitForReply(
 			ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT,
 			depositAddress,
 			ISocketListenerTypes.AXL_DEPOSIT_CONFIRMED,
-			interimStatusCb
+			((data: any) => {
+				data.axelarRequiredNumConfirmations = this.numConfirmations;
+				interimStatusCb(data);
+			}).bind(this)
 		);
+		return data;
 
 	}
 }
