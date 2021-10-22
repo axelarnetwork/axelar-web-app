@@ -1,13 +1,3 @@
-export enum SupportedTokenSymbols {
-	BTC = "BTC",
-	AXL = "AXL",
-	EVM = "EVM"
-}
-export enum SupportedTokenNames {
-	BTC = "Bitcoin",
-	AXL = "Axelar",
-	EVM = "EVM"
-}
 export interface ISupportedChainType {
 	chainSymbol: string;
 	chainName: string;
