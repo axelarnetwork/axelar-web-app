@@ -1,5 +1,4 @@
 import {Server}               from "@hapi/hapi";
-import Boom                   from "@hapi/boom";
 import {ISocketListenerTypes} from "@axelar-network/axelarjs-sdk";
 import {handleRecaptcha}      from "../helpers";
 
@@ -15,7 +14,7 @@ export const socketRegister = {
 
 		const io = require('socket.io')(server.listener, {
 			cors: {
-				origin: "http://localhost:3000",
+				origin: "*",
 				credentials: true
 			}
 		});
@@ -35,30 +34,6 @@ export const socketRegister = {
 			console.log('New connection!', socket?.id, server.settings.port);
 			socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
 		});
-
-		// handleRecaptcha(options?.auth?.token).then((recaptchaResult: any) => {
-		//
-		// 	if (!recaptchaResult?.success || recaptchaResult?.score < 0.6) {
-		// 		return Boom.forbidden("bad recaptcha verification");
-		// 	}
-		//
-		// 	const io = require('socket.io')(server.listener, {
-		// 		cors: {
-		// 			origin: "http://localhost:3000",
-		// 			credentials: true
-		// 		}
-		// 	});
-		//
-		// 	io.on('connection', function (socket: any) {
-		// 		console.log('New connection!', socket?.id, server.settings.port);
-		// 		socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
-		// 	});
-		//
-		// }).catch((error: any) => {
-		//
-		// 	return Boom.boomify(error);
-		//
-		// });
 
 	}
 }
