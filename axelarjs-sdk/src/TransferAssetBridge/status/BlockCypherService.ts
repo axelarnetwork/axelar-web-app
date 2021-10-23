@@ -1,8 +1,7 @@
-import {WaitingService}      from "./WaitingService";
-import {poll}                from "./utils";
-import {BlockCypherResponse} from "../../interface";
-import {StatusResponse}              from "../index";
-import {IAsset, ISupportedChainType} from "../../constants";
+import {WaitingService}              from "./WaitingService";
+import {poll}                                from "./utils";
+import {BlockCypherResponse, StatusResponse} from "../../interface";
+import {IAsset, ISupportedChainType}         from "../../constants";
 
 export default class BlockCypherService extends WaitingService {
 

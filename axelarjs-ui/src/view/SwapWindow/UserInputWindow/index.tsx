@@ -1,26 +1,18 @@
-import Button                           from "react-bootstrap/Button";
-import {FlexRow}                        from "component/StyleComponents/FlexRow";
-import ChainSelector                    from "component/CompositeComponents/ChainSelector";
-import {FlexColumn}                     from "component/StyleComponents/FlexColumn";
-import {NumberFormInput}                from "component/CompositeComponents/NumberFormInput";
-import {GridDisplay}                    from "component/StyleComponents/GridDisplay";
-import {FooterComponent}                from "component/StyleComponents/FooterComponent";
-import {
-	ChainSelection,
-	DESTINATION_TOKEN_KEY,
-	DestinationAddress,
-	SOURCE_TOKEN_KEY,
-	SourceAsset
-}                                       from "state/ChainSelection";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {
-	IAsset,
-	SupportedChains
-}                                       from "@axelar-network/axelarjs-sdk";
-import AssetSelector                    from "./AssetSelector";
-import {useState}                       from "react";
-import {validateDestinationAddress}     from "@axelar-network/axelarjs-sdk/dist/utils";
-import DelayedRender                    from "component/Widgets/DelayedRender";
+import Button                                            from "react-bootstrap/Button";
+import {FlexRow}                                         from "component/StyleComponents/FlexRow";
+import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
+import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
+import {NumberFormInput}                                 from "component/CompositeComponents/NumberFormInput";
+import {GridDisplay}                                     from "component/StyleComponents/GridDisplay";
+import {FooterComponent}                                 from "component/StyleComponents/FooterComponent";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import {useRecoilState, useRecoilValue}                  from "recoil";
+import {IAsset, SupportedChains}                         from "@axelar-network/axelarjs-sdk";
+import AssetSelector                                     from "./AssetSelector";
+import {useState}                                        from "react";
+import {validateDestinationAddress}                      from "@axelar-network/axelarjs-sdk/dist/utils";
+import DelayedRender                                     from "component/Widgets/DelayedRender";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "../../../config/consts";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: any;
@@ -34,7 +26,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [sourceChainAsset, setSourceChainAsset] = useRecoilState(SourceAsset);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 
-	console.log("source chain selections",sourceChainSelection);
+	console.log("source chain selections", sourceChainSelection);
 	return <GridDisplay>
 		<FlexRow>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>

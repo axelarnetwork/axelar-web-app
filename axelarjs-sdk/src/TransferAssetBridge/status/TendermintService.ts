@@ -1,8 +1,7 @@
-import {IWaitingService, WaitingService} from "./WaitingService";
-import {IAsset, ISupportedChainType}     from "../../constants";
-import {StatusResponse}                  from "../index";
-import {ClientSocketConnect}  from "../ClientSocketConnect";
-import {ISocketListenerTypes} from "../../interface";
+import {WaitingService}              from "./WaitingService";
+import {IAsset, ISupportedChainType} from "../../constants";
+import {ClientSocketConnect}                  from "../ClientSocketConnect";
+import {ISocketListenerTypes, StatusResponse} from "../../interface";
 
 export default class TendermintService extends WaitingService {
 

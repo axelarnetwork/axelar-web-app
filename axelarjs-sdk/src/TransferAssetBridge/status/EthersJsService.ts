@@ -22,7 +22,7 @@ declare const window: any;
 const axelarBTCTokenAddr: string = '0xEA3f4398DA7Ec007683b46AF7961feD202c92c6F';
 const uphotonTokenAddr: string = "0xb1bfDBcd65292792f8fB4036a718e1b5C01fec0C";
 const uaxlTokenAddr: string = "0xa27cf99806Cc295fA90f2b6E8b46830BeDd3Be24";
-const tokenAddressMap: { [key: string]: string} = {};
+const tokenAddressMap: { [key: string]: string } = {};
 tokenAddressMap.btc = axelarBTCTokenAddr;
 tokenAddressMap.uphoton = uphotonTokenAddr;
 tokenAddressMap.uaxl = uaxlTokenAddr;
@@ -35,14 +35,14 @@ const abi: string[] = [
 	"event Transfer(address indexed from, address indexed to, uint amount)" 	// An event triggered whenever anyone transfers to someone else, IERC20.sol
 ];
 
-export default class EthersJsService extends WaitingService implements IWaitingService{
+export default class EthersJsService extends WaitingService implements IWaitingService {
 
 	private provider;
 	private tokenContract;
 	private filter: any;
 
 	constructor(chainInfo: ISupportedChainType, assetInfo: IAsset) {
-		console.log("chain info and asset info",chainInfo,assetInfo);
+		console.log("chain info and asset info", chainInfo, assetInfo);
 		const tokenContract: string = tokenAddressMap[assetInfo.assetSymbol?.toLowerCase() as string] || "";
 		const depositAddress: string = assetInfo.assetAddress as string;
 		super(30, depositAddress);
@@ -57,7 +57,9 @@ export default class EthersJsService extends WaitingService implements IWaitingS
 
 		return new Promise((resolve, reject) => {
 			this.tokenContract.once(this.filter, (from, to, amount, event) => {
-				console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`);
+				console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`, event);
+				event.axelarRequiredNumConfirmations = this.numConfirmations;
+				cb(event);
 				resolve(event);
 			});
 		});

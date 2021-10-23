@@ -1,11 +1,13 @@
-import React                                           from "react";
-import {ISupportedChainType, SupportedChains}          from "@axelar-network/axelarjs-sdk";
-import {SVGImage}                                      from "component/Widgets/SVGImage";
-import DropdownComponent, {IDropdownOption}            from "component/Widgets/DropdownComponent";
-import Container                                       from "component/StyleComponents/Container";
-import styled                                                from "styled-components";
-import {useRecoilState, useRecoilValue, useResetRecoilState}                  from "recoil";
-import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY, SourceAsset} from "state/ChainSelection";
+import React                                                                    from "react";
+import {ISupportedChainType, SupportedChains}                                   from "@axelar-network/axelarjs-sdk";
+import {SVGImage}                                                               from "component/Widgets/SVGImage";
+import DropdownComponent, {IDropdownOption}                                     from "component/Widgets/DropdownComponent";
+import Container
+                                                                                from "component/StyleComponents/Container";
+import styled                                                                   from "styled-components";
+import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
+import {ChainSelection, SourceAsset}                                            from "state/ChainSelection";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                from "../../config/consts";
 
 interface IChainComponentProps {
 	chainInfo: ISupportedChainType | null
@@ -46,7 +48,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const [selectedChain, setSelectedChain] = useRecoilState<ISupportedChainType | null>(ChainSelection(props.id));
 	const sourceChain = useRecoilValue<ISupportedChainType | null>(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue<ISupportedChainType | null>(ChainSelection(DESTINATION_TOKEN_KEY));
-	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
+	const setSourceAsset = useSetRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 
 	const dropdownOptions: IDropdownOption[] = SupportedChains
@@ -69,16 +71,11 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		}
 	}));
 
-	const conditionToDisableDropdownItem = (dropdownOption: IDropdownOption) => {
-		return false;
-	}
-
 	return <StyledChainSelector width="150px">
 		{props.label}
 		<SelectedChainComponent chainInfo={selectedChain}/>
 		{<DropdownComponent
 			id={"dropdown-for-" + props.id}
-			conditionToDisableItem={conditionToDisableDropdownItem}
 			dropdownOptions={dropdownOptions}
 		/>}
 	</StyledChainSelector>

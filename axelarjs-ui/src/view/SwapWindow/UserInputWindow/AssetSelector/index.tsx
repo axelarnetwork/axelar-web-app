@@ -1,10 +1,11 @@
-import {IAsset}         from "@axelar-network/axelarjs-sdk";
-import ModalWidget      from "component/CompositeComponents/ModalWidget";
+import {IAsset}           from "@axelar-network/axelarjs-sdk";
+import ModalWidget        from "component/CompositeComponents/ModalWidget";
 
 //TODO: convert to styled components instead of CSS
 import "./assetSelector.css";
-import {useRecoilValue}                   from "recoil";
-import {ChainSelection, SOURCE_TOKEN_KEY} from "../../../../state/ChainSelection";
+import {useRecoilValue}   from "recoil";
+import {ChainSelection}   from "../../../../state/ChainSelection";
+import {SOURCE_TOKEN_KEY} from "../../../../config/consts";
 
 interface IAssetSelector {
 	selectedToken: IAsset | null;

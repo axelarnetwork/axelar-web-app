@@ -7,6 +7,7 @@
 export interface IWaitingService {
 	wait(...args: any[]): Promise<void>;
 }
+
 export class WaitingService implements IWaitingService {
 
 	public numConfirmations: number = 0;

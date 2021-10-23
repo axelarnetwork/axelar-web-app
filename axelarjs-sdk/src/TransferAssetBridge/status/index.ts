@@ -1,10 +1,9 @@
-import BlockCypherService                from "./BlockCypherService";
-import EthersJsService                   from "./EthersJsService";
-import TendermintService                 from "./TendermintService";
-import {IWaitingService, WaitingService} from "./WaitingService";
-import {IAsset, ISupportedChainType}     from "../../constants";
+import BlockCypherService            from "./BlockCypherService";
+import EthersJsService               from "./EthersJsService";
+import TendermintService             from "./TendermintService";
+import {IAsset, ISupportedChainType} from "../../constants";
 
-const waitingService: { [chainSymbol: string]: any} = {
+const waitingService: { [chainSymbol: string]: any } = {
 	"btc": BlockCypherService,
 	"eth": EthersJsService,
 	"cos": TendermintService
