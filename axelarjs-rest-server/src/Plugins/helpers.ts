@@ -14,14 +14,14 @@ linkRequestTypes.btc = (payload: IAssetTransferObject) => ({
 	"@type": LinkType.BITCOIN,
 	"sender": "",
 	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
-	"recipient_chain": payload.destinationChainInfo.chainSymbol
+	"recipient_chain": payload.destinationChainInfo.chainName.toLowerCase()
 } as IBTCLinkRequestBody)
 
 linkRequestTypes.eth = (payload: IAssetTransferObject) => ({
 	"@type": LinkType.EVM,
 	"sender": "",
 	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
-	"recipient_chain": payload.destinationChainInfo.chainSymbol,
+	"recipient_chain": payload.destinationChainInfo.chainName.toLowerCase(),
 	"chain": payload.sourceChainInfo.chainSymbol,
 	"asset": payload.selectedSourceAsset.assetSymbol
 } as IEVMLinkRequestBody)
@@ -30,8 +30,8 @@ linkRequestTypes.cos = (payload: IAssetTransferObject) => ({
 	"@type": LinkType.COS,
 	"sender": "",
 	"recipient_addr": payload.selectedDestinationAsset.assetAddress,
-	"recipient_chain": payload.destinationChainInfo.chainSymbol,
-	"asset": payload.selectedSourceAsset.assetSymbol
+	"recipient_chain": payload.destinationChainInfo.chainName.toLowerCase(),
+	"asset": payload.selectedSourceAsset.assetSymbol?.toLowerCase()
 } as ICOSLinkRequestBody)
 
 export const constructLinkBody = (payload: IAssetTransferObject): ILinkRequestBody => {

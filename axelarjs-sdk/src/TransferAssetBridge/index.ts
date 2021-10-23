@@ -43,7 +43,7 @@ export class TransferAssetBridge {
 	}
 
 	private async listenForTransactionStatus(addressInformation: IAsset, chainInfo: ISupportedChainType, waitCb: StatusResponse, errCb: any) {
-		const waitingService = chainInfo?.chainSymbol && getWaitingService(chainInfo.chainSymbol);
+		const waitingService = chainInfo?.chainSymbol && getWaitingService(chainInfo.chainSymbol, chainInfo, addressInformation);
 		try {
 			await waitingService.wait(addressInformation, waitCb, this.clientSocketConnect);
 		} catch (e) {

@@ -1,13 +1,13 @@
-import {WaitingService}       from "./WaitingService";
-import {IAsset}               from "../../constants";
-import {StatusResponse}       from "../index";
+import {IWaitingService, WaitingService} from "./WaitingService";
+import {IAsset, ISupportedChainType}     from "../../constants";
+import {StatusResponse}                  from "../index";
 import {ClientSocketConnect}  from "../ClientSocketConnect";
 import {ISocketListenerTypes} from "../../interface";
 
 export default class TendermintService extends WaitingService {
 
-	constructor(depositAddress: string) {
-		super(1, depositAddress);
+	constructor(chainInfo: ISupportedChainType, assetInfo: IAsset) {
+		super(1, assetInfo.assetAddress as string);
 	}
 
 	public async wait(depositAddress: IAsset, interimStatusCb: StatusResponse, clientSocketConnect: ClientSocketConnect) {

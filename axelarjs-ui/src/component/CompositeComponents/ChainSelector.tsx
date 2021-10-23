@@ -3,9 +3,9 @@ import {ISupportedChainType, SupportedChains}          from "@axelar-network/axe
 import {SVGImage}                                      from "component/Widgets/SVGImage";
 import DropdownComponent, {IDropdownOption}            from "component/Widgets/DropdownComponent";
 import Container                                       from "component/StyleComponents/Container";
-import styled                                          from "styled-components";
-import {useRecoilState, useResetRecoilState}           from "recoil";
-import {ChainSelection, SOURCE_TOKEN_KEY, SourceAsset} from "state/ChainSelection";
+import styled                                                from "styled-components";
+import {useRecoilState, useRecoilValue, useResetRecoilState}                  from "recoil";
+import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY, SourceAsset} from "state/ChainSelection";
 
 interface IChainComponentProps {
 	chainInfo: ISupportedChainType | null
@@ -42,7 +42,10 @@ interface IChainSelectorProps {
 
 const ChainSelector = (props: IChainSelectorProps) => {
 
+	const isSourceChain: boolean = props.id === SOURCE_TOKEN_KEY;
 	const [selectedChain, setSelectedChain] = useRecoilState<ISupportedChainType | null>(ChainSelection(props.id));
+	const sourceChain = useRecoilValue<ISupportedChainType | null>(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue<ISupportedChainType | null>(ChainSelection(DESTINATION_TOKEN_KEY));
 	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 
@@ -50,6 +53,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	.map((supportedChain: ISupportedChainType) => ({
 		title: supportedChain.chainName,
 		active: false,
+		disabled: (isSourceChain ? destinationChain : sourceChain)?.chainName === supportedChain.chainName,
 		action: (param: IDropdownOption) => {
 			setSelectedChain(supportedChain);
 
@@ -57,18 +61,26 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			if the selected chain is the source token and the chain only
 			has a single asset, select that asset
 			* */
-			if (props.id === SOURCE_TOKEN_KEY) {
+			if (isSourceChain) {
 				supportedChain?.assets?.length === 1
 					? setSourceAsset(supportedChain.assets[0])
-					: !sourceAsset && resetSourceAsset();
+					: resetSourceAsset();
 			}
 		}
 	}));
 
+	const conditionToDisableDropdownItem = (dropdownOption: IDropdownOption) => {
+		return false;
+	}
+
 	return <StyledChainSelector width="150px">
 		{props.label}
 		<SelectedChainComponent chainInfo={selectedChain}/>
-		{<DropdownComponent id={"dropdown-for-" + props.id} dropdownOptions={dropdownOptions}/>}
+		{<DropdownComponent
+			id={"dropdown-for-" + props.id}
+			conditionToDisableItem={conditionToDisableDropdownItem}
+			dropdownOptions={dropdownOptions}
+		/>}
 	</StyledChainSelector>
 
 }

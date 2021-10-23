@@ -34,6 +34,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [sourceChainAsset, setSourceChainAsset] = useRecoilState(SourceAsset);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 
+	console.log("source chain selections",sourceChainSelection);
 	return <GridDisplay>
 		<FlexRow>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>

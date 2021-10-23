@@ -62,7 +62,8 @@ export default function usePostTransactionToBridge() {
 			selectedSourceAsset: sourceAsset,
 			destinationChainInfo: {...destinationChain, assets: undefined},
 			selectedDestinationAsset: {
-				assetAddress: destinationAddress
+				assetAddress: destinationAddress,
+				assetSymbol: sourceAsset.assetSymbol // the destination asset will be the wrapped asset of the source token
 			},
 			recaptchaToken: null
 		}

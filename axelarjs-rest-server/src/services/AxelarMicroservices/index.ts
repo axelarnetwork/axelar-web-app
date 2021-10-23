@@ -25,6 +25,7 @@ export class AxelarMicroservices {
 			const res: AxiosResponse = await this.axios.get(this.MICROSERVICES_HOSTNAME + this.SENDER_URL, {
 				data: { httpMethod: "GET"}
 			})
+			console.log("sender",res.data);
 			return (res.data as any).body as string;
 		} catch (e: any) {
 			return e;
@@ -33,10 +34,12 @@ export class AxelarMicroservices {
 
 	public async link(body: IBTCLinkRequestBody | IEVMLinkRequestBody) {
 		try {
+			console.log("request body",JSON.stringify(body));
 			const res = await this.axios.post(this.MICROSERVICES_HOSTNAME + this.LINK_URL,{
 				httpMethod: "POST",
 				body: JSON.stringify(body)
 			})
+			console.log("link success",res.data);
 			return res.data;
 		} catch (e: any) {
 			console.log("error hitting link",e);
