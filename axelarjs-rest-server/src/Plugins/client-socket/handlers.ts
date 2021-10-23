@@ -1,28 +1,11 @@
-import {IAssetTransferObject, TRANSFER_RESULT} from "@axelar-network/axelarjs-sdk";
+import {IAsset, ISocketListenerTypes, TRANSFER_RESULT} from "@axelar-network/axelarjs-sdk";
+import DepositConfirmationListener                     from "../../services/TendermintWebsocket/DepositConfirmationListener";
 
-// TODO: this is a mock implementation for now
-exports.btc2evm = async function (messageParam: IAssetTransferObject) {
+exports.listenForAXLDeposit = async function (messageParam: IAsset) {
 
-	console.log("btc2evm messageParam", messageParam);
+	const depositConfirmation: any = await new DepositConfirmationListener().listen(messageParam.assetAddress as string);
 
-	let done: string = "still waiting";
+	console.log("asset deposit confirmed confirmed", depositConfirmation);
+	this.emit(ISocketListenerTypes.AXL_DEPOSIT_CONFIRMED, depositConfirmation);
 
-	const interval = setInterval(() => {
-		this.emit(TRANSFER_RESULT, done);
-	}, 1000);
-
-	done = await confirmBtcDeposit();
-
-	clearInterval(interval);
-
-	this.emit(TRANSFER_RESULT, done);
 }
-
-const confirmBtcDeposit = (): Promise<string> => {
-	return new Promise((res: any, rej: any) => {
-		setTimeout(() => {
-			console.log("Done!");
-			res("Done!")
-		}, 10000)
-	})
-};

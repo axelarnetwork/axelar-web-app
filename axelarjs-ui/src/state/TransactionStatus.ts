@@ -1,8 +1,8 @@
-import {atom}          from "recoil";
-import {Nullable}      from "../interface/Nullable";
-import {ITokenAddress} from "@axelar-network/axelarjs-sdk";
+import {atom, atomFamily} from "recoil";
+import {Nullable}         from "../interface/Nullable";
+import {IAsset}           from "@axelar-network/axelarjs-sdk";
 
-export const SourceDepositAddress = atom<Nullable<ITokenAddress>>({
+export const SourceDepositAddress = atom<Nullable<IAsset>>({
 	key: "SourceDepositAddress",
 	default: null,
 });
@@ -10,13 +10,15 @@ export const SourceDepositAddress = atom<Nullable<ITokenAddress>>({
 export interface IConfirmationStatus {
 	numberConfirmations: Nullable<number>;
 	numberRequiredConfirmations: Nullable<number>;
+	transactionHash: Nullable<string>;
 }
 
-export const NumberConfirmations = atom<IConfirmationStatus>({
+export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
 	key: "NumberConfirmations",
 	default: {
 		numberConfirmations: null,
-		numberRequiredConfirmations: null
+		numberRequiredConfirmations: null,
+		transactionHash: null
 	},
 });
 

@@ -2,9 +2,9 @@
 * With credit to terra.js: https://github.com/terra-money/terra.js
 * */
 
-import { EventEmitter } from 'events';
-import WebSocket     from 'ws';
-import { hashAmino } from '../util/hash';
+import {EventEmitter} from 'events';
+import WebSocket      from 'ws';
+import {hashAmino}    from '../util/hash';
 
 type Callback = (data: TendermintSubscriptionResponse) => void;
 
@@ -162,7 +162,7 @@ export class WebSocketClient extends EventEmitter {
 
 	private onOpen() {
 		this.isConnected = true;
-		console.log("is connected",this.isConnected);
+		console.log("is connected", this.isConnected);
 		this.emit('connect');
 		// reset reconnectCount after connection establishment
 		this._reconnectCount = this.reconnectCount;
@@ -181,14 +181,11 @@ export class WebSocketClient extends EventEmitter {
 		try {
 			const parsedData = JSON.parse(message.data.toString());
 
-			if (
-				this.callback &&
-				parsedData.result &&
-				parsedData.result.query === this.queryParams
-			) {
+			if (this.callback && parsedData.result && parsedData.result.query === this.queryParams) {
 				// this.emit('message', parsedData.result.data);
 				this.callback(parsedData.result.data);
 			}
+
 		} catch (err) {
 			this.emit('error', err);
 		}
@@ -227,15 +224,22 @@ export class WebSocketClient extends EventEmitter {
 		})
 		console.log("~~~~~SUBSCRIBING", qp);
 		this.queryParams = qp;
-		this.callback = callback;
-	}
-
-	public subscribeTx(query: TendermintQuery, callback: Callback): void {
-		const newCallback: Callback = d => {
-			d.value.TxResult.txhash = hashAmino(d.value.TxResult.tx);
-			return callback(d);
+		this.callback = (data: TendermintSubscriptionResponse) => {
+			callback && callback(data);
+			this.unsubscribe(qp);
 		};
-
-		this.subscribe('Tx', query, newCallback);
 	}
+
+	// NEED TO TEST ON ACTUAL SOCKET
+	public unsubscribe(queryParams: string) {
+		this.socket.send(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'unsubscribe',
+				params: [queryParams],
+				id: 1,
+			})
+		);
+	}
+
 }

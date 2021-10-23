@@ -1,11 +1,6 @@
-import {useResetRecoilState} from "recoil";
-import {
-	ChainSelection,
-	DESTINATION_TOKEN_KEY,
-	DestinationAddress,
-	SOURCE_TOKEN_KEY,
-	SourceAsset
-}                            from "state/ChainSelection";
+import {useResetRecoilState}                             from "recoil";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "../config/consts";
 
 const useResetUserInputs = () => {
 	const resetSourceTokenKey = useResetRecoilState(ChainSelection(SOURCE_TOKEN_KEY));

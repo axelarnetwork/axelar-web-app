@@ -1,5 +1,5 @@
-import { SHA256 } from 'jscrypto/SHA256';
-import { Base64 } from 'jscrypto/Base64';
+import {SHA256} from 'jscrypto/SHA256';
+import {Base64} from 'jscrypto/Base64';
 
 /**
  * Calculates the transaction hash from Amino-encoded string.

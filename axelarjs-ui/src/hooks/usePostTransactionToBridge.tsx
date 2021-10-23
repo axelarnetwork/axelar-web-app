@@ -1,73 +1,50 @@
-import {useCallback, useState}             from "react";
-import {
-	BlockCypherResponse,
-	IAssetTransferObject,
-	IBlockCypherResponse,
-	ITokenAddress
-}                                          from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}         from "api/TransferAssetBridgeFacade";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-import {
-	ChainSelection,
-	DESTINATION_TOKEN_KEY,
-	DestinationAddress,
-	SOURCE_TOKEN_KEY,
-	SourceAsset
-}                                          from "state/ChainSelection";
-import {
-	IConfirmationStatus,
-	NumberConfirmations,
-	SourceDepositAddress
-}                                          from "state/TransactionStatus";
-import useRecaptchaAuthenticate            from "./auth/useRecaptchaAuthenticate";
+import {useCallback, useState}                                          from "react";
+import {useRecoilValue, useSetRecoilState}                              from "recoil";
+import {IAsset, IAssetTransferObject}                                   from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade}                                      from "api/TransferAssetBridgeFacade";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
+import {ChainSelection, DestinationAddress, SourceAsset}                from "state/ChainSelection";
+import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import useRecaptchaAuthenticate                                         from "./auth/useRecaptchaAuthenticate";
+import {depositConfirmCbMap}                                            from "./helper";
 
 export default function usePostTransactionToBridge() {
 
 	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useState(false);
-	const sourceToken = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const destinationToken = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
-	const setNumConfirmations = useSetRecoilState(NumberConfirmations);
+	const setSourceNumConfirmations = useSetRecoilState(NumberConfirmations(SOURCE_TOKEN_KEY));
+	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 
 	const handleTransactionSubmission = useCallback(async () => {
 
-		if (!(sourceToken?.symbol && destinationToken?.symbol && destinationAddress && sourceAsset))
+		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset))
 			return;
 
 		setShowTransactionStatusWindow(true);
 
-		const successCb: IBlockCypherResponse = (status: BlockCypherResponse): void => {
-
-			console.log("status+++++", status);
-
+		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
 			const confirms: IConfirmationStatus = {
-				numberConfirmations: null,
-				numberRequiredConfirmations: status.axelarRequiredNumConfirmations
+				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
+				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
+				transactionHash: status?.transactionHash
 			};
-
-			if (status.unconfirmed_txrefs)
-				confirms.numberConfirmations = null;
-			else if (status?.txrefs?.length)
-				confirms.numberConfirmations = status.txrefs[0].confirmations;
-
-			setNumConfirmations(confirms);
-
+			setConfirms(confirms);
 		};
 
 		const failCb = (data: any): void => console.log(data);
 
 		const msg: IAssetTransferObject = {
-			sourceTokenInfo: {
-				tokenSymbol: sourceToken.symbol,
-				tokenAddress: null
-			},
-			sourceAsset,
-			destinationTokenInfo: {
-				tokenSymbol: destinationToken.symbol,
-				tokenAddress: destinationAddress
+			sourceChainInfo: {...sourceChain, assets: undefined},
+			selectedSourceAsset: sourceAsset,
+			destinationChainInfo: {...destinationChain, assets: undefined},
+			selectedDestinationAsset: {
+				assetAddress: destinationAddress,
+				assetSymbol: sourceAsset.assetSymbol // the destination asset will be the wrapped asset of the source token
 			},
 			recaptchaToken: null
 		}
@@ -75,17 +52,27 @@ export default function usePostTransactionToBridge() {
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
 				msg.recaptchaToken = token;
-				const res: ITokenAddress = await TransferAssetBridgeFacade.transferAssets(msg, successCb, failCb);
+				const res: IAsset = await TransferAssetBridgeFacade
+				.transferAssets(msg,
+					{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
+					{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
 				setDepositAddress(res);
 			}
 		})
 
-	}, [sourceToken, destinationToken, destinationAddress, setDepositAddress, setNumConfirmations, sourceAsset, isRecaptchaAuthenticated, authenticateWithRecaptcha]);
+	}, [
+		sourceChain,
+		destinationChain,
+		destinationAddress,
+		setDepositAddress,
+		setSourceNumConfirmations,
+		setDestinationNumConfirmations,
+		sourceAsset,
+		isRecaptchaAuthenticated,
+		authenticateWithRecaptcha
+	]);
 
-	const closeResultsScreen = () => {
-		setShowTransactionStatusWindow(false);
-	}
-
+	const closeResultsScreen = () => setShowTransactionStatusWindow(false);
 
 	return [showTransactionStatusWindow, handleTransactionSubmission, closeResultsScreen] as const;
 }
