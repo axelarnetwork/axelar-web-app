@@ -18,7 +18,6 @@ export default class DepositConfirmationListener extends BaseListener {
 				'transfer.recipient': axelarDepositAddress,
 			};
 			const handler = (data: TendermintSubscriptionResponse) => {
-				console.log("recipient event", data); //TODO: find out what this looks like
 				resolve(data);
 			}
 

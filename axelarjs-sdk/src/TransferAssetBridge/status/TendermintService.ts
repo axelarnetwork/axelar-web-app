@@ -1,25 +1,28 @@
-import {WaitingService}       from "./WaitingService";
-import {IAsset}               from "../../constants";
-import {StatusResponse}       from "../index";
-import {ClientSocketConnect}  from "../ClientSocketConnect";
-import {ISocketListenerTypes} from "../../interface";
+import {WaitingService}              from "./WaitingService";
+import {IAsset, ISupportedChainType} from "../../constants";
+import {ClientSocketConnect}                  from "../ClientSocketConnect";
+import {ISocketListenerTypes, StatusResponse} from "../../interface";
 
 export default class TendermintService extends WaitingService {
 
-	constructor(depositAddress: string) {
-		super(1, depositAddress);
+	constructor(chainInfo: ISupportedChainType, assetInfo: IAsset) {
+		super(1, assetInfo.assetAddress as string);
 	}
 
 	public async wait(depositAddress: IAsset, interimStatusCb: StatusResponse, clientSocketConnect: ClientSocketConnect) {
 
 		await clientSocketConnect.connect();
 
-		return await clientSocketConnect.emitMessageAndWaitForReply(
+		const data: any = await clientSocketConnect.emitMessageAndWaitForReply(
 			ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT,
 			depositAddress,
 			ISocketListenerTypes.AXL_DEPOSIT_CONFIRMED,
-			interimStatusCb
+			((data: any) => {
+				data.axelarRequiredNumConfirmations = this.numConfirmations;
+				interimStatusCb(data);
+			}).bind(this)
 		);
+		return data;
 
 	}
 }

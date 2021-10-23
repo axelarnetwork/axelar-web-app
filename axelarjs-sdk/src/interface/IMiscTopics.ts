@@ -1,5 +1,7 @@
 // TODO: all miscellaneous topics go here for now
 
+import {IBlockCypherResponse} from "./btc";
+
 export const TRANSFER_RESULT: string = "socket-transfer-result";
 
 // POST REQUEST CONSTS
@@ -10,3 +12,11 @@ export interface ISocketOptions {
 	auth: { token: string };
 	query: { [key: string]: string }
 }
+
+export interface ICallbackStatus {
+	successCb: any;
+	failCb: any;
+}
+
+export type StatusResponse = IBlockCypherResponse
+	| (() => void);

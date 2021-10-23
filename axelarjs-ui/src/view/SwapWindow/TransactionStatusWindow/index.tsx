@@ -1,14 +1,15 @@
 import React, {useEffect, useState}                                          from "react";
 import {useRecoilValue}                                                      from "recoil";
+import {Step, Stepper}                                                       from "react-form-stepper";
+import Button                                                                from "react-bootstrap/Button";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import BoldSpan                                                              from "component/StyleComponents/BoldSpan";
 import {GridDisplay}                                                         from "component/StyleComponents/GridDisplay";
-import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {FooterComponent}                                                     from "component/StyleComponents/FooterComponent";
+import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
-import {Step, Stepper}                                                       from "react-form-stepper";
-import {FlexRow}                                                             from "../../../component/StyleComponents/FlexRow";
-import {ChainSelection, DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "../../../state/ChainSelection";
-import Button                                                                from "react-bootstrap/Button";
-import {FooterComponent}                                                     from "../../../component/StyleComponents/FooterComponent";
+import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {ChainSelection}                                                      from "state/ChainSelection";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -17,7 +18,8 @@ interface ITransactionStatusWindowProps {
 
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
-	const confirmationStatus = useRecoilValue(NumberConfirmations);
+	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
+	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const resetUserInputs = useResetUserInputs();
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
@@ -25,23 +27,33 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const [activeStep, setActiveStep] = useState<number>(0);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 
-	const {numberConfirmations, numberRequiredConfirmations} = confirmationStatus;
+	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
+	const {numberConfirmations: dNumConfirms, numberRequiredConfirmations: dReqNumConfirms, transactionHash} = destinationConfirmStatus;
 
 	useEffect(() => {
 		//TODO: clean this up
-		if (depositAddress && numberConfirmations && numberRequiredConfirmations && numberConfirmations > numberRequiredConfirmations) {
-			setActiveStep(2);
-		} else if (depositAddress) {
-			setActiveStep(1);
+		console.log("number of source confirmations", sNumConfirms, sReqNumConfirms, dNumConfirms, dReqNumConfirms);
+		let activeStep: number;
+
+		switch (true) {
+			case !!(dNumConfirms && dReqNumConfirms):
+				activeStep = 3; break;
+			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
+				activeStep = 2; break;
+			case !!depositAddress:
+				activeStep = 1; break;
+			default:
+				activeStep = 0;
 		}
-	}, [depositAddress, numberConfirmations, numberRequiredConfirmations]);
+		setActiveStep(activeStep);
+
+	}, [depositAddress, dNumConfirms, dReqNumConfirms, sNumConfirms, sReqNumConfirms]);
 
 	const generateStatusBody = (activeStep: number) => {
-		const {numberConfirmations, numberRequiredConfirmations} = confirmationStatus;
 		const dict: any = {};
 		dict[0] = null;
 		dict[1] = <div>
-			{!numberConfirmations
+			{!sNumConfirms
 				? <div>
 					<div>
 						Next step: please deposit
@@ -53,15 +65,19 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				</div>
 				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
-					<p>Currently detected {numberConfirmations} of {numberRequiredConfirmations} confirmations.</p>
+					<p>Currently detected {sNumConfirms} of {sReqNumConfirms} confirmations.</p>
 					<p>Alternatively, you can just trust the process and wait for
 						the {destinationChain?.chainName} tokens to
 						hit your deposit account.</p>
 				</div>
 			}
 		</div>;
-		dict[2] = "Axelar Network is actively working on your request...";
-		dict[3] = "(TBD) Confirming ethereum transactions...";
+		dict[2] = "Deposit Confirmed. Axelar Network is actively working on your request...";
+		dict[3] = <div><p>Your transaction has been detected on the {destinationChain?.chainName} blockchain, so
+			you're done as far as Axelar is concerned. Feel free to view the transaction status directly on that chain:
+			<BoldSpan>{transactionHash}</BoldSpan>
+		</p>
+		</div>;
 		return dict[activeStep];
 	}
 
@@ -102,6 +118,5 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 	</GridDisplay>
 }
-
 
 export default TransactionStatusWindow;

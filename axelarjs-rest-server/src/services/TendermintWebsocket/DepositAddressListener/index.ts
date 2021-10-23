@@ -23,9 +23,9 @@ export default class DepositAddressListener extends BaseListener {
 
 			const event: TendermintEventType = "Tx";
 			const query: any = {
-				'message.module': sourceChain,
-				'message.destinationChain': destinationChain,
-				'message.destinationAddress': destinationAddress
+				'link.module': sourceChain,
+				'link.destinationChain': destinationChain,
+				'link.destinationAddress': destinationAddress
 			};
 			const handler = (data: TendermintSubscriptionResponse) => {
 				const destinationAddress: any = this.parseDestinationAddress(data);

@@ -29,15 +29,15 @@ export class ClientSocketConnect {
 		try {
 			token = await grecaptcha.execute(GREPTCHA_SITE_KEY);
 		} catch (e: any) {
-			console.log("cannot get captcha",e);
+			console.log("cannot get captcha", e);
 			return;
 		}
 
-		console.log("ClientSocketConnect connecting to socket");
+		console.log("ClientSocketConnect connecting to socket", this.resourceUrl, token);
 
 		this.socket = io(this.resourceUrl, {
 			reconnectionDelayMax: 10000,
-			auth: { token },
+			auth: {token},
 			query: {
 				"my-key": "my-value"
 			}
@@ -58,7 +58,8 @@ export class ClientSocketConnect {
 			this.connect(() => {
 				this.emitMessage(triggerTopic, message);
 				this.awaitResponse(waitTopic, (data: any) => {
-					resolve(waitCb(data));
+					waitCb(data)
+					resolve(data);
 				});
 			})
 		});
