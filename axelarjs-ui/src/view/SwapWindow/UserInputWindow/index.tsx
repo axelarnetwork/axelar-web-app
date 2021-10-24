@@ -7,20 +7,18 @@ import {GridDisplay}                                     from "component/StyleCo
 import {FooterComponent}                                 from "component/StyleComponents/FooterComponent";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {useRecoilState, useRecoilValue}                  from "recoil";
-import {IAsset, SupportedChains, Chains}                         from "@axelar-network/axelarjs-sdk";
+import {IAsset, SupportedChains}                         from "@axelar-network/axelarjs-sdk";
 import AssetSelector                                     from "./AssetSelector";
 import {useState}                                        from "react";
 import {validateDestinationAddress}                      from "@axelar-network/axelarjs-sdk/dist/utils";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "../../../config/consts";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: any;
 }
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
-
-	console.log("CHains",Chains);
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));

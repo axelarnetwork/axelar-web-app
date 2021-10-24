@@ -1,7 +1,7 @@
 export interface IChain {
 	chainInfo: IChainInfo;
 	validateAddress?: (assetInfo: IAssetInfo) => boolean;
-	// waitingService?: (chainInfo: IChainInfo, assetInfo: IAssetInfo) => any;
+	waitingService?: (chainInfo: IChainInfo, assetInfo: IAssetInfo) => IBlockchainWaitingService;
 }
 
 export interface IBlockchainWaitingService {

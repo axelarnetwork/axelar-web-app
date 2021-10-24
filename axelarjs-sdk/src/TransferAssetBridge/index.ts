@@ -5,6 +5,7 @@ import getWaitingService                                                 from ".
 import {IAsset, ISupportedChainType}                                     from "../constants";
 import {ClientSocketConnect}                                             from "./ClientSocketConnect";
 import {validateDestinationAddress}                                      from "../utils";
+import {IBlockchainWaitingService}                                       from "../chains/models/Chains";
 
 export class TransferAssetBridge {
 
@@ -54,8 +55,7 @@ export class TransferAssetBridge {
 	                                         errCb: any
 	) {
 
-		const waitingService = chainInfo?.chainSymbol
-			&& getWaitingService(chainInfo.chainSymbol, chainInfo, addressInformation);
+		const waitingService: IBlockchainWaitingService = getWaitingService(chainInfo.chainSymbol, chainInfo, addressInformation);
 
 		try {
 			await waitingService.wait(addressInformation, waitCb, this.clientSocketConnect);

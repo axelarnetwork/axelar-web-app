@@ -4,7 +4,7 @@ import ChainList            from "../chains/ChainList";
 
 const validatorsDict: { [chainSymbol: string]: (asset: IAssetInfo) => boolean } = {};
 ChainList.forEach((chain: IChain) => {
-	const key = chain.chainInfo.chainName.toLowerCase();
+	const key = chain.chainInfo.chainSymbol.toLowerCase();
 	validatorsDict[key] = chain.validateAddress as (asset: IAssetInfo) => boolean
 })
 
