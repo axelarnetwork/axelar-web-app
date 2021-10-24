@@ -1,5 +1,5 @@
-import {BlockCypherResponse} from "@axelar-network/axelarjs-sdk";
 import {Nullable}            from "../interface/Nullable";
+import {BlockCypherResponse} from "@axelar-network/axelarjs-sdk/dist/chains/Bitcoin/WaitingService";
 
 export const depositConfirmCbMap: { [chainSymbol: string]: (param: any) => Nullable<number> } = {};
 

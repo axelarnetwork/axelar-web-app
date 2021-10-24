@@ -4,7 +4,6 @@
 
 import {EventEmitter} from 'events';
 import WebSocket      from 'ws';
-import {hashAmino}    from '../util/hash';
 
 type Callback = (data: TendermintSubscriptionResponse) => void;
 
@@ -160,6 +159,35 @@ export class WebSocketClient extends EventEmitter {
 		this.socket.onerror = () => undefined;
 	}
 
+	public subscribe(
+		event: TendermintEventType,
+		query: TendermintQuery,
+		callback: Callback
+	): void {
+		const qp: any = makeQueryParams({
+			'tm.event': event,
+			...query,
+		})
+		console.log("~~~~~SUBSCRIBING", qp);
+		this.queryParams = qp;
+		this.callback = (data: TendermintSubscriptionResponse) => {
+			callback && callback(data);
+			this.unsubscribe(qp);
+		};
+	}
+
+	// NEED TO TEST ON ACTUAL SOCKET
+	public unsubscribe(queryParams: string) {
+		this.socket.send(
+			JSON.stringify({
+				jsonrpc: '2.0',
+				method: 'unsubscribe',
+				params: [queryParams],
+				id: 1,
+			})
+		);
+	}
+
 	private onOpen() {
 		this.isConnected = true;
 		console.log("is connected", this.isConnected);
@@ -211,35 +239,6 @@ export class WebSocketClient extends EventEmitter {
 		} else {
 			this.emit('destroyed');
 		}
-	}
-
-	public subscribe(
-		event: TendermintEventType,
-		query: TendermintQuery,
-		callback: Callback
-	): void {
-		const qp: any = makeQueryParams({
-			'tm.event': event,
-			...query,
-		})
-		console.log("~~~~~SUBSCRIBING", qp);
-		this.queryParams = qp;
-		this.callback = (data: TendermintSubscriptionResponse) => {
-			callback && callback(data);
-			this.unsubscribe(qp);
-		};
-	}
-
-	// NEED TO TEST ON ACTUAL SOCKET
-	public unsubscribe(queryParams: string) {
-		this.socket.send(
-			JSON.stringify({
-				jsonrpc: '2.0',
-				method: 'unsubscribe',
-				params: [queryParams],
-				id: 1,
-			})
-		);
 	}
 
 }

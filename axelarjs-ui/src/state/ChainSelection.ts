@@ -1,13 +1,13 @@
-import {atom, atomFamily}            from "recoil";
-import {IAsset, ISupportedChainType} from "@axelar-network/axelarjs-sdk";
-import {Nullable}                    from "interface/Nullable";
+import {atom, atomFamily}       from "recoil";
+import {IAssetInfo, IChainInfo} from "@axelar-network/axelarjs-sdk";
+import {Nullable}               from "interface/Nullable";
 
-export const ChainSelection = atomFamily<Nullable<ISupportedChainType>, string>({
+export const ChainSelection = atomFamily<Nullable<IChainInfo>, string>({
 	key: "ChainSelection",
 	default: null,
 });
 
-export const SourceAsset = atom<Nullable<IAsset>>({
+export const SourceAsset = atom<Nullable<IAssetInfo>>({
 	key: "SourceAsset",
 	default: null,
 });

@@ -1,6 +1,6 @@
 import {useCallback, useState}                                          from "react";
 import {useRecoilValue, useSetRecoilState}                              from "recoil";
-import {IAsset, IAssetTransferObject}                                   from "@axelar-network/axelarjs-sdk";
+import {IAssetInfo, IAssetTransferObject}                               from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                                      from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}                from "state/ChainSelection";
@@ -52,7 +52,7 @@ export default function usePostTransactionToBridge() {
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
 				msg.recaptchaToken = token;
-				const res: IAsset = await TransferAssetBridgeFacade
+				const res: IAssetInfo = await TransferAssetBridgeFacade
 				.transferAssets(msg,
 					{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
 					{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});

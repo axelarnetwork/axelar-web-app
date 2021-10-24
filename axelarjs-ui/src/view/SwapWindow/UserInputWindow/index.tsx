@@ -1,18 +1,18 @@
+import {useState}                                        from "react";
 import Button                                            from "react-bootstrap/Button";
+import {useRecoilState, useRecoilValue}                  from "recoil";
+import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
 import {FlexRow}                                         from "component/StyleComponents/FlexRow";
 import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
 import {NumberFormInput}                                 from "component/CompositeComponents/NumberFormInput";
 import {GridDisplay}                                     from "component/StyleComponents/GridDisplay";
 import {FooterComponent}                                 from "component/StyleComponents/FooterComponent";
-import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
-import {useRecoilState, useRecoilValue}                  from "recoil";
-import {IAsset, SupportedChains}                         from "@axelar-network/axelarjs-sdk";
-import AssetSelector                                     from "./AssetSelector";
-import {useState}                                        from "react";
-import {validateDestinationAddress}                      from "@axelar-network/axelarjs-sdk/dist/utils";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "../../../config/consts";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import {ChainList}                                       from "state/ChainList";
+import AssetSelector                                     from "./AssetSelector";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: any;
@@ -21,6 +21,7 @@ interface IUserInputWindowProps {
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const chainList = useRecoilValue(ChainList);
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destAddr = useRecoilValue(DestinationAddress);
 	const [sourceChainAsset, setSourceChainAsset] = useRecoilState(SourceAsset);
@@ -36,7 +37,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
         <FlexRow>
             <AssetSelector
                 selectedToken={sourceChainAsset}
-                allTokens={SupportedChains?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}
+                allTokens={chainList?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}
                 handleChange={(asset) => setSourceChainAsset(asset)}
             />
         </FlexRow>
@@ -46,7 +47,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		</FlexColumn>
 		<FooterComponent>
 			<Button variant="secondary" size="sm" onClick={() => {
-				const destToken: IAsset = {
+				const destToken: IAssetInfo = {
 					assetAddress: destAddr as string,
 					assetSymbol: destChainSelection?.chainSymbol
 				}
