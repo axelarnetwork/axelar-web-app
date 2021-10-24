@@ -1,8 +1,8 @@
-import {IAssetInfo, IChain, IChainInfo} from "../models/Chains";
 import {WaitingService}                 from "./WaitingService";
 import {validate as isValidBTCAddress}  from "bitcoin-address-validation";
+import {IAssetInfo, IChain, IChainInfo} from "../../interface";
 
-export class Bitcoin implements IChain {
+export default class Bitcoin implements IChain {
 
 	public chainInfo: IChainInfo = {
 		chainSymbol: "BTC",

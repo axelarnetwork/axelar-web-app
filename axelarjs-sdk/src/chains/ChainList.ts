@@ -1,7 +1,7 @@
-import {Bitcoin} from "./Bitcoin";
-import Cosmos    from "./Cosmos";
-import Ethereum  from "./Ethereum";
-import {IChain}  from "./models/Chains";
+import Bitcoin  from "./Bitcoin";
+import Cosmos   from "./Cosmos";
+import Ethereum from "./Ethereum";
+import {IChain} from "../interface";
 
 const ChainList: IChain[] = [
 	new Bitcoin(),

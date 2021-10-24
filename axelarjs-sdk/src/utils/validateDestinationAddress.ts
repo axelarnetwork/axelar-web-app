@@ -1,6 +1,5 @@
-import {IAsset}             from "../constants";
-import {IAssetInfo, IChain} from "../chains/models/Chains";
 import ChainList            from "../chains/ChainList";
+import {IAssetInfo, IChain} from "../interface";
 
 const validatorsDict: { [chainSymbol: string]: (asset: IAssetInfo) => boolean } = {};
 ChainList.forEach((chain: IChain) => {
@@ -8,7 +7,7 @@ ChainList.forEach((chain: IChain) => {
 	validatorsDict[key] = chain.validateAddress as (asset: IAssetInfo) => boolean
 })
 
-export const validateDestinationAddress = (destTokenInfo: IAsset): boolean => {
+export const validateDestinationAddress = (destTokenInfo: IAssetInfo): boolean => {
 
 	const destTokenSymbol: string = destTokenInfo?.assetSymbol as string;
 	const validator: (assetInfo: IAssetInfo) => boolean = validatorsDict[destTokenSymbol?.toLowerCase()];

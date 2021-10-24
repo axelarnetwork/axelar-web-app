@@ -1,15 +1,15 @@
-import {IAsset}           from "@axelar-network/axelarjs-sdk";
+import {useRecoilValue}   from "recoil";
+import {IAssetInfo}       from "@axelar-network/axelarjs-sdk";
+import {ChainSelection}   from "state/ChainSelection";
+import {SOURCE_TOKEN_KEY} from "config/consts";
 import ModalWidget        from "component/CompositeComponents/ModalWidget";
 
 //TODO: convert to styled components instead of CSS
 import "./assetSelector.css";
-import {useRecoilValue}   from "recoil";
-import {ChainSelection}   from "../../../../state/ChainSelection";
-import {SOURCE_TOKEN_KEY} from "../../../../config/consts";
 
 interface IAssetSelector {
-	selectedToken: IAsset | null;
-	allTokens: IAsset[];
+	selectedToken: IAssetInfo | null;
+	allTokens: IAssetInfo[];
 	handleChange: (param: any) => void;
 }
 
@@ -45,12 +45,12 @@ const AssetSelector = ({selectedToken, allTokens, handleChange}: IAssetSelector)
 };
 
 interface ITokenOption {
-	tokenInfo: IAsset;
+	tokenInfo: IAssetInfo;
 	onClick: any;
 }
 
 const TokenOption = (props: ITokenOption) => {
-	const {tokenInfo, onClick}: { tokenInfo: IAsset, onClick: any } = props;
+	const {tokenInfo, onClick}: { tokenInfo: IAssetInfo, onClick: any } = props;
 	return <div className="token-option" onClick={() => onClick(tokenInfo)}>
 		<h6>{tokenInfo?.assetName} ({tokenInfo?.assetSymbol})</h6>
 	</div>;

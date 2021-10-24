@@ -1,8 +1,8 @@
 import {ethers}                                            from "ethers";
 import {formatEther}                                       from "ethers/lib/utils";
 import {BaseWaitingService}                                from "../models/BaseWaitingService";
-import {IAssetInfo, IBlockchainWaitingService, IChainInfo} from "../models/Chains";
 import {getEthersJsProvider}                               from "../../TransferAssetBridge/status/utils/ethersjsProvider";
+import {IAssetInfo, IBlockchainWaitingService, IChainInfo} from "../../interface";
 
 const axelarBTCTokenAddr: string = '0xEA3f4398DA7Ec007683b46AF7961feD202c92c6F';
 const uphotonTokenAddr: string = "0xb1bfDBcd65292792f8fB4036a718e1b5C01fec0C";

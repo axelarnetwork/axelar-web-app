@@ -1,6 +1,6 @@
-import {IAssetInfo, IBlockchainWaitingService, IChainInfo} from "../models/Chains";
 import {BaseWaitingService}                                from "../models/BaseWaitingService";
 import {poll}                                              from "../utils/poll";
+import {IAssetInfo, IBlockchainWaitingService, IChainInfo} from "../../interface";
 
 export interface UnconfirmedTxRef {
 	address: string;

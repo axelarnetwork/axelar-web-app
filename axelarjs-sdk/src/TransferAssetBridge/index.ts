@@ -1,11 +1,16 @@
-import {IAssetTransferObject}                                            from "../interface/IAssetTransferObject";
-import {CLIENT_API_POST_TRANSFER_ASSET, ICallbackStatus, StatusResponse} from "../interface";
-import {ClientRest}                                                      from "./ClientRest";
-import getWaitingService                                                 from "./status";
-import {IAsset, ISupportedChainType}                                     from "../constants";
-import {ClientSocketConnect}                                             from "./ClientSocketConnect";
-import {validateDestinationAddress}                                      from "../utils";
-import {IBlockchainWaitingService}                                       from "../chains/models/Chains";
+import {IAssetTransferObject}       from "../interface/IAssetTransferObject";
+import {
+	CLIENT_API_POST_TRANSFER_ASSET,
+	IAssetInfo,
+	IBlockchainWaitingService,
+	ICallbackStatus,
+	IChainInfo,
+	StatusResponse
+}                                   from "../interface";
+import {ClientRest}                 from "./ClientRest";
+import getWaitingService            from "./status";
+import {ClientSocketConnect}        from "./ClientSocketConnect";
+import {validateDestinationAddress} from "../utils";
 
 export class TransferAssetBridge {
 
@@ -23,19 +28,19 @@ export class TransferAssetBridge {
 	public async transferAssets(message: IAssetTransferObject,
 	                            sourceCbs: ICallbackStatus,
 	                            destCbs: ICallbackStatus
-	): Promise<IAsset> {
+	): Promise<IAssetInfo> {
 
 		if (!validateDestinationAddress(message?.selectedDestinationAsset))
 			throw new Error(`invalid destination address in ${message?.selectedDestinationAsset?.assetSymbol}`);
 
-		const depositAddress: IAsset = await this.getDepositAddress(message);
+		const depositAddress: IAssetInfo = await this.getDepositAddress(message);
 
 		this.listenForTransactionStatus(depositAddress,
 			message.sourceChainInfo,
 			sourceCbs.successCb,
 			sourceCbs.failCb
 		).then(() => {
-			this.listenForTransactionStatus(message.selectedDestinationAsset as IAsset,
+			this.listenForTransactionStatus(message.selectedDestinationAsset as IAssetInfo,
 				message.destinationChainInfo,
 				destCbs.successCb,
 				destCbs.failCb
@@ -45,12 +50,12 @@ export class TransferAssetBridge {
 		return depositAddress;
 	}
 
-	private async getDepositAddress(message: IAssetTransferObject): Promise<IAsset> {
+	private async getDepositAddress(message: IAssetTransferObject): Promise<IAssetInfo> {
 		return await this.clientRest.post(CLIENT_API_POST_TRANSFER_ASSET, message);
 	}
 
-	private async listenForTransactionStatus(addressInformation: IAsset,
-	                                         chainInfo: ISupportedChainType,
+	private async listenForTransactionStatus(addressInformation: IAssetInfo,
+	                                         chainInfo: IChainInfo,
 	                                         waitCb: StatusResponse,
 	                                         errCb: any
 	) {

@@ -28,7 +28,11 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
-	const {numberConfirmations: dNumConfirms, numberRequiredConfirmations: dReqNumConfirms, transactionHash} = destinationConfirmStatus;
+	const {
+		numberConfirmations: dNumConfirms,
+		numberRequiredConfirmations: dReqNumConfirms,
+		transactionHash
+	} = destinationConfirmStatus;
 
 	useEffect(() => {
 		//TODO: clean this up
@@ -37,11 +41,14 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				activeStep = 3; break;
+				activeStep = 3;
+				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				activeStep = 2; break;
+				activeStep = 2;
+				break;
 			case !!depositAddress:
-				activeStep = 1; break;
+				activeStep = 1;
+				break;
 			default:
 				activeStep = 0;
 		}

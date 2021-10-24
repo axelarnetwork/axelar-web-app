@@ -1,17 +1,14 @@
-import {IAsset, ISupportedChainType} from "../../constants";
-
-import {ISocketListenerTypes, StatusResponse}              from "../../interface";
-import {BaseWaitingService}                                from "../models/BaseWaitingService";
-import {IAssetInfo, IBlockchainWaitingService, IChainInfo} from "../models/Chains";
-import {ClientSocketConnect}                               from "../../TransferAssetBridge/ClientSocketConnect";
+import {IAssetInfo, IBlockchainWaitingService, IChainInfo, ISocketListenerTypes, StatusResponse} from "../../interface";
+import {BaseWaitingService}                                                                      from "../models/BaseWaitingService";
+import {ClientSocketConnect}                                                                     from "../../TransferAssetBridge/ClientSocketConnect";
 
 export default class WaitingService extends BaseWaitingService implements IBlockchainWaitingService {
 
-	constructor(chainInfo: ISupportedChainType, assetInfo: IAsset) {
+	constructor(chainInfo: IChainInfo, assetInfo: IAssetInfo) {
 		super(1, assetInfo.assetAddress as string);
 	}
 
-	public async wait(depositAddress: IAsset, interimStatusCb: StatusResponse, clientSocketConnect: ClientSocketConnect) {
+	public async wait(depositAddress: IAssetInfo, interimStatusCb: StatusResponse, clientSocketConnect: ClientSocketConnect) {
 
 		await clientSocketConnect.connect();
 

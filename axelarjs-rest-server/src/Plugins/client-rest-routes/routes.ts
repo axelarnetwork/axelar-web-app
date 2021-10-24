@@ -2,6 +2,7 @@
 
 import {Request, Server} from "@hapi/hapi";
 import {transferAsset}   from "./post/transferAsset";
+
 const package_json = require("../../../package.json");
 
 export const routes = {

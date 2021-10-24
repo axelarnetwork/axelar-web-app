@@ -1,9 +1,7 @@
-import {IAssetInfo, IChain, IChainInfo} from "../models/Chains";
 import WaitingService                   from "./WaitingService";
+import {IAssetInfo, IChain, IChainInfo} from "../../interface";
 
 export default class Cosmos implements IChain {
-
-	constructor() {}
 
 	public chainInfo: IChainInfo = {
 		chainSymbol: "COS",
@@ -13,6 +11,9 @@ export default class Cosmos implements IChain {
 			{assetSymbol: "LUNA", assetName: "Terra (To be supported)"},
 		]
 	};
+
+	constructor() {
+	}
 
 	public validateAddress = (addressInfo: IAssetInfo) => true;
 

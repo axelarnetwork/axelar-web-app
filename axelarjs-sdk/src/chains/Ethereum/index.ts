@@ -1,10 +1,8 @@
-import {IAssetInfo, IChain, IChainInfo} from "../models/Chains";
 import WaitingService                   from "./WaitingService";
 import {isAddress as isValidEVMAddress} from "ethers/lib/utils";
+import {IAssetInfo, IChain, IChainInfo} from "../../interface";
 
 export default class Ethereum implements IChain {
-
-	constructor() {}
 
 	public chainInfo: IChainInfo = {
 		chainSymbol: "ETH",
@@ -14,6 +12,9 @@ export default class Ethereum implements IChain {
 			{assetSymbol: "axelarPHOT", assetName: "Photon"},
 		]
 	};
+
+	constructor() {
+	}
 
 	public validateAddress = (addressInfo: IAssetInfo) => isValidEVMAddress(addressInfo.assetAddress as string);
 

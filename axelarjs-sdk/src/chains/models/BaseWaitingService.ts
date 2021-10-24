@@ -1,4 +1,4 @@
-import {IBlockchainWaitingService} from "./Chains";
+import {IBlockchainWaitingService} from "../../interface";
 
 export class BaseWaitingService implements IBlockchainWaitingService {
 
