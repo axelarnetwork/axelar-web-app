@@ -1,9 +1,10 @@
 'use strict';
+
 import Hapi, {Server}    from "@hapi/hapi";
 import {routesPlugin}    from "../Plugins/client-rest-routes/routes";
 import {socketPlugin}    from "../Plugins/client-socket";
-import {HealthPlugin}    from "hapi-k8s-health";
 import {restRateLimiter} from "../MiddleWare/RestRateLimiter";
+import {healthPlugin}    from "../Plugins/health/healthPlugin";
 
 export let server: Server;
 
@@ -17,21 +18,10 @@ export const init = async function (): Promise<Server> {
 		}
 	});
 
+	await server.register(healthPlugin);
 	await server.register(routesPlugin);
 	await server.register(socketPlugin);
 	await server.register(restRateLimiter);
-
-	await server.register({
-		plugin: HealthPlugin,
-		options: {
-			livenessProbes: {
-				status: () => Promise.resolve('Yeah !')
-			},
-			readinessProbes: {
-				health: () => Promise.resolve('ready TODO')
-			}
-		}
-	});
 
 	return server;
 };
@@ -42,7 +32,6 @@ export const start = async (): Promise<void> => {
 };
 
 process.on('unhandledRejection', (err) => {
-	console.error("unhandledRejection");
-	console.error(err);
+	console.error("unhandledRejection", err);
 	process.exit(1);
 });

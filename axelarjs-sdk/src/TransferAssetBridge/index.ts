@@ -35,8 +35,6 @@ export class TransferAssetBridge {
 
 		const depositAddress: IAssetInfo = await this.getDepositAddress(message);
 
-		console.log("deposit address", depositAddress);
-
 		this.listenForTransactionStatus(depositAddress,
 			message.sourceChainInfo,
 			sourceCbs.successCb,

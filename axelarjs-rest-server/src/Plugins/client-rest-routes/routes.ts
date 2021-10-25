@@ -1,6 +1,6 @@
 'use strict';
 
-import {Request, Server} from "@hapi/hapi";
+import {Server} from "@hapi/hapi";
 import {transferAsset}   from "./post/transferAsset";
 import {livenessPage}    from "./get/livenessPage";
 
