@@ -3,7 +3,6 @@ import {ChainList as ImportedChains, IChain, IChainInfo} from "@axelar-network/a
 
 const initialState: IChainInfo[] = ImportedChains.map((chain: IChain) => chain.chainInfo);
 
-console.log("imported chains",ImportedChains, initialState);
 export const ChainList = atom<any[]>({
 	key: "ChainList",
 	default: initialState,
