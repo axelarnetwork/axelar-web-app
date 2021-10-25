@@ -10,11 +10,12 @@ export class TransferAssetBridgeFacade {
 		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.hostUrl);
 	}
 
-	public static async transferAssets(message: IAssetTransferObject, waitCb: ICallbackStatus, errCb: ICallbackStatus): Promise<IAssetInfo> {
+	public static async transferAssets(message: IAssetTransferObject, sourceCbs: ICallbackStatus, destCbs: ICallbackStatus): Promise<IAssetInfo> {
 
 		try {
-			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, waitCb, errCb);
+			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, sourceCbs, destCbs);
 		} catch (e: any) {
+			sourceCbs?.failCb();
 			throw e;
 		}
 	}

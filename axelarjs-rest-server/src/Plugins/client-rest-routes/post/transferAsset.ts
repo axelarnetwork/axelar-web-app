@@ -27,7 +27,7 @@ export const transferAsset = {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
 
-			if (!validateDestinationAddress(payload?.selectedDestinationAsset))
+			if (!validateDestinationAddress(payload?.destinationChainInfo?.chainSymbol, payload?.selectedDestinationAsset))
 				throw Boom.badRequest("bad destination address");
 
 			const recaptchaResult: any = await handleRecaptcha(request.payload.recaptchaToken);
@@ -35,10 +35,10 @@ export const transferAsset = {
 				return Boom.forbidden("bad recaptcha verification");
 			}
 
-			const axelarMicroservices = new AxelarMicroservices();
-			const linkBody = constructLinkBody(payload);
-			linkBody.sender = await axelarMicroservices.getSender();
-			const link = await axelarMicroservices.link(linkBody);
+			// const axelarMicroservices = new AxelarMicroservices();
+			// const linkBody = constructLinkBody(payload);
+			// linkBody.sender = await axelarMicroservices.getSender();
+			// const link = await axelarMicroservices.link(linkBody);
 
 			const assetAddress: any = await new DepositAddressListener().listen(
 				payload.sourceChainInfo.chainName?.toLowerCase(),

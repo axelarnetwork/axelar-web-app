@@ -7,7 +7,7 @@ const Handlers = require('./handlers');
 /**
  * This plugin is used for the socket connection between the webapp and rest-server.
  */
-export const socketRegister = {
+const clientSocket = {
 	name: "server-connection",
 	version: "1.0.0",
 	register: (server: Server, options: any) => {
@@ -35,5 +35,12 @@ export const socketRegister = {
 			socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
 		});
 
+	}
+}
+
+export const socketPlugin = {
+	plugin: clientSocket,
+	options: {
+		message: 'ui socket initiated'
 	}
 }

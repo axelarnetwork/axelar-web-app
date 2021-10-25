@@ -1,9 +1,9 @@
 'use strict';
-
-import Hapi, {Server}   from "@hapi/hapi";
-import {routes}         from "../Plugins/client-rest-routes/routes";
-import {socketRegister} from "../Plugins/client-socket";
-import {HealthPlugin}   from "hapi-k8s-health";
+import Hapi, {Server}    from "@hapi/hapi";
+import {routesPlugin}    from "../Plugins/client-rest-routes/routes";
+import {socketPlugin}    from "../Plugins/client-socket";
+import {HealthPlugin}    from "hapi-k8s-health";
+import {restRateLimiter} from "../MiddleWare/RestRateLimiter";
 
 export let server: Server;
 
@@ -17,19 +17,9 @@ export const init = async function (): Promise<Server> {
 		}
 	});
 
-	await server.register({
-		plugin: routes,
-		options: {
-			message: 'hello'
-		}
-	});
-
-	await server.register({
-		plugin: socketRegister,
-		options: {
-			message: 'helloSocket'
-		}
-	});
+	await server.register(routesPlugin);
+	await server.register(socketPlugin);
+	await server.register(restRateLimiter);
 
 	await server.register({
 		plugin: HealthPlugin,
@@ -47,17 +37,12 @@ export const init = async function (): Promise<Server> {
 };
 
 export const start = async (): Promise<void> => {
-
 	console.log(`Listening on ${server.settings.host}:${server.settings.port}`);
-
 	return server.start();
-
 };
 
 process.on('unhandledRejection', (err) => {
-
 	console.error("unhandledRejection");
 	console.error(err);
 	process.exit(1);
-
 });
