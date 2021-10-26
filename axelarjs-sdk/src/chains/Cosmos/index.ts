@@ -7,7 +7,7 @@ export default class Cosmos implements IChain {
 		chainSymbol: "COS",
 		chainName: "Cosmos",
 		assets: [
-			{assetSymbol: "uPHOTON", assetName: "Cosmos Hub"},
+			{assetSymbol: "uphoton", assetName: "Cosmos Hub"},
 			{assetSymbol: "LUNA", assetName: "Terra (To be supported)"},
 		]
 	};

@@ -9,7 +9,7 @@ import {FooterComponent}                                                     fro
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection}                                                      from "state/ChainSelection";
+import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -21,6 +21,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const resetUserInputs = useResetUserInputs();
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
@@ -63,8 +64,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			{!sNumConfirms
 				? <div>
 					<div>
-						Next step: please deposit
-						<BoldSpan> {depositAddress?.assetSymbol} </BoldSpan>
+						Next step: please deposit/transfer
+						<BoldSpan> {selectedSourceAsset?.assetSymbol} </BoldSpan>
 						to the following address:
 					</div>
 					<br/>
