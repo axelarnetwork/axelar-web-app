@@ -33,6 +33,7 @@ export const socketRegister = {
 		io.on('connection', function (socket: any) {
 			console.log('New connection!', socket?.id, server.settings.port);
 			socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
+			socket.on(ISocketListenerTypes.WAIT_FOR_EVM_DEPOSIT, Handlers.listenForETHDeposit);
 		});
 
 	}
