@@ -1,10 +1,12 @@
-export * from "./IAssetTransferObject";
-export * from "./IMiscTopics";
+import {SourceOrDestination} from "./IMiscTopics";
+
+export *                     from "./IAssetTransferObject";
+export *                     from "./IMiscTopics";
 
 export interface IChain {
 	chainInfo: IChainInfo;
-	validateAddress?: (assetInfo: IAssetInfo) => boolean;
-	waitingService?: (chainInfo: IChainInfo, assetInfo: IAssetInfo) => IBlockchainWaitingService;
+	validateAddress: (assetInfo: IAssetInfo) => boolean;
+	waitingService: IBlockchainWaitingServiceFinder;
 }
 
 export interface IBlockchainWaitingService {
@@ -22,3 +24,8 @@ export interface IAssetInfo {
 	assetName?: string;
 	assetAddress?: string;
 }
+
+export type IBlockchainWaitingServiceFinder = (chainInfo: IChainInfo,
+                                               assetInfo: IAssetInfo,
+                                               sOrDChain: SourceOrDestination
+) => IBlockchainWaitingService;

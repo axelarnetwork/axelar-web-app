@@ -20,7 +20,7 @@ const abi: string[] = [
 	"event Transfer(address indexed from, address indexed to, uint amount)" 	// An event triggered whenever anyone transfers to someone else, IERC20.sol
 ];
 
-export default class WaitingService extends BaseWaitingService implements IBlockchainWaitingService {
+export default class EthersJsWaitingService extends BaseWaitingService implements IBlockchainWaitingService {
 
 	private provider;
 	private tokenContract;
