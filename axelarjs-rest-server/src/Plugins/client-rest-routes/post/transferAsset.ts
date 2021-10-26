@@ -5,14 +5,14 @@ import {
 	IAssetTransferObject,
 	validateDestinationAddress
 }                                 from "@axelar-network/axelarjs-sdk";
-import Boom                       from "@hapi/boom";
-import DepositAddressListener     from "../../../services/TendermintWebsocket/DepositAddressListener";
-import {AxelarMicroservices}      from "../../../services/AxelarMicroservices";
+import Boom                   from "@hapi/boom";
+import DepositAddressListener from "../../../Services/TendermintWebsocket/DepositAddressListener";
+import {AxelarMicroservices}  from "../../../Services/AxelarMicroservices";
 import {
 	constructLinkBody,
 	handleRecaptcha
-}                                 from "../../helpers";
-import {toProperCase}             from "../../../services/util/toProperCase";
+}                             from "../../helpers";
+import {toProperCase}         from "../../../Services/util/toProperCase";
 
 interface AssetTransferRequest extends Request {
 	payload: IAssetTransferObject;
@@ -27,7 +27,7 @@ export const transferAsset = {
 
 			let payload: IAssetTransferObject = request.payload as IAssetTransferObject;
 
-			if (!validateDestinationAddress(payload?.selectedDestinationAsset))
+			if (!validateDestinationAddress(payload?.destinationChainInfo?.chainSymbol, payload?.selectedDestinationAsset))
 				throw Boom.badRequest("bad destination address");
 
 			const recaptchaResult: any = await handleRecaptcha(request.payload.recaptchaToken);

@@ -1,13 +1,14 @@
 import {Server}               from "@hapi/hapi";
 import {ISocketListenerTypes} from "@axelar-network/axelarjs-sdk";
 import {handleRecaptcha}      from "../helpers";
+import {rateLimiter}          from "../../MiddleWare/SocketRateLimiter";
 
 const Handlers = require('./handlers');
 
 /**
  * This plugin is used for the socket connection between the webapp and rest-server.
  */
-export const socketRegister = {
+const clientSocket = {
 	name: "server-connection",
 	version: "1.0.0",
 	register: (server: Server, options: any) => {
@@ -30,11 +31,26 @@ export const socketRegister = {
 			}
 		})
 
-		io.on('connection', function (socket: any) {
-			console.log('New connection!', socket?.id, server.settings.port);
-			socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
-			socket.on(ISocketListenerTypes.WAIT_FOR_EVM_DEPOSIT, Handlers.listenForETHDeposit);
+
+
+		io.on('connection', async (socket: any) => {
+			try {
+				await rateLimiter.consume(socket.handshake.address); // consume 1 point per event from IP
+				console.log('New connection!', socket?.id, server.settings.port);
+				socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
+				socket.on(ISocketListenerTypes.WAIT_FOR_EVM_DEPOSIT, Handlers.listenForETHDeposit);
+			} catch (reject: any) {
+				console.log("Socket blocked because of rate limiting");
+				socket.emit("blocked", {"retry-ms": reject.msBeforeNext});
+			}
 		});
 
+	}
+}
+
+export const socketPlugin = {
+	plugin: clientSocket,
+	options: {
+		message: 'ui socket initiated'
 	}
 }

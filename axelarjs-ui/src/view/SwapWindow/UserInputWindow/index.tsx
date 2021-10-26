@@ -51,7 +51,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					assetAddress: destAddr as string,
 					assetSymbol: destChainSelection?.chainSymbol
 				}
-				const validAddr: boolean = validateDestinationAddress(destToken);
+				const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
 				setIsValidDestinationAddress(validAddr);
 
 				if (validAddr)
