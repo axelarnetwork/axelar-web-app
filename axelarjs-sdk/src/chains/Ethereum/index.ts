@@ -1,7 +1,7 @@
-import WaitingService                                        from "./WaitingService";
-import {isAddress as isValidEVMAddress}                      from "ethers/lib/utils";
-import {IAssetInfo, IChain, IChainInfo, SourceOrDestination} from "../../interface";
-import EthersJsWaitingService                                from "./EthersJsWaitingService";
+import WaitingService                                                                   from "./WaitingService";
+import {isAddress as isValidEVMAddress}                                                 from "ethers/lib/utils";
+import {IAssetInfo, IBlockchainWaitingService, IChain, IChainInfo, SourceOrDestination} from "../../interface";
+import EthersJsWaitingService                                                           from "./EthersJsWaitingService";
 
 export default class Ethereum implements IChain {
 
@@ -20,8 +20,12 @@ export default class Ethereum implements IChain {
 	public validateAddress = (addressInfo: IAssetInfo) => isValidEVMAddress(addressInfo.assetAddress as string);
 
 	public waitingService = (chainInfo: IChainInfo, assetInfo: IAssetInfo, sOrDChain: SourceOrDestination) => {
-		return sOrDChain === "source"
-			? new WaitingService(chainInfo, assetInfo)
-			: new EthersJsWaitingService(chainInfo, assetInfo)
+		const map: { [key in SourceOrDestination]: IBlockchainWaitingService } = {
+			"source": new WaitingService(chainInfo, assetInfo),
+			"destination": new EthersJsWaitingService(chainInfo, assetInfo)
+		};
+		if (!map[sOrDChain])
+			throw new Error("Ethereum: cannot get waiting service");
+		return map[sOrDChain];
 	}
 }
