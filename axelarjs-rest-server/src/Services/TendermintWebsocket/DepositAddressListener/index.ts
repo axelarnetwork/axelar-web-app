@@ -5,6 +5,7 @@ export default class DepositAddressListener extends BaseListener {
 
 	private static chainAliasMap: { [key: string]: string } = {
 		"cosmos": "axelarnet",
+		"axelar": "axelarnet",
 		"ethereum": "evm"
 	}
 
@@ -22,7 +23,7 @@ export default class DepositAddressListener extends BaseListener {
 			if (DepositAddressListener.chainAliasMap[sourceChain])
 				sourceChain = DepositAddressListener.chainAliasMap[sourceChain];
 			// a cosmos link is really an axelarnet link
-			if (destinationChain?.toLowerCase() === "cosmos" && DepositAddressListener.chainAliasMap[destinationChain?.toLowerCase()])
+			if (["cosmos", "axelar"].includes(destinationChain?.toLowerCase()) && DepositAddressListener.chainAliasMap[destinationChain?.toLowerCase()])
 				destinationChain = DepositAddressListener.chainAliasMap[destinationChain.toLowerCase()];
 
 			const event: TendermintEventType = "Tx";

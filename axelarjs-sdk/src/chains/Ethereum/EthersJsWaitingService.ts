@@ -27,7 +27,7 @@ export default class EthersJsWaitingService extends BaseWaitingService implement
 	private filter: any;
 
 	constructor(chainInfo: IChainInfo, assetInfo: IAssetInfo) {
-		console.log("chain info and asset info", chainInfo, assetInfo);
+		console.log("EthersJs chain info and asset info", chainInfo, assetInfo);
 		const tokenContract: string = tokenAddressMap[assetInfo.assetSymbol?.toLowerCase() as string] || "";
 		const depositAddress: string = assetInfo.assetAddress as string;
 		super(30, depositAddress);

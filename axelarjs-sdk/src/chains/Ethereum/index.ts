@@ -21,12 +21,15 @@ export default class Ethereum implements IChain {
 	public validateAddress = (addressInfo: IAssetInfo) => isValidEVMAddress(addressInfo.assetAddress as string);
 
 	public waitingService = (chainInfo: IChainInfo, assetInfo: IAssetInfo, sOrDChain: SourceOrDestination) => {
-		const map: { [key in SourceOrDestination]: IBlockchainWaitingService } = {
-			"source": new WaitingService(chainInfo, assetInfo),
-			"destination": new EthersJsWaitingService(chainInfo, assetInfo)
-		};
-		if (!map[sOrDChain])
-			throw new Error("Ethereum: cannot get waiting service");
-		return map[sOrDChain];
+		// const map: { [key in SourceOrDestination]: IBlockchainWaitingService } = {
+		// 	"source": new WaitingService(chainInfo, assetInfo),
+		// 	"destination": new EthersJsWaitingService(chainInfo, assetInfo)
+		// };
+		// if (!map[sOrDChain])
+		// 	throw new Error("Ethereum: cannot get waiting service");
+		if (sOrDChain === "source")
+			return new WaitingService(chainInfo, assetInfo);
+		else
+			return new EthersJsWaitingService(chainInfo, assetInfo);
 	}
 }
