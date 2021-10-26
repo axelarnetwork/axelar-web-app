@@ -8,6 +8,7 @@ export default class Ethereum implements IChain {
 	public chainInfo: IChainInfo = {
 		chainSymbol: "ETH",
 		chainName: "Ethereum",
+		noteOnWaitTimes: "Confirmations on Ethereum can take upwards of 30 minutes or more",
 		assets: [
 			{assetSymbol: "uaxl", assetName: "Axelar"},
 			{assetSymbol: "axelarPHOT", assetName: "Photon"},

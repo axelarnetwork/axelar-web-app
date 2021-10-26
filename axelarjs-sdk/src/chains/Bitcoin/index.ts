@@ -9,7 +9,8 @@ export default class Bitcoin implements IChain {
 		chainName: "Bitcoin",
 		assets: [
 			{assetSymbol: "BTC", assetName: "Bitcoin"}
-		]
+		],
+		noteOnWaitTimes: "Confirmations on Bitcoin can take upwards of [90-120] minutes"
 	}
 
 	constructor() {

@@ -16,6 +16,7 @@ export interface IBlockchainWaitingService {
 export interface IChainInfo {
 	chainSymbol: string;
 	chainName: string;
+	noteOnWaitTimes: string;
 	assets?: IAssetInfo[];
 }
 
