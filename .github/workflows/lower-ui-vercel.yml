@@ -20,7 +20,7 @@ jobs:
             ${{ runner.os }}-node-
       - name: build
         run: |
-          cd axelar-web-app/axelarjs-ui
+          cd axelarjs-ui
           npm install
           npm run build
 
