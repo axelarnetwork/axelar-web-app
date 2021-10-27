@@ -52,11 +52,17 @@ export default function usePostTransactionToBridge() {
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
 				msg.recaptchaToken = token;
-				const res: IAssetInfo = await TransferAssetBridgeFacade
-				.transferAssets(msg,
-					{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
-					{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
-				setDepositAddress(res);
+				try {
+					const res: IAssetInfo = await TransferAssetBridgeFacade
+					.transferAssets(msg,
+						{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
+						{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
+					setDepositAddress(res);
+				} catch (e) {
+					setShowTransactionStatusWindow(false);
+					console.log("transfer bridge error",e);
+				}
+
 			}
 		})
 

@@ -1,5 +1,5 @@
 import {IAssetInfo, ISocketListenerTypes} from "@axelar-network/axelarjs-sdk";
-import DepositConfirmationListener        from "../../services/TendermintWebsocket/DepositConfirmationListener";
+import DepositConfirmationListener        from "../../Services/TendermintWebsocket/DepositConfirmationListener";
 
 exports.listenForAXLDeposit = async function (messageParam: IAssetInfo) {
 
