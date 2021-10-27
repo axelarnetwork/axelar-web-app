@@ -20,6 +20,7 @@ jobs:
             ${{ runner.os }}-node-
       - name: build
         run: |
+          export NPM_TOKEN=${{ secrets.NPM_TOKEN }}
           cd axelarjs-ui
           npm install
           npm run build
