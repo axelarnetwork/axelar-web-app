@@ -1,0 +1,47 @@
+name: axelarjs-ui deployment
+on:
+  push:
+    branches:
+      - main
+  pull_request_target:
+  workflow_dispatch:
+
+jobs:
+  react:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/axelarjs-ui/.npmrc
+#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#           restore-keys: |
+#             ${{ runner.os }}-node-
+      - name: build
+        run: |
+          cd axelar-web-app/axelarjs-ui
+          npm install
+          npm run build
+
+      - uses: ./
+        id: vercel-action-staging
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: axelar-web-app/axelarjs-ui
+          alias-domains: |
+            staging.axelar-bridge-app.axelar.dev
+            pr-{{PR_NUMBER}}.axelar-bridge-app.axelar.dev
+      - uses: ./
+        id: vercel-action-production
+        if: github.event_name == 'push'
+        with:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: axelar-web-app/axelarjs-ui
+          vercel-args: '--prod '
