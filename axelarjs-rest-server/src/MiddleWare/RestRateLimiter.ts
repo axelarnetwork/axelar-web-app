@@ -4,6 +4,7 @@ import Boom from "@hapi/boom";
 This configuration rate limits the rest endpoints, which in turn
 makes a downstream call to microservices.
 The figures are configured as environment variables.
+>>>>>>> main
 * */
 export const restRateLimiter = {
 	plugin: require('hapi-rate-limit'),

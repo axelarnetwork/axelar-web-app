@@ -7,16 +7,13 @@ export default class DepositConfirmationListener extends BaseListener {
 		super();
 	}
 
-	public listen(axelarDepositAddress: string) {
+	public listen(query: { [key: string]: string }) {
 
 		return new Promise(async (resolve, reject) => {
 
 			await super.initialize();
 
 			const event: TendermintEventType = "Tx";
-			const query: any = {
-				'transfer.recipient': axelarDepositAddress,
-			};
 			const handler = (data: TendermintSubscriptionResponse) => {
 				resolve(data);
 			}

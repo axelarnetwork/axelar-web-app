@@ -10,6 +10,6 @@ The figures are configured as environment variables.
 
 * */
 export const rateLimiter = new RateLimiterMemory({
-	points: Number(String(process.env.SOCKET_SERVICE_USER_LIMIT)) | 50,
+	points: Number(String(process.env.SOCKET_SERVICE_USER_LIMIT)) | 50, //slightly more relaxed than restRateLimiter
 	duration: Number(String(process.env.SOCKET_SERVICE_USER_LIMIT_DURATION)) | 120_000,
 });

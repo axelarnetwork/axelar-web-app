@@ -3,10 +3,6 @@ import {BaseListener}                                        from "../BaseListen
 
 export default class DepositAddressListener extends BaseListener {
 
-	private static chainAliasMap: { [key: string]: string } = {
-		"cosmos": "axelarnet"
-	}
-
 	constructor() {
 		super();
 	}
@@ -17,35 +13,80 @@ export default class DepositAddressListener extends BaseListener {
 
 			await super.initialize();
 
-			// a cosmos link is really an axelarnet link
-			if (DepositAddressListener.chainAliasMap[sourceChain])
-				sourceChain = DepositAddressListener.chainAliasMap[sourceChain];
-
 			const event: TendermintEventType = "Tx";
-			const query: any = {
-				'link.module': sourceChain,
-				'link.destinationChain': destinationChain,
-				'link.destinationAddress': destinationAddress
-			};
-			const handler = (data: TendermintSubscriptionResponse) => {
-				const destinationAddress: any = this.parseDestinationAddress(data);
-				console.log("destination address", destinationAddress);
-				resolve(destinationAddress);
-				// this.client.destroy();
-			}
 
-			super.subscribe(event, query, handler);
+			super.subscribe(event,
+				getQuery(sourceChain, destinationChain, destinationAddress),
+				(data: TendermintSubscriptionResponse) => {
+					const destinationAddress: any = this.parseDestinationAddress(data, sourceChain);
+					console.log("destination address", destinationAddress);
+					if (destinationAddress)
+						resolve(destinationAddress);
+					else
+						reject("could not resolve destination address");
+				}
+			);
 
 		});
 
 	}
 
-	private parseDestinationAddress(data: any): string {
-		//TODO: ... is there a better (less brittle) way of doing this?
-		return JSON.parse(data.value.TxResult.result.log)[0]
-			.events[0]
-		.attributes
-		.find((attribute: any) => attribute.key === 'depositAddress')
-			?.value;
+	private parseDestinationAddress(data: any, sourceChain: string): string {
+
+		const field: string = sourceChain === "ethereum" ? "burnAddress" : "depositAddress";
+		return JSON.parse(data.value.TxResult.result.log)[0]?.events[0]?.attributes
+		?.find((attribute: any) => attribute.key === field)?.value;
 	}
 }
+
+const getQuery = (sourceChain: string, destinationChain: string, destinationAddress: string) => {
+	const AXELAR_NET = "axelarnet";
+	const sourceMap: { [key: string]: string } = {
+		"cosmos": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"axelar": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"ethereum": "evm"     // ethereum is part of the evm module
+	}
+	const destinationMap: { [key: string]: string } = {
+		"cosmos": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"axelar": AXELAR_NET  // a cosmos link is really an axelarnet link
+	}
+
+	let query: any;
+
+	if (sourceMap[sourceChain?.toLowerCase()])
+		sourceChain = sourceMap[sourceChain.toLowerCase()];
+	if (destinationMap[destinationChain?.toLowerCase()])
+		destinationChain = destinationMap[destinationChain.toLowerCase()];
+
+	if (AXELAR_NET.includes(destinationChain)) {
+		query = {
+			'message.module': sourceChain,
+			'message.destinationChain': AXELAR_NET,
+			'message.address': destinationAddress
+		}
+	} else {
+		query = {
+			'link.module': sourceChain,
+			'link.destinationChain': destinationChain,
+			'link.destinationAddress': destinationAddress
+		}
+	}
+	return query;
+}
+/*
+NOTES:
+
+Query for mint Cosmos >> Ethereum:
+~~~~~SUBSCRIBING tm.event='Tx' AND link.module='axelarnet' AND link.destinationChain='Ethereum' AND link.destinationAddress='0x74Ccd7d9F1F40417C6F7fD1151429a2c44c34e6d'
+
+Query needed for Ethereum >> Axelarnet:
+0: {key: 'action', value: 'Link'}
+1: {key: 'module', value: 'evm'}
+2: {key: 'chain', value: 'ethereum'}
+3: {key: 'burnAddress', value: '0x937Dc9AFD82342F1E5F82Dd444c1199322fCf7B7'}
+4: {key: 'address', value: 'axelar1vacnefnxhxyt3slarl2rtwaq3xrcd7v2slelqe'}
+5: {key: 'destinationChain', value: 'axelarnet'}
+6: {key: 'tokenAddress', value: '0xb1bfDBcd65292792f8fB4036a718e1b5C01fec0C'},
+so link.module='evm' AND link.destinationChain='axelarnet' AND link.address='axelar1vacnefnxhxyt3slarl2rtwaq3xrcd7v2slelqe'
+*
+* */

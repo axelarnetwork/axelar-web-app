@@ -36,6 +36,7 @@ const clientSocket = {
 				await rateLimiter.consume(socket.handshake.address); // consume 1 point per event from IP
 				console.log('New connection!', socket?.id, server.settings.port);
 				socket.on(ISocketListenerTypes.WAIT_FOR_AXL_DEPOSIT, Handlers.listenForAXLDeposit);
+				socket.on(ISocketListenerTypes.WAIT_FOR_EVM_DEPOSIT, Handlers.listenForETHDeposit);
 			} catch (reject: any) {
 				console.log("Socket blocked because of rate limiting");
 				socket.emit("blocked", {"retry-ms": reject.msBeforeNext});

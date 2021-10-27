@@ -9,7 +9,7 @@ import {FooterComponent}                                                     fro
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection}                                                      from "state/ChainSelection";
+import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -21,6 +21,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const resetUserInputs = useResetUserInputs();
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
@@ -36,7 +37,6 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 	useEffect(() => {
 		//TODO: clean this up
-		console.log("number of source confirmations", sNumConfirms, sReqNumConfirms, dNumConfirms, dReqNumConfirms);
 		let activeStep: number;
 
 		switch (true) {
@@ -63,12 +63,16 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			{!sNumConfirms
 				? <div>
 					<div>
-						Next step: please deposit
-						<BoldSpan> {depositAddress?.assetSymbol} </BoldSpan>
+						Next step: please deposit/transfer
+						<BoldSpan> {selectedSourceAsset?.assetSymbol} </BoldSpan>
+						in
+						<BoldSpan> {sourceChain?.chainName} </BoldSpan>
 						to the following address:
 					</div>
 					<br/>
 					<div><BoldSpan> {depositAddress?.assetAddress}</BoldSpan></div>
+					<br />
+					<div>FYI: {sourceChain?.noteOnWaitTimes}, although network speeds will vary.</div>
 				</div>
 				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
@@ -79,11 +83,16 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				</div>
 			}
 		</div>;
-		dict[2] = "Deposit Confirmed. Axelar Network is actively working on your request...";
-		dict[3] = <div><p>Your transaction has been detected on the {destinationChain?.chainName} blockchain, so
-			you're done as far as Axelar is concerned. Feel free to view the transaction status directly on that chain:
-			<BoldSpan>{transactionHash}</BoldSpan>
-		</p>
+		dict[2] = "Deposit Confirmed. Working on your request...";
+		dict[3] = <div>All set: your transaction has been detected on {destinationChain?.chainName}.
+			{
+				transactionHash
+					? <div>Feel free to view the transaction status directly on that chain:
+						<br /><br />
+						<BoldSpan> {transactionHash}</BoldSpan>
+					</div>
+					: null
+			}
 		</div>;
 		return dict[activeStep];
 	}
@@ -93,13 +102,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	1 - awaiting generation of deposit address for source chain
 	2 - waiting for confirmations of deposit
 	3 - waiting for first confirmation to show up on destination chain
-	4 - waiting for requisite number of confirmations of destination chain
+	4 - deposit confirmation on destination chain
 	* */
 	const steps: string[] = [
 		"Generating Source Chain Deposit Address",
 		"Waiting on Source Chain Confirmations",
 		"Axelar Network working...",
-		"Waiting on Destination Chain Confirmations"
+		"Deposit Confirmed on Destination Chain"
 	];
 	return <GridDisplay>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
@@ -111,7 +120,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				/>)}
 			</Stepper>
 				{generateStatusBody(activeStep)}
-				{activeStep >= 1 &&
+				{activeStep > 1 &&
                 <FooterComponent>
                     <Button variant="secondary" onClick={() => {
 						resetUserInputs();

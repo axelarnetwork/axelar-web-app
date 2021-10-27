@@ -26,13 +26,11 @@ const GlobalStyle = createGlobalStyle`
 new TransferAssetBridgeFacade(downstreamServices.getEnvironmentBasedConfigs(process.env.REACT_APP_STAGE || "")?.AXELAR_BRIDGE_URL);
 
 ReactDOM.render(
-	<React.StrictMode>
-		<RecoilRoot>
-			<RecoilLogger/>
-			<App/>
-			<GlobalStyle/>
-		</RecoilRoot>
-	</React.StrictMode>,
+	<RecoilRoot>
+		<RecoilLogger/>
+		<App/>
+		<GlobalStyle/>
+	</RecoilRoot>,
 	document.getElementById('root')
 );
 
