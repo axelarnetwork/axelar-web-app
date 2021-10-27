@@ -1,16 +1,17 @@
 import Boom from "@hapi/boom";
 
 /*
-userLimit == 2 && expiresIn 60 * 1000 = 2 requests a minute per user
-TODO: revisit these params if necessary
+This configuration rate limits the rest endpoints, which in turn
+makes a downstream call to microservices.
+The figures are configured as environment variables.
 * */
 export const restRateLimiter = {
 	plugin: require('hapi-rate-limit'),
 	options: {
-		userLimit: 2,
+		userLimit: Number(String(process.env.REST_SERVICE_USER_LIMIT)) | 2,
 		userCache: {
 			segment: "hapi-rate-limit-user",
-			expiresIn: 60 * 1000,
+			expiresIn: Number(String(process.env.REST_SERVICE_USER_LIMIT_DURATION)) | 60_000,
 		},
 		limitExceededResponse: () => Boom.tooManyRequests('Rate limit exceeded'),
 	}
