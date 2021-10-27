@@ -2,7 +2,7 @@ name: axelarjs-ui deployment
 on:
   push:
     branches:
-      - main
+      - ui-deployment-test
   pull_request_target:
   workflow_dispatch:
 
