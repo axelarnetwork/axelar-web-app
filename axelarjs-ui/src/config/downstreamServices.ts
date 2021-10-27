@@ -8,6 +8,7 @@ interface IDownstreamServicesConfigs {
 	AXELAR_BRIDGE_URL: string;
 }
 
+const environment: string = process.env.REST_SERVER_URL as string;
 const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 	AXELAR_BRIDGE_URL
 })
@@ -15,9 +16,9 @@ const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 const configsByEnvironment: { [key: string]: IDownstreamServicesConfigs } = {};
 
 configsByEnvironment.local = setConfigs("http://localhost:4000");
-configsByEnvironment.devnet = setConfigs("https://sheltered-tor-78765.herokuapp.com");
-configsByEnvironment.testnet = setConfigs("http://localhost:4000");
-configsByEnvironment.mainnet = setConfigs("http://localhost:4000");
+configsByEnvironment.devnet = setConfigs(environment);
+configsByEnvironment.testnet = setConfigs(environment);
+configsByEnvironment.mainnet = setConfigs(environment);
 
 const getEnvironmentBasedConfigs = (environment: string) => {
 	return configsByEnvironment[environment || "devnet"];
