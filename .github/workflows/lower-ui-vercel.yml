@@ -32,7 +32,7 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: axelar-web-app/axelarjs-ui
+          working-directory: axelarjs-ui
           alias-domains: |
             staging.axelar-bridge-app.axelar.dev
             pr-{{PR_NUMBER}}.axelar-bridge-app.axelar.dev
@@ -44,5 +44,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: axelar-web-app/axelarjs-ui
+          working-directory: axelarjs-ui
           vercel-args: '--prod '
