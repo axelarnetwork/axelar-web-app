@@ -27,7 +27,6 @@ export default class EthersJsWaitingService extends BaseWaitingService implement
 	private filter: any;
 
 	constructor(chainInfo: IChainInfo, assetInfo: IAssetInfo) {
-		console.log("EthersJs chain info and asset info", chainInfo, assetInfo);
 		const tokenContract: string = tokenAddressMap[assetInfo.assetSymbol?.toLowerCase() as string] || "";
 		const depositAddress: string = assetInfo.assetAddress as string;
 		super(30, depositAddress);
@@ -37,9 +36,6 @@ export default class EthersJsWaitingService extends BaseWaitingService implement
 	}
 
 	public async wait(address: string, cb: any): Promise<any> {
-
-		console.log("waiting on ethers", address);
-
 		return new Promise((resolve, reject) => {
 			this.tokenContract.once(this.filter, (from, to, amount, event) => {
 				console.log(`Incoming amount of: ${formatEther(amount)}, from: ${from}.`, event);
@@ -48,7 +44,6 @@ export default class EthersJsWaitingService extends BaseWaitingService implement
 				resolve(event);
 			});
 		});
-
 	}
 
 }
