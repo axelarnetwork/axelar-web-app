@@ -31,8 +31,6 @@ const clientSocket = {
 			}
 		})
 
-
-
 		io.on('connection', async (socket: any) => {
 			try {
 				await rateLimiter.consume(socket.handshake.address); // consume 1 point per event from IP

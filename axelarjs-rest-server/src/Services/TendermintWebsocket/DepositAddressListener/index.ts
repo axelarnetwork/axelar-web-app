@@ -18,7 +18,7 @@ export default class DepositAddressListener extends BaseListener {
 			super.subscribe(event,
 				getQuery(sourceChain, destinationChain, destinationAddress),
 				(data: TendermintSubscriptionResponse) => {
-				const destinationAddress: any = this.parseDestinationAddress(data, sourceChain);
+					const destinationAddress: any = this.parseDestinationAddress(data, sourceChain);
 					console.log("destination address", destinationAddress);
 					if (destinationAddress)
 						resolve(destinationAddress);
@@ -35,7 +35,7 @@ export default class DepositAddressListener extends BaseListener {
 
 		const field: string = sourceChain === "ethereum" ? "burnAddress" : "depositAddress";
 		return JSON.parse(data.value.TxResult.result.log)[0]?.events[0]?.attributes
-			?.find((attribute: any) => attribute.key === field)?.value;
+		?.find((attribute: any) => attribute.key === field)?.value;
 	}
 }
 
