@@ -1,5 +1,3 @@
-# trying a simpler one
-
 name: deploy-ui-to-devnet-and-testnet
 on:
   push:
