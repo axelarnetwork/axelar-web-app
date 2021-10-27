@@ -21,8 +21,6 @@ exports.listenForETHDeposit = async function (messageParam: IAssetInfo) {
 		'depositConfirmation.burnAddress': messageParam.assetAddress
 	}
 
-	console.log("query in listenForETHDeposit",query);
-
 	const depositConfirmation: any = await new DepositConfirmationListener().listen(query);
 
 	console.log("asset deposit confirmed on EVM", depositConfirmation);

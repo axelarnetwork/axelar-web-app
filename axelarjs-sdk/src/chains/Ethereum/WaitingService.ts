@@ -5,13 +5,10 @@ import {ClientSocketConnect}                                                    
 export default class WaitingService extends BaseWaitingService implements IBlockchainWaitingService {
 
 	constructor(chainInfo: IChainInfo, assetInfo: IAssetInfo) {
-		console.log("Tendermint waiting service for ethereum",chainInfo, assetInfo);
 		super(1, assetInfo.assetAddress as string);
 	}
 
 	public async wait(depositAddress: IAssetInfo, interimStatusCb: StatusResponse, clientSocketConnect: ClientSocketConnect) {
-
-		await clientSocketConnect.connect();
 
 		const data: any = await clientSocketConnect.emitMessageAndWaitForReply(
 			ISocketListenerTypes.WAIT_FOR_EVM_DEPOSIT,

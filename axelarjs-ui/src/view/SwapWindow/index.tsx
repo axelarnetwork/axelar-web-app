@@ -6,6 +6,7 @@ import TransactionStatusWindow    from "./TransactionStatusWindow";
 
 const SwapWindow = (): ReactElement => {
 
+
 	const [
 		showTransactionStatusWindow,
 		handleTransactionSubmission,

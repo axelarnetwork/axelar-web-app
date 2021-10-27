@@ -1,11 +1,11 @@
-import {useEffect, useState} from "react";
-import downstreamServices    from "config/downstreamServices";
+import {useCallback, useState} from "react";
+import downstreamServices      from "config/downstreamServices";
 
 const useLoadRecaptcha = () => {
 
 	const [isRecaptchaSet, setIsRecaptchaSet] = useState(false);
 
-	useEffect(() => {
+	const initiateRecaptcha = useCallback(() => {
 
 		const loadScriptByURL = (id: string, url: string, cb: () => void) => {
 
@@ -23,13 +23,13 @@ const useLoadRecaptcha = () => {
 			if (hasScriptDownloaded && cb) cb();
 		}
 
-		loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${downstreamServices.RECAPTCHA_SITE_KEY}`, () => {
-			setIsRecaptchaSet(true);
-			console.log("is recaptcha set", isRecaptchaSet);
-		});
-	}, [isRecaptchaSet]);
+		loadScriptByURL("recaptcha-key",
+			`https://www.google.com/recaptcha/api.js?render=${downstreamServices.RECAPTCHA_SITE_KEY}`,
+			() => setIsRecaptchaSet(true)
+		);
+	}, []);
 
-	return isRecaptchaSet;
+	return [isRecaptchaSet, initiateRecaptcha] as const;
 }
 
 export default useLoadRecaptcha;

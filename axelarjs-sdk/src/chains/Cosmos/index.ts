@@ -1,7 +1,7 @@
-import WaitingService                   from "./WaitingService";
-import {IAssetInfo, IChain, IChainInfo} from "../../interface";
+import {IChain, IChainInfo} from "../../interface";
+import Axelar               from "../Axelar";
 
-export default class Cosmos implements IChain {
+export default class Cosmos extends Axelar implements IChain {
 
 	public chainInfo: IChainInfo = {
 		chainSymbol: "COS",
@@ -14,10 +14,7 @@ export default class Cosmos implements IChain {
 	};
 
 	constructor() {
+		super();
 	}
-
-	public validateAddress = (addressInfo: IAssetInfo) => true;
-
-	public waitingService = (chainInfo: IChainInfo, assetInfo: IAssetInfo) => new WaitingService(chainInfo, assetInfo)
 
 }

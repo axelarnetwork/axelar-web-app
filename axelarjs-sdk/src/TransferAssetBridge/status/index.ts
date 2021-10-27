@@ -9,7 +9,6 @@ ChainList.forEach((chainInfo: IChain) => {
 });
 
 const getWaitingService = (type: string, chainInfo: IChainInfo, assetInfo: IAssetInfo, sOrDChain: SourceOrDestination) => {
-	console.log("waiting service map",type.toLowerCase(),chainInfo, assetInfo, sOrDChain,waitingServiceMap);
 	return waitingServiceMap[type.toLowerCase()](chainInfo, assetInfo, sOrDChain);
 };
 

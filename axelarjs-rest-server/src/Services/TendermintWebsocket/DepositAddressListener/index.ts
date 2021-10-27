@@ -3,12 +3,6 @@ import {BaseListener}                                        from "../BaseListen
 
 export default class DepositAddressListener extends BaseListener {
 
-	private static chainAliasMap: { [key: string]: string } = {
-		"cosmos": "axelarnet",
-		"axelar": "axelarnet",
-		"ethereum": "evm"
-	}
-
 	constructor() {
 		super();
 	}
@@ -19,43 +13,19 @@ export default class DepositAddressListener extends BaseListener {
 
 			await super.initialize();
 
-			// a cosmos link is really an axelarnet link
-			if (DepositAddressListener.chainAliasMap[sourceChain])
-				sourceChain = DepositAddressListener.chainAliasMap[sourceChain];
-			// a cosmos link is really an axelarnet link
-			if (["cosmos", "axelar"].includes(destinationChain?.toLowerCase()) && DepositAddressListener.chainAliasMap[destinationChain?.toLowerCase()])
-				destinationChain = DepositAddressListener.chainAliasMap[destinationChain.toLowerCase()];
-
 			const event: TendermintEventType = "Tx";
 
-			let query: any;
-
-			//TODO: I don't know why these are the events... this is madness.
-			if (destinationChain === "axelarnet") {
-				query = {
-					'message.module': sourceChain,
-					'message.destinationChain': destinationChain,
-					'message.address': destinationAddress
-				}
-			} else {
-				query = {
-					'link.module': sourceChain,
-					'link.destinationChain': destinationChain,
-					'link.destinationAddress': destinationAddress
-				}
-			}
-
-			const handler = (data: TendermintSubscriptionResponse) => {
+			super.subscribe(event,
+				getQuery(sourceChain, destinationChain, destinationAddress),
+				(data: TendermintSubscriptionResponse) => {
 				const destinationAddress: any = this.parseDestinationAddress(data, sourceChain);
-				console.log("destination address", destinationAddress);
-				if (destinationAddress)
-					resolve(destinationAddress);
-				else
-					reject("could not resolve destination address");
-				// this.client.destroy();
-			}
-
-			super.subscribe(event, query, handler);
+					console.log("destination address", destinationAddress);
+					if (destinationAddress)
+						resolve(destinationAddress);
+					else
+						reject("could not resolve destination address");
+				}
+			);
 
 		});
 
@@ -63,15 +33,46 @@ export default class DepositAddressListener extends BaseListener {
 
 	private parseDestinationAddress(data: any, sourceChain: string): string {
 
-		const field: string = sourceChain === "evm" ? "burnAddress" : "depositAddress";
-
-		console.log(JSON.stringify(data));
-		//TODO: ... is there a better (less brittle) way of doing this?
-		return JSON.parse(data.value.TxResult.result.log)[0].events[0].attributes
-		.find((attribute: any) => attribute.key === field)?.value;
+		const field: string = sourceChain === "ethereum" ? "burnAddress" : "depositAddress";
+		return JSON.parse(data.value.TxResult.result.log)[0]?.events[0]?.attributes
+			?.find((attribute: any) => attribute.key === field)?.value;
 	}
 }
 
+const getQuery = (sourceChain: string, destinationChain: string, destinationAddress: string) => {
+	const AXELAR_NET = "axelarnet";
+	const sourceMap: { [key: string]: string } = {
+		"cosmos": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"axelar": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"ethereum": "evm"     // ethereum is part of the evm module
+	}
+	const destinationMap: { [key: string]: string } = {
+		"cosmos": AXELAR_NET, // a cosmos link is really an axelarnet link
+		"axelar": AXELAR_NET  // a cosmos link is really an axelarnet link
+	}
+
+	let query: any;
+
+	if (sourceMap[sourceChain?.toLowerCase()])
+		sourceChain = sourceMap[sourceChain.toLowerCase()];
+	if (destinationMap[destinationChain?.toLowerCase()])
+		destinationChain = destinationMap[destinationChain.toLowerCase()];
+
+	if (AXELAR_NET.includes(destinationChain)) {
+		query = {
+			'message.module': sourceChain,
+			'message.destinationChain': AXELAR_NET,
+			'message.address': destinationAddress
+		}
+	} else {
+		query = {
+			'link.module': sourceChain,
+			'link.destinationChain': destinationChain,
+			'link.destinationAddress': destinationAddress
+		}
+	}
+	return query;
+}
 /*
 NOTES:
 

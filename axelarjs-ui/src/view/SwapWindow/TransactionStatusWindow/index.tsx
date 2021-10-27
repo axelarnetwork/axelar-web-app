@@ -37,7 +37,6 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 	useEffect(() => {
 		//TODO: clean this up
-		console.log("number of source confirmations", sNumConfirms, sReqNumConfirms, dNumConfirms, dReqNumConfirms);
 		let activeStep: number;
 
 		switch (true) {
@@ -85,7 +84,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			}
 		</div>;
 		dict[2] = "Deposit Confirmed. Working on your request...";
-		dict[3] = <div><p>All set: your transaction has been detected on {destinationChain?.chainName}.
+		dict[3] = <div>All set: your transaction has been detected on {destinationChain?.chainName}.
 			{
 				transactionHash
 					? <div>Feel free to view the transaction status directly on that chain:
@@ -94,7 +93,6 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 					</div>
 					: null
 			}
-		</p>
 		</div>;
 		return dict[activeStep];
 	}
