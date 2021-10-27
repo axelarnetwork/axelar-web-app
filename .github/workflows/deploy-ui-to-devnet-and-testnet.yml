@@ -2,7 +2,7 @@ name: deploy-ui-to-devnet-and-testnet
 on:
   push:
     branches:
-      - develop
+      - ui-deployment-test
   pull_request_target:
   workflow_dispatch:
 jobs:
