@@ -14,9 +14,10 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: ~/axelarjs-ui/.npmrc
+          key: ${{ runner.os }}-node-test-key
 #           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-node-
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: build
         run: |
           cd axelar-web-app/axelarjs-ui
