@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 	}
 `;
 
-new TransferAssetBridgeFacade(downstreamServices.getEnvironmentBasedConfigs(process.env.REACT_APP_STAGE || "")?.AXELAR_BRIDGE_URL);
+new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
 
 ReactDOM.render(
 	<RecoilRoot>
