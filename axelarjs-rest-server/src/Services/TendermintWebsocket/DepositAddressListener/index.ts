@@ -39,6 +39,10 @@ export default class DepositAddressListener extends BaseListener {
 	}
 }
 
+/*
+@Jackson, this is the helper method I mentioned in the earlier call. 
+The queries are constructed on line 66 and 72, and the notes show the "working" queries in either direction (and how this was derived)
+*/
 const getQuery = (sourceChain: string, destinationChain: string, destinationAddress: string) => {
 	const AXELAR_NET = "axelarnet";
 	const sourceMap: { [key: string]: string } = {
@@ -59,16 +63,16 @@ const getQuery = (sourceChain: string, destinationChain: string, destinationAddr
 		destinationChain = destinationMap[destinationChain.toLowerCase()];
 
 	if (AXELAR_NET.includes(destinationChain)) {
-		query = {
+		query = { // note 'message' module vs 'link' module
 			'message.module': sourceChain,
 			'message.destinationChain': AXELAR_NET,
-			'message.address': destinationAddress
+			'message.address': destinationAddress // NOTE 'address' vs destinationAddress
 		}
 	} else {
-		query = {
+		query = { // note 'link' module vs 'message' module
 			'link.module': sourceChain,
 			'link.destinationChain': destinationChain,
-			'link.destinationAddress': destinationAddress
+			'link.destinationAddress': destinationAddress // / NOTE 'destinationAddress' vs address
 		}
 	}
 	return query;
