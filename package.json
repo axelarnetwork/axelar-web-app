@@ -5,10 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install:rest": "cd axelarjs-rest-server && npm install",
-    "install:sdk": "cd axelarjs-sdk && npm install",
     "install:ui": "cd axelarjs-ui && npm install",
     "initiate:rest": "cd axelarjs-rest-server && npm run dev",
-    "initiate:sdk": "cd axelarjs-sdk && npm run dev",
     "initiate:ui": "cd axelarjs-ui && npm start",
     "postinstall": "run-p install:*",
     "poststart": "run-p initiate:*",
