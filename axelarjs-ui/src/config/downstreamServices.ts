@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const GITHUB_LINK: string = "https://github.com/axelarnetwork/axelar-web-app";
 const RECAPTCHA_SITE_KEY: string = "6LcxwsocAAAAANQ1t72JEcligfeSr7SSq_pDC9vR"; //this is intentionally public
 
@@ -8,7 +10,8 @@ interface IDownstreamServicesConfigs {
 	AXELAR_BRIDGE_URL: string;
 }
 
-const environment: string = process.env.REST_SERVER_URL as string;
+const REST_SERVER_URL: string = process.env.REACT_APP_REST_SERVER_URL as string;
+
 const setConfigs = (AXELAR_BRIDGE_URL: string): IDownstreamServicesConfigs => ({
 	AXELAR_BRIDGE_URL
 })
