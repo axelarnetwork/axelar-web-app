@@ -1,0 +1,33 @@
+name: deploy-ui-to-devnet-and-testnet
+on:
+  push:
+    branches:
+      - develop
+  pull_request_target:
+  workflow_dispatch:
+jobs:
+  deploy-ui-to-devnet-and-testnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: amondnet/vercel-action@v20
+        id: vercel-action-devnet
+        with:
+          scope: ${{ secrets.AXELAR_TEAM_ID_VERCEL }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: axelarjs-ui
+          alias-domains: |
+            axelar-bridge-devnet.vercel.app
+      - uses: amondnet/vercel-action@v20
+        id: vercel-action-testnet
+        with:
+          scope: ${{ secrets.AXELAR_TEAM_ID_VERCEL }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: axelarjs-ui
+          vercel-args: '--prod'
+          alias-domains: |
+            axelar-bridge-testnet.vercel.app
