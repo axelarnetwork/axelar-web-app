@@ -1,31 +1,23 @@
-import Container          from "../StyleComponents/Container";
-import styled             from "styled-components";
-import logo               from "assets/logos/AXE.svg";
-import {SVGImage}         from "../Widgets/SVGImage";
-import Link               from "../Widgets/Link";
-import {FlexRow}          from "../StyleComponents/FlexRow";
-import downstreamServices from "../../config/downstreamServices";
+import Container  from "../StyleComponents/Container";
+import styled     from "styled-components";
+import logo       from "assets/logos/AXE.svg";
+import {SVGImage} from "../Widgets/SVGImage";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
-	width: 100%;
-	height: 80px;
-	background-color: #424952;
-	overflow: hidden;
+	z-index: 10;
 	top: 0;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+	width: 100%;
+	height: 40px;
+	padding: 12px 12px 12px 12px;
+	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.21);
+	background-image: linear-gradient(92deg, #1b1c1e 2%, #0b0b0c 100%);
 `
 
 const PageHeader = () => {
 	return (
 		<StyledPageHeader>
-			<SVGImage src={logo} height={"40px"} width={"150px"} margin={"20px"}/>
-			<FlexRow>
-				<Link>Docs (TBD)</Link>
-				<Link href={downstreamServices.GITHUB_LINK}>Github</Link>
-			</FlexRow>
+			<SVGImage src={logo} height={"30px"} width={"125px"} margin={"4px"}/>
 		</StyledPageHeader>
 	);
 }

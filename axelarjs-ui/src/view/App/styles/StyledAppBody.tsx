@@ -1,11 +1,10 @@
-import styled from "styled-components";
+import styled           from "styled-components";
+import {StyledCentered} from "component/StyleComponents/Centered";
 
 export const StyledAppBody = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+	${StyledCentered}
+	position: relative;
 	width: 100%;
 	height: 100%;
-	margin-top: 80px;
+	margin-top: 100px;
 `;

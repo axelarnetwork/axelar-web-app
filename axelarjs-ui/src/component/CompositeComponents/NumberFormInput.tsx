@@ -4,18 +4,18 @@ import styled               from "styled-components";
 import {DestinationAddress} from "state/ChainSelection";
 
 const StyledForm = styled(Form)`
-	margin-top: 30px;
-	margin-bottom: 30px;
-	width: calc(100% - 50px);
+	// margin-top: 30px;
+	// margin-bottom: 30px;
+	// width: calc(100% - 50px);
 `;
 
 const StyledFormControl = styled(Form.Control)`
-	background-color: rgb(33, 36, 41);
-	color: darkgray;
-	font-size: 16px;
-	border: none;
-	margin-top: 10px;
-	width: 100%;
+	// background-color: rgb(33, 36, 41);
+	// color: darkgray;
+	// font-size: 16px;
+	// border: none;
+	// margin-top: 10px;
+	// width: 100%;
 `;
 
 export const NumberFormInput = () => {

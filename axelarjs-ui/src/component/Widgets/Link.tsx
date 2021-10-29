@@ -18,8 +18,6 @@ const Link = ({children, href, className}: ILinkProps) => (
 );
 
 const StyledLink = styled(Link)`
-	color: grey;
-	margin: 20px;
 	cursor: pointer;
 `;
 

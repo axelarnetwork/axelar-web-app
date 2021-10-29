@@ -1,9 +1,10 @@
+import {useEffect}          from "react";
+import PageFooter           from "component/CompositeComponents/PageFooter";
 import PageHeader           from "component/CompositeComponents/PageHeader";
-import SwapWindow           from "view/SwapWindow";
+import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 import {StyledAppBody}      from "view/App/styles/StyledAppBody";
-import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
-import {useEffect}          from "react";
+import SwapWindow           from "view/SwapWindow";
 
 const App = () => {
 
@@ -23,6 +24,7 @@ const App = () => {
 				</StyledAppBody>
 				: null
 			}
+			<PageFooter />
 		</StyledAppContainer>
 	);
 }

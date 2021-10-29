@@ -7,19 +7,25 @@ import {RecoilLogger}              from 'recoil-devtools-logger';
 import {createGlobalStyle}         from "styled-components";
 import {TransferAssetBridgeFacade} from "api/TransferAssetBridgeFacade";
 import downstreamServices          from "./config/downstreamServices";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+		padding: 0;
+		height: 100%;
+		font-family: Kanit, Sans-Serif !important;
+     	font-size: 18px;
+		font-weight: normal;
+		font-stretch: normal;
+		font-style: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
-	
+
 	code {
-	    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	    // font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 	}
 `;
 
