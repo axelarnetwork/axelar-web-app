@@ -1,3 +1,41 @@
+.my-node {
+    position: absolute;
+    width: 283px;
+    bottom: 190px;
+}
+
+.move {
+    animation: move-down-keyframes 500ms;
+}
+@keyframes move-down-keyframes {
+    from {bottom: 190px}
+    to {bottom: 90px}
+}
+
+.fade-enter {
+    opacity: 0;
+    transform: translateY(-25%);
+}
+.fade-enter-active{
+    opacity: 1;
+    transform: translateY(0%);
+}
+.fade-exit {
+    opacity: 1;
+    transform: translateX(0%);
+}
+.fade-exit-active{
+    opacity: 0;
+    transform: translateX(-25%);
+}
+.fade-enter-active {
+    transition: opacity 50ms, transform 50ms;
+}
+.fade-exit-active {
+    transition: opacity 1000ms, transform 1000ms;
+}
+
+
 /*.wrapper {*/
 /*    width: 100vw;*/
 /*    height: 100vh;*/

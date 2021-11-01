@@ -1,5 +1,6 @@
-import {Dropdown} from "react-bootstrap";
-import {useState} from "react";
+import {Dropdown}        from "react-bootstrap";
+import React, {useState} from "react";
+import {SVGImage}        from "./SVGImage";
 
 export interface IDropdownOption {
 	title: string;
@@ -18,10 +19,13 @@ const DropdownComponent = (props: IDropdownComponent) => {
 	const {dropdownOptions, id} = props;
 	return <Dropdown>
 
-		<Dropdown.Toggle id={id} variant="secondary">
-			{selectedOption?.title || "Select a chain..."}
+		<Dropdown.Toggle id={id}>
+			<SVGImage
+				src={require(`assets/chevron-down-black.svg`)?.default}
+				height={"8px"}
+				width={"20px"}
+			/>
 		</Dropdown.Toggle>
-
 		<Dropdown.Menu variant="dark">{
 			dropdownOptions.map((dropdownOption: IDropdownOption) => {
 				return <Dropdown.Item

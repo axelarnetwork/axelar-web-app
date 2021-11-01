@@ -15,7 +15,7 @@ const StyledFormControl = styled(Form.Control)`
 	// font-size: 16px;
 	// border: none;
 	// margin-top: 10px;
-	// width: 100%;
+	width: 100%;
 `;
 
 export const NumberFormInput = () => {
@@ -26,6 +26,6 @@ export const NumberFormInput = () => {
 		setDestinationAddress(e?.target?.value);
 	}
 	return <StyledForm onChange={onChange}>
-		<StyledFormControl type="text" placeholder="Destination Address (Public Key)" size={"sm"}/>
+		<StyledFormControl type="text" placeholder="Enter Destination Address (Public Key)" size={"sm"}/>
 	</StyledForm>;
 }

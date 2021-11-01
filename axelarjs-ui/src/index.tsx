@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
 		padding: 0;
 		height: 100%;
 		font-family: Kanit, Sans-Serif !important;
-     	font-size: 18px;
+     	font-size: 14px;
 		font-weight: normal;
 		font-stretch: normal;
 		font-style: normal;
