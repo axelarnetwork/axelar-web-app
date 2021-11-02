@@ -8,7 +8,7 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
 	position: absolute;
 	width: 333px;
 	height: 30px;
-	bottom: ${props => props.nextState ? `90px` : `190px` };
+	bottom: ${props => props.nextState ? `60px` : `190px` };
 	margin-top: ${props => props.nextState ? `10px` : `0px` };
     transition: bottom 500ms;
 `;

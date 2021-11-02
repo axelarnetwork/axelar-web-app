@@ -4,6 +4,7 @@ import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/a
 import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
 import {InputForm}                                       from "component/CompositeComponents/InputForm";
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
+import {VisibilityToggle}                                from "component/StyleComponents/VisibilityToggle";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
@@ -44,7 +45,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				Transfer fee
 			</StyledDividerSvg>
 		</StyledTransferFeeDivider>
-		{<div className={isSubmitting ? "no-visibility" : "testsss"}>
+		{<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/>
@@ -78,7 +79,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					}
 				</StyledInitiateTransferButton>
 			</FlexColumn>
-		</div>}
+		</VisibilityToggle>}
 	</>;
 }
 

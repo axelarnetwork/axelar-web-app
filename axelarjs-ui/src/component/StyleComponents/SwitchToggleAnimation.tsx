@@ -25,10 +25,10 @@ export const animateStyles = css`
 	}
 	
 	.fade-enter-active {
-	    transition: opacity 500ms, transform 500ms;
+	    transition: opacity 250ms, transform 250ms;
 	}
 	
 	.fade-exit-active {
-	    transition: opacity 1000ms, transform 1000ms;
+	    transition: opacity 500ms, transform 500ms;
 	}
 `;
