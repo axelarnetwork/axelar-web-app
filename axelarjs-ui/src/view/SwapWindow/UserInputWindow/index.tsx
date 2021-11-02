@@ -1,60 +1,31 @@
 import React, {useState}                                 from "react";
 import {useRecoilState, useRecoilValue}                  from "recoil";
-import styled, {ThemedStyledProps}                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
-import svg                                               from "assets/transfer-modal-light-mode.svg";
-import dividerSvg from "assets/group.svg";
 import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
 import {InputForm}                                       from "component/CompositeComponents/InputForm";
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
-import {GridDisplay}                                     from "component/StyleComponents/GridDisplay";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {ChainList}                                       from "state/ChainList";
-import {StyledAppContainer}                              from "view/App/styles/StyledAppContainer";
+import {StyledInitiateTransferButton}                    from "./StyleComponents/StyledInitiateTransferButton";
+import {StyledTransferFeeDivider}                        from "./StyleComponents/StyledTransferFeeDivider";
+import {StyledDividerSvg}                                from "./StyleComponents/StyledDividerSvg";
 import "../todelete.css";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: any;
 }
 
-interface IStyledButtonProps extends ThemedStyledProps<any, any> {
-	dim?: boolean;
-}
-
-{/*{sourceChainSelection && sourceChainSelection?.assets && sourceChainSelection?.assets?.length > 1 &&*/}
-{/*<FlexRow>*/}
-{/*    <AssetSelector*/}
-{/*        selectedToken={sourceChainAsset}*/}
-{/*        allTokens={chainList?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}*/}
-{/*        handleChange={(asset) => setSourceChainAsset(asset)}*/}
-{/*    />*/}
-{/*</FlexRow>*/}
-{/*}*/}
-
-const Button = styled.button<IStyledButtonProps>`
-	width: 100%;
-	height: 35px;
-	border-radius: 8px;
-	border: none !important;
-	box-shadow: 0 0 3px 0 rgba(11, 11, 12, 0.38);
-	background-color: ${props => props.dim ? "grey" : "#0b0b0f"};
-	color: white;
-`;
-
-interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
-	nextState?: boolean;
-}
-
-const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProps>`
-	position: absolute;
-	width: 333px;
-	height: 30px;
-	bottom: ${props => props.nextState ? `90px` : `190px` };
-	margin-top: ${props => props.nextState ? `10px` : `0px` };
-    transition: bottom 500ms;
-`;
+// {/*{sourceChainSelection && sourceChainSelection?.assets && sourceChainSelection?.assets?.length > 1 &&*/}
+// {/*<FlexRow>*/}
+// {/*    <AssetSelector*/}
+// {/*        selectedToken={sourceChainAsset}*/}
+// {/*        allTokens={chainList?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}*/}
+// {/*        handleChange={(asset) => setSourceChainAsset(asset)}*/}
+// {/*    />*/}
+// {/*</FlexRow>*/}
+// {/*}*/}
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
@@ -69,18 +40,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	return <>
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
 		<StyledTransferFeeDivider nextState={isSubmitting}>
-			<div style={{
-				backgroundImage: `url(${dividerSvg})`, backgroundRepeat: `no-repeat`, backgroundSize: `cover`,
-				right: `0`,
-				top: `5px`,
-				fontSize: `11px`,
-				fontWeight: `bold`,
-				height: `21px`,
-				width: `98%`,
-				textAlign: `right`
-			}}>
+			<StyledDividerSvg>
 				Transfer fee
-			</div>
+			</StyledDividerSvg>
 		</StyledTransferFeeDivider>
 		{<div className={isSubmitting ? "no-visibility" : "testsss"}>
 			<br/>
@@ -91,7 +53,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				<br/>
 				<InputForm/>
 				<br/>
-				<Button
+				<StyledInitiateTransferButton
 					dim={!destAddr}
 					onClick={() => {
 						const destToken: IAssetInfo = {
@@ -114,7 +76,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 							delayBeforeNewChild={3000}
 						/>
 					}
-				</Button>
+				</StyledInitiateTransferButton>
 			</FlexColumn>
 		</div>}
 	</>;
