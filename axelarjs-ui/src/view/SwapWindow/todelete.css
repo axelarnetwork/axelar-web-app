@@ -1,17 +1,3 @@
-.slowly-expand {
-    animation: increase-height-keyframes 500ms;
-}
-@keyframes increase-height-keyframes {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 .canhhh {
     transform: translate3d(10px, 10px, 0px) !important;
     z-index: 10;
