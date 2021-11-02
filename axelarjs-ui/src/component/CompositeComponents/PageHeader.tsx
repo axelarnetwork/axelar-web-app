@@ -15,7 +15,8 @@ const StyledPageHeader = styled(Container)`
 const PageHeader = () => {
 	return (
 		<StyledPageHeader>
-			<SVGImage src={require(`assets/axelar-logo-horizontal-white.svg`)?.default} height={"30px"} width={"125px"} margin={"4px"}/>
+			<SVGImage src={require(`assets/axelar-logo-horizontal-white.svg`)?.default} height={"30px"} width={"125px"}
+			          margin={"4px"}/>
 		</StyledPageHeader>
 	);
 }

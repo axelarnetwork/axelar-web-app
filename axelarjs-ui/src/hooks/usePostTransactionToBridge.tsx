@@ -60,7 +60,7 @@ export default function usePostTransactionToBridge() {
 					setDepositAddress(res);
 				} catch (e) {
 					setShowTransactionStatusWindow(false);
-					console.log("transfer bridge error",e);
+					console.log("transfer bridge error", e);
 				}
 
 			}

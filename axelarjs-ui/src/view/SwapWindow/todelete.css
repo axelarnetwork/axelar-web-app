@@ -1,40 +1,87 @@
 .my-node {
     position: absolute;
-    width: 283px;
+    width: 333px;
     bottom: 190px;
+    height: 30px;
+}
+
+.slowly-expand {
+    animation: increase-height-keyframes 500ms;
+}
+@keyframes increase-height-keyframes {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .move {
     animation: move-down-keyframes 500ms;
 }
+
 @keyframes move-down-keyframes {
-    from {bottom: 190px}
-    to {bottom: 90px}
+    from {
+        bottom: 190px
+    }
+    to {
+        bottom: 90px
+    }
 }
 
 .fade-enter {
     opacity: 0;
-    transform: translateY(-25%);
+    /*transform: translateY(-25%);*/
 }
-.fade-enter-active{
+
+.fade-enter-active {
     opacity: 1;
-    transform: translateY(0%);
+    /*transform: translateY(0%);*/
 }
+
 .fade-exit {
     opacity: 1;
-    transform: translateX(0%);
+    /*transform: translateX(0%);*/
 }
-.fade-exit-active{
+
+.fade-exit-active {
     opacity: 0;
-    transform: translateX(-25%);
+    /*transform: translateX(-25%);*/
 }
+
 .fade-enter-active {
     transition: opacity 50ms, transform 50ms;
 }
+
 .fade-exit-active {
     transition: opacity 1000ms, transform 1000ms;
 }
 
+.canhhh {
+    transform: translate3d(10px, 10px, 0px) !important;
+    z-index: 10;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.16), inset 0 0 3px 1px rgba(0, 0, 0, 0.21);
+    border: solid 1px #e2e1e2;
+    background-color: #fff;
+}
+.dropdown {
+    position: initial !important; /*overriding position: absolute setting*/
+}
+.list-unstyled {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    padding: 10px;
+    width: 100%;
+    z-index: 10;
+}
+
+.no-visibility {
+    display: none;
+}
 
 /*.wrapper {*/
 /*    width: 100vw;*/

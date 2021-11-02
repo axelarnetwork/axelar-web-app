@@ -2,7 +2,8 @@
     <g transform="translate(.5 .5)" fill="none" fill-rule="evenodd">
         <circle stroke="#E2E1E2" fill="#F8F8F9" cx="9" cy="9" r="9"/>
         <circle stroke="#BABBC8" fill="#E3E2E3" cx="9" cy="9" r="4.286"/>
-        <path d="M18.329 8.485h174.832a13 13 0 0 1 9.192 3.808l8.354 8.354a13 13 0 0 0 9.192 3.808h222.13" stroke="#E2E1E2"/>
+        <path d="M18.329 8.485h174.832a13 13 0 0 1 9.192 3.808l8.354 8.354a13 13 0 0 0 9.192 3.808h222.13"
+              stroke="#E2E1E2"/>
         <circle stroke="#BABBC8" fill="#E3E2E3" cx="438.5" cy="24.5" r="3.5"/>
     </g>
 </svg>

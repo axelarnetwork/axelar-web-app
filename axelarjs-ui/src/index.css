@@ -1,4 +1,6 @@
-.grecaptcha-badge { visibility: hidden; }
+.grecaptcha-badge {
+    visibility: hidden;
+}
 
 img.Transfer-modal_Light-Mode {
     width: 639.4px;

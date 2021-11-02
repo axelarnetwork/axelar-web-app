@@ -24,7 +24,7 @@ const App = () => {
 				</StyledAppBody>
 				: null
 			}
-			<PageFooter />
+			<PageFooter/>
 		</StyledAppContainer>
 	);
 }

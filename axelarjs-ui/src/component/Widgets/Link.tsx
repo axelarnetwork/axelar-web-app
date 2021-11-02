@@ -8,7 +8,7 @@ interface ILinkProps {
 
 const Link = ({children, href, className}: ILinkProps) => (
 	<a
-		style={{ textDecoration: `none`, color: `white` }}
+		style={{textDecoration: `none`, color: `white`}}
 		href={href}
 		target={"_blank"}
 		rel="noreferrer"

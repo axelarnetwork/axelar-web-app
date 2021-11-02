@@ -46,7 +46,7 @@ const PageFooter = () => {
 						width={"18px"}
 						margin={"0px"}
 					/>
-					<p style={{ marginLeft: `10px` }}>
+					<p style={{marginLeft: `10px`}}>
 						Github
 					</p>
 				</FlexRow>

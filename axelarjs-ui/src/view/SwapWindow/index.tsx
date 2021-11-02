@@ -20,7 +20,7 @@ const SwapWindow = (): ReactElement => {
 			addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 			classNames="fade"
 		>
-			<div style={{ maxWidth: `600px`, overflow: `hidden`}}>
+			<div style={{maxWidth: `600px`, overflow: `hidden`}}>
 				{userInputNeeded
 					? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
 					: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
