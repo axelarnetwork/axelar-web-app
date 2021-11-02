@@ -9,6 +9,15 @@ import {ChainSelection, SourceAsset}                                            
 import {ChainList}                                                              from "state/ChainList";
 import {FlexRow}                                                                from "../StyleComponents/FlexRow";
 
+const StyledSelectedChainComponent = styled.div`
+	width: 125px;
+	height: 30px;
+	display: fiex;
+	align-items: center;
+	justify-content: space-between;
+	margin-left: 10px;
+	font-weight: bold;
+`;
 interface IChainComponentProps {
 	chainInfo: IChainInfo | null
 }
@@ -23,24 +32,16 @@ const SelectedChainComponent = (props: IChainComponentProps) => {
 		: <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
 		            src={require(`assets/select-chain-icon-black.svg`)?.default}
 		/>;
-	return <div style={{
-		width: `125px`,
-		height: `30px`,
-		display: `flex`,
-		alignItems: `center`,
-		justifyContent: `space-between`,
-		marginLeft: `10px`,
-		fontWeight: `bold`
-	}}>
+	return <StyledSelectedChainComponent>
 		{image}
 		<div style={{width: `90px`, marginLeft: `5px`}}>{props.chainInfo?.chainName || "Select Chain"}</div>
-	</div>
+	</StyledSelectedChainComponent>
 }
 interface IStyledChainSelectorProps extends ThemedStyledProps<any, any> {
 	animate: boolean;
 }
 
-const StyledChainSelector = styled(FlexRow)<IStyledChainSelectorProps>`
+const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelectorProps>`
 	border-radius: 8px;
 	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.21);
 	border: solid 1px #e2e1e2;
@@ -49,6 +50,15 @@ const StyledChainSelector = styled(FlexRow)<IStyledChainSelectorProps>`
     flex-direction: column;
     transition: height 500ms;
     height: ${props => props.animate ? "90%" : "70px"}
+`;
+
+const StyledChainSelectionIconWidget = styled.div`
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+	width: 50%;
 `;
 
 interface IChainSelectorProps {
@@ -77,10 +87,8 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		action: (param: IDropdownOption) => {
 			setSelectedChain(supportedChain);
 
-			/*
-			if the selected chain is the source token and the chain only
-			has a single asset, select that asset
-			* */
+			/* if the selected chain is the source token and the chain only
+			has a single asset, select that asset */
 			if (isSourceChain) {
 				supportedChain?.assets?.length === 1
 					? setSourceAsset(supportedChain.assets[0])
@@ -89,25 +97,18 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		}
 	}));
 
-	return <StyledChainSelector animate={props.animate}>{
+	return <StyledChainSelectionComponent animate={props.animate}> {
 		!props.hideContents && <>
             <div style={{marginLeft: `10px`, marginBottom: `10px`}}>{props.label}</div>
-            <div style={{
-				display: `flex`,
-				justifyContent: `space-between`,
-				flexDirection: `row`,
-				alignItems: `center`,
-				width: `50%`,
-				position: `relative`
-			}}>
+            <StyledChainSelectionIconWidget>
                 <SelectedChainComponent chainInfo={selectedChain}/>
 				{<DropdownComponent
 					id={"dropdown-for-" + props.id}
 					dropdownOptions={dropdownOptions}
 				/>}
-            </div>
+            </StyledChainSelectionIconWidget>
 		</>
-	}</StyledChainSelector>
+	} </StyledChainSelectionComponent>
 
 }
 
