@@ -4,7 +4,6 @@ import {Step, Stepper}                                                       fro
 import Button                                                                from "react-bootstrap/Button";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import BoldSpan                                                              from "component/StyleComponents/BoldSpan";
-import {GridDisplay}                                                         from "component/StyleComponents/GridDisplay";
 import {FooterComponent}                                                     from "component/StyleComponents/FooterComponent";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
@@ -111,7 +110,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		"Axelar Network working...",
 		"Deposit Confirmed on Destination Chain"
 	];
-	return <GridDisplay>
+	return <>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
 		{isRecaptchaAuthenticated
 			? <><Stepper activeStep={activeStep}>
@@ -133,7 +132,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
-	</GridDisplay>
+	</>;
+
 }
 
 export default TransactionStatusWindow;

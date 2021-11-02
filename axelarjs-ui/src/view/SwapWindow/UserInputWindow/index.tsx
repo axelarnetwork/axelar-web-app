@@ -53,64 +53,58 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	return <StyledAppContainer
-		style={{backgroundImage: `url(${svg})`, backgroundRepeat: `no-repeat`, backgroundSize: `cover`}}
-		height={"480px"}
-		width={"483px"}
-	>
-		<GridDisplay style={{padding: "75px", height: `100%`, boxSizing: `border-box`}}>
-			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
-			<div className={(isSubmitting ? " move" : "my-node")}>
-				<div style={{
-					backgroundImage: `url(${dividerSvg})`, backgroundRepeat: `no-repeat`, backgroundSize: `cover`,
-					right: `0`,
-					top: `5px`,
-					fontSize: `11px`,
-					fontWeight: `bold`,
-					height: `21px`,
-					width: `98%`,
-					textAlign: `right`
-				}}>
-					Transfer fee
-				</div>
+	return <>
+		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
+		<div className={(isSubmitting ? " move" : "my-node")}>
+			<div style={{
+				backgroundImage: `url(${dividerSvg})`, backgroundRepeat: `no-repeat`, backgroundSize: `cover`,
+				right: `0`,
+				top: `5px`,
+				fontSize: `11px`,
+				fontWeight: `bold`,
+				height: `21px`,
+				width: `98%`,
+				textAlign: `right`
+			}}>
+				Transfer fee
 			</div>
-			{<div className={isSubmitting ? "no-visibility" : "testsss"}>
+		</div>
+		{<div className={isSubmitting ? "no-visibility" : "testsss"}>
+			<br/>
+			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<br/>
+			<br/>
+			<FlexColumn>
 				<br/>
-				<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+				<InputForm/>
 				<br/>
-				<br/>
-				<FlexColumn>
-					<br/>
-					<InputForm/>
-					<br/>
-					<Button
-						dim={!destAddr}
-						onClick={() => {
-							const destToken: IAssetInfo = {
-								assetAddress: destAddr as string,
-								assetSymbol: destChainSelection?.chainSymbol
-							}
-							const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
-							setIsValidDestinationAddress(validAddr);
-							validAddr && setIsSubmitting(validAddr)
-							validAddr && handleSwapSubmit();
-						}}
-						onAnimationEnd={() => setIsSubmitting(false)}
-					>
-						{isValidDestinationAddress
-							? "Initiate Asset Transfer"
-							: <DelayedRender
-								prevChild={
-									<span>The {destChainSelection?.chainSymbol} address does not look right...</span>}
-								newChild={<span>Retry and resubmit here</span>}
-								delayBeforeNewChild={3000}
-							/>
+				<Button
+					dim={!destAddr}
+					onClick={() => {
+						const destToken: IAssetInfo = {
+							assetAddress: destAddr as string,
+							assetSymbol: destChainSelection?.chainSymbol
 						}
-					</Button>
-				</FlexColumn>
-			</div>}
-		</GridDisplay>
-	</StyledAppContainer>;
+						const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
+						setIsValidDestinationAddress(validAddr);
+						validAddr && setIsSubmitting(validAddr)
+						validAddr && handleSwapSubmit();
+					}}
+					onAnimationEnd={() => setIsSubmitting(false)}
+				>
+					{isValidDestinationAddress
+						? "Initiate Asset Transfer"
+						: <DelayedRender
+							prevChild={
+								<span>The {destChainSelection?.chainSymbol} address does not look right...</span>}
+							newChild={<span>Retry and resubmit here</span>}
+							delayBeforeNewChild={3000}
+						/>
+					}
+				</Button>
+			</FlexColumn>
+		</div>}
+	</>;
 }
 
 export default UserInputWindow;
