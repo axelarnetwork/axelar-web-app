@@ -4,6 +4,7 @@ import {SVGImage}        from "./SVGImage";
 
 export interface IDropdownOption {
 	title: string;
+	symbol: string;
 	active: boolean;
 	disabled: boolean;
 	action: (param: IDropdownOption) => void;
@@ -65,7 +66,9 @@ const DropdownComponent = (props: IDropdownComponent) => {
 					}}
 					active={dropdownOption.active}
 				>
-					{dropdownOption.title}
+					<SVGImage height={"20px"} width={"20px"}
+					          src={require(`assets/logos/${dropdownOption.symbol}.svg`)?.default} />
+					<span style={{ marginLeft: `10px` }}>{dropdownOption.title}</span>
 				</Dropdown.Item>
 			})
 		} </Dropdown.Menu>

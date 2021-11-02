@@ -1,18 +1,16 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
-        "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-     width="48.000000pt" height="48.000000pt" viewBox="0 0 48.000000 48.000000"
-     preserveAspectRatio="xMidYMid meet">
-
-    <g transform="translate(0.000000,48.000000) scale(0.100000,-0.100000)"
-       fill="#808080" stroke="none">
-        <path d="M386 430 l-49 -48 -36 15 c-44 19 -110 11 -157 -17 -61 -39 -90 -137
--60 -205 13 -29 12 -31 -36 -81 l-50 -52 21 -21 20 -20 48 49 48 50 45 -16
-c62 -22 121 -11 167 29 61 54 78 122 47 195 l-15 37 51 49 c49 46 50 49 34 67
--9 11 -20 18 -23 18 -3 -1 -28 -23 -55 -49z m-97 -87 c3 -2 -28 -37 -69 -78
--77 -78 -90 -80 -90 -20 0 44 34 93 72 103 29 9 75 6 87 -5z m59 -94 c6 -57
--36 -114 -88 -120 -38 -4 -70 2 -70 13 0 17 132 149 145 145 5 -2 12 -19 13
--38z"/>
+<svg width="31" height="32" viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" fill-rule="evenodd">
+        <rect width="31" height="31" rx="5" fill="#2E3148" transform="translate(0 .73)"/>
+        <g transform="translate(4 5)">
+            <ellipse stroke="#FFF" cx="11.434" cy="11.406" rx="3.282" ry="11.406"/>
+            <g transform="translate(0 2.631)" stroke="#FFF">
+                <ellipse transform="rotate(-31.614 11.434 8.776)" cx="11.434" cy="8.776" rx="11.406" ry="3.282"/>
+                <ellipse transform="rotate(-58.386 11.434 8.774)" cx="11.434" cy="8.774" rx="3.282" ry="11.406"/>
+            </g>
+            <circle fill="#FFF" fill-rule="nonzero" cx="11.434" cy="11.488" r="1.477"/>
+            <circle fill="#FFF" fill-rule="nonzero" cx="3.31" cy="9.108" r="1.149"/>
+            <circle fill="#FFF" fill-rule="nonzero" cx="17.096" cy="5.252" r="1.149"/>
+            <circle fill="#FFF" fill-rule="nonzero" cx="9.219" cy="19.776" r="1.149"/>
+        </g>
     </g>
 </svg>

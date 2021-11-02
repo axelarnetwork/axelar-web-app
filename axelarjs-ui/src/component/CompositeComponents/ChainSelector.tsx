@@ -48,7 +48,7 @@ const StyledChainSelector = styled(FlexRow)<IStyledChainSelectorProps>`
     align-items: flex-start;
     flex-direction: column;
     transition: height 500ms;
-    height: ${props => props.animate ? "100%" : "70px"}
+    height: ${props => props.animate ? "90%" : "70px"}
 `;
 
 interface IChainSelectorProps {
@@ -71,6 +71,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const dropdownOptions: IDropdownOption[] = chainList
 	.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
+		symbol: supportedChain.chainSymbol,
 		active: false,
 		disabled: (isSourceChain ? destinationChain : sourceChain)?.chainName === supportedChain.chainName,
 		action: (param: IDropdownOption) => {

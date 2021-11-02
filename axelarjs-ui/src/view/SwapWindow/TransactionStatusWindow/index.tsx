@@ -38,6 +38,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	useEffect(() => {
 		//TODO: clean this up
 		let activeStep: number;
+		console.log("render transaction status screen");
 
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):

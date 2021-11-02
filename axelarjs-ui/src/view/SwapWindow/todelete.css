@@ -20,6 +20,9 @@
 }
 
 .move {
+    width: 333px;
+    height: 30px;
+    margin-top: 10px;
     animation: move-down-keyframes 500ms;
 }
 
@@ -69,6 +72,12 @@
 }
 .dropdown {
     position: initial !important; /*overriding position: absolute setting*/
+}
+.dropdown-menu {
+    min-width: initial;
+}
+.dropdown-item {
+    padding: 10px !important;
 }
 .list-unstyled {
     display: flex;

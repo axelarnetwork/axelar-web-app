@@ -9,7 +9,6 @@ import {InputForm}                                       from "component/Composi
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
 import {GridDisplay}                                     from "component/StyleComponents/GridDisplay";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
-import {SVGImage}                                        from "component/Widgets/SVGImage";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {ChainList}                                       from "state/ChainList";
@@ -77,12 +76,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			</div>
 			{<div className={isSubmitting ? "no-visibility" : "testsss"}>
 				<br/>
-
 				<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 				<br/>
-
 				<br/>
-
 				<FlexColumn>
 					<br/>
 					<InputForm/>
@@ -96,8 +92,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 							}
 							const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
 							setIsValidDestinationAddress(validAddr);
-							if (validAddr)
-								setIsSubmitting(validAddr);
+							validAddr && setIsSubmitting(validAddr)
 							validAddr && handleSwapSubmit();
 						}}
 						onAnimationEnd={() => setIsSubmitting(false)}
@@ -113,7 +108,6 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 						}
 					</Button>
 				</FlexColumn>
-
 			</div>}
 		</GridDisplay>
 	</StyledAppContainer>;
