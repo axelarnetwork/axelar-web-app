@@ -1,10 +1,3 @@
-.my-node {
-    position: absolute;
-    width: 333px;
-    bottom: 190px;
-    height: 30px;
-}
-
 .slowly-expand {
     animation: increase-height-keyframes 500ms;
 }
@@ -16,22 +9,6 @@
     to {
         transform: translateY(0);
         opacity: 1;
-    }
-}
-
-.move {
-    width: 333px;
-    height: 30px;
-    margin-top: 10px;
-    animation: move-down-keyframes 500ms;
-}
-
-@keyframes move-down-keyframes {
-    from {
-        bottom: 190px
-    }
-    to {
-        bottom: 90px
     }
 }
 

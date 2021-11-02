@@ -43,6 +43,19 @@ const Button = styled.button<IStyledButtonProps>`
 	color: white;
 `;
 
+interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
+	nextState?: boolean;
+}
+
+const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProps>`
+	position: absolute;
+	width: 333px;
+	height: 30px;
+	bottom: ${props => props.nextState ? `90px` : `190px` };
+	margin-top: ${props => props.nextState ? `10px` : `0px` };
+    transition: bottom 500ms;
+`;
+
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
@@ -55,7 +68,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <>
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
-		<div className={(isSubmitting ? " move" : "my-node")}>
+		<StyledTransferFeeDivider nextState={isSubmitting}>
 			<div style={{
 				backgroundImage: `url(${dividerSvg})`, backgroundRepeat: `no-repeat`, backgroundSize: `cover`,
 				right: `0`,
@@ -68,7 +81,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			}}>
 				Transfer fee
 			</div>
-		</div>
+		</StyledTransferFeeDivider>
 		{<div className={isSubmitting ? "no-visibility" : "testsss"}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
