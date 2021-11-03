@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import {Dropdown}        from "react-bootstrap";
-import {SVGImage}        from "./SVGImage";
-import styled            from "styled-components";
+import {forwardRef} from "react";
+import {Dropdown}   from "react-bootstrap";
+import {SVGImage}   from "./SVGImage";
+import styled       from "styled-components";
 
 export interface IDropdownOption {
 	title: string;
@@ -16,9 +16,9 @@ interface IDropdownComponent {
 	dropdownOptions: IDropdownOption[];
 }
 
-const CustomToggle = React.forwardRef(({ children, onClick }: any, ref) => (
+const CustomToggle = forwardRef(({children, onClick}: any, ref) => (
 	<a
-		href=""
+		href="/"
 		ref={ref as any}
 		onClick={(e) => {
 			e.preventDefault();
@@ -29,10 +29,8 @@ const CustomToggle = React.forwardRef(({ children, onClick }: any, ref) => (
 	</a>
 ));
 
-const CustomMenu = React.forwardRef(
-	({ children, style, className, 'aria-labelledby': labeledBy }: any, ref) => {
-		const [value, setValue] = useState('');
-
+const CustomMenu = forwardRef(
+	({children, style, className, 'aria-labelledby': labeledBy}: any, ref) => {
 		return (<div
 			ref={ref as any}
 			style={style}
@@ -58,7 +56,7 @@ const StyledDropdownItem = styled(Dropdown.Item)`
 `;
 
 const DropdownComponent = (props: IDropdownComponent) => {
-	const [selectedOption, setSelectedOption] = useState<IDropdownOption>();
+	// const [selectedOption, setSelectedOption] = useState<IDropdownOption>();
 	const {dropdownOptions, id} = props;
 	return <Dropdown>
 		<Dropdown.Toggle as={CustomToggle} id={id}>
@@ -68,20 +66,21 @@ const DropdownComponent = (props: IDropdownComponent) => {
 				width={"20px"}
 			/>
 		</Dropdown.Toggle>
-		<Dropdown.Menu as={StyledCustomMenu}>{
+		{/*TODO: Note: there is a bug in Dropdown.Menu where adding zero margins is needed for now*/}
+		<Dropdown.Menu style={{margin: 0}} as={StyledCustomMenu}>{
 			dropdownOptions.map((dropdownOption: IDropdownOption) => {
 				return <StyledDropdownItem
 					key={"dropdown-item" + id + dropdownOption.title}
 					disabled={dropdownOption.disabled}
 					onClick={() => {
 						dropdownOption.action(dropdownOption);
-						setSelectedOption(dropdownOption);
+						// setSelectedOption(dropdownOption);
 					}}
 					active={dropdownOption.active}
 				>
 					<SVGImage height={"20px"} width={"20px"}
-					          src={require(`assets/logos/${dropdownOption.symbol}.svg`)?.default} />
-					<span style={{ marginLeft: `10px` }}>{dropdownOption.title}</span>
+					          src={require(`assets/logos/${dropdownOption.symbol}.svg`)?.default}/>
+					<span style={{marginLeft: `10px`}}>{dropdownOption.title}</span>
 				</StyledDropdownItem>
 			})
 		} </Dropdown.Menu>
