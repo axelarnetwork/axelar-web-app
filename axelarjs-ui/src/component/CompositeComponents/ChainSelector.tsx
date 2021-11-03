@@ -49,7 +49,7 @@ const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelectorProps>
     align-items: flex-start;
     flex-direction: column;
     transition: height 500ms;
-    height: ${props => props.animate ? "90%" : "70px"}
+    height: ${props => props.animate ? "90%" : "70px"};
 `;
 
 const StyledChainSelectionIconWidget = styled.div`

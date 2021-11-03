@@ -12,5 +12,5 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
 	bottom: ${props => props.nextState ? `60px` : `190px` };
 	margin-top: ${props => props.nextState ? `10px` : `0px` };
 	opacity: ${props => props.showContents ? `1` : `0`};
-    transition: bottom 500ms, opacity 1000ms;
+    ${props => props.showContents ? `transition: bottom 500ms, opacity 1000ms;` : ``}
 `;
