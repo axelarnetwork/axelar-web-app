@@ -1,6 +1,7 @@
 import React, {useState}                                 from "react";
 import {useRecoilState, useRecoilValue}                  from "recoil";
 import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
+import BoldSpan                                          from "component/StyleComponents/BoldSpan";
 import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
 import {InputForm}                                       from "component/CompositeComponents/InputForm";
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
@@ -40,11 +41,13 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <>
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
-		<StyledTransferFeeDivider nextState={isSubmitting}>
-			<StyledDividerSvg>
-				Transfer fee
-			</StyledDividerSvg>
-		</StyledTransferFeeDivider>
+		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
+            <StyledDividerSvg>
+                <BoldSpan>Fee: </BoldSpan>
+                <span>XX% of transferred {sourceChainSelection?.chainSymbol}</span>
+            </StyledDividerSvg>
+        </StyledTransferFeeDivider>
+
 		{<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>

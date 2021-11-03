@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const BoldSpan = styled.span`
-	// font-weight: bold;
+	font-weight: bold;
 `;
 
 export default BoldSpan;

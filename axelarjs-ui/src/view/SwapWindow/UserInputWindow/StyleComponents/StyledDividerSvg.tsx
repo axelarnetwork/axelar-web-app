@@ -8,7 +8,6 @@ export const StyledDividerSvg = styled.div`
 	right: 0;
 	top: 5px;
 	font-size: 11px;
-	font-weight: bold;
 	height: 21px;
 	width: 98%;
 	text-align: right;
