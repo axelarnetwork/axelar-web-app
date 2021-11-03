@@ -18,7 +18,7 @@ function ModalWidget(props: IModalComponentProps) {
 
 		<SVGImage
 			onClick={handleShow}
-			src={require(`assets/chevron-down-black.svg`)?.default}
+			src={require(`appAssets/chevron-down-black.svg`)?.default}
 			height={"8px"}
 			width={"20px"}
 		/>

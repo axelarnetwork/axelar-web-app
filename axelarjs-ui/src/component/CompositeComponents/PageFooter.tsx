@@ -41,7 +41,7 @@ const PageFooter = () => {
 			<DocsLinks href={downstreamServices.GITHUB_LINK}>
 				<FlexRow>
 					<SVGImage
-						src={require(`assets/github.svg`)?.default}
+						src={require(`appAssets/github.svg`)?.default}
 						height={"18px"}
 						width={"18px"}
 						margin={"0px"}

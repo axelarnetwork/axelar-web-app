@@ -22,10 +22,10 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 	const chainId: string | undefined = props.chainInfo?.chainSymbol;
 	const image = chainId
 		? <SVGImage height={"25px"} width={"25px"}
-		            src={require(`assets/logos/${props.chainInfo?.chainSymbol}.svg`)?.default}
+		            src={require(`appAssets/logos/${props.chainInfo?.chainSymbol}/${props.chainInfo?.chainSymbol}.svg`)?.default}
 		/>
 		: <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
-		            src={require(`assets/select-chain-icon-black.svg`)?.default}
+		            src={require(`appAssets/select-chain-icon-black.svg`)?.default}
 		/>;
 	return <BaseSelector
 		image={image}

@@ -1,5 +1,5 @@
 import styled     from "styled-components";
-import dividerSvg from "assets/group.svg";
+import dividerSvg from "appAssets/group.svg";
 
 export const StyledDividerSvg = styled.div`
 	background-image: url(${dividerSvg}); 
