@@ -1,7 +1,6 @@
-import React, {useState}    from "react";
-import {useSetRecoilState}  from "recoil";
-import {DestinationAddress} from "state/ChainSelection";
+import {useRecoilState}     from "recoil";
 import styled               from "styled-components";
+import {DestinationAddress} from "state/ChainSelection";
 
 const Input = styled.input.attrs({
 	type: 'text',
@@ -19,18 +18,15 @@ const Input = styled.input.attrs({
 `
 export const InputForm = (props: any) => {
 
-	const [controlledValue, updateControlledValue] = useState("");
-	const setDestinationAddress = useSetRecoilState<string | null>(DestinationAddress);
-	const handleChange = (event: any) => {
-		updateControlledValue(event.target.value);
-		setDestinationAddress(event.target.value);
-	};
+	const [destinationAddress, setDestinationAddress] = useRecoilState(DestinationAddress);
+	const handleChange = (event: any) => setDestinationAddress(event.target.value);
 
-	return (<Input
+	return <Input
 		name="destination-address-input"
 		placeholder="Enter Destination Address (Public Key)"
 		type="text"
-		value={controlledValue}
+		value={destinationAddress || ""}
 		onChange={handleChange}
-	/>);
+	/>;
+
 };

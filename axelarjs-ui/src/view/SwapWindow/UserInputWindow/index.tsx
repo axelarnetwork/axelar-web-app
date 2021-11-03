@@ -8,6 +8,7 @@ import {FlexColumn}                                      from "component/StyleCo
 import {VisibilityToggle}                                from "component/StyleComponents/VisibilityToggle";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
+import useResetUserInputs                                from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {ChainList}                                       from "state/ChainList";
 import {StyledInitiateTransferButton}                    from "./StyleComponents/StyledInitiateTransferButton";
@@ -16,7 +17,7 @@ import {StyledDividerSvg}                                from "./StyleComponents
 import "../todelete.css";
 
 interface IUserInputWindowProps {
-	handleSwapSubmit: any;
+	handleSwapSubmit: () => Promise<string>;
 }
 
 // {/*{sourceChainSelection && sourceChainSelection?.assets && sourceChainSelection?.assets?.length > 1 &&*/}
@@ -38,55 +39,60 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [sourceChainAsset, setSourceChainAsset] = useRecoilState(SourceAsset);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const resetUserInputs = useResetUserInputs();
+
+	const onInitiateTransfer = async () => {
+		const destToken: IAssetInfo = {
+			assetAddress: destAddr as string,
+			assetSymbol: destChainSelection?.chainSymbol
+		}
+		const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
+		setIsValidDestinationAddress(validAddr);
+		if (destAddr && validAddr) {
+			try {
+				await handleSwapSubmit();
+				setIsSubmitting(validAddr);
+			} catch (e) {
+				resetUserInputs();
+			}
+			setIsSubmitting(false);
+		}
+	};
 
 	return <>
+
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
+
 		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
-            <StyledDividerSvg>
-                <BoldSpan>Fee: </BoldSpan>
-                <span>XX% of transferred {sourceChainSelection?.chainSymbol}</span>
-            </StyledDividerSvg>
-        </StyledTransferFeeDivider>
+			<StyledDividerSvg>
+				<BoldSpan>Fee: </BoldSpan>
+				<span>XX% of transferred {sourceChainSelection?.chainSymbol}</span>
+			</StyledDividerSvg>
+		</StyledTransferFeeDivider>
 
 		<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
-			<br/>
-			<br/>
+			<br/><br/>
 			<FlexColumn>
 				<br/>
 				<InputForm/>
 				<br/>
-				<StyledInitiateTransferButton
-					dim={!destAddr}
-					onClick={() => {
-						const destToken: IAssetInfo = {
-							assetAddress: destAddr as string,
-							assetSymbol: destChainSelection?.chainSymbol
-						}
-						const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
-						setIsValidDestinationAddress(validAddr);
-						if (destAddr && validAddr) {
-							setIsSubmitting(validAddr);
-							handleSwapSubmit();
-						}
-					}}
-					onAnimationEnd={() => setIsSubmitting(false)}
-				>
-					{isValidDestinationAddress
-						? "Initiate Asset Transfer"
-						: <DelayedRender
-							prevChild={
-								<span>The {destChainSelection?.chainSymbol} address does not look right...</span>}
-							newChild={<span>Retry and resubmit here</span>}
-							delayBeforeNewChild={3000}
-						/>
-					}
-				</StyledInitiateTransferButton>
+				<StyledInitiateTransferButton dim={!destAddr} onClick={onInitiateTransfer}> {
+				isValidDestinationAddress
+					? "Initiate Asset Transfer"
+					: <DelayedRender
+						prevChild={<span>
+								The {destChainSelection?.chainSymbol} address does not look right...
+							</span>}
+						newChild={<span>Retry and resubmit here</span>}
+						delayBeforeNewChild={3000}
+					/>
+				} </StyledInitiateTransferButton>
 			</FlexColumn>
 		</VisibilityToggle>
+
 	</>;
 }
 
 export default UserInputWindow;
-
