@@ -1,26 +1,8 @@
-.canhhh {
-    transform: translate3d(10px, 10px, 0px) !important;
-    z-index: 10;
-    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.16), inset 0 0 3px 1px rgba(0, 0, 0, 0.21);
-    border: solid 1px #e2e1e2;
-    background-color: #fff;
-}
+/*TODO: this class overrides the Dropdown.Toggle component that needs
+   to be done in styled component instead
+*/
 .dropdown {
     position: initial !important; /*overriding position: absolute setting*/
-}
-.dropdown-menu {
-    min-width: initial;
-}
-.dropdown-item {
-    padding: 10px !important;
-}
-.list-unstyled {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    padding: 10px;
-    width: 100%;
-    z-index: 10;
 }
 
 /*.wrapper {*/

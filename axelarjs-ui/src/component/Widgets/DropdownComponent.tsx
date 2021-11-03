@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Dropdown}        from "react-bootstrap";
 import {SVGImage}        from "./SVGImage";
+import styled            from "styled-components";
 
 export interface IDropdownOption {
 	title: string;
@@ -27,8 +28,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }: any, ref) => (
 		{children}
 	</a>
 ));
-// forwardRef again here!
-// Dropdown needs access to the DOM of the Menu to measure it
+
 const CustomMenu = React.forwardRef(
 	({ children, style, className, 'aria-labelledby': labeledBy }: any, ref) => {
 		const [value, setValue] = useState('');
@@ -44,6 +44,19 @@ const CustomMenu = React.forwardRef(
 	},
 );
 
+const StyledCustomMenu = styled(CustomMenu)`
+    min-width: initial;
+    transform: translate3d(10px, 10px, 0px) !important;
+    z-index: 10;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.16), inset 0 0 3px 1px rgba(0, 0, 0, 0.21);
+    border: solid 1px #e2e1e2;
+    background-color: #fff;
+`;
+
+const StyledDropdownItem = styled(Dropdown.Item)`
+    padding: 10px !important;
+`;
+
 const DropdownComponent = (props: IDropdownComponent) => {
 	const [selectedOption, setSelectedOption] = useState<IDropdownOption>();
 	const {dropdownOptions, id} = props;
@@ -55,9 +68,9 @@ const DropdownComponent = (props: IDropdownComponent) => {
 				width={"20px"}
 			/>
 		</Dropdown.Toggle>
-		<Dropdown.Menu as={CustomMenu} className={"canhhh"}>{
+		<Dropdown.Menu as={StyledCustomMenu}>{
 			dropdownOptions.map((dropdownOption: IDropdownOption) => {
-				return <Dropdown.Item
+				return <StyledDropdownItem
 					key={"dropdown-item" + id + dropdownOption.title}
 					disabled={dropdownOption.disabled}
 					onClick={() => {
@@ -69,7 +82,7 @@ const DropdownComponent = (props: IDropdownComponent) => {
 					<SVGImage height={"20px"} width={"20px"}
 					          src={require(`assets/logos/${dropdownOption.symbol}.svg`)?.default} />
 					<span style={{ marginLeft: `10px` }}>{dropdownOption.title}</span>
-				</Dropdown.Item>
+				</StyledDropdownItem>
 			})
 		} </Dropdown.Menu>
 	</Dropdown>;
