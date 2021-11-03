@@ -48,7 +48,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
             </StyledDividerSvg>
         </StyledTransferFeeDivider>
 
-		{<VisibilityToggle shouldHide={isSubmitting}>
+		<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/>
@@ -66,8 +66,10 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 						}
 						const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
 						setIsValidDestinationAddress(validAddr);
-						validAddr && setIsSubmitting(validAddr)
-						validAddr && handleSwapSubmit();
+						if (destAddr && validAddr) {
+							setIsSubmitting(validAddr);
+							handleSwapSubmit();
+						}
 					}}
 					onAnimationEnd={() => setIsSubmitting(false)}
 				>
@@ -82,7 +84,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					}
 				</StyledInitiateTransferButton>
 			</FlexColumn>
-		</VisibilityToggle>}
+		</VisibilityToggle>
 	</>;
 }
 

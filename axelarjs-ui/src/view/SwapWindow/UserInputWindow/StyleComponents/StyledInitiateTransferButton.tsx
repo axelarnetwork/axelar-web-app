@@ -9,6 +9,6 @@ export const StyledInitiateTransferButton = styled.button<IStyledButtonProps>`
 	border-radius: 8px;
 	border: none !important;
 	box-shadow: 0 0 3px 0 rgba(11, 11, 12, 0.38);
-	background-color: ${props => props.dim ? "grey" : "#0b0b0f"};
+	background-color: ${props => props.dim ? "lightgray" : "#0b0b0f"};
 	color: white;
 `;
