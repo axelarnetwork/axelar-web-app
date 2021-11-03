@@ -1,5 +1,5 @@
-import React from "react";
-import { dependencies } from '../../../package.json';
+import React          from "react";
+import {dependencies} from '../../../package.json';
 
 const Info = () => {
 

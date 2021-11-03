@@ -1,42 +1,29 @@
-import React, {useState}                                 from "react";
-import {useRecoilState, useRecoilValue}                  from "recoil";
-import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
-import BoldSpan                                          from "component/StyleComponents/BoldSpan";
-import ChainSelector                                     from "component/CompositeComponents/ChainSelector";
-import {InputForm}                                       from "component/CompositeComponents/InputForm";
-import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
-import {VisibilityToggle}                                from "component/StyleComponents/VisibilityToggle";
-import DelayedRender                                     from "component/Widgets/DelayedRender";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
-import useResetUserInputs                                from "hooks/useResetUserInputs";
-import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
-import {ChainList}                                       from "state/ChainList";
-import {StyledInitiateTransferButton}                    from "./StyleComponents/StyledInitiateTransferButton";
-import {StyledTransferFeeDivider}                        from "./StyleComponents/StyledTransferFeeDivider";
-import {StyledDividerSvg}                                from "./StyleComponents/StyledDividerSvg";
+import React, {useState}                         from "react";
+import {useRecoilValue}                          from "recoil";
+import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-sdk";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import Index                                     from "component/CompositeComponents/ChainSelector";
+import {InputForm}                               from "component/CompositeComponents/InputForm";
+import {FlexColumn}                              from "component/StyleComponents/FlexColumn";
+import {VisibilityToggle}                        from "component/StyleComponents/VisibilityToggle";
+import DelayedRender                             from "component/Widgets/DelayedRender";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
+import useResetUserInputs                        from "hooks/useResetUserInputs";
+import {ChainSelection, DestinationAddress}      from "state/ChainSelection";
+import {StyledInitiateTransferButton}            from "./StyleComponents/StyledInitiateTransferButton";
+import {StyledTransferFeeDivider}                from "./StyleComponents/StyledTransferFeeDivider";
+import {StyledDividerSvg}                        from "./StyleComponents/StyledDividerSvg";
 import "../todelete.css";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
 }
 
-// {/*{sourceChainSelection && sourceChainSelection?.assets && sourceChainSelection?.assets?.length > 1 &&*/}
-// {/*<FlexRow>*/}
-// {/*    <AssetSelector*/}
-// {/*        selectedToken={sourceChainAsset}*/}
-// {/*        allTokens={chainList?.find(chain => chain?.chainName === sourceChainSelection?.chainName)?.assets || []}*/}
-// {/*        handleChange={(asset) => setSourceChainAsset(asset)}*/}
-// {/*    />*/}
-// {/*</FlexRow>*/}
-// {/*}*/}
-
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const chainList = useRecoilValue(ChainList);
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destAddr = useRecoilValue(DestinationAddress);
-	const [sourceChainAsset, setSourceChainAsset] = useRecoilState(SourceAsset);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const resetUserInputs = useResetUserInputs();
@@ -61,7 +48,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <>
 
-		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
+		<Index id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
 
 		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
 			<StyledDividerSvg>
@@ -72,22 +59,22 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 		<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
-			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<Index id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/><br/>
 			<FlexColumn>
 				<br/>
 				<InputForm/>
 				<br/>
 				<StyledInitiateTransferButton dim={!destAddr} onClick={onInitiateTransfer}> {
-				isValidDestinationAddress
-					? "Initiate Asset Transfer"
-					: <DelayedRender
-						prevChild={<span>
+					isValidDestinationAddress
+						? "Initiate Asset Transfer"
+						: <DelayedRender
+							prevChild={<span>
 								The {destChainSelection?.chainSymbol} address does not look right...
 							</span>}
-						newChild={<span>Retry and resubmit here</span>}
-						delayBeforeNewChild={3000}
-					/>
+							newChild={<span>Retry and resubmit here</span>}
+							delayBeforeNewChild={3000}
+						/>
 				} </StyledInitiateTransferButton>
 			</FlexColumn>
 		</VisibilityToggle>

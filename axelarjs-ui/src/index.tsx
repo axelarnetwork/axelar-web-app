@@ -9,7 +9,7 @@ import {TransferAssetBridgeFacade}    from "api/TransferAssetBridgeFacade";
 import downstreamServices             from "./config/downstreamServices";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import './index.css';
-import Info from "./view/Debug";
+import Info                           from "./view/Debug";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 const GlobalStyle = createGlobalStyle`

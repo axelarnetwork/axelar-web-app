@@ -3,6 +3,7 @@ import styled, {ThemedStyledProps} from "styled-components";
 interface IStyledButtonProps extends ThemedStyledProps<any, any> {
 	dim?: boolean;
 }
+
 export const StyledInitiateTransferButton = styled.button<IStyledButtonProps>`
 	width: 100%;
 	height: 35px;
