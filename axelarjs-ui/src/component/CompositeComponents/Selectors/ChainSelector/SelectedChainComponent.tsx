@@ -1,7 +1,7 @@
-import styled       from "styled-components";
-import {IChainInfo} from "@axelar-network/axelarjs-sdk";
-import {SVGImage}   from "component/Widgets/SVGImage";
-import React        from "react";
+import styled         from "styled-components";
+import {IChainInfo}   from "@axelar-network/axelarjs-sdk";
+import {SVGImage}     from "component/Widgets/SVGImage";
+import {BaseSelector} from "../BaseSelector";
 
 export const StyledSelectedChainComponent = styled.div`
 	width: 125px;
@@ -27,8 +27,8 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 		: <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
 		            src={require(`assets/select-chain-icon-black.svg`)?.default}
 		/>;
-	return <StyledSelectedChainComponent>
-		{image}
-		<div style={{width: `90px`, marginLeft: `5px`}}>{props.chainInfo?.chainName || "Select Chain"}</div>
-	</StyledSelectedChainComponent>
+	return <BaseSelector
+		image={image}
+		label={props.chainInfo?.chainName || "Select Chain"}
+	/>;
 }

@@ -1,14 +1,10 @@
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import {IAssetInfo}                        from "@axelar-network/axelarjs-sdk";
-import ModalWidget                         from "component/CompositeComponents/ModalWidget";
+import {ChainSelection, SourceAsset}       from "state/ChainSelection";
 import {SOURCE_TOKEN_KEY}                  from "config/consts";
 import {ChainList}                         from "state/ChainList";
-import {ChainSelection, SourceAsset}       from "state/ChainSelection";
+import {IAssetInfo}                        from "@axelar-network/axelarjs-sdk";
 
-//TODO: convert to styled components instead of CSS
-import "./assetSelector.css";
-
-const AssetSelector = () => {
+const TokenMenu = (props: any) => {
 
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const selectedToken = useRecoilValue(SourceAsset);
@@ -17,7 +13,7 @@ const AssetSelector = () => {
 	const allTokens: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
 	const handleChange = (asset: IAssetInfo) => setSourceChainAsset(asset);
 
-	const TokenMenu = (props: any) => (<>
+	return (<>
 		<div className="token-selector-header">
 			<h5>Select an Asset</h5>
 		</div>
@@ -31,17 +27,6 @@ const AssetSelector = () => {
 			))}
 		</div>
 	</>);
-
-	return (<div className="token-selection-window">
-		<div className="selected-token-info">
-			<ModalWidget
-				modaltext={selectedToken
-					? `${selectedToken?.assetName} (${selectedToken?.assetSymbol})`
-					: `Select asset`}
-				items={<TokenMenu/>}
-			/>
-		</div>
-	</div>)
 };
 
 interface ITokenOption {
@@ -56,4 +41,4 @@ const TokenOption = (props: ITokenOption) => {
 	</div>;
 }
 
-export default AssetSelector;
+export default TokenMenu;

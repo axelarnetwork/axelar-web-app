@@ -1,5 +1,5 @@
 import styled, {ThemedStyledProps} from "styled-components";
-import {FlexRow}                   from "../../../StyleComponents/FlexRow";
+import {FlexRow}                   from "../../StyleComponents/FlexRow";
 
 interface IStyledChainSelectorProps extends ThemedStyledProps<any, any> {
 	animate: boolean;

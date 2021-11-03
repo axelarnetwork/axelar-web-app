@@ -1,9 +1,9 @@
 import React, {useState}                         from "react";
 import {useRecoilValue}                          from "recoil";
 import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-sdk";
-import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import Index                                     from "component/CompositeComponents/ChainSelector";
-import {InputForm}                               from "component/CompositeComponents/InputForm";
+import BoldSpan      from "component/StyleComponents/BoldSpan";
+import ChainSelector from "component/CompositeComponents/Selectors/ChainSelector";
+import {InputForm}   from "component/CompositeComponents/InputForm";
 import {FlexColumn}                              from "component/StyleComponents/FlexColumn";
 import {VisibilityToggle}                        from "component/StyleComponents/VisibilityToggle";
 import DelayedRender                             from "component/Widgets/DelayedRender";
@@ -48,7 +48,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <>
 
-		<Index id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
+		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
 
 		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
 			<StyledDividerSvg>
@@ -59,7 +59,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 		<VisibilityToggle shouldHide={isSubmitting}>
 			<br/>
-			<Index id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/><br/>
 			<FlexColumn>
 				<br/>

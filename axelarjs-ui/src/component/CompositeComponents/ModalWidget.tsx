@@ -16,8 +16,6 @@ function ModalWidget(props: IModalComponentProps) {
 
 	return (<>
 
-		<div>{props.modaltext || "You're using this modal but need text for the button trigger"}</div>
-
 		<SVGImage
 			onClick={handleShow}
 			src={require(`assets/chevron-down-black.svg`)?.default}
