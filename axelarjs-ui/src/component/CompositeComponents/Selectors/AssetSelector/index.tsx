@@ -15,7 +15,7 @@ const AssetSelector = () => {
 	// 	            src={require(`assets/select-chain-icon-black.svg`)?.default}
 	// 	/>;
 	const image = <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
-	                        src={require(`appAssets/select-chain-icon-black.svg`)?.default}
+	                        src={require(`resources/select-chain-icon-black.svg`)?.default}
 	/>;
 	return <BaseSelector
 		image={image}

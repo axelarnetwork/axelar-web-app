@@ -1,3 +1,25 @@
+
+/*TODO: global style overrides*/
+
 .grecaptcha-badge {
     visibility: hidden;
 }
+.custom-modal-style {
+    background-color: unset !important;
+    border: none !important;
+}
+
+.fade.modal-backdrop.show {
+    background-image: url("./resources/gears-bottom-right-corner.svg");
+    background-repeat: no-repeat;
+    background-position: right -150px bottom -25px;
+}
+
+.modal-backdrop {
+    background-color: white !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.9;
+}
+

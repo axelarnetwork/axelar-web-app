@@ -61,7 +61,7 @@ const DropdownComponent = (props: IDropdownComponent) => {
 	return <Dropdown>
 		<Dropdown.Toggle as={CustomToggle} id={id}>
 			<SVGImage
-				src={require(`appAssets/chevron-down-black.svg`)?.default}
+				src={require(`resources/chevron-down-black.svg`)?.default}
 				height={"8px"}
 				width={"20px"}
 			/>
@@ -79,7 +79,7 @@ const DropdownComponent = (props: IDropdownComponent) => {
 					active={dropdownOption.active}
 				>
 					<SVGImage height={"20px"} width={"20px"}
-					          src={require(`appAssets/logos/${dropdownOption.symbol}/${dropdownOption.symbol}.svg`)?.default}/>
+					          src={require(`resources/logos/${dropdownOption.symbol}/${dropdownOption.symbol}.svg`)?.default}/>
 					<span style={{marginLeft: `10px`}}>{dropdownOption.title}</span>
 				</StyledDropdownItem>
 			})
