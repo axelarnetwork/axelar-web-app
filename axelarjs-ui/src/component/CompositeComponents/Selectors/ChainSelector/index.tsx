@@ -64,7 +64,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			modaltext={sourceAsset
 				? `${sourceAsset?.assetName} (${sourceAsset?.assetSymbol})`
 				: `Select asset`}
-			items={<AssetMenu/>}
+			children={<AssetMenu/>}
 		/>
 	</StyledChainSelectionIconWidget>;
 

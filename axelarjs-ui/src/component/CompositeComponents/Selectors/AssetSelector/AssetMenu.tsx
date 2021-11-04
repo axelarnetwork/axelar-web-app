@@ -13,7 +13,7 @@ const StyledAssetMenu = styled(GridDisplay)`
 	background-size: cover;
 	height: 569px;
 	width: 401px;
-	// padding: 75px;
+	padding: 15px 50px 0px 50px; /*top right bottom left*/
 	box-sizing: border-box;
 `;
 

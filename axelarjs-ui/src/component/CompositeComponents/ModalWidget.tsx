@@ -1,17 +1,11 @@
 import React, {cloneElement, useState} from "react";
 import {Modal}                         from "react-bootstrap";
-import Button                          from "react-bootstrap/Button";
 import {SVGImage}                      from "component/Widgets/SVGImage";
-import styled                          from "styled-components";
 
 interface IModalComponentProps {
 	modaltext: string | undefined;
-	items: JSX.Element;
+	children: JSX.Element;
 }
-
-const ModalBodyStylesOverride = styled(Modal.Body)`
-	background-color: unset !important;
-`;
 
 function ModalWidget(props: IModalComponentProps) {
 
@@ -30,7 +24,7 @@ function ModalWidget(props: IModalComponentProps) {
 
 		<Modal show={show} onHide={handleClose} contentClassName={"custom-modal-style"}>
 			<Modal.Body>
-				{cloneElement(props.items, {...props, onHide: handleClose})}
+				{cloneElement(props.children, {...props, onHide: handleClose})}
 			</Modal.Body>
 			{/*<Modal.Footer>*/}
 			{/*	<Button variant="secondary" onClick={handleClose}>*/}
