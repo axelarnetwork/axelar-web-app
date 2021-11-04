@@ -2,17 +2,18 @@ import React                                                 from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IChainInfo}                                          from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
-import ModalWidget                                           from "component/CompositeComponents/ModalWidget";
+import ModalWidget                          from "component/CompositeComponents/ModalWidget";
 import AssetSelector
-                                                             from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexRow}                                             from "component/StyleComponents/FlexRow";
-import DropdownComponent, {IDropdownOption}                  from "component/Widgets/DropdownComponent";
-import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
-import {ChainList}                                           from "state/ChainList";
-import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";
-import {StyledChainSelectionIconWidget}                      from "./StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainComponent} from "./SelectedChainComponent";
-import AssetMenu                from "../AssetSelector/AssetMenu";
+                                            from "component/CompositeComponents/Selectors/AssetSelector";
+import {FlexRow}                            from "component/StyleComponents/FlexRow";
+import DropdownComponent, {IDropdownOption} from "component/Widgets/DropdownComponent";
+import {ChainSelection, SourceAsset}        from "state/ChainSelection";
+import {ChainList}                          from "state/ChainList";
+import {StyledChainSelectionComponent}      from "../StyledChainSelectionComponent";
+import {StyledChainSelectionIconWidget}     from "./StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainComponent}             from "./SelectedChainComponent";
+import AssetMenu                            from "../AssetSelector/AssetMenu";
+import ModalContainer                       from "../../../Widgets/BasicModal/ModalContainer";
 
 interface IChainSelectorProps {
 	id: string;
@@ -60,12 +61,15 @@ const ChainSelector = (props: IChainSelectorProps) => {
 
 	const assetSelectorWidget = () => <StyledChainSelectionIconWidget>
 		<AssetSelector/>
-		<ModalWidget
-			modaltext={sourceAsset
-				? `${sourceAsset?.assetName} (${sourceAsset?.assetSymbol})`
-				: `Select asset`}
-			children={<AssetMenu/>}
-		/>
+		<ModalContainer>
+			<AssetMenu />
+		</ModalContainer>
+		{/*<ModalWidget*/}
+		{/*	modaltext={sourceAsset*/}
+		{/*		? `${sourceAsset?.assetName} (${sourceAsset?.assetSymbol})`*/}
+		{/*		: `Select asset`}*/}
+		{/*	children={<AssetMenu/>}*/}
+		{/*/>*/}
 	</StyledChainSelectionIconWidget>;
 
 	const contents = <>

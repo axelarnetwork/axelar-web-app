@@ -23,3 +23,9 @@
     opacity: 0.9;
 }
 
+.modal-body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+

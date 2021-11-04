@@ -1,12 +1,13 @@
 import {ReactElement}                    from "react";
 import {CSSTransition, SwitchTransition} from "react-transition-group";
-import styled        from "styled-components";
-import svg           from "resources/transfer-modal-light-mode.svg";
-import {GridDisplay} from "component/StyleComponents/GridDisplay";
+import styled                            from "styled-components";
+import svg                               from "resources/transfer-modal-light-mode.svg";
+import {GridDisplay}                     from "component/StyleComponents/GridDisplay";
 import {animateStyles}                   from "component/StyleComponents/SwitchToggleAnimation";
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
 import UserInputWindow                   from "./UserInputWindow";
-import TransactionStatusWindow           from "./TransactionStatusWindow";
+import TransactionStatusWindow from "./TransactionStatusWindow";
+import ModalContainer          from "../../component/Widgets/BasicModal/ModalContainer";
 
 const StyledSwapWindow = styled(GridDisplay)`
 	background-image: url(${svg});

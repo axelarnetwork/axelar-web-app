@@ -6,13 +6,14 @@ import {ChainList}                         from "state/ChainList";
 import {ChainSelection, SourceAsset}       from "state/ChainSelection";
 import styled                              from "styled-components";
 import {GridDisplay}                       from "component/StyleComponents/GridDisplay";
+import {SelectedChainComponent}            from "../ChainSelector/SelectedChainComponent";
 
 const StyledAssetMenu = styled(GridDisplay)`
 	background-image: url(${svg});
 	background-repeat: no-repeat;
 	background-size: cover;
-	height: 569px;
-	width: 401px;
+	height: 572px;
+	width: 409px;
 	padding: 15px 50px 0px 50px; /*top right bottom left*/
 	box-sizing: border-box;
 `;
@@ -27,7 +28,7 @@ const AssetMenu = (props: any) => {
 
 	return (<StyledAssetMenu>
 		<div>
-			<h5>Select an Asset</h5>
+			<SelectedChainComponent chainInfo={sourceChain} />
 		</div>
 		<div>
 			{fullAssetList.map(assetInfo => (<TokenOption

@@ -1,0 +1,36 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    display: block;
+}
+
+.modal-main {
+    position:fixed;
+    /*background: white;*/
+    width: auto;
+    height: 100vh;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    justify-content: center;
+    overflow: scroll;
+}
+.modal-main::-webkit-scrollbar {
+    display: none;
+}
+
+.not-showing {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 1s, opacity 0.5s linear;
+}
+.showing {
+    visibility: visible;
+    transition: visibility 1s, opacity 0.5s linear;
+    opacity: 1;
+}
