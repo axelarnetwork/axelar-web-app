@@ -19,16 +19,16 @@ interface IChainComponentProps {
 
 export const SelectedChainComponent = (props: IChainComponentProps) => {
 
-	const chainId: string | undefined = props.chainInfo?.chainSymbol;
-	const image = chainId
-		? <SVGImage height={"25px"} width={"25px"}
-		            src={require(`resources/logos/${props.chainInfo?.chainSymbol}/${props.chainInfo?.chainSymbol}.svg`)?.default}
-		/>
-		: <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
-		            src={require(`resources/select-chain-icon-black.svg`)?.default}
-		/>;
+	let image, dimensions;
+	try {
+		image = require(`resources/logos/${props.chainInfo?.chainSymbol}/${props.chainInfo?.chainSymbol}.svg`)?.default;
+		dimensions = "25px";
+	} catch (e) {
+		image = require(`resources/select-chain-icon-black.svg`)?.default;
+		dimensions = "20px"
+	}
 	return <BaseSelector
-		image={image}
+		image={<SVGImage height={dimensions} width={dimensions} src={image} />}
 		label={props.chainInfo?.chainName || "Select Chain"}
 	/>;
 }

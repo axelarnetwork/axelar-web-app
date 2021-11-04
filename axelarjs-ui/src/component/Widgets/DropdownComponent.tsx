@@ -69,17 +69,22 @@ const DropdownComponent = (props: IDropdownComponent) => {
 		{/*TODO: Note: there is a bug in Dropdown.Menu where adding zero margins is needed for now*/}
 		<Dropdown.Menu style={{margin: 0}} as={StyledCustomMenu}>{
 			dropdownOptions.map((dropdownOption: IDropdownOption) => {
+				let image;
+				try {
+					image = require(`resources/logos/${dropdownOption.symbol}/${dropdownOption.symbol}.svg`)?.default;
+				} catch (e) {
+					image = require(`resources/select-chain-icon-black.svg`)?.default;
+				}
 				return <StyledDropdownItem
 					key={"dropdown-item" + id + dropdownOption.title}
 					disabled={dropdownOption.disabled}
 					onClick={() => {
 						dropdownOption.action(dropdownOption);
-						// setSelectedOption(dropdownOption);
 					}}
 					active={dropdownOption.active}
 				>
 					<SVGImage height={"20px"} width={"20px"}
-					          src={require(`resources/logos/${dropdownOption.symbol}/${dropdownOption.symbol}.svg`)?.default}/>
+					          src={image}/>
 					<span style={{marginLeft: `10px`}}>{dropdownOption.title}</span>
 				</StyledDropdownItem>
 			})
