@@ -2,11 +2,13 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 import {IAssetInfo}                        from "@axelar-network/axelarjs-sdk";
 import {SOURCE_TOKEN_KEY}                  from "config/consts";
 import svg                                 from "resources/select-asset-component.svg";
-import {ChainList}                         from "state/ChainList";
 import {ChainSelection, SourceAsset}       from "state/ChainSelection";
 import styled                              from "styled-components";
 import {GridDisplay}                       from "component/StyleComponents/GridDisplay";
 import {SelectedChainComponent}            from "../ChainSelector/SelectedChainComponent";
+import AssetSearchComponent  from "./AssetSearchComponent";
+import {useEffect, useState} from "react";
+import {ChainList}           from "../../../../state/ChainList";
 
 const StyledAssetMenu = styled(GridDisplay)`
 	background-image: url(${svg});
@@ -18,24 +20,36 @@ const StyledAssetMenu = styled(GridDisplay)`
 	box-sizing: border-box;
 `;
 
-const AssetMenu = (props: any) => {
+interface IAssetMenuProps {
+	handleClose?: () => void;
+}
+const AssetMenu = (props: IAssetMenuProps) => {
 
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const chainList = useRecoilValue(ChainList);
 	const setSourceChainAsset = useSetRecoilState(SourceAsset);
-	const fullAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
+	const chainList = useRecoilValue(ChainList);
+	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
+	const [assetList, setAssetList] = useState<IAssetInfo[]>(initialAssetList);
+
+	useEffect(() => {
+		const newAssetList = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
+		setAssetList(newAssetList);
+	}, [chainList, sourceChain,setAssetList]);
+
 	const handleChange = (asset: IAssetInfo) => setSourceChainAsset(asset);
 
 	return (<StyledAssetMenu>
+		<div style={{ marginLeft: `30px`}}><SelectedChainComponent chainInfo={sourceChain} /></div>
+		<AssetSearchComponent
+			initialAssetList={initialAssetList}
+			callback={(data) => setAssetList(data)}
+		/>
 		<div>
-			<SelectedChainComponent chainInfo={sourceChain} />
-		</div>
-		<div>
-			{fullAssetList.map(assetInfo => (<TokenOption
+			{assetList.map(assetInfo => (<TokenOption
 					key={assetInfo.assetSymbol}
 					tokenInfo={assetInfo} onClick={() => {
 					handleChange(assetInfo);
-					props.onHide();
+					props.handleClose && props.handleClose();
 				}}/>
 			))}
 		</div>
@@ -47,11 +61,16 @@ interface ITokenOption {
 	onClick: any;
 }
 
+const StyledToken = styled.div`
+	cursor: pointer;
+	box-sizing: border-box;
+`;
+
 const TokenOption = (props: ITokenOption) => {
 	const {tokenInfo, onClick}: { tokenInfo: IAssetInfo, onClick: any } = props;
-	return <div onClick={() => onClick(tokenInfo)}>
+	return <StyledToken onClick={() => onClick(tokenInfo)}>
 		<h6>{tokenInfo?.assetName} ({tokenInfo?.assetSymbol})</h6>
-	</div>;
+	</StyledToken>;
 }
 
 export default AssetMenu;

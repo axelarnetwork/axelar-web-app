@@ -6,8 +6,7 @@ import {GridDisplay}                     from "component/StyleComponents/GridDis
 import {animateStyles}                   from "component/StyleComponents/SwitchToggleAnimation";
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
 import UserInputWindow                   from "./UserInputWindow";
-import TransactionStatusWindow from "./TransactionStatusWindow";
-import ModalContainer          from "../../component/Widgets/BasicModal/ModalContainer";
+import TransactionStatusWindow           from "./TransactionStatusWindow";
 
 const StyledSwapWindow = styled(GridDisplay)`
 	background-image: url(${svg});

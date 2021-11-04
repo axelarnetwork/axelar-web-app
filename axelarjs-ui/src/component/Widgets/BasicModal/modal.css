@@ -1,16 +1,18 @@
 .modal {
     position: fixed;
+    display: block;
     top: 0;
     left: 0;
     width:100vw;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.8);
-    display: block;
+    background-color: rgba(255, 255, 255, 0.8);
+    background-image: url("../../../resources/gears-bottom-right-corner.svg");
+    background-repeat: no-repeat;
+    background-position: right -150px bottom -25px;
 }
 
 .modal-main {
     position:fixed;
-    /*background: white;*/
     width: auto;
     height: 100vh;
     top:50%;
@@ -18,6 +20,7 @@
     transform: translate(-50%,-50%);
     display: flex;
     justify-content: center;
+    align-items: center;
     overflow: scroll;
 }
 .modal-main::-webkit-scrollbar {
@@ -27,10 +30,10 @@
 .not-showing {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 1s, opacity 0.5s linear;
+    transition: visibility 0.25s, opacity 0.25s linear;
 }
 .showing {
     visibility: visible;
-    transition: visibility 1s, opacity 0.5s linear;
+    transition: visibility 0.25s, opacity 0.25s linear;
     opacity: 1;
 }

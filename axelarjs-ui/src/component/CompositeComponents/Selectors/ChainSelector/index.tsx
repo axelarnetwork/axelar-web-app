@@ -1,8 +1,7 @@
-import React                                                 from "react";
-import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
-import {IChainInfo}                                          from "@axelar-network/axelarjs-sdk";
+import React                                                                    from "react";
+import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
+import {IChainInfo}                                                             from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
-import ModalWidget                          from "component/CompositeComponents/ModalWidget";
 import AssetSelector
                                             from "component/CompositeComponents/Selectors/AssetSelector";
 import {FlexRow}                            from "component/StyleComponents/FlexRow";
@@ -29,7 +28,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const sourceChain = useRecoilValue<IChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue<IChainInfo | null>(ChainSelection(DESTINATION_TOKEN_KEY));
 	const chainList = useRecoilValue(ChainList);
-	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
+	const setSourceAsset = useSetRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 
 	const dropdownOptions: IDropdownOption[] = chainList
@@ -64,12 +63,6 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		<ModalContainer>
 			<AssetMenu />
 		</ModalContainer>
-		{/*<ModalWidget*/}
-		{/*	modaltext={sourceAsset*/}
-		{/*		? `${sourceAsset?.assetName} (${sourceAsset?.assetSymbol})`*/}
-		{/*		: `Select asset`}*/}
-		{/*	children={<AssetMenu/>}*/}
-		{/*/>*/}
 	</StyledChainSelectionIconWidget>;
 
 	const contents = <>
