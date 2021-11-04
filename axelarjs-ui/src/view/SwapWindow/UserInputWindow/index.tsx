@@ -4,9 +4,9 @@ import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-
 import BoldSpan      from "component/StyleComponents/BoldSpan";
 import ChainSelector from "component/CompositeComponents/Selectors/ChainSelector";
 import {InputForm}   from "component/CompositeComponents/InputForm";
-import {FlexColumn}                              from "component/StyleComponents/FlexColumn";
-import {VisibilityToggle}                        from "component/StyleComponents/VisibilityToggle";
-import DelayedRender                             from "component/Widgets/DelayedRender";
+import {FlexColumn}    from "component/StyleComponents/FlexColumn";
+import {DisplayToggle} from "component/StyleComponents/DisplayToggle";
+import DelayedRender   from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import useResetUserInputs                        from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress}      from "state/ChainSelection";
@@ -57,7 +57,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			</StyledDividerSvg>
 		</StyledTransferFeeDivider>
 
-		<VisibilityToggle shouldHide={isSubmitting}>
+		<DisplayToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/><br/>
@@ -77,7 +77,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 						/>
 				} </StyledInitiateTransferButton>
 			</FlexColumn>
-		</VisibilityToggle>
+		</DisplayToggle>
 
 	</>;
 }

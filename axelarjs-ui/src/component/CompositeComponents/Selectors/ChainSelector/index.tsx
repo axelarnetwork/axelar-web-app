@@ -58,19 +58,19 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		/>}
 	</StyledChainSelectionIconWidget>;
 
-	const assetSelectorWidget = () => <StyledChainSelectionIconWidget>
-		<AssetSelector/>
-		<ModalContainer>
-			<AssetMenu />
-		</ModalContainer>
-	</StyledChainSelectionIconWidget>;
+	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
+			<AssetSelector/>
+			<ModalContainer>
+				<AssetMenu />
+			</ModalContainer>
+		</StyledChainSelectionIconWidget>;
 
 	const contents = <>
 		<div style={{marginLeft: `10px`, marginBottom: `10px`}}>{props.label}</div>
 		{isSourceChain
 			? <FlexRow style={{width: `100%`}}>
 				{chainSelectorWidget()}
-				{assetSelectorWidget()}
+				{assetSelectorWidget(!sourceChain)}
 			</FlexRow>
 			: chainSelectorWidget()
 		}

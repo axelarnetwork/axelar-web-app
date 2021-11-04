@@ -10,7 +10,10 @@ export const Input = styled.input.attrs({
 	padding: 0px 10px 0px 10px !important;
 	box-sizing: border-box;
 	font-size: 11px;
+	transition: 0.3s;
 	&:focus {
 		outline: none !important;
+	    border-color: darkgrey;
+	    box-shadow: 0 0 8px 0 darkgrey;
 	}
 `
