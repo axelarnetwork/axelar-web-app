@@ -66,7 +66,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		</StyledChainSelectionIconWidget>;
 
 	const contents = <>
-		<div style={{marginLeft: `10px`, marginBottom: `10px`}}>{props.label}</div>
+		<div style={{marginLeft: `10px`, marginBottom: `2px`}}>{props.label}</div>
 		{isSourceChain
 			? <FlexRow style={{width: `100%`}}>
 				{chainSelectorWidget()}

@@ -1,17 +1,6 @@
-import styled         from "styled-components";
 import {IChainInfo}   from "@axelar-network/axelarjs-sdk";
 import {SVGImage}     from "component/Widgets/SVGImage";
 import {BaseSelector} from "../BaseSelector";
-
-export const StyledSelectedChainComponent = styled.div`
-	width: 125px;
-	height: 30px;
-	display: fiex;
-	align-items: center;
-	justify-content: space-between;
-	margin-left: 10px;
-	font-weight: bold;
-`;
 
 interface IChainComponentProps {
 	chainInfo: IChainInfo | null

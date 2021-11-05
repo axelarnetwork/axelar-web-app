@@ -1,24 +1,24 @@
-import {useRecoilValue} from "recoil";
-import {SVGImage}       from "component/Widgets/SVGImage";
-import {SourceAsset}    from "state/ChainSelection";
-import {BaseSelector}   from "../BaseSelector";
+import {useRecoilValue}              from "recoil";
+import {SVGImage}                    from "component/Widgets/SVGImage";
+import {SOURCE_TOKEN_KEY}            from "config/consts";
+import {ChainSelection, SourceAsset} from "state/ChainSelection";
+import {BaseSelector}                from "../BaseSelector";
 
 const AssetSelector = () => {
 
 	const selectedToken = useRecoilValue(SourceAsset);
+	const chainInfo = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 
-	// const image = chainId
-	// 	? <SVGImage height={"25px"} width={"25px"}
-	// 	            src={require(`assets/logos/${props.chainInfo?.chainSymbol}.svg`)?.default}
-	// 	/>
-	// 	: <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
-	// 	            src={require(`assets/select-chain-icon-black.svg`)?.default}
-	// 	/>;
-	const image = <SVGImage height={"20px"} width={"20px"} margin={"2.5px"}
-	                        src={require(`resources/select-chain-icon-black.svg`)?.default}
-	/>;
+	let image;
+	console.log("chain and asset info",chainInfo,selectedToken);
+	try {
+		image = require(`resources/logos/${chainInfo?.chainSymbol}/assets/${selectedToken?.assetSymbol}.svg`)?.default;
+	} catch (e) {
+		image = require(`resources/select-chain-icon-black.svg`)?.default;
+	}
+
 	return <BaseSelector
-		image={image}
+		image={<SVGImage height={"25px"} width={"25px"} src={image} />}
 		label={selectedToken
 			? `${selectedToken?.assetSymbol}`
 			: `Select asset`}
