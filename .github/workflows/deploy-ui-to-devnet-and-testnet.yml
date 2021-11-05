@@ -20,6 +20,7 @@ jobs:
           working-directory: axelarjs-ui
           alias-domains: |
             axelar-bridge-devnet.vercel.app
+            bridge.devnet.axelar.dev
       - uses: amondnet/vercel-action@v20
         id: vercel-action-testnet
         with:
