@@ -6,9 +6,11 @@ export const StyledDividerSvg = styled.div`
 	background-repeat: no-repeat;
 	background-size: cover;
 	right: 0;
-	top: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	font-size: 11px;
-	height: 21px;
-	width: 98%;
+	height: 47px;
+	width: 99%;
 	text-align: right;
 `;

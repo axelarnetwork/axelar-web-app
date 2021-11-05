@@ -52,8 +52,12 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
 			<StyledDividerSvg>
-				<BoldSpan>Fee: </BoldSpan>
-				<span>XX% of transferred {sourceChainSelection?.chainSymbol}</span>
+				<div style={{ marginLeft: `15px` }}><BoldSpan>Approx. wait: </BoldSpan>
+					<span>XX min</span>
+				</div>
+				<div><BoldSpan>Transfer Fee: </BoldSpan>
+					<span>XX% of xferred {sourceChainSelection?.chainSymbol}</span>
+				</div>
 			</StyledDividerSvg>
 		</StyledTransferFeeDivider>
 
