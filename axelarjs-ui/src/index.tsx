@@ -10,6 +10,7 @@ import {TransferAssetBridgeFacade}    from "api/TransferAssetBridgeFacade";
 import downstreamServices             from "./config/downstreamServices";
 import Info                           from "./view/Debug";
 import './index.css';
+import Login                          from "./view/Login";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -35,6 +36,7 @@ new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
 const routes = <BrowserRouter>
 	<Switch>
 		<Route exact path="/" component={App}/>
+		<Route exact path="/login" component={Login}/>
 		<Route exact path="/debug" component={Info}/>
 	</Switch>
 </BrowserRouter>;
