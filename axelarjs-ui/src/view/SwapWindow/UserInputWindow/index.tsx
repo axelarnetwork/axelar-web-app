@@ -1,18 +1,19 @@
 import React, {useState}                         from "react";
 import {useRecoilValue}                          from "recoil";
 import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-sdk";
-import BoldSpan      from "component/StyleComponents/BoldSpan";
-import ChainSelector from "component/CompositeComponents/Selectors/ChainSelector";
-import {InputForm}   from "component/CompositeComponents/InputForm";
-import {FlexColumn}    from "component/StyleComponents/FlexColumn";
-import {DisplayToggle} from "component/StyleComponents/DisplayToggle";
-import DelayedRender   from "component/Widgets/DelayedRender";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import ChainSelector                             from "component/CompositeComponents/Selectors/ChainSelector";
+import {InputForm}                               from "component/CompositeComponents/InputForm";
+import {FlexColumn}                              from "component/StyleComponents/FlexColumn";
+import {DisplayToggle}                           from "component/StyleComponents/DisplayToggle";
+import DelayedRender                             from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import useResetUserInputs                        from "hooks/useResetUserInputs";
+import dividerImage                              from "resources/group.svg";
 import {ChainSelection, DestinationAddress}      from "state/ChainSelection";
 import {StyledInitiateTransferButton}            from "./StyleComponents/StyledInitiateTransferButton";
 import {StyledTransferFeeDivider}                from "./StyleComponents/StyledTransferFeeDivider";
-import {StyledDividerSvg}                        from "./StyleComponents/StyledDividerSvg";
+import {StyledImage}                             from "../index";
 import "../todelete.css";
 
 interface IUserInputWindowProps {
@@ -50,22 +51,24 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} animate={isSubmitting} hideContents={isSubmitting}/>
 
-		<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
-			<StyledDividerSvg>
-				<div style={{ marginLeft: `15px`, marginTop: `15px` }}>
-					<div><BoldSpan>Approximate wait time: </BoldSpan></div>
-					<div>XX minutes</div>
-				</div>
-				<div style={{ textAlign: `right` }}><div><BoldSpan>Transfer Fee: </BoldSpan></div>
-					<div>XX% of xferred {sourceChainSelection?.chainSymbol}</div>
-				</div>
-			</StyledDividerSvg>
-		</StyledTransferFeeDivider>
 
 		<DisplayToggle shouldHide={isSubmitting}>
 			<br/>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
-			<br/><br/>
+			<br/>
+			<StyledTransferFeeDivider showContents={!!sourceChainSelection} nextState={isSubmitting}>
+				<StyledImage src={dividerImage}/>
+				<div style={{display: `flex`, justifyContent: `space-between`}}>
+					<div style={{marginLeft: `15px`, marginTop: `15px`}}>
+						<div><BoldSpan>Approximate wait time: </BoldSpan></div>
+						<div>XX minutes</div>
+					</div>
+					<div style={{textAlign: `right`}}>
+						<div><BoldSpan>Transfer Fee: </BoldSpan></div>
+						<div>XX% of xferred {sourceChainSelection?.chainSymbol}</div>
+					</div>
+				</div>
+			</StyledTransferFeeDivider>
 			<FlexColumn>
 				<br/>
 				<InputForm/>

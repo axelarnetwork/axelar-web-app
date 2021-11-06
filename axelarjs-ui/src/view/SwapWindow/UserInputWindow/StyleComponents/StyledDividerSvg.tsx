@@ -4,7 +4,7 @@ import dividerSvg from "resources/group.svg";
 export const StyledDividerSvg = styled.div`
 	background-image: url(${dividerSvg}); 
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: contain;
 	right: 0;
 	display: flex;
 	align-items: center;

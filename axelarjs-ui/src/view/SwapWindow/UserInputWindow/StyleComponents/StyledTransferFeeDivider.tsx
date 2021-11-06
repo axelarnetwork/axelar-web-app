@@ -6,9 +6,8 @@ interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
 }
 
 export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProps>`
-	position: absolute;
-	width: 70%;
-	height: 50px;
+	position: relative;
+	height: auto;
 	bottom: ${props => props.nextState ? `60px` : `37%`};
 	margin-top: ${props => props.nextState ? `10px` : `0px`};
 	opacity: ${props => props.showContents ? `1` : `0`};

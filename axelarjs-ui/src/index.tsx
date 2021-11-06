@@ -1,5 +1,6 @@
 import React                          from 'react';
 import ReactDOM                       from 'react-dom';
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import App                            from './view/App';
 import reportWebVitals                from './reportWebVitals';
 import {RecoilRoot}                   from "recoil";
@@ -7,10 +8,8 @@ import {RecoilLogger}                 from 'recoil-devtools-logger';
 import {createGlobalStyle}            from "styled-components";
 import {TransferAssetBridgeFacade}    from "api/TransferAssetBridgeFacade";
 import downstreamServices             from "./config/downstreamServices";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
-import './index.css';
 import Info                           from "./view/Debug";
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
 const GlobalStyle = createGlobalStyle`
 	body {
