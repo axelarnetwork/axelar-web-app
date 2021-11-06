@@ -8,10 +8,12 @@
     background-color: rgba(255, 255, 255, 0.8);
     background-image: url("../../../resources/gears-bottom-right-corner.svg");
     background-repeat: no-repeat;
-    background-position: right -150px bottom -25px;
+    background-position: right 0px top 0px;
 }
 
 .modal-main {
+    scrollbar-width: none; /*FireFox*/
+    -ms-overflow-style: -ms-autohiding-scrollbar; /*IE10+*/
     position:fixed;
     width: auto;
     height: 100vh;

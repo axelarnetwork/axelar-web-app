@@ -12,5 +12,4 @@ export const StyledDividerSvg = styled.div`
 	font-size: 11px;
 	height: 47px;
 	width: 99%;
-	text-align: right;
 `;

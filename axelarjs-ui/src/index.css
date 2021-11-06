@@ -5,3 +5,12 @@
     visibility: hidden;
 }
 
+/*::-webkit-scrollbar {*/
+/*    -webkit-appearance: none;*/
+/*    width: 5px;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb {*/
+/*    border-radius: 25px;*/
+/*    background-color: rgba(0, 0, 0, .3);*/
+/*}*/
