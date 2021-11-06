@@ -67,7 +67,7 @@ const DropdownComponent = (props: IDropdownComponent) => {
 			/>
 		</Dropdown.Toggle>
 		{/*TODO: Note: there is a bug in Dropdown.Menu where adding zero margins is needed for now*/}
-		<Dropdown.Menu style={{margin: 0}} as={StyledCustomMenu}>{
+		<Dropdown.Menu style={{margin: 0, overflowY: `scroll`, maxHeight: `200px`}} as={StyledCustomMenu}>{
 			dropdownOptions.map((dropdownOption: IDropdownOption) => {
 				let image;
 				try {

@@ -21,7 +21,7 @@ const StyledSwapWindow = styled(GridDisplay)`
 
 const StyledToggleContainer = styled.div`
 	max-width: 600px;
-	overflow: hidden;
+	// overflow: hidden;
 	height: 100%;
 `;
 
