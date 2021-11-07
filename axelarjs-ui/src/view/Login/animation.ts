@@ -1,4 +1,7 @@
-require("./animation.css");
+// @ts-nocheck
+
+import "./animation.css";
+
 const html2canvas = require("html2canvas");
 
 const DEBUG = false;
@@ -102,18 +105,4 @@ function disintegrate($elm) {
     });
 }
 
-
-// /** === Below is just to bind the module and the DOM == */
-// [...document.querySelectorAll(".disintegration-target")].forEach($elm => {
-//     $elm.addEventListener("click", () => {
-//         if ($elm.disintegrated) { return; }
-//         $elm.disintegrated = true;
-//         disintegrate($elm);
-//     });
-// });
-
-module.exports = {
-    disintegrate: (el) => disintegrate(el)
-}
-
-// export default disintegrate;
+export default disintegrate;

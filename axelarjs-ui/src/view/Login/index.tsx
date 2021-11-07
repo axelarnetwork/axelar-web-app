@@ -1,11 +1,13 @@
-import {useRef, useState} from "react";
-import {Redirect}         from "react-router-dom";
-import styled             from "styled-components";
-import {slamKeyframe}     from "component/StyleComponents/animations/slamKeyframe";
-import {StyledButton}     from "component/StyleComponents/StyledButton";
-import usePasswordInput   from "hooks/usePasswordInput";
-import backgroundImage    from "resources/jarold-sng-axo-explorer-jsd.png";
-import {disintegrate}       from "./animation";
+import {useRef}         from "react";
+import {useRecoilState} from "recoil";
+import {Redirect}       from "react-router-dom";
+import styled           from "styled-components";
+import {slamKeyframe}   from "component/StyleComponents/animations/slamKeyframe";
+import {StyledButton}   from "component/StyleComponents/StyledButton";
+import usePasswordInput from "hooks/usePasswordInput";
+import backgroundImage  from "resources/jarold-sng-axo-explorer-jsd.png";
+import {IsLoggedIn}     from "state/ApplicationStatus";
+import disintegrate     from "./animation";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -45,7 +47,7 @@ const SlaminDiv = styled(StyledImage)`
 const Login = () => {
 
 	const imageRef = useRef(null);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
 	const [userPassword, passwordComponent] = usePasswordInput();
 
 	const onClick = () => {
@@ -62,7 +64,7 @@ const Login = () => {
 				<StyledImage ref={imageRef} src={backgroundImage}/>
 			</StyledLoginSection>
 			<RightStyledLoginSection>
-				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default} />
+				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
 				<br/>
 				{passwordComponent}
 				<br/>

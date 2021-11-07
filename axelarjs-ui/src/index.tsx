@@ -1,17 +1,18 @@
 import React                          from 'react';
 import ReactDOM                       from 'react-dom';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import App                            from './view/App';
-import reportWebVitals                from './reportWebVitals';
-import {RecoilRoot}                   from "recoil";
-import {RecoilLogger}                 from 'recoil-devtools-logger';
-import {createGlobalStyle}            from "styled-components";
-import {TransferAssetBridgeFacade}    from "api/TransferAssetBridgeFacade";
-import downstreamServices             from "./config/downstreamServices";
-import Info                           from "./view/Debug";
+import App                              from './view/App';
+import reportWebVitals                  from './reportWebVitals';
+import {RecoilRoot}                     from "recoil";
+import {RecoilLogger}                   from 'recoil-devtools-logger';
+import {createGlobalStyle}              from "styled-components";
+import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
+import downstreamServices               from "./config/downstreamServices";
+import Info                             from "./view/Debug";
 import './index.css';
-import Login                          from "./view/Login";
-import {TransitionGroup, CSSTransition}              from "react-transition-group";
+import Login                            from "./view/Login";
+import {TransitionGroup, CSSTransition} from "react-transition-group";
+import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -38,9 +39,9 @@ const routes = (props: any) =>	<TransitionGroup>
 	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>
 		<Switch>
 			<Route exact path="/" component={Login}/>
-			<Route exact path="/app" component={App}/>
+			<ProtectedRoute exact path="/app" component={App}/>
 			<Route exact path="/login" component={Login}/>
-			<Route exact path="/debug" component={Info}/>
+			<ProtectedRoute exact path="/debug" component={Info}/>
 		</Switch>
 	</CSSTransition>
 </TransitionGroup>;
