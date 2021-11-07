@@ -5,7 +5,7 @@ import {slamKeyframe}     from "component/StyleComponents/animations/slamKeyfram
 import {StyledButton}     from "component/StyleComponents/StyledButton";
 import usePasswordInput   from "hooks/usePasswordInput";
 import backgroundImage    from "resources/jarold-sng-axo-explorer-jsd.png";
-import animation          from "./animation";
+import {disintegrate}       from "./animation";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -51,7 +51,7 @@ const Login = () => {
 	const onClick = () => {
 		if (!(userPassword === process.env.REACT_APP_LOGIN_PASSWORD))
 			return;
-		animation.disintegrate(imageRef.current)
+		disintegrate(imageRef.current)
 		.then(() => setTimeout(() => setIsLoggedIn(true), 2000));
 	}
 

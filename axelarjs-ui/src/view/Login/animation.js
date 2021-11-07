@@ -115,3 +115,5 @@ function disintegrate($elm) {
 module.exports = {
     disintegrate: (el) => disintegrate(el)
 }
+
+// export default disintegrate;
