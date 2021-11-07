@@ -1,17 +1,26 @@
-import {useRecoilState}     from "recoil";
-import {DestinationAddress} from "state/ChainSelection";
-import {Input}              from "../StyleComponents/Input";
+import {Input}                            from "../StyleComponents/Input";
+import {HTMLInputTypeAttribute, useState} from "react";
 
-export const InputForm = (props: any) => {
+interface IInputProps {
+	name: string;
+	placeholder: string;
+	type: ((HTMLInputTypeAttribute | undefined) & "text") | undefined;
+	onChange: (e: any) => void;
+	
+}
+export const InputForm = (props: IInputProps) => {
 
-	const [destinationAddress, setDestinationAddress] = useRecoilState(DestinationAddress);
-	const handleChange = (event: any) => setDestinationAddress(event.target.value);
+	const [stateValue, setStateValue] = useState("");
+	const handleChange = (event: any) => {
+		setStateValue(event.target.value);
+		props.onChange && props.onChange(event);
+	};
 
 	return <Input
-		name="destination-address-input"
-		placeholder="Enter Destination Address (Public Key)"
-		type="text"
-		value={destinationAddress || ""}
+		name={props.name}
+		placeholder={props.placeholder}
+		type={props.type}
+		value={stateValue || ""}
 		onChange={handleChange}
 	/>;
 

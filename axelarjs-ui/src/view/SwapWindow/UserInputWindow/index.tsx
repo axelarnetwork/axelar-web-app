@@ -1,6 +1,6 @@
-import React, {useState}                         from "react";
-import {useRecoilValue}                          from "recoil";
-import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-sdk";
+import React, {useState}                        from "react";
+import {useRecoilState, useRecoilValue}         from "recoil";
+import {IAssetInfo, validateDestinationAddress} from "@axelar-network/axelarjs-sdk";
 import BoldSpan                                  from "component/StyleComponents/BoldSpan";
 import ChainSelector                             from "component/CompositeComponents/Selectors/ChainSelector";
 import {InputForm}                               from "component/CompositeComponents/InputForm";
@@ -10,9 +10,9 @@ import DelayedRender                             from "component/Widgets/Delayed
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import useResetUserInputs                        from "hooks/useResetUserInputs";
 import dividerImage                              from "resources/group.svg";
-import {ChainSelection, DestinationAddress}      from "state/ChainSelection";
-import {StyledInitiateTransferButton}            from "./StyleComponents/StyledInitiateTransferButton";
-import {StyledTransferFeeDivider}                from "./StyleComponents/StyledTransferFeeDivider";
+import {ChainSelection, DestinationAddress} from "state/ChainSelection";
+import {StyledButton}                       from "../../../component/StyleComponents/StyledButton";
+import {StyledTransferFeeDivider}           from "./StyleComponents/StyledTransferFeeDivider";
 import {StyledImage}                             from "../index";
 import "../todelete.css";
 
@@ -24,7 +24,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
-	const destAddr = useRecoilValue(DestinationAddress);
+	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const resetUserInputs = useResetUserInputs();
@@ -71,9 +71,14 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			</StyledTransferFeeDivider>
 			<FlexColumn>
 				<br/>
-				<InputForm/>
+				<InputForm
+					name={"destination-address-input"}
+					placeholder={"Enter Destination Address (Public Key)"}
+					type={"text"}
+					onChange={(e: any) => setDestAddr(e.target.value)}
+				/>
 				<br/>
-				<StyledInitiateTransferButton dim={!destAddr} onClick={onInitiateTransfer}> {
+				<StyledButton dim={!destAddr} onClick={onInitiateTransfer}> {
 					isValidDestinationAddress
 						? "Initiate Asset Transfer"
 						: <DelayedRender
@@ -83,7 +88,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 							newChild={<span>Retry and resubmit here</span>}
 							delayBeforeNewChild={3000}
 						/>
-				} </StyledInitiateTransferButton>
+				} </StyledButton>
 			</FlexColumn>
 		</DisplayToggle>
 

@@ -11,6 +11,7 @@ import downstreamServices             from "./config/downstreamServices";
 import Info                           from "./view/Debug";
 import './index.css';
 import Login                          from "./view/Login";
+import {TransitionGroup, CSSTransition}              from "react-transition-group";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -33,18 +34,25 @@ const GlobalStyle = createGlobalStyle`
 
 new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
 
-const routes = <BrowserRouter>
-	<Switch>
-		<Route exact path="/" component={App}/>
-		<Route exact path="/login" component={Login}/>
-		<Route exact path="/debug" component={Info}/>
-	</Switch>
+const routes = (props: any) =>	<TransitionGroup>
+	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>
+		<Switch>
+			<Route exact path="/" component={Login}/>
+			<Route exact path="/app" component={App}/>
+			<Route exact path="/login" component={Login}/>
+			<Route exact path="/debug" component={Info}/>
+		</Switch>
+	</CSSTransition>
+</TransitionGroup>;
+
+const routesWithCSSTransition = <BrowserRouter>
+	<Route path="/" component={routes} />
 </BrowserRouter>;
 
 ReactDOM.render(
 	<RecoilRoot>
 		<RecoilLogger/>
-		{routes}
+		{routesWithCSSTransition}
 		<GlobalStyle/>
 	</RecoilRoot>,
 	document.getElementById('root')

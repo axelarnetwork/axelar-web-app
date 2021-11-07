@@ -1,0 +1,28 @@
+.disintegration-container {
+    position: absolute;
+    pointer-events: none;
+}
+
+.disintegration-container > canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+    opacity: 1;
+    transform: rotate(0deg) translate(0px, 0px) rotate(0deg);
+}
+
+@keyframes debug-pulse {
+    0% { filter: none; }
+    95% { filter: none; }
+    95% { filter: drop-shadow(0 1px 0 rgba(255,0,0,1)); }
+    100% { filter: drop-shadow(0 1px 0 rgba(255,0,0,1)); }
+}
+
+.item {
+    margin-bottom: 1em;
+    padding: 1em;
+}
+h1.item { margin-top: 0; }
+p.item { margin-bottom: 0; }
+img.item { float: right; }

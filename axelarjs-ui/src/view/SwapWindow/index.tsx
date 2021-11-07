@@ -1,10 +1,10 @@
 import {ReactElement}                    from "react";
 import {CSSTransition, SwitchTransition} from "react-transition-group";
 import styled                            from "styled-components";
-import svg                               from "resources/transfer-modal-light-mode.svg";
 import {GridDisplay}                     from "component/StyleComponents/GridDisplay";
-import {animateStyles}                   from "component/StyleComponents/SwitchToggleAnimation";
+import {animateStyles}                   from "component/StyleComponents/animations/SwitchToggleAnimation";
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
+import svg                               from "resources/transfer-modal-light-mode.svg";
 import UserInputWindow                   from "./UserInputWindow";
 import TransactionStatusWindow           from "./TransactionStatusWindow";
 
@@ -43,7 +43,7 @@ const SwapWindow = (): ReactElement => {
 	const userInputNeeded = !showTransactionStatusWindow;
 
 	return <StyledSwapWindow>
-		<StyledImage src={svg} />
+		<StyledImage src={svg}/>
 		<SwitchTransition mode={"out-in"}>
 			<CSSTransition
 				key={userInputNeeded ? "user-input-window" : "transaction-status-window"}
