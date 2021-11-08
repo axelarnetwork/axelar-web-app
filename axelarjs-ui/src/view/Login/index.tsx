@@ -15,6 +15,7 @@ const StyledLoginPage = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: row;
+	background: white !important;
 `;
 
 const StyledLoginSection = styled.div`

@@ -13,6 +13,7 @@ import './index.css';
 import Login                            from "./view/Login";
 import {TransitionGroup, CSSTransition} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
+import backgroundImage                  from "resources/dummy_background_7.jpg";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -26,6 +27,11 @@ const GlobalStyle = createGlobalStyle`
 		font-style: normal;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		background-image: url(${backgroundImage});
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-attachment: fixed;
+		background-size: cover;
 	}
 
 	code {
