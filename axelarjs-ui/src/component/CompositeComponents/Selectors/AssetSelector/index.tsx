@@ -10,7 +10,7 @@ const AssetSelector = () => {
 	const chainInfo = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 
 	let image;
-	console.log("chain and asset info",chainInfo,selectedToken);
+
 	try {
 		image = require(`resources/logos/${chainInfo?.chainSymbol}/assets/${selectedToken?.assetSymbol}.svg`)?.default;
 	} catch (e) {
