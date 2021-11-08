@@ -47,7 +47,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				addStep(`Generating deposit address`, 0);
 				break;
 		}
-
+		// TODO: uncomment next line with fix above
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [destinationChain?.chainName,
 		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
