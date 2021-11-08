@@ -1,4 +1,5 @@
 import {useEffect}          from "react";
+import HelperCartoonWidget  from "component/CompositeComponents/HelperCartoonWidget";
 import PageFooter           from "component/CompositeComponents/PageFooter";
 import PageHeader           from "component/CompositeComponents/PageHeader";
 import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
@@ -17,6 +18,7 @@ const App = () => {
 
 	return (
 		<StyledAppContainer>
+			<HelperCartoonWidget />
 			<PageHeader/>
 			{isRecaptchaSet
 				? <StyledAppBody>

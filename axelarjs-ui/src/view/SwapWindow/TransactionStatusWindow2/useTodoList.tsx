@@ -1,7 +1,9 @@
 import React, {useState}                 from 'react';
 import {Button, Container, ListGroup,}   from 'react-bootstrap';
 import {CSSTransition, TransitionGroup,} from 'react-transition-group';
-import { v4 as uuid }                              from 'uuid';
+import { v4 as uuid }                    from 'uuid';
+import {useSetRecoilState}               from "recoil";
+import {ShowHelperCartoonWidget}         from "state/ApplicationStatus";
 import './todolist.css';
 
 const steps: string[] = ["", "", "", ""];
@@ -17,6 +19,7 @@ const useTodoList = () => {
 		text: step
 	})));
 	const [activeStep, setActiveStep] = useState<number>(0);
+	const setShowHelperCartoonWidget = useSetRecoilState(ShowHelperCartoonWidget);
 
 	const jsx = () => <Container style={{marginTop: '2rem'}}>
 		<ListGroup style={{marginBottom: '1rem'}}>
@@ -59,6 +62,8 @@ const useTodoList = () => {
 		})
 		setActiveStep(index);
 		setItems(items => newState);
+		if (index >= 1)
+			setShowHelperCartoonWidget(true);
 	}
 
 	// const setAddStep = (step: number) => {

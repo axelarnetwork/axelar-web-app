@@ -9,7 +9,7 @@ export const IsLoggedIn = atom<boolean>({
 	effects_UNSTABLE: [persistAtom]
 });
 
-export const ShowHelper = atom<boolean>({
-	key: "ShowHelper",
+export const ShowHelperCartoonWidget = atom<boolean>({
+	key: "ShowHelperCartoonWidget",
 	default: false,
 });
