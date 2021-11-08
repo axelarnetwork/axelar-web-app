@@ -1,105 +1,60 @@
-import {useEffect, useState}                               from "react";
-import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
-// import {Step, Stepper}                                                       from "react-form-stepper";
-// import Button                                                                from "react-bootstrap/Button";
+import {useEffect}                                                           from "react";
+import {useRecoilValue}                                                      from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
-// import BoldSpan                                                              from "component/StyleComponents/BoldSpan";
-// import {FooterComponent}                                                     from "component/StyleComponents/FooterComponent";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
-// import useResetUserInputs                                                    from "hooks/useResetUserInputs";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-// import {ChainSelection, SourceAsset} from "state/ChainSelection";
+import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
 import useTodoList                                                           from "./useTodoList";
-import {Nullable}                                                            from "../../../interface/Nullable";
-import {IAssetInfo}                                                          from "@axelar-network/axelarjs-sdk";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
 	closeResultsScreen: any;
 }
+
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
-	const [steps, addStep, stepsJsx] = useTodoList();
+	const [addStep, stepsJsx] = useTodoList();
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
-	// const depositAddress = useRecoilValue(SourceDepositAddress);
-	const [depositAddress, setDepositAddress] = useRecoilState(SourceDepositAddress);
-	// const selectedSourceAsset = useRecoilValue(SourceAsset);
-	// const resetUserInputs = useResetUserInputs();
-	// const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	// const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
-	const [activeStep, setActiveStep] = useState(0);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
 		numberConfirmations: dNumConfirms,
 		numberRequiredConfirmations: dReqNumConfirms,
-		// transactionHash
 	} = destinationConfirmStatus;
 
-	// const setActiveState = useRecoilCallback(({snapshot}) => async () => {
-	// 	const destinationConfirmStatus = await snapshot.getPromise(NumberConfirmations(DESTINATION_TOKEN_KEY));
-	// 	const {
-	// 		numberConfirmations: dNumConfirms,
-	// 		numberRequiredConfirmations: dReqNumConfirms,
-	// 		// transactionHash
-	// 	} = destinationConfirmStatus;
-	// 	const depositAddress = await snapshot.getPromise(SourceDepositAddress);
-	// 	console.log('destinationConfirmStatus: ', destinationConfirmStatus, depositAddress);
-	// 	let activeStep: number;
-	// 	switch (true) {
-	// 		case !!(dNumConfirms && dReqNumConfirms):
-	// 			activeStep = 4;
-	// 			break;
-	// 		case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-	// 			activeStep = 3;
-	// 			break;
-	// 		case !!depositAddress:
-	// 			activeStep = 2;
-	// 			// addStep(`Please deposit ${depositAddress?.assetSymbol} into ${depositAddress?.assetAddress}`);
-	// 			break;
-	// 		default:
-	// 			activeStep = 1;
-	// 			// addStep(`Generating deposit address`);
-	// 			break;
-	// 	}
-	// 	addStep(activeStep);
-	// 	return activeStep;
-	// });
-
 	useEffect(() => {
+		//todo: need to improve this, the 'right' way of doing something like this is here: https://bugfender.com/blog/react-hooks-common-mistakes/
 		console.log("render transaction status screen");
-		let activeStep: number;
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				activeStep = 4;
+				addStep(`Transaction detected on ${destinationChain?.chainName}`, 3);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				activeStep = 3;
+				addStep(`Deposit confirmed. Axelar is working on your request`, 2);
 				break;
 			case !!depositAddress:
-				activeStep = 2;
-				// addStep(`Please deposit ${depositAddress?.assetSymbol} into ${depositAddress?.assetAddress}`);
+				addStep(`Please deposit/transfer ${selectedSourceAsset?.assetSymbol} 
+					in ${sourceChain?.chainName} to the 
+					following address: ${depositAddress?.assetAddress}`, 1);
 				break;
 			default:
-				activeStep = 1;
-				// addStep(`Generating deposit address`);
+				addStep(`Generating deposit address`, 0);
 				break;
 		}
-		// setActiveStep(activeStep);
 
-	},[dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
-
-	// console.log("active step",activeStep);
+	}, [destinationChain?.chainName,
+		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
 	return <>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
 		{isRecaptchaAuthenticated
-			? <div style={{ background: `blue`}} onClick={() => {
-				console.log("CLICKED");
-				setDepositAddress({ assetAddress: "ctt",assetSymbol: "canh"});
-			}}>{stepsJsx()}</div>
+			? stepsJsx()
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>

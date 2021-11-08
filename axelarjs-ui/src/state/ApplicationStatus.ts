@@ -8,3 +8,8 @@ export const IsLoggedIn = atom<boolean>({
 	default: false,
 	effects_UNSTABLE: [persistAtom]
 });
+
+export const ShowHelper = atom<boolean>({
+	key: "ShowHelper",
+	default: false,
+});

@@ -6,7 +6,7 @@ import {animateStyles}                   from "component/StyleComponents/animati
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
 import svg                               from "resources/transfer-modal-light-mode.svg";
 import UserInputWindow                   from "./UserInputWindow";
-import TransactionStatusWindow           from "./TransactionStatusWindow";
+import TransactionStatusWindow           from "./TransactionStatusWindow2";
 
 const StyledSwapWindow = styled(GridDisplay)`
 	max-width: 638px;

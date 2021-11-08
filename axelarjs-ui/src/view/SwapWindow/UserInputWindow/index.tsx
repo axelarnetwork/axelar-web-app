@@ -28,6 +28,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const resetUserInputs = useResetUserInputs();
+	const [mounted, setMounted] = useState(true);
 
 	const onInitiateTransfer = async () => {
 		const destToken: IAssetInfo = {
@@ -36,10 +37,12 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		}
 		const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
 		setIsValidDestinationAddress(validAddr);
-		if (destAddr && validAddr) {
+		if (destAddr && validAddr && mounted) {
 			try {
-				await handleSwapSubmit();
 				setIsSubmitting(validAddr);
+				setMounted(false);
+				await handleSwapSubmit();
+				return;
 			} catch (e) {
 				resetUserInputs();
 			}
