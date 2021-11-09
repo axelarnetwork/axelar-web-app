@@ -1,16 +1,27 @@
-import React, {useState}                 from 'react';
-import {Button, Container, ListGroup,}   from 'react-bootstrap';
+import React, {ReactElement, useState}   from 'react';
+import {Container, ListGroup,}           from 'react-bootstrap';
 import {CSSTransition, TransitionGroup,} from 'react-transition-group';
+import styled                            from "styled-components";
 import {v4 as uuid}                      from 'uuid';
 import {useSetRecoilState}               from "recoil";
+import {FlexSpaceBetween}                from "component/StyleComponents/FlexSpaceBetween";
+import {SVGImage}                        from "component/Widgets/SVGImage";
 import {ShowHelperCartoonWidget}         from "state/ApplicationStatus";
 import './todolist.css';
 
-const steps: string[] = ["", "", "", ""];
+const StyledListItem = styled.div`
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    background-color: #fff;
+    height: 30%;
+`;
+
+const steps: (ReactElement | null)[] = [null, null, null, null];
 
 interface IITem {
 	id: string;
-	text: string;
+	text: ReactElement | null;
 }
 
 const useTodoList = () => {
@@ -27,35 +38,27 @@ const useTodoList = () => {
 			<TransitionGroup className="todo-list">
 				{items
 				.filter((item, i) => i <= activeStep)
-				.map(({id, text}) => (
-					<CSSTransition
+				.map(({id, text}: IITem, currIdx: number) => {
+					return <CSSTransition
 						key={id}
 						timeout={500}
 						classNames="item"
 					>
 						<ListGroup.Item>
-							<Button
-								className="status-btn"
-								variant="danger"
-								size="sm"
-							>
-								&times;
-							</Button>
-							{text}
+							<FlexSpaceBetween>
+							<SVGImage height={"40px"} width={"40px"}
+							          src={require(`resources/transaction_status_logos/transfer-step-${currIdx + 1}-${currIdx === activeStep ? "active" : "inactive"}.svg`).default}
+							/>
+							<div style={{ width: `100%`, textIndent: `20px`, height: `100%` }}>{text}</div>
+							</FlexSpaceBetween>
 						</ListGroup.Item>
 					</CSSTransition>
-				))}
+				})}
 			</TransitionGroup>
 		</ListGroup>
 	</Container>;
 
-	// const addStep = (itemText: string) => {
-	// 	setItems(items => [
-	// 		...items,
-	// 		{ id: uuid(), text: itemText },
-	// 	]);
-	// }
-	const updateStep = (itemText: string, index: number) => {
+	const updateStep = (itemText: ReactElement, index: number) => {
 		const newState = items.map((item: IITem, iter: number) => {
 			if (iter === index)
 				return {id: item.id, text: itemText}
@@ -66,12 +69,6 @@ const useTodoList = () => {
 		if (index >= 1)
 			setShowHelperCartoonWidget(true);
 	}
-
-	// const setAddStep = (step: number) => {
-	// 	if (steps && steps[step]) {
-	// 		addStep(steps[step]);
-	// 	}
-	// }
 
 	return [activeStep, updateStep, jsx] as const;
 }

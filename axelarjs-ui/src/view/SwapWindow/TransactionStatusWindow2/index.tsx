@@ -36,16 +36,20 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		console.log("render transaction status screen");
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				addStep(`Transaction detected on ${destinationChain?.chainName}`, 3);
+				addStep(<div>Transaction detected on ${destinationChain?.chainName}</div>, 3);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				addStep(`Deposit confirmed. Axelar is working on your request`, 2);
+				addStep(<div>Deposit confirmed. Axelar is working on your request</div>, 2);
 				break;
 			case !!depositAddress:
-				addStep(`Deposit address: ${depositAddress?.assetAddress}`, 1);
+				const jsx = <>
+					<div>Deposit {selectedSourceAsset?.assetSymbol} into {sourceChain?.chainName} here:</div>
+					<div>${depositAddress?.assetAddress}</div>
+				</>;
+				addStep(jsx, 1);
 				break;
 			default:
-				addStep(`Generating source chain deposit address`, 0);
+				addStep(<div>Generating source chain deposit address</div>, 0);
 				break;
 		}
 		// TODO: uncomment next line with fix above
