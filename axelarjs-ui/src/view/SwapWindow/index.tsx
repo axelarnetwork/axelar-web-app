@@ -1,8 +1,9 @@
 import {ReactElement}                    from "react";
 import {CSSTransition, SwitchTransition} from "react-transition-group";
 import styled                            from "styled-components";
-import {GridDisplay}                     from "component/StyleComponents/GridDisplay";
 import {animateStyles}                   from "component/StyleComponents/animations/SwitchToggleAnimation";
+import {GridDisplay}                     from "component/StyleComponents/GridDisplay";
+import {StyledImage}                     from "component/StyleComponents/StyledImage";
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
 import svg                               from "resources/transfer-modal-light-mode.svg";
 import UserInputWindow                   from "./UserInputWindow";
@@ -24,12 +25,6 @@ const StyledToggleContainer = styled.div`
 	height: 100%;
 	padding: 15%;
 	z-index: 15;
-`;
-
-export const StyledImage = styled.img`
-	position: absolute;
-	width: 100%;
-	height: auto;
 `;
 
 const SwapWindow = (): ReactElement => {

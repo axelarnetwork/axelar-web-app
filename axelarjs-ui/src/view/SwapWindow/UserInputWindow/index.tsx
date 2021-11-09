@@ -1,19 +1,15 @@
 import React, {useCallback, useState}            from "react";
 import {useRecoilState, useRecoilValue}          from "recoil";
 import {IAssetInfo, validateDestinationAddress}  from "@axelar-network/axelarjs-sdk";
-import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import ChainSelector                             from "component/CompositeComponents/Selectors/ChainSelector";
 import {InputForm}                               from "component/CompositeComponents/InputForm";
+import ChainSelector                             from "component/CompositeComponents/Selectors/ChainSelector";
+import TransferFeeDivider                        from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                              from "component/StyleComponents/FlexColumn";
-import {DisplayToggle}                           from "component/StyleComponents/DisplayToggle";
 import {StyledButton}                            from "component/StyleComponents/StyledButton";
 import DelayedRender                             from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import useResetUserInputs                        from "hooks/useResetUserInputs";
-import dividerImage                              from "resources/group.svg";
 import {ChainSelection, DestinationAddress}      from "state/ChainSelection";
-import {StyledTransferFeeDivider}                from "./StyleComponents/StyledTransferFeeDivider";
-import {StyledImage}                             from "../index";
 import "../todelete.css";
 
 interface IUserInputWindowProps {
@@ -22,7 +18,6 @@ interface IUserInputWindowProps {
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
-	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
@@ -59,23 +54,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <>
 
-		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} />
-		<br/>
-		<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
-		<br/>
-		<StyledTransferFeeDivider showContents={!!sourceChainSelection}>
-			<StyledImage src={dividerImage}/>
-			<div style={{display: `flex`, justifyContent: `space-between`}}>
-				<div style={{marginLeft: `15px`, marginTop: `15px`}}>
-					<div><BoldSpan>Approximate wait time: </BoldSpan></div>
-					<div>XX minutes</div>
-				</div>
-				<div style={{textAlign: `right`}}>
-					<div><BoldSpan>Transfer Fee: </BoldSpan></div>
-					<div>XX% of xferred {sourceChainSelection?.chainSymbol}</div>
-				</div>
-			</div>
-		</StyledTransferFeeDivider>
+		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"} /><br/>
+		<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/><br/>
+		<TransferFeeDivider />
 		<FlexColumn>
 			<br/>
 			<InputForm
