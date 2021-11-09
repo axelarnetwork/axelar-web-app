@@ -44,7 +44,7 @@ new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
 const routes = (props: any) =>	<TransitionGroup>
 	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>
 		<Switch>
-			<Route exact path="/" component={Login}/>
+			<ProtectedRoute exact path="/" component={App}/>
 			<ProtectedRoute exact path="/app" component={App}/>
 			<Route exact path="/login" component={Login}/>
 			<ProtectedRoute exact path="/debug" component={Info}/>

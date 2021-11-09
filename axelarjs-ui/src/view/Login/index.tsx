@@ -59,7 +59,7 @@ const Login = () => {
 	}
 
 	return <>{isLoggedIn
-		? <Redirect to={"/app"}/>
+		? <Redirect to={"/"}/>
 		: <StyledLoginPage>
 			<StyledLoginSection>
 				<StyledImage ref={imageRef} src={backgroundImage}/>
