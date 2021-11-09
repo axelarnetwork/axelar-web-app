@@ -65,7 +65,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			</ModalContainer>
 		</StyledChainSelectionIconWidget>;
 
-	const contents = <>
+	return <StyledChainSelectionComponent>
 		<div style={{marginLeft: `10px`, marginBottom: `2px`}}>{props.label}</div>
 		{isSourceChain
 			? <FlexRow style={{width: `100%`}}>
@@ -74,10 +74,6 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			</FlexRow>
 			: chainSelectorWidget()
 		}
-	</>;
-
-	return <StyledChainSelectionComponent animate={props.animate}>
-		{!props.hideContents && contents}
 	</StyledChainSelectionComponent>
 
 }

@@ -12,6 +12,4 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    transition: height 500ms;
-    height: ${props => props.animate ? "90%" : "70px"};
 `;
