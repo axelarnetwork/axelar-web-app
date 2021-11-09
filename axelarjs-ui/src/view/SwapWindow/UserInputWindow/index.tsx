@@ -21,7 +21,6 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const resetUserInputs = useResetUserInputs();
 	const [mounted, setMounted] = useState(true);
 
@@ -34,21 +33,19 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		setIsValidDestinationAddress(validAddr);
 		if (destAddr && validAddr && mounted) {
 			try {
-				setIsSubmitting(validAddr);
 				setMounted(false);
 				await handleSwapSubmit();
 				return;
 			} catch (e) {
 				resetUserInputs();
 			}
-			setIsSubmitting(false);
 		}
 	}, [destAddr,
 		destChainSelection,
-		setIsValidDestinationAddress,
-		setIsSubmitting,
-		setMounted,
 		handleSwapSubmit,
+		mounted,
+		setIsValidDestinationAddress,
+		setMounted,
 		resetUserInputs
 	]);
 
