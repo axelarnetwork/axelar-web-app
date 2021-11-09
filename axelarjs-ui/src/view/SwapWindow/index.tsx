@@ -25,6 +25,11 @@ const StyledToggleContainer = styled.div`
 	height: 100%;
 	padding: 15%;
 	z-index: 15;
+	position: relative;
+	min-height: 500px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;
 
 const SwapWindow = (): ReactElement => {

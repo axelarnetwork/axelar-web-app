@@ -5,9 +5,9 @@ import {fadeIn, fadeInFromLeft}    from "../StyleComponents/animations/fadeInKey
 
 const HelperCartoonWidgetStyles = styled.div`
     position: absolute;
-    height: auto;
     z-index: 1000;
-    width: 250px;
+    width: 350px;
+    height: 125px;
     margin: 50px 0px 0px 10px;
     box-sizing: border-box;
     display: flex;
@@ -17,10 +17,13 @@ const HelperCartoonWidgetStyles = styled.div`
 interface IStyledDivProps extends ThemedStyledProps<any, any> {
 	animation?: any;
 	animationDuration?: number;
+	width: string;
 }
 
 const StyledDiv = styled.div<IStyledDivProps>`
-	width: 50%;
+	position: relative;
+	width: ${props => props.width};
+	height: 100%;
 	animation: ${props => props?.animation} ${props => props?.animationDuration}s ease-in;
 `;
 
@@ -28,16 +31,15 @@ const StyledImage = styled.img`
 	width: 100%;
 	height: auto;
 `;
-const StyledTextDiv = styled(StyledDiv)`
-	display: flex;
+const StyledTextDiv = styled.div`
+	position: absolute;
 	box-sizing: border-box;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.02);
-	border: solid 5px #e2e1e2;
-	border-style: outset;
-	background-color: rgba(255, 255, 255, 1);
-	height: 50%;
+	padding: 15%;
+	height: 75%;
+`;
+const StyledBubbleImage = styled(StyledImage)`
+	position: absolute;
+	height: 75%;
 `;
 
 const HelperCartoonWidget = () => {
@@ -47,12 +49,13 @@ const HelperCartoonWidget = () => {
 		return null;
 
 	return <HelperCartoonWidgetStyles>
-		<StyledDiv animation={fadeInFromLeft} animationDuration={1}>
+		<StyledDiv animation={fadeInFromLeft} animationDuration={1} width={"30%"}>
 			<StyledImage src={require("resources/seated_robot.png").default} alt={""}/>
 		</StyledDiv>
-		<StyledTextDiv animation={fadeIn} animationDuration={2}>
-			Hello
-		</StyledTextDiv>
+		<StyledDiv animation={fadeIn} animationDuration={2} width={"70%"}>
+			<StyledBubbleImage src={require("resources/speech-textbox.png").default} alt={""}/>
+			<StyledTextDiv>Hello</StyledTextDiv>
+		</StyledDiv>
 	</HelperCartoonWidgetStyles>
 }
 

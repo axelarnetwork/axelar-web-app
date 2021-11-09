@@ -22,7 +22,7 @@ const useTodoList = () => {
 	const [activeStep, setActiveStep] = useState<number>(0);
 	const setShowHelperCartoonWidget = useSetRecoilState(ShowHelperCartoonWidget);
 
-	const jsx = () => <Container style={{marginTop: '2rem'}}>
+	const jsx = () => <Container style={{height: '275px'}}>
 		<ListGroup style={{marginBottom: '1rem'}}>
 			<TransitionGroup className="todo-list">
 				{items
@@ -73,7 +73,7 @@ const useTodoList = () => {
 	// 	}
 	// }
 
-	return [updateStep, jsx] as const;
+	return [activeStep, updateStep, jsx] as const;
 }
 
 export default useTodoList;

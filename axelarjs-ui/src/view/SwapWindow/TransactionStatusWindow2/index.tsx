@@ -1,6 +1,8 @@
 import {useEffect}                                                           from "react";
 import {useRecoilValue}                                                      from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
+import TransferFeeDivider
+                                                                             from "component/CompositeComponents/TransferFeeDivider";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
@@ -13,7 +15,7 @@ interface ITransactionStatusWindowProps {
 
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
-	const [addStep, stepsJsx] = useTodoList();
+	const [activeStep, addStep, stepsJsx] = useTodoList();
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
@@ -21,6 +23,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
+
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -39,12 +42,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				addStep(`Deposit confirmed. Axelar is working on your request`, 2);
 				break;
 			case !!depositAddress:
-				addStep(`Please deposit/transfer ${selectedSourceAsset?.assetSymbol} 
-					in ${sourceChain?.chainName} to the 
-					following address: ${depositAddress?.assetAddress}`, 1);
+				addStep(`Deposit address: ${depositAddress?.assetAddress}`, 1);
 				break;
 			default:
-				addStep(`Generating deposit address`, 0);
+				addStep(`Generating source chain deposit address`, 0);
 				break;
 		}
 		// TODO: uncomment next line with fix above
@@ -53,13 +54,15 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
 	return <>
-		<FlexRow><h4>Transaction Status</h4></FlexRow>
+		<FlexRow><h5>Transaction Status</h5></FlexRow>
+		<FlexRow><h6>Step {activeStep + 1}/4</h6></FlexRow>
 		{isRecaptchaAuthenticated
 			? stepsJsx()
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
+		<div style={{bottom: `0`}}><TransferFeeDivider/></div>
 	</>;
 
 }
