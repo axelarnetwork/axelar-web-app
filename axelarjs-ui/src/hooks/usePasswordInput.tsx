@@ -14,6 +14,7 @@ const usePasswordInput = () => {
 			<InputForm
 				name={"usePasswordInput"}
 				placeholder={"Enter password"}
+				value={password}
 				type={(passwordShown ? "text" : "password") as any}
 				onChange={(e: any) => setPassword(e.target.value)}
 			/>

@@ -56,7 +56,7 @@ const StyledDropdownItem = styled(Dropdown.Item)`
 `;
 
 const DropdownComponent = (props: IDropdownComponent) => {
-	// const [selectedOption, setSelectedOption] = useState<IDropdownOption>();
+
 	const {dropdownOptions, id} = props;
 	return <Dropdown>
 		<Dropdown.Toggle as={CustomToggle} id={id}>

@@ -1,18 +1,18 @@
-import {Input}                            from "../StyleComponents/Input";
-import {HTMLInputTypeAttribute, useState} from "react";
+import {HTMLInputTypeAttribute} from "react";
+import {Input}                  from "component/StyleComponents/Input";
 
 interface IInputProps {
 	name: string;
 	placeholder: string;
 	type: ((HTMLInputTypeAttribute | undefined) & "text") | undefined;
 	onChange: (e: any) => void;
-	
+	value: string;
+
 }
+
 export const InputForm = (props: IInputProps) => {
 
-	const [stateValue, setStateValue] = useState("");
 	const handleChange = (event: any) => {
-		setStateValue(event.target.value);
 		props.onChange && props.onChange(event);
 	};
 
@@ -20,7 +20,7 @@ export const InputForm = (props: IInputProps) => {
 		name={props.name}
 		placeholder={props.placeholder}
 		type={props.type}
-		value={stateValue || ""}
+		value={props.value || ""}
 		onChange={handleChange}
 	/>;
 
