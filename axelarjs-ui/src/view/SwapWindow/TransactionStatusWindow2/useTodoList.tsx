@@ -1,7 +1,7 @@
 import React, {ReactElement, useState}   from 'react';
 import {Container, ListGroup,}           from 'react-bootstrap';
 import {CSSTransition, TransitionGroup,} from 'react-transition-group';
-import styled                            from "styled-components";
+// import styled                            from "styled-components";
 import {v4 as uuid}                      from 'uuid';
 import {useSetRecoilState}               from "recoil";
 import {FlexSpaceBetween}                from "component/StyleComponents/FlexSpaceBetween";
@@ -9,13 +9,13 @@ import {SVGImage}                        from "component/Widgets/SVGImage";
 import {ShowHelperCartoonWidget}         from "state/ApplicationStatus";
 import './todolist.css';
 
-const StyledListItem = styled.div`
-    position: relative;
-    display: block;
-    padding: 0.75rem 1.25rem;
-    background-color: #fff;
-    height: 30%;
-`;
+// const StyledListItem = styled.div`
+//     position: relative;
+//     display: block;
+//     padding: 0.75rem 1.25rem;
+//     background-color: #fff;
+//     height: 30%;
+// `;
 
 const steps: (ReactElement | null)[] = [null, null, null, null];
 
