@@ -4,12 +4,12 @@ import {SVGImage} from "../Widgets/SVGImage";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
-	z-index: 10;
 	top: 0;
 	width: 100%;
 	height: 40px;
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.21);
 	background-image: linear-gradient(92deg, #1b1c1e 2%, #0b0b0c 100%);
+	z-index: 1000;
 `
 
 const PageHeader = () => {

@@ -17,6 +17,7 @@ const StyledPageFooter = styled(Container)`
 	display: flex;
 	justify-content: flex-end !important;
 	align-items: center !important;
+	z-index: 1000;
 `
 
 const DocsLinks = styled(Link)`

@@ -26,7 +26,6 @@ export default function usePostTransactionToBridge() {
 			reject("no input params");
 			return;
 		}
-		debugger;
 
 		setShowTransactionStatusWindow(true);
 
