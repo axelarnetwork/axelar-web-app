@@ -18,7 +18,7 @@ const App = () => {
 
 	return (
 		<StyledAppContainer>
-			<HelperCartoonWidget />
+			<HelperCartoonWidget/>
 			<PageHeader/>
 			{isRecaptchaSet
 				? <StyledAppBody>

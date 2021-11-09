@@ -1,7 +1,7 @@
 import {useRecoilValue}            from "recoil";
 import styled, {ThemedStyledProps} from "styled-components";
 import {ShowHelperCartoonWidget}   from "state/ApplicationStatus";
-import {fadeIn, fadeInFromLeft} from "../StyleComponents/animations/fadeInKeyframe";
+import {fadeIn, fadeInFromLeft}    from "../StyleComponents/animations/fadeInKeyframe";
 
 const HelperCartoonWidgetStyles = styled.div`
     position: absolute;
@@ -18,6 +18,7 @@ interface IStyledDivProps extends ThemedStyledProps<any, any> {
 	animation?: any;
 	animationDuration?: number;
 }
+
 const StyledDiv = styled.div<IStyledDivProps>`
 	width: 50%;
 	animation: ${props => props?.animation} ${props => props?.animationDuration}s ease-in;
@@ -47,7 +48,7 @@ const HelperCartoonWidget = () => {
 
 	return <HelperCartoonWidgetStyles>
 		<StyledDiv animation={fadeInFromLeft} animationDuration={1}>
-			<StyledImage src={require("resources/seated_robot.png").default} alt={""} />
+			<StyledImage src={require("resources/seated_robot.png").default} alt={""}/>
 		</StyledDiv>
 		<StyledTextDiv animation={fadeIn} animationDuration={2}>
 			Hello

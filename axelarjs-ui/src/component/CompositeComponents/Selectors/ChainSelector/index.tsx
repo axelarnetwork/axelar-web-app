@@ -1,19 +1,19 @@
-import React                                                                    from "react";
+import React, {useState}                                                        from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
 import {IChainInfo}                                                             from "@axelar-network/axelarjs-sdk";
-import {SOURCE_TOKEN_KEY}                                                       from "config/consts";
+import {SOURCE_TOKEN_KEY} from "config/consts";
 import AssetSelector
-                                                                                from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexRow}                                                                from "component/StyleComponents/FlexRow";
-import ModalContainer
-                                                                                from "component/Widgets/BasicModal/ModalContainer";
+                          from "component/CompositeComponents/Selectors/AssetSelector";
+import {FlexRow}          from "component/StyleComponents/FlexRow";
 import DropdownComponent, {IDropdownOption}                                     from "component/Widgets/DropdownComponent";
+import SearchComponent
+                                                                                from "component/Widgets/SearchComponent";
+import {SVGImage}                                                               from "component/Widgets/SVGImage";
 import {ChainSelection, SourceAsset}                                            from "state/ChainSelection";
 import {ChainList}                                                              from "state/ChainList";
 import {StyledChainSelectionComponent}                                          from "../StyledChainSelectionComponent";
 import {StyledChainSelectionIconWidget}                                         from "./StyleComponents/StyledChainSelectionIconWidget";
 import {SelectedChainComponent}                                                 from "./SelectedChainComponent";
-import AssetMenu                                                                from "../AssetSelector/AssetMenu";
 
 interface IChainSelectorProps {
 	id: string;
@@ -30,9 +30,9 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const chainList = useRecoilValue(ChainList);
 	const setSourceAsset = useSetRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
+	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
 
-	const dropdownOptions: IDropdownOption[] = chainList
-	.map((supportedChain: IChainInfo) => ({
+	const chainDropdownOptions: IDropdownOption[] = chainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
 		symbol: supportedChain.chainSymbol,
 		active: false,
@@ -54,15 +54,21 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		<SelectedChainComponent chainInfo={selectedChain}/>
 		{<DropdownComponent
 			id={"dropdown-for-" + props.id}
-			dropdownOptions={dropdownOptions}
+			dropdownOptions={chainDropdownOptions}
 		/>}
 	</StyledChainSelectionIconWidget>;
 
 	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
-		<AssetSelector/>
-		<ModalContainer>
-			<AssetMenu/>
-		</ModalContainer>
+		<div style={{cursor: `pointer`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
+			<AssetSelector/>
+		</div>
+		<SVGImage
+			style={{cursor: `pointer`}}
+			onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
+			src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+			height={"8px"}
+			width={"20px"}
+		/>
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
@@ -73,6 +79,12 @@ const ChainSelector = (props: IChainSelectorProps) => {
 				{assetSelectorWidget(!sourceChain)}
 			</FlexRow>
 			: chainSelectorWidget()
+		}
+		{isSourceChain
+		&& <SearchComponent
+            show={showAssetSearchBox}
+            handleClose={() => setShowAssetSearchBox(false)}
+        />
 		}
 	</StyledChainSelectionComponent>
 

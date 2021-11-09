@@ -1,7 +1,7 @@
 import React, {useState}                 from 'react';
 import {Button, Container, ListGroup,}   from 'react-bootstrap';
 import {CSSTransition, TransitionGroup,} from 'react-transition-group';
-import { v4 as uuid }                    from 'uuid';
+import {v4 as uuid}                      from 'uuid';
 import {useSetRecoilState}               from "recoil";
 import {ShowHelperCartoonWidget}         from "state/ApplicationStatus";
 import './todolist.css';
@@ -12,6 +12,7 @@ interface IITem {
 	id: string;
 	text: string;
 }
+
 const useTodoList = () => {
 
 	const [items, setItems] = useState<IITem[]>(steps.map(step => ({
@@ -57,7 +58,7 @@ const useTodoList = () => {
 	const updateStep = (itemText: string, index: number) => {
 		const newState = items.map((item: IITem, iter: number) => {
 			if (iter === index)
-				return { id: item.id, text: itemText}
+				return {id: item.id, text: itemText}
 			return item;
 		})
 		setActiveStep(index);

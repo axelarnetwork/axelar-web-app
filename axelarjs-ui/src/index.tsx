@@ -1,6 +1,6 @@
-import React                          from 'react';
-import ReactDOM                       from 'react-dom';
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import React                            from 'react';
+import ReactDOM                         from 'react-dom';
+import {BrowserRouter, Route, Switch}   from "react-router-dom";
 import App                              from './view/App';
 import reportWebVitals                  from './reportWebVitals';
 import {RecoilRoot}                     from "recoil";
@@ -11,7 +11,7 @@ import downstreamServices               from "./config/downstreamServices";
 import Info                             from "./view/Debug";
 import './index.css';
 import Login                            from "./view/Login";
-import {TransitionGroup, CSSTransition} from "react-transition-group";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
 import backgroundImage                  from "resources/dummy_background_7.jpg";
 
@@ -41,7 +41,7 @@ const GlobalStyle = createGlobalStyle`
 
 new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
 
-const routes = (props: any) =>	<TransitionGroup>
+const routes = (props: any) => <TransitionGroup>
 	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>
 		<Switch>
 			<ProtectedRoute exact path="/" component={App}/>
@@ -53,7 +53,7 @@ const routes = (props: any) =>	<TransitionGroup>
 </TransitionGroup>;
 
 const routesWithCSSTransition = <BrowserRouter>
-	<Route path="/" component={routes} />
+	<Route path="/" component={routes}/>
 </BrowserRouter>;
 
 ReactDOM.render(
@@ -69,4 +69,4 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-export {StyledImage} from "./component/StyleComponents/StyledImage";
+export {StyledImage}                    from "./component/StyleComponents/StyledImage";

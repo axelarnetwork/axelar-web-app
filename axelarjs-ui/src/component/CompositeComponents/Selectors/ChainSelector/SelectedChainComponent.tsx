@@ -17,7 +17,7 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 		dimensions = "20px"
 	}
 	return <BaseSelector
-		image={<SVGImage height={dimensions} width={dimensions} src={image} />}
+		image={<SVGImage height={dimensions} width={dimensions} src={image}/>}
 		label={props.chainInfo?.chainName || "Select Chain"}
 	/>;
 }

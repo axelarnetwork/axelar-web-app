@@ -30,7 +30,7 @@ const SwapChains = () => {
 		setSourceChain(newSourceChain);
 		setDestinationChain(newDestinationChain);
 
-	}, [sourceChain, destinationChain,resetAllInputs, setDestinationChain, setSourceChain]);
+	}, [sourceChain, destinationChain, resetAllInputs, setDestinationChain, setSourceChain]);
 
 	return <StyledSwapChains>{
 		sourceChain && destinationChain && <ClickableSvgImage

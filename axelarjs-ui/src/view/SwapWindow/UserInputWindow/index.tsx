@@ -57,7 +57,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& selectedSourceAsset
 		&& destAddr;
 
-	return <>
+	return <div style={{maxHeight: `450px`, overflow: `hidden`}}>
 
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 		<div><SwapChains/></div>
@@ -86,7 +86,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			} </StyledButton>
 		</FlexColumn>
 
-	</>;
+	</div>;
 }
 
 export default UserInputWindow;

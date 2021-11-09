@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
-export const Input = styled.input.attrs({
-})`
+export const Input = styled.input.attrs({})`
 	width: 100%;
 	height: 35px;
 	border-radius: 5px;

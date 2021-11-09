@@ -3,10 +3,10 @@ import {SVGImage}               from "../SVGImage";
 import './modal.css';
 import styled                   from "styled-components";
 
-const Modal = ({ handleClose, show, children }: any) => {
+const Modal = ({handleClose, show, children}: any) => {
 	const showHideClassName = show ? "modal showing" : "modal not-showing";
 
-	const onClick = (e:any) => {
+	const onClick = (e: any) => {
 		e.preventDefault();
 		if (e.target === e.currentTarget)
 			handleClose();
@@ -39,7 +39,7 @@ const ModalContainer = (props: any) => {
 				width={"20px"}
 			/>
 			<Modal show={show} handleClose={hideModal}>
-				{cloneElement(props.children, {...props, handleClose: hideModal })}
+				{cloneElement(props.children, {...props, handleClose: hideModal})}
 			</Modal>
 		</div>
 	);

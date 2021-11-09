@@ -1,5 +1,5 @@
-import {ReactElement}                 from "react";
-import styled                         from "styled-components";
+import {ReactElement} from "react";
+import styled         from "styled-components";
 
 export const StyledBaseSelector = styled.div`
 	width: 125px;
@@ -10,10 +10,12 @@ export const StyledBaseSelector = styled.div`
 	margin-left: 10px;
 	font-weight: bold;
 `;
+
 interface IBaseSelectorProps {
 	image: ReactElement;
 	label: string;
 }
+
 export const BaseSelector = (props: IBaseSelectorProps) => {
 	return <StyledBaseSelector>
 		{props.image}
