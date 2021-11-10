@@ -3,6 +3,7 @@ import styled, {ThemedStyledProps}                      from "styled-components"
 import {MessageShownInCartoon, ShowHelperCartoonWidget} from "state/ApplicationStatus";
 import {fadeIn, fadeInFromLeft}                         from "../StyleComponents/animations/fadeInKeyframe";
 import {fadeOutKeyframe}                                from "../StyleComponents/animations/fadeOutKeyframe";
+import screenConfigs                                    from "../../config/screenConfigs";
 
 const HelperCartoonWidgetStyles = styled.div`
     position: absolute;
@@ -13,6 +14,10 @@ const HelperCartoonWidgetStyles = styled.div`
     box-sizing: border-box;
     display: flex;
     justify-content: end;
+    
+    @media ${screenConfigs.media.mobile} {
+		display: none;
+	}
 `;
 
 interface IStyledDivProps extends ThemedStyledProps<any, any> {
