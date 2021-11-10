@@ -7,13 +7,13 @@ import {RecoilRoot}                     from "recoil";
 import {RecoilLogger}                   from 'recoil-devtools-logger';
 import {createGlobalStyle}              from "styled-components";
 import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
-import downstreamServices               from "./config/downstreamServices";
+// import downstreamServices               from "./config/downstreamServices";
 import Info                             from "./view/Debug";
 import './index.css';
 import Login                            from "./view/Login";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
-import backgroundImage                  from "resources/dummy_background_7.jpg";
+import backgroundImage                  from "resources/Axelar-app-Background-min.svg";
 
 const GlobalStyle = createGlobalStyle`
 	body {
@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
 	}
 `;
 
-new TransferAssetBridgeFacade(downstreamServices.AXELAR_BRIDGE_URL);
+new TransferAssetBridgeFacade("local");
 
 const routes = (props: any) => <TransitionGroup>
 	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>

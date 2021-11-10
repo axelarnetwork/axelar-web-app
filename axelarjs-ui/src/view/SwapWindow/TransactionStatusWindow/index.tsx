@@ -72,7 +72,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 					<br/>
 					<div><BoldSpan> {depositAddress?.assetAddress}</BoldSpan></div>
 					<br/>
-					<div>FYI: {sourceChain?.noteOnWaitTimes}, although network speeds will vary.</div>
+					{/*<div>FYI: {sourceChain?.noteOnWaitTimes}, although network speeds will vary.</div>*/}
 				</div>
 				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
