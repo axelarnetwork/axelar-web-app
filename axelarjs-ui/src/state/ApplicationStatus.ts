@@ -1,5 +1,6 @@
 import {atom}          from "recoil";
 import {recoilPersist} from "recoil-persist";
+import {Nullable}      from "../interface/Nullable";
 
 const {persistAtom} = recoilPersist();
 
@@ -12,4 +13,9 @@ export const IsLoggedIn = atom<boolean>({
 export const ShowHelperCartoonWidget = atom<boolean>({
 	key: "ShowHelperCartoonWidget",
 	default: false,
+});
+
+export const MessageShownInCartoon = atom<Nullable<string>>({
+	key: "MessageShownInCartoon",
+	default: null
 });

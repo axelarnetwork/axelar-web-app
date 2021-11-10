@@ -7,6 +7,8 @@ import {FlexRow}                                                             fro
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
 import useTodoList                                                           from "./useTodoList";
+import useCartoonMessageDispatcher
+                                                                             from "../../../hooks/useCartoonMessageDispatcher";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -23,7 +25,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
-
+	const setMessageInCartoon = useCartoonMessageDispatcher();
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -47,6 +49,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 					<div>${depositAddress?.assetAddress}</div>
 				</>;
 				addStep(jsx, 1);
+				setMessageInCartoon(`Once your deposit is confirmed, you can leave the rest to us... or following along with the rest if you would like!`);
 				break;
 			default:
 				addStep(<div>Generating source chain deposit address</div>, 0);

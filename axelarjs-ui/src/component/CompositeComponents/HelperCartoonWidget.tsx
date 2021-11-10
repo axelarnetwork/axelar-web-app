@@ -1,7 +1,8 @@
-import {useRecoilValue}            from "recoil";
-import styled, {ThemedStyledProps} from "styled-components";
-import {ShowHelperCartoonWidget}   from "state/ApplicationStatus";
-import {fadeIn, fadeInFromLeft}    from "../StyleComponents/animations/fadeInKeyframe";
+import {useRecoilValue}                                 from "recoil";
+import styled, {ThemedStyledProps}                      from "styled-components";
+import {MessageShownInCartoon, ShowHelperCartoonWidget} from "state/ApplicationStatus";
+import {fadeIn, fadeInFromLeft}                         from "../StyleComponents/animations/fadeInKeyframe";
+import {fadeOutKeyframe}                                from "../StyleComponents/animations/fadeOutKeyframe";
 
 const HelperCartoonWidgetStyles = styled.div`
     position: absolute;
@@ -34,8 +35,11 @@ const StyledImage = styled.img`
 const StyledTextDiv = styled.div`
 	position: absolute;
 	box-sizing: border-box;
-	padding: 15%;
+	padding: 10px 10px 0px 15%;
 	height: 75%;
+	font-size: 12px;
+	animation: ${fadeOutKeyframe} 5s forwards; 
+	animation-delay: 30s;
 `;
 const StyledBubbleImage = styled(StyledImage)`
 	position: absolute;
@@ -44,6 +48,7 @@ const StyledBubbleImage = styled(StyledImage)`
 
 const HelperCartoonWidget = () => {
 	const showHelperCartoonWidget = useRecoilValue(ShowHelperCartoonWidget);
+	const messageInCartoon = useRecoilValue(MessageShownInCartoon);
 
 	if (!showHelperCartoonWidget)
 		return null;
@@ -54,7 +59,7 @@ const HelperCartoonWidget = () => {
 		</StyledDiv>
 		<StyledDiv animation={fadeIn} animationDuration={2} width={"70%"}>
 			<StyledBubbleImage src={require("resources/speech-textbox.png").default} alt={""}/>
-			<StyledTextDiv>Hello</StyledTextDiv>
+			<StyledTextDiv>{messageInCartoon}</StyledTextDiv>
 		</StyledDiv>
 	</HelperCartoonWidgetStyles>
 }
