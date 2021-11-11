@@ -15,4 +15,6 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
     height: 100%;
     box-sizing: border-box;
     padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
 `;
