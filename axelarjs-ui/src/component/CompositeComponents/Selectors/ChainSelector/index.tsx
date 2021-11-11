@@ -1,19 +1,18 @@
-import React, {useState}                                                        from "react";
-import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
-import {IChainInfo}                                                             from "@axelar-network/axelarjs-sdk";
-import {SOURCE_TOKEN_KEY} from "config/consts";
+import React, {useState}                                     from "react";
+import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
+import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
+import {SOURCE_TOKEN_KEY}                                    from "config/consts";
 import AssetSelector
-                          from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexRow}          from "component/StyleComponents/FlexRow";
-import DropdownComponent, {IDropdownOption}                                     from "component/Widgets/DropdownComponent";
-import SearchComponent
-                                                                                from "component/Widgets/SearchComponent";
-import {SVGImage}                                                               from "component/Widgets/SVGImage";
-import {ChainSelection, SourceAsset}                                            from "state/ChainSelection";
-import {ChainList}                                                              from "state/ChainList";
-import {StyledChainSelectionComponent}                                          from "../StyledChainSelectionComponent";
-import {StyledChainSelectionIconWidget}                                         from "./StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainComponent}                                                 from "./SelectedChainComponent";
+                                                             from "component/CompositeComponents/Selectors/AssetSelector";
+import {FlexRow}                                             from "component/StyleComponents/FlexRow";
+import DropdownComponent, {IDropdownOption}                  from "component/Widgets/DropdownComponent";
+import SearchComponent                                       from "component/Widgets/SearchComponent";
+import {SVGImage}                                            from "component/Widgets/SVGImage";
+import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
+import {ChainList}                                           from "state/ChainList";
+import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";
+import {StyledChainSelectionIconWidget}                      from "./StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainComponent}                              from "./SelectedChainComponent";
 
 interface IChainSelectorProps {
 	id: string;
@@ -28,11 +27,22 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const [selectedChain, setSelectedChain] = useRecoilState<IChainInfo | null>(ChainSelection(props.id));
 	const sourceChain = useRecoilValue<IChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
 	const chainList = useRecoilValue(ChainList);
-	const setSourceAsset = useSetRecoilState(SourceAsset);
+	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
 
-	const chainDropdownOptions: IDropdownOption[] = chainList.map((supportedChain: IChainInfo) => ({
+	let filteredChainList: IChainInfo[] = chainList;
+
+	/*for the destination chain, if source chain and source asset are selected,
+	* only enable chains which also have that asset, based on common_key
+	* */
+	if (!!sourceChain && !!sourceAsset && !isSourceChain) {
+		filteredChainList = filteredChainList.filter((supportedChain) => {
+			const assetsInSupportedChain: IAssetInfo[] = supportedChain.assets || [];
+			return assetsInSupportedChain.map(asset => asset.common_key).includes(sourceAsset.common_key);
+		});
+	}
+	const chainDropdownOptions: IDropdownOption[] = filteredChainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
 		symbol: supportedChain.chainSymbol,
 		active: false,
