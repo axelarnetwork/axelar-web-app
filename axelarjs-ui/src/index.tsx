@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
 	}
 `;
 
-new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE);
+new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE as string);
 
 const routes = (props: any) => <TransitionGroup>
 	<CSSTransition key={props.location.pathname} classNames="page" timeout={2000}>
