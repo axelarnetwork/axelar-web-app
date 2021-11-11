@@ -7,6 +7,7 @@ export const StyledBaseSelector = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	margin-left: 10px;
+	margin-right: 5px;
 	font-weight: bold;
 `;
 
@@ -18,6 +19,6 @@ interface IBaseSelectorProps {
 export const BaseSelector = (props: IBaseSelectorProps) => {
 	return <StyledBaseSelector>
 		{props.image}
-		<div style={{width: `90px`, marginLeft: `5px`, fontSize: `17px`, fontWeight: 900 }}>{props.label}</div>
+		<div style={{width: `120px`, marginLeft: `5px`, fontSize: `17px`, fontWeight: 900 }}>{props.label}</div>
 	</StyledBaseSelector>
 }

@@ -69,7 +69,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	</StyledChainSelectionIconWidget>;
 
 	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
-		<div style={{cursor: `pointer`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
+		<div style={{cursor: `pointer`, marginRight: `5px`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
 			<AssetSelector/>
 		</div>
 		<SVGImage
