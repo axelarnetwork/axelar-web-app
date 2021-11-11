@@ -25,3 +25,11 @@ depositConfirmCbMap.cos = (status: any): Nullable<number> => {
 depositConfirmCbMap.eth = (status: any): Nullable<number> => {
 	return 1;
 };
+
+depositConfirmCbMap.axl = (status: any): Nullable<number> => {
+	return 1;
+};
+
+depositConfirmCbMap.terra = (status: any): Nullable<number> => {
+	return 1;
+};

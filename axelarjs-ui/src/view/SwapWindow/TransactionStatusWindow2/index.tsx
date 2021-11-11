@@ -38,7 +38,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		console.log("render transaction status screen");
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				addStep(<div>Transaction detected on ${destinationChain?.chainName}</div>, 3);
+				addStep(<div>Transaction detected on {destinationChain?.chainName}</div>, 3);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
 				addStep(<div>Deposit confirmed. Axelar is working on your request</div>, 2);
@@ -46,13 +46,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			case !!depositAddress:
 				const jsx = <>
 					<div>Deposit {selectedSourceAsset?.assetSymbol} into {sourceChain?.chainName} here:</div>
-					<div>${depositAddress?.assetAddress}</div>
+					<div>{depositAddress?.assetAddress}</div>
 				</>;
 				addStep(jsx, 1);
 				setMessageInCartoon(`Once your deposit is confirmed, you can leave the rest to us... or following along with the rest if you would like!`);
 				break;
 			default:
-				addStep(<div>Generating source chain deposit address</div>, 0);
+				addStep(<div>Generating {selectedSourceAsset?.assetSymbol} deposit address</div>, 0);
 				break;
 		}
 		// TODO: uncomment next line with fix above
@@ -61,14 +61,15 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
 	return <>
-		<FlexRow><h5>Transaction Status</h5></FlexRow>
-		<FlexRow><h6>Step {activeStep + 1}/4</h6></FlexRow>
+		<FlexRow><h5>Transaction Steps ({activeStep + 1}/4)</h5></FlexRow>
+		<br/>
 		{isRecaptchaAuthenticated
 			? stepsJsx()
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
+		<br/>
 		<div style={{bottom: `0`}}><TransferFeeDivider/></div>
 	</>;
 

@@ -30,6 +30,7 @@ export default function usePostTransactionToBridge() {
 		setShowTransactionStatusWindow(true);
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
+			debugger;
 			const confirms: IConfirmationStatus = {
 				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,

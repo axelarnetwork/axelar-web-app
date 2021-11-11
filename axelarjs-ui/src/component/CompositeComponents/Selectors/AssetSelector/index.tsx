@@ -11,8 +11,6 @@ const AssetSelector = () => {
 
 	let image;
 
-	console.log("chain and asset",chainInfo?.chainSymbol,selectedToken?.assetSymbol);
-
 	try {
 		image = require(`resources/logos/${chainInfo?.chainSymbol}/assets/${selectedToken?.assetSymbol}.svg`)?.default;
 	} catch (e) {

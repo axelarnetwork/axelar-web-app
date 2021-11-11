@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "file:../../axelarjs-sdk",
+		"@axelar-network/axelarjs-sdk": "0.1.2",
 		"@n8tb1t/use-scroll-position": "^2.0.3",
 		"@testing-library/jest-dom": "^5.14.1",
 		"@testing-library/react": "^11.2.7",

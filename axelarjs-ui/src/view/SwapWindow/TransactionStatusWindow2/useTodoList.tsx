@@ -10,11 +10,24 @@ import './todolist.css';
 
 const StyledListItem = styled.div`
     position: relative;
-    display: block;
-    padding: 0.75rem 1.25rem;
+    padding: 0rem 0.75rem 0rem 0.75rem;
+    box-sizing: border-box;
+    width: 100%;
     background-color: #fff;
-    height: 30%;
+    border: solid 1px #e2e1e2;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    height: 25%;
 `;
+const StyledTextBox = styled.div`
+    width: 90%;
+    height: 100%;
+    overflow-wrap: break-word;
+    padding-left: 20px;
+    box-sizing: border-box;
+`;
+
 const StyledTransitionGroup = styled(TransitionGroup)`
 	height: 275px;
 `;
@@ -39,18 +52,20 @@ const useTodoList = () => {
 		{items
 		.filter((item, i) => i <= activeStep)
 		.map(({id, text}: IITem, currIdx: number) => {
-			const img = require(`resources/transaction_status_logos/transfer-step-${currIdx + 1}-${currIdx === activeStep ? "active" : "inactive"}.svg`).default;
+			const img = require(`resources/transaction_status_logos/success-green-check-mark.svg`).default;
+			// TODO: we'll use something like the below later... once those assets are ready. above is a stopgap
+			// const img = require(`resources/transaction_status_logos/transfer-step-${currIdx + 1}-${currIdx === activeStep ? "active" : "inactive"}.svg`).default;
 			return <CSSTransition
 				key={id}
 				timeout={500}
 				classNames="item"
 			>
 				<StyledListItem>
-					<FlexSpaceBetween>
-						<div style={{ width: `40px`, height: `40px`, position: `relative` }}>
+					<FlexSpaceBetween style={{ width: `100%` }}>
+						<div style={{ width: `35px`, height: `35px`, position: `relative` }}>
 							<StyledImage src={img} />
 						</div>
-					<div style={{ width: `100%`, textIndent: `20px`, height: `100%` }}>{text}</div>
+					<StyledTextBox>{text}</StyledTextBox>
 					</FlexSpaceBetween>
 				</StyledListItem>
 			</CSSTransition>
@@ -65,8 +80,10 @@ const useTodoList = () => {
 		})
 		setActiveStep(index);
 		setItems(items => newState);
-		if (index >= 1)
+		if (index == 1) {
 			setShowHelperCartoonWidget(true);
+			setTimeout(() => setShowHelperCartoonWidget(false),120_000);
+		}
 	}
 
 	return [activeStep, updateStep, jsx] as const;
