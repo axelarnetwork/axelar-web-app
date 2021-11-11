@@ -13,4 +13,6 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
     align-items: flex-start;
     flex-direction: column;
     height: 100%;
+    box-sizing: border-box;
+    padding: 15px;
 `;

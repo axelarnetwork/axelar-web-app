@@ -13,7 +13,7 @@ import './index.css';
 import Login                            from "./view/Login";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
-import backgroundImage                  from "resources/Axelar-app-Background-min.svg";
+import backgroundImage                  from "resources/dummy_background_7.jpg";
 
 const GlobalStyle = createGlobalStyle`
 	body {
