@@ -1,10 +1,8 @@
-import styled from "styled-components";
+import styled               from "styled-components";
+import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 
-export const GridDisplay = styled.div`
+export const GridDisplay = styled(StyledAppContainer)`
 	display: flex;
 	position: relative;
 	flex-direction: column;
-	padding: 20px 20px 20px 20px;
-	height: 100%;
-	width: 100%;
 `;

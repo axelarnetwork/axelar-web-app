@@ -4,7 +4,6 @@ import {Step, Stepper}                                                       fro
 import Button                                                                from "react-bootstrap/Button";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import BoldSpan                                                              from "component/StyleComponents/BoldSpan";
-import {GridDisplay}                                                         from "component/StyleComponents/GridDisplay";
 import {FooterComponent}                                                     from "component/StyleComponents/FooterComponent";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
@@ -38,6 +37,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	useEffect(() => {
 		//TODO: clean this up
 		let activeStep: number;
+		console.log("render transaction status screen");
 
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
@@ -71,8 +71,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 					</div>
 					<br/>
 					<div><BoldSpan> {depositAddress?.assetAddress}</BoldSpan></div>
-					<br />
-					<div>FYI: {sourceChain?.noteOnWaitTimes}, although network speeds will vary.</div>
+					<br/>
+					{/*<div>FYI: {sourceChain?.noteOnWaitTimes}, although network speeds will vary.</div>*/}
 				</div>
 				: <div><p>Your transaction has been detected on the {sourceChain?.chainName} blockchain.
 					If you wish to follow along, sit back; this may take a while.</p>
@@ -88,7 +88,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			{
 				transactionHash
 					? <div>Feel free to view the transaction status directly on that chain:
-						<br /><br />
+						<br/><br/>
 						<BoldSpan> {transactionHash}</BoldSpan>
 					</div>
 					: null
@@ -110,7 +110,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		"Axelar Network working...",
 		"Deposit Confirmed on Destination Chain"
 	];
-	return <GridDisplay>
+	return <>
 		<FlexRow><h4>Transaction Status</h4></FlexRow>
 		{isRecaptchaAuthenticated
 			? <><Stepper activeStep={activeStep}>
@@ -132,7 +132,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
-	</GridDisplay>
+	</>;
+
 }
 
 export default TransactionStatusWindow;

@@ -1,0 +1,38 @@
+<svg width="52" height="54" viewBox="0 0 52 54" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-17.1%" y="-17.1%" width="134.2%" height="134.2%" filterUnits="objectBoundingBox" id="a">
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0.0431372549 0 0 0 0 0.0431372549 0 0 0 0 0.0470588235 0 0 0 0.02 0" in="shadowBlurOuter1"/>
+        </filter>
+        <filter x="-21.6%" y="-21.6%" width="143.3%" height="143.3%" filterUnits="objectBoundingBox" id="c">
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0.0431372549 0 0 0 0 0.0431372549 0 0 0 0 0.0470588235 0 0 0 0.02 0" in="shadowBlurOuter1"/>
+        </filter>
+        <circle id="b" cx="25.816" cy="25.337" r="19"/>
+        <circle id="d" cx="25.816" cy="25.337" r="15.028"/>
+        <linearGradient x1=".805%" y1=".805%" x2="100%" y2="100%" id="e">
+            <stop stop-color="#8CE7FD" offset="0%"/>
+            <stop stop-color="#54D4FC" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M46.578 40.356a24.358 24.358 0 0 0 1.367-25.715l-1.037.587-.073.042-.042-.075A22.698 22.698 0 0 0 35.25 5.062a22.46 22.46 0 0 0-11.692-1.32l-.084.014-.011-.087L23.1 1A24.149 24.149 0 0 0 8.065 9.307l1.961 1.678.065.057-.057.066a22.782 22.782 0 0 0-3.621 5.513l-.037.077-.076-.037-2.876-1.368a26.413 26.413 0 0 0-2.22 14.61A26.322 26.322 0 0 0 7.18 43.4l2.41-2.085.066-.056.055.066a22.64 22.64 0 0 0 5.297 4.57l.078.047-.054.075-2.079 2.915a24.884 24.884 0 0 0 12.53 4.61l.317-4.166.005-.082.082.004c7.674.369 15.117-3.236 19.607-9.612l.05-.071.068.05.965.691z" stroke="#C8C9D4" stroke-width=".6"/>
+        <g transform="translate(.971 1)">
+            <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+            <use stroke="#F8F8F9" fill="#FFF" xlink:href="#b"/>
+        </g>
+        <g transform="translate(.971 1)">
+            <use fill="#000" filter="url(#c)" xlink:href="#d"/>
+            <use stroke="#C8C9D4" fill="url(#e)" xlink:href="#d"/>
+        </g>
+        <text font-family="ShareTechMono-Regular, Share Tech Mono" font-size="21" letter-spacing=".817" fill="#FFF" transform="translate(.971 1)">
+                    <tspan x="19.108" y="33.51">1</tspan>
+                </text>
+    </g>
+</svg>
