@@ -2,12 +2,12 @@ import {IAssetInfo, IAssetTransferObject, ICallbackStatus, TransferAssetBridge} 
 
 export class TransferAssetBridgeFacade {
 
-	private static hostUrl: string;
+	private static environment: string;
 	private static transferAssetBridge: TransferAssetBridge;
 
-	constructor(hostUrl: string) {
-		TransferAssetBridgeFacade.hostUrl = hostUrl;
-		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.hostUrl);
+	constructor(environment: string) {
+		TransferAssetBridgeFacade.environment = environment;
+		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.environment);
 	}
 
 	public static async transferAssets(message: IAssetTransferObject, sourceCbs: ICallbackStatus, destCbs: ICallbackStatus): Promise<IAssetInfo> {

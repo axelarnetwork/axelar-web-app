@@ -11,7 +11,7 @@ interface IDismissableAlertProps {
 const DismissableAlert = (props: IDismissableAlertProps) => {
 	const {bodyContent, closeCb, headerText, open} = props;
 
-	return (<Alert show={open} variant="success">
+	return (<Alert show={open} variant="dark">
 		<Alert.Heading>{headerText}</Alert.Heading>
 		{bodyContent}
 		<div className="d-flex justify-content-end">

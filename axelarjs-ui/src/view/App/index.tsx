@@ -1,9 +1,11 @@
+import {useEffect}          from "react";
+import HelperCartoonWidget  from "component/CompositeComponents/HelperCartoonWidget";
+import PageFooter           from "component/CompositeComponents/PageFooter";
 import PageHeader           from "component/CompositeComponents/PageHeader";
-import SwapWindow           from "view/SwapWindow";
+import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 import {StyledAppBody}      from "view/App/styles/StyledAppBody";
-import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
-import {useEffect}          from "react";
+import SwapWindow           from "view/SwapWindow";
 
 const App = () => {
 
@@ -16,6 +18,7 @@ const App = () => {
 
 	return (
 		<StyledAppContainer>
+			<HelperCartoonWidget/>
 			<PageHeader/>
 			{isRecaptchaSet
 				? <StyledAppBody>
@@ -23,6 +26,7 @@ const App = () => {
 				</StyledAppBody>
 				: null
 			}
+			<PageFooter/>
 		</StyledAppContainer>
 	);
 }

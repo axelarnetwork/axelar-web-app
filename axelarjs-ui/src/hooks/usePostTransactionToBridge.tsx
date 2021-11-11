@@ -20,14 +20,17 @@ export default function usePostTransactionToBridge() {
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 
-	const handleTransactionSubmission = useCallback(async () => {
+	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
 
-		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset))
+		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset)) {
+			reject("no input params");
 			return;
+		}
 
 		setShowTransactionStatusWindow(true);
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
+			debugger;
 			const confirms: IConfirmationStatus = {
 				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
@@ -58,15 +61,16 @@ export default function usePostTransactionToBridge() {
 						{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
 						{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
 					setDepositAddress(res);
+					resolve(res);
 				} catch (e) {
 					setShowTransactionStatusWindow(false);
-					console.log("transfer bridge error",e);
+					reject("transfer bridge error" + e);
 				}
 
 			}
 		})
 
-	}, [
+	}), [
 		sourceChain,
 		destinationChain,
 		destinationAddress,
@@ -80,5 +84,8 @@ export default function usePostTransactionToBridge() {
 
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);
 
-	return [showTransactionStatusWindow, handleTransactionSubmission, closeResultsScreen] as const;
+	return [showTransactionStatusWindow as boolean,
+		handleTransactionSubmission as () => Promise<string>,
+		closeResultsScreen as () => void
+	] as const;
 }
