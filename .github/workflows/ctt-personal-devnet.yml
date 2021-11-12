@@ -16,6 +16,5 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.CTT_PERSONAL_VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.CTT_PERSONAL_VERCEL_PROJECT_ID }}
-          working-directory: axelarjs-ui
           alias-domains: |
             canh-devnet.vercel.app
