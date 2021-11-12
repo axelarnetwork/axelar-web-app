@@ -10,6 +10,8 @@ import useTodoList                                                           fro
 import CopyToClipboard
                                                                              from "../../../component/Widgets/CopyToClipboard";
 import Tooltip                                                               from "../../../component/Widgets/Tooltip";
+import {StyledButton}                                                        from "../../../component/StyleComponents/StyledButton";
+import useResetUserInputs                                                    from "../../../hooks/useResetUserInputs";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -27,6 +29,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 	const setMessageInCartoon = useCartoonMessageDispatcher();
+	const resetUserInputs = useResetUserInputs();
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -42,7 +45,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				addStep(<div>Transaction detected on {destinationChain?.chainName}</div>, 3);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				addStep(<div>Deposit confirmed. Axelar is working on your request</div>, 2);
+				const text = destinationChain?.chainName?.toLowerCase() === "axelar"
+					? "Deposit confirmed in Axelar. You can check your balances in your account in a few moments. (TODO)"
+					: "Deposit confirmed on our network. Axelar is working on your request"
+				addStep(<div>{text}</div>, 2);
 				break;
 			case !!depositAddress:
 				const jsx = <>
@@ -72,7 +78,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
 	return <>
-		<FlexRow><h5>Transaction Steps ({activeStep + 1}/4)</h5></FlexRow>
+		<FlexRow><h5>Transaction Steps ({activeStep + 1}/{destinationChain?.chainName?.toLowerCase() === "axelar" ? 3 : 4 })</h5></FlexRow>
 		<br/>
 		{isRecaptchaAuthenticated
 			? stepsJsx()
@@ -81,7 +87,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			</FlexRow>
 		}
 		<br/>
-		<div style={{bottom: `0`}}><TransferFeeDivider/></div>
+		<div style={{bottom: `0`}}>
+			{activeStep > 1 && <StyledButton style={{ marginBottom: `5px`}} onClick={() => {
+				resetUserInputs();
+				closeResultsScreen();
+			}} >Go back</StyledButton>}
+			<TransferFeeDivider/>
+		</div>
 	</>;
 
 }

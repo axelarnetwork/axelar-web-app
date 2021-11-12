@@ -20,7 +20,7 @@ const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
 	height: 375px;
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
 	height: ${props => props.show ? '375px' : '0px'};
-	transition: all 1000ms;
+	transition: all 250ms;
 `;
 
 const StyledBox = styled.div`
