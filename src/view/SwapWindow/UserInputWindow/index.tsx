@@ -51,7 +51,6 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		if (!(destAddr && isValidDestinationAddress && mounted))
 			return;
 		try {
-			setMounted(false);
 			await handleSwapSubmit();
 			return;
 		} catch (e) {
@@ -61,7 +60,6 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		isValidDestinationAddress,
 		handleSwapSubmit,
 		mounted,
-		setMounted,
 		resetUserInputs
 	]);
 

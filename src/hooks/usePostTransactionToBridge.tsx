@@ -1,6 +1,9 @@
 import {useCallback, useState}                           from "react";
 import {useRecoilValue, useSetRecoilState}               from "recoil";
-import {IAssetInfoWithTrace, IAssetTransferObject}       from "@axelar-network/axelarjs-sdk";
+import {
+	IAssetInfoWithTrace,
+	IAssetTransferObject
+}                                                        from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
@@ -13,6 +16,7 @@ import {
 import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
 import {depositConfirmCbMap}                             from "./helper";
 import {v4 as uuidv4}                                    from 'uuid';
+import ErrorHandler                                      from "../utils/ErrorHandler";
 
 export default function usePostTransactionToBridge() {
 
@@ -26,6 +30,7 @@ export default function usePostTransactionToBridge() {
 	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
+	const errorHandler = ErrorHandler();
 
 	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
 
@@ -76,7 +81,8 @@ export default function usePostTransactionToBridge() {
 					resolve(res);
 				} catch (e) {
 					setShowTransactionStatusWindow(false);
-					console.log("transfer bridge error",e);
+					console.log("transfer bridge error", e);
+					errorHandler.notifyError(e);
 					reject("transfer bridge error" + e);
 				}
 
@@ -93,7 +99,8 @@ export default function usePostTransactionToBridge() {
 		setTransactionTraceId,
 		sourceAsset,
 		isRecaptchaAuthenticated,
-		authenticateWithRecaptcha
+		authenticateWithRecaptcha,
+		errorHandler
 	]);
 
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);
