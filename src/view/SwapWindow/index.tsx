@@ -8,7 +8,7 @@ import {StyledImage}                     from "component/StyleComponents/StyledI
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
 import svg                               from "resources/transfer-modal-light-mode.svg";
 import UserInputWindow                   from "./UserInputWindow";
-import TransactionStatusWindow           from "./TransactionStatusWindow2";
+import TransactionStatusWindow           from "./TransactionStatusWindow";
 
 const StyledSwapWindow = styled(GridDisplay)`
 	box-sizing: border-box;
