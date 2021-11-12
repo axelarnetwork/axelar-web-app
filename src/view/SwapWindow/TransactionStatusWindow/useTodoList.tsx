@@ -82,7 +82,7 @@ const useTodoList = () => {
 		setItems(items => newState);
 		if (index === 1) {
 			setShowHelperCartoonWidget(true);
-			setTimeout(() => setShowHelperCartoonWidget(false),120_000);
+			setTimeout(() => setShowHelperCartoonWidget(false),36_000);
 		}
 	}
 
