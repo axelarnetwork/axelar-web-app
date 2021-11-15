@@ -3,15 +3,15 @@ import {useRecoilValue}                                                      fro
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import TransferFeeDivider                                                    from "component/CompositeComponents/TransferFeeDivider";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
-import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
-import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection, SourceAsset}                                         from "state/ChainSelection";
-import useTodoList                                                           from "./useTodoList";
+import {StyledButton}                                                        from "component/StyleComponents/StyledButton";
 import CopyToClipboard
-                                                                             from "../../../component/Widgets/CopyToClipboard";
-import Tooltip                                                               from "../../../component/Widgets/Tooltip";
-import {StyledButton}                                                        from "../../../component/StyleComponents/StyledButton";
-import useResetUserInputs                                                    from "../../../hooks/useResetUserInputs";
+                                                                             from "component/Widgets/CopyToClipboard";
+import Tooltip                                                               from "component/Widgets/Tooltip";
+import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
+import useResetUserInputs                                                    from "hooks/useResetUserInputs";
+import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {ChainSelection, DestinationAddress, SourceAsset}                     from "state/ChainSelection";
+import useTodoList                                                           from "./useTodoList";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -22,6 +22,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 	const [activeStep, addStep, stepsJsx] = useTodoList();
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
+	const destAddr = useRecoilValue(DestinationAddress);
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
@@ -42,13 +43,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		console.log("render transaction status screen");
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				addStep(<div>Transaction detected on {destinationChain?.chainName}</div>, 3);
+				addStep(<div>Transaction detected in {destAddr} on the {destinationChain?.chainName} network</div>, 3);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				const text = destinationChain?.chainName?.toLowerCase() === "axelar"
-					? "Deposit confirmed in Axelar. You can check your balances in your account in a few moments. (TODO)"
-					: "Deposit confirmed on our network. Axelar is working on your request"
-				addStep(<div>{text}</div>, 2);
+				addStep(<div>Deposit confirmed on our network. Axelar is working on your request</div>, 2);
 				break;
 			case !!depositAddress:
 				const jsx = <>
@@ -78,7 +76,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
 
 	return <>
-		<FlexRow><h5>Transaction Steps ({activeStep + 1}/{destinationChain?.chainName?.toLowerCase() === "axelar" ? 3 : 4 })</h5></FlexRow>
+		<FlexRow><h5>Transaction Steps ({activeStep + 1}/4)</h5></FlexRow>
 		<br/>
 		{isRecaptchaAuthenticated
 			? stepsJsx()
