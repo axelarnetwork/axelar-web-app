@@ -7,26 +7,20 @@ import {RecoilRoot}                     from "recoil";
 import {RecoilLogger}                   from 'recoil-devtools-logger';
 import {createGlobalStyle}              from "styled-components";
 import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
-// import downstreamServices               from "./config/downstreamServices";
 import Info                             from "./view/Debug";
-import './index.css';
 import Login                            from "./view/Login";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
-import backgroundImage                  from "resources/dummy_background_7.jpg";
+import backgroundImage                  from "resources/axelar-app-bg@3x.webp";
+import './index.css';
 
 const GlobalStyle = createGlobalStyle`
 	body {
-		margin: 0;
+		margin: 0 auto;
 		padding: 0;
-		height: 100%;
-		font-family: Kanit, Sans-Serif !important;
-     	font-size: 14px;
-		font-weight: normal;
-		font-stretch: normal;
-		font-style: normal;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
+		// width: 100vh;
+		box-sizing: border-box;
+		position: relative;
 		background-image: url(${backgroundImage});
 		background-repeat: no-repeat;
 		background-position: center center;

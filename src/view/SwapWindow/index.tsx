@@ -3,40 +3,33 @@ import {CSSTransition, SwitchTransition} from "react-transition-group";
 import styled                            from "styled-components";
 import screenConfigs                     from "config/screenConfigs";
 import {animateStyles}                   from "component/StyleComponents/animations/SwitchToggleAnimation";
-import {GridDisplay}                     from "component/StyleComponents/GridDisplay";
-import {StyledImage}                     from "component/StyleComponents/StyledImage";
 import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
-import svg                               from "resources/transfer-modal-light-mode.svg";
+import svg                               from "resources/select-component.svg";
 import UserInputWindow                   from "./UserInputWindow";
 import TransactionStatusWindow           from "./TransactionStatusWindow";
+import {StyledCentered}                  from "../../component/StyleComponents/Centered";
 
-const StyledSwapWindow = styled(GridDisplay)`
-	box-sizing: border-box;
-	position: absolute;
+const StyledSwapWindow = styled.div`
+	// overflow: scroll;
+	${StyledCentered}
 	${animateStyles}
-
-	@media ${screenConfigs.media.nonMobile} {
-		max-width: 638px;
-		min-width: 600px;
-		min-height: 450px;
-		max-height: 642px;
-		width: 50%;
-        top: 15%;
+    background-size: 100% 100%;
+    background-position: center center;
+    background-image: url(${svg});
+    position: relative;
+    width: 40%;
+    padding-top: 45%;
+    height: 0;
+    position: relative;
+    box-sizing: border-box;
+    
+	/*TODO: this is where the responsive breakpoint screens would be set*/
+	@media ${screenConfigs.media.laptop} {
+	}
+	@media ${screenConfigs.media.tablet} {
 	}
 	@media ${screenConfigs.media.mobile} {
-		width: 100%;
 	}
-`;
-
-const StyledToggleContainer = styled.div`
-	height: 100%;
-	padding: 15%;
-	z-index: 15;
-	position: relative;
-	min-height: 500px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
 `;
 
 const SwapWindow = (): ReactElement => {
@@ -50,19 +43,16 @@ const SwapWindow = (): ReactElement => {
 	const userInputNeeded = !showTransactionStatusWindow;
 
 	return <StyledSwapWindow>
-		<StyledImage src={svg}/>
 		<SwitchTransition mode={"out-in"}>
 			<CSSTransition
 				key={userInputNeeded ? "user-input-window" : "transaction-status-window"}
 				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 				classNames="fade"
-			>
-				<StyledToggleContainer>{userInputNeeded
-					? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
-					: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
-					                           closeResultsScreen={closeResultsScreen}/>
-				}</StyledToggleContainer>
-			</CSSTransition>
+			>{ userInputNeeded
+				? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
+				: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
+				                           closeResultsScreen={closeResultsScreen}/>
+			}</CSSTransition>
 		</SwitchTransition>
 	</StyledSwapWindow>;
 

@@ -12,10 +12,20 @@ import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import useResetUserInputs                                from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import "../todelete.css";
+import styled                                            from "styled-components";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
 }
+
+const StyledUserInputWindow = styled.div`
+    position: absolute;
+	padding: 10% 18% 5% 18%;
+    top: 5%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+`;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
@@ -57,7 +67,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& selectedSourceAsset
 		&& destAddr;
 
-	return <div style={{maxHeight: `450px`, overflow: `hidden`}}>
+	return <StyledUserInputWindow>
 
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 		<div><SwapChains/></div>
@@ -86,7 +96,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			} </StyledButton>
 		</FlexColumn>
 
-	</div>;
+	</StyledUserInputWindow>;
 }
 
 export default UserInputWindow;
