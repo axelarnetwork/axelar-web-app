@@ -7,6 +7,11 @@ export const SourceDepositAddress = atom<Nullable<IAssetInfo>>({
 	default: null,
 });
 
+export const TransactionTraceId = atom<string>({
+	key: "TransactionTraceId",
+	default: "",
+});
+
 export interface IConfirmationStatus {
 	numberConfirmations: Nullable<number>;
 	numberRequiredConfirmations: Nullable<number>;

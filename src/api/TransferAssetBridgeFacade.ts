@@ -1,4 +1,4 @@
-import {IAssetInfo, IAssetTransferObject, ICallbackStatus, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
+import {IAssetInfoResponse, IAssetTransferObject, ICallbackStatus, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
 
 export class TransferAssetBridgeFacade {
 
@@ -10,7 +10,7 @@ export class TransferAssetBridgeFacade {
 		TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(TransferAssetBridgeFacade.environment);
 	}
 
-	public static async transferAssets(message: IAssetTransferObject, sourceCbs: ICallbackStatus, destCbs: ICallbackStatus): Promise<IAssetInfo> {
+	public static async transferAssets(message: IAssetTransferObject, sourceCbs: ICallbackStatus, destCbs: ICallbackStatus): Promise<IAssetInfoResponse> {
 
 		try {
 			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, sourceCbs, destCbs);
