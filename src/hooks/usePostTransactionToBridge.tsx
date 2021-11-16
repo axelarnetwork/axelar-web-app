@@ -92,6 +92,7 @@ export default function usePostTransactionToBridge() {
 		setDepositAddress,
 		setSourceNumConfirmations,
 		setDestinationNumConfirmations,
+		setTransactionTraceId,
 		sourceAsset,
 		isRecaptchaAuthenticated,
 		authenticateWithRecaptcha
