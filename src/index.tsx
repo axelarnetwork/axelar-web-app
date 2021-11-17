@@ -11,7 +11,7 @@ import Info                             from "./view/Debug";
 import Login                            from "./view/Login";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
-import backgroundImage                  from "resources/axelar-app-bg@3x.webp";
+import backgroundImage                  from "resources/bg-image.svg";
 import './index.css';
 
 const GlobalStyle = createGlobalStyle`
@@ -21,11 +21,12 @@ const GlobalStyle = createGlobalStyle`
 		// width: 100vh;
 		box-sizing: border-box;
 		position: relative;
+		line-height: 1.5;
 		background-image: url(${backgroundImage});
 		background-repeat: no-repeat;
 		background-position: center center;
-		background-attachment: fixed;
-		background-size: cover;
+		// background-attachment: fixed;
+		background-size: initial;
 	}
 
 	code {

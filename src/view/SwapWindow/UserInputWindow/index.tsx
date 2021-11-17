@@ -19,12 +19,16 @@ interface IUserInputWindowProps {
 }
 
 const StyledUserInputWindow = styled.div`
-    position: absolute;
-	padding: 10% 18% 5% 18%;
-    top: 5%;
-    left: 0;
-    right: 0;
-    bottom: 0;
+	padding: 5%;
+`;
+
+const PlainButton = styled.button`
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 7.5px 0px 0px 0px;
+    padding: 0;
+    color: white;
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
@@ -83,7 +87,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				onChange={(e: any) => setDestAddr(e.target.value)}
 			/>
 			<br/>
-			<StyledButton disabled={!enableSubmitBtn} dim={!enableSubmitBtn} onClick={onInitiateTransfer}> {
+			<PlainButton disabled={!enableSubmitBtn} onClick={onInitiateTransfer}> {
 				isValidDestinationAddress
 					? "Initiate Asset Transfer"
 					: <DelayedRender
@@ -93,7 +97,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 						newChild={<span>Retry and resubmit here</span>}
 						delayBeforeNewChild={3000}
 					/>
-			} </StyledButton>
+			} </PlainButton>
 		</FlexColumn>
 
 	</StyledUserInputWindow>;
