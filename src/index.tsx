@@ -24,9 +24,9 @@ const GlobalStyle = createGlobalStyle`
 		line-height: initial;
 		background-image: url(${backgroundImage});
 		background-repeat: no-repeat;
-		background-position: center center;
+		background-position: 50% 50%;
 		background-attachment: fixed;
-		background-size: initial;
+		background-size: cover;
 	}
 
 	code {
