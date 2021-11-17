@@ -97,8 +97,11 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		</FlexSpaceBetween>
 		<SearchComponentGeneric
 			show={showChainSelectorSearchBox}
-			items={chainDropdownOptions}
+			allItems={chainDropdownOptions}
 			handleClose={() => setShowChainSelectorSearchBox(false)}
+			filterPredicate={(chainItem: ISearchItem, criteriaString: string) => {
+				return !!(chainItem?.title?.toLowerCase()?.includes(criteriaString.toLowerCase()) || chainItem?.symbol?.toLowerCase()?.includes(criteriaString.toLowerCase()));
+			}}
 		/>
 		<SearchComponent
 			show={showAssetSearchBox}

@@ -1,8 +1,8 @@
 import {useState}                  from "react";
 import styled, {ThemedStyledProps} from "styled-components";
-import {IAssetInfo}                from "@axelar-network/axelarjs-sdk";
 import {Input}                     from "component/StyleComponents/Input";
 import {SVGImage}                  from "component/Widgets/SVGImage";
+import {ISearchItem}               from "./index";
 
 interface IStyledSearchBoxProps extends ThemedStyledProps<any, any> {
 	show: boolean;
@@ -40,28 +40,27 @@ const StyledInput = styled(Input)`
 `;
 
 interface IAssetSearchComponentProps {
-	initialAssetList: IAssetInfo[];
-	callback: (filteredAssets: IAssetInfo[]) => void;
+	unfilteredList: ISearchItem[];
+	callback: (filteredAssets: ISearchItem[]) => void;
 	show: boolean;
+	filterPredicate: (item: ISearchItem, matchStringCriteria: string) => boolean;
+	handleOnEnterPress: any;
 }
 
 const SearchFilterText = (props: IAssetSearchComponentProps) => {
 
+	const { callback, filterPredicate, show, unfilteredList } = props;
+
 	const initialSearchState: string = "";
 	const [searchText, setSearchText] = useState(initialSearchState);
 
-	const predicate = (asset: IAssetInfo, match: string) => {
-		return !!(asset?.assetName?.toLowerCase()?.includes(match.toLowerCase()) || asset?.assetSymbol?.toLowerCase()?.includes(match.toLowerCase()));
-	};
-
 	const handleChange = (e: any) => {
 		setSearchText(e.target.value);
-		const filteredItems = props.initialAssetList?.filter((asset: IAssetInfo) => predicate(asset, e.target.value));
-		props.callback(filteredItems);
+		callback(unfilteredList?.filter((item: any) => filterPredicate(item, e.target.value)));
 	}
 
-	return <StyledSearchBox show={props.show}>
-		{props.show && <>
+	return <StyledSearchBox show={show}>
+		{show && <>
             <SVGImage height={"12px"} width={"12px"} margin={"5px 0px 0px 10px"}
                       src={require(`resources/search.svg`)?.default}
             />
@@ -71,6 +70,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
                 type="text"
                 value={searchText}
                 onChange={handleChange}
+                onKeyDown={props.handleOnEnterPress}
             />
         </>
 		}

@@ -1,16 +1,15 @@
-import styled, {ThemedStyledProps}         from "styled-components";
-import {IAssetInfo}                        from "@axelar-network/axelarjs-sdk";
-import {FlexSpaceBetween}                  from "component/StyleComponents/FlexSpaceBetween";
-import {GridDisplay}                       from "component/StyleComponents/GridDisplay";
-import {SVGImage}                          from "component/Widgets/SVGImage";
-import SearchFilterText                    from "component/Widgets/SearchComponentGeneric/SearchFilterText";
+import {KeyboardEvent, useState}   from "react";
+import styled, {ThemedStyledProps} from "styled-components";
+import {FlexSpaceBetween}          from "component/StyleComponents/FlexSpaceBetween";
+import {GridDisplay}               from "component/StyleComponents/GridDisplay";
+import {SVGImage}                  from "component/Widgets/SVGImage";
+import SearchFilterText            from "component/Widgets/SearchComponentGeneric/SearchFilterText";
 
 interface IStyledSearchComponentProps extends ThemedStyledProps<any, any> {
 	show: boolean;
 }
 
 const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
-	// padding: ${props => props.show ? '5px' : '0px'};
 	box-sizing: border-box;
 	width: 100%;
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
@@ -26,6 +25,7 @@ const StyledBox = styled.div`
 	overflow-y: auto;
 	position: relative;
 `;
+
 export interface ISearchItem {
 	title: string;
 	symbol: string;
@@ -34,30 +34,45 @@ export interface ISearchItem {
 	icon: any;
 	onClick: () => void;
 }
+
 interface ISearchMenuProps {
 	show: boolean;
-	items: ISearchItem[];
-	handleClose?: () => void;
+	allItems: ISearchItem[];
+	handleClose: () => void;
+	filterPredicate: (item: ISearchItem, matchStringCriteria: string) => boolean;
 }
 
 const SearchMenu = (props: ISearchMenuProps) => {
 
-	return (<StyledSearchComponent show={props.show}>
-		{props.show && <>
+	const {filterPredicate, handleClose, allItems, show} = props;
+	const [listItems, setListItems] = useState<any[]>(allItems);
+
+	const onClick = (item: ISearchItem) => {
+		item.onClick();
+		handleClose && handleClose();
+		setListItems(allItems); //reset list items so that when menu is reopened, all options show again
+	};
+
+	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+		e.stopPropagation();
+		e.code === "Enter" && listItems?.length === 1 && onClick(listItems[0]);
+	}
+
+	return (<StyledSearchComponent show={show}>
+		{show && <>
             <SearchFilterText
-                initialAssetList={[]}
-                callback={(data: IAssetInfo[]) => console.log(data)}
+                unfilteredList={allItems}
+                callback={(data: any[]) => setListItems(data)}
                 show={props.show}
+                filterPredicate={filterPredicate}
+                handleOnEnterPress={handleOnEnterPress}
             />
             <StyledBox>
-				{props.items.map((item: ISearchItem) => (<SearchOption
+				{listItems.map((item: ISearchItem) => (<SearchOption
 						key={item.title}
 						title={item.title}
 						icon={item.icon}
-						onClick={() => {
-							item.onClick();
-							props.handleClose && props.handleClose();
-						}}
+						onClick={(title: string) => onClick(item)}
 					/>
 				))}
             </StyledBox>
@@ -65,10 +80,10 @@ const SearchMenu = (props: ISearchMenuProps) => {
 	</StyledSearchComponent>);
 };
 
-interface IAssetOption {
+interface ISearchOption {
 	title: string;
 	icon: any;
-	onClick: any;
+	onClick: (title: string) => void;
 }
 
 const StyledSearchItem = styled(FlexSpaceBetween)`
@@ -87,16 +102,17 @@ const StyledSearchItem = styled(FlexSpaceBetween)`
 	transition: color 500ms;
 `;
 
-const SearchOption = (props: IAssetOption) => {
-	let icon;
+const SearchOption = (props: ISearchOption) => {
+	const {icon, onClick, title} = props;
+	let imageSrc;
 	try {
-		icon = props.icon;
+		imageSrc = icon;
 	} catch (e) {
-		icon = require(`resources/select-chain-icon-black.svg`)?.default;
+		imageSrc = require(`resources/select-chain-icon-black.svg`)?.default;
 	}
-	return <StyledSearchItem onClick={() => props.onClick(props.title)}>
-		<SVGImage height={"25px"} width={"25px"} src={icon}/>
-		<div style={{ width: `85%` }}>{props.title}</div>
+	return <StyledSearchItem onClick={() => onClick(title)}>
+		<SVGImage height={"25px"} width={"25px"} src={imageSrc}/>
+		<div style={{width: `85%`}}>{title}</div>
 	</StyledSearchItem>;
 }
 
