@@ -21,6 +21,7 @@ const StyledUserInputWindow = styled.div`
 	width: 300px;
 	height: 80%;
 	position: relative;
+	overflow: hidden;
 `;
 
 const PlainButton = styled.button`
@@ -80,21 +81,24 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <StyledUserInputWindow>
 		<br/><br/>
-		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
-		<div><SwapChains/></div>
-		<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/><br/>
-		<TransferFeeDivider/>
-		<FlexColumn>
+		<div style={{ maxHeight: `350px`, overflow: `hidden` }}>
+			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
+			<div><SwapChains/></div>
+			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/>
-			<InputForm
-				name={"destination-address-input"}
-				value={destAddr || ""}
-				placeholder={"Enter Destination Address (Public Key)"}
-				type={"text"}
-				onChange={(e: any) => setDestAddr(e.target.value)}
-			/>
-			<br/>
-		</FlexColumn>
+			<TransferFeeDivider/>
+			<FlexColumn>
+				<br/>
+				<InputForm
+					name={"destination-address-input"}
+					value={destAddr || ""}
+					placeholder={"Enter Destination Address (Public Key)"}
+					type={"text"}
+					onChange={(e: any) => setDestAddr(e.target.value)}
+				/>
+				<br/>
+			</FlexColumn>
+		</div>
 		<ButtonContainer>
 			<PlainButton disabled={!enableSubmitBtn} onClick={onInitiateTransfer}> {
 				isValidDestinationAddress

@@ -15,7 +15,7 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
 	border-width: 1.6px;
 	border-image-source: linear-gradient(103deg, #cecfd8 2%, #b8b9c7);
 	border-image-slice: 1;
-	// background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16)), linear-gradient(103deg, #cecfd8 2%, #b8b9c7);
 	background-origin: border-box;
 	background-clip: content-box, border-box;
+	padding: 5px;
 `;
