@@ -46,7 +46,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		title: supportedChain.chainName,
 		symbol: supportedChain.chainSymbol,
 		active: false,
-		disabled: ["avalanche","terra"].includes(supportedChain?.chainName?.toLowerCase()),
+		disabled: ["avalanche"].includes(supportedChain?.chainName?.toLowerCase()),
 		action: (param: IDropdownOption) => {
 			setSelectedChain(supportedChain);
 
