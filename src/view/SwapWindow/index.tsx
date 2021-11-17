@@ -1,13 +1,18 @@
-import {ReactElement}                    from "react";
-import {CSSTransition, SwitchTransition} from "react-transition-group";
-import styled                            from "styled-components";
-import screenConfigs                     from "config/screenConfigs";
-import {animateStyles}                   from "component/StyleComponents/animations/SwitchToggleAnimation";
-import usePostTransactionToBridge        from "hooks/usePostTransactionToBridge";
-import svg                               from "resources/inactive-box.svg";
-import UserInputWindow                   from "./UserInputWindow";
-import TransactionStatusWindow           from "./TransactionStatusWindow";
-import {StyledCentered}                  from "../../component/StyleComponents/Centered";
+import {ReactElement}                                    from "react";
+import {CSSTransition, SwitchTransition}                 from "react-transition-group";
+import {useRecoilValue}                  from "recoil";
+import styled                                            from "styled-components";
+import screenConfigs                                     from "config/screenConfigs";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
+import {animateStyles}                                   from "component/StyleComponents/animations/SwitchToggleAnimation";
+import {switchBackgroundAnimation}                                   from "component/StyleComponents/animations/SwitchBackgroundAnimation";
+import {StyledCentered}                                  from "component/StyleComponents/Centered";
+import usePostTransactionToBridge                        from "hooks/usePostTransactionToBridge";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import inactiveBox                                               from "resources/inactive-box.svg";
+import activeBox                                               from "resources/active-box.svg";
+import UserInputWindow                                   from "./UserInputWindow";
+import TransactionStatusWindow                           from "./TransactionStatusWindow";
 
 const StyledImage = styled.img`
 	position: absolute;
@@ -16,12 +21,9 @@ const StyledImage = styled.img`
 `;
 
 const StyledSwapWindow = styled.div`
-	// overflow: scroll;
 	${StyledCentered}
 	${animateStyles}
-    // background-size: 100% 100%;
-    // background-position: center center;
-    // background-image: url(${svg});
+	${switchBackgroundAnimation}
     position: relative;
     width: 100%;
     height: 100%;
@@ -56,8 +58,27 @@ const SwapWindow = (): ReactElement => {
 
 	const userInputNeeded = !showTransactionStatusWindow;
 
+	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const selectedSourceAsset = useRecoilValue(SourceAsset);
+	const destAddr = useRecoilValue(DestinationAddress);
+
+	const canLightUp = sourceChainSelection && destChainSelection
+		&& sourceChainSelection.chainName !== destChainSelection.chainName
+		&& selectedSourceAsset
+		&& destAddr;
+
 	return <StyledSwapWindow>
-		<StyledImage src={svg} />
+
+		<SwitchTransition mode={"out-in"}>
+			<CSSTransition
+				key={canLightUp ? "lit-background" : "dimmed-background"}
+				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
+				classNames="lighten"
+			>{
+				canLightUp ? <StyledImage src={activeBox} /> : <StyledImage src={inactiveBox} />
+			}</CSSTransition>
+		</SwitchTransition>
 		<SwitchTransition mode={"out-in"}>
 			<CSSTransition
 				key={userInputNeeded ? "user-input-window" : "transaction-status-window"}

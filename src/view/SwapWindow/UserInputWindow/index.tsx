@@ -19,7 +19,7 @@ interface IUserInputWindowProps {
 
 const StyledUserInputWindow = styled.div`
 	width: 300px;
-	height: 80%;
+	height: 425px;
 	position: relative;
 	overflow: hidden;
 `;
@@ -80,7 +80,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& destAddr;
 
 	return <StyledUserInputWindow>
-		<br/><br/>
+		<br/>
 		<div style={{ maxHeight: `350px`, overflow: `hidden` }}>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
