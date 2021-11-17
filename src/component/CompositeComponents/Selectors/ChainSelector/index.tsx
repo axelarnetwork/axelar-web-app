@@ -3,16 +3,16 @@ import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
 import AssetSelector
-                                                             from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexRow}                                             from "component/StyleComponents/FlexRow";
-import DropdownComponent, {IDropdownOption}                  from "component/Widgets/DropdownComponent";
-import SearchComponent                                       from "component/Widgets/SearchComponent";
-import {SVGImage}                                            from "component/Widgets/SVGImage";
-import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
-import {ChainList}                                           from "state/ChainList";
-import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";
-import {StyledChainSelectionIconWidget}                      from "./StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainComponent}                              from "./SelectedChainComponent";
+	                                        from "component/CompositeComponents/Selectors/AssetSelector";
+import DropdownComponent, {IDropdownOption} from "component/Widgets/DropdownComponent";
+import SearchComponent                      from "component/Widgets/SearchComponent";
+import {SVGImage}                           from "component/Widgets/SVGImage";
+import {ChainSelection, SourceAsset}        from "state/ChainSelection";
+import {ChainList}                          from "state/ChainList";
+import {StyledChainSelectionComponent}      from "../StyledChainSelectionComponent";
+import {StyledChainSelectionIconWidget}     from "./StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainComponent}             from "./SelectedChainComponent";
+import {FlexSpaceBetween}                   from "../../../StyleComponents/FlexSpaceBetween";
 
 interface IChainSelectorProps {
 	id: string;
@@ -82,14 +82,14 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
-		<div style={{marginLeft: `10px`, marginBottom: `10px`}}>{props.label}</div>
-		{isSourceChain
-			? <FlexRow style={{width: `100%`}}>
-				{chainSelectorWidget()}
-				{assetSelectorWidget(!sourceChain)}
-			</FlexRow>
-			: chainSelectorWidget()
-		}
+		<div style={{margin: `10px`, color: `#898994`}}>{props.label}</div>
+		<FlexSpaceBetween style={{width: `95%`, margin: `5px`}}>
+			{chainSelectorWidget()}
+			{isSourceChain
+				? assetSelectorWidget(!sourceChain)
+				: <></>
+			}
+		</FlexSpaceBetween>
 		{isSourceChain
 		&& <SearchComponent
             show={showAssetSearchBox}

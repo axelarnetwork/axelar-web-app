@@ -1,34 +1,41 @@
 import React, {useCallback, useState}                    from "react";
 import {useRecoilState, useRecoilValue}                  from "recoil";
+import styled                                            from "styled-components";
 import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                       from "component/CompositeComponents/InputForm";
 import ChainSelector                                     from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains                                        from "component/CompositeComponents/SwapChains";
 import TransferFeeDivider                                from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
-import {StyledButton}                                    from "component/StyleComponents/StyledButton";
 import DelayedRender                                     from "component/Widgets/DelayedRender";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import useResetUserInputs                                from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import "../todelete.css";
-import styled                                            from "styled-components";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
 }
 
 const StyledUserInputWindow = styled.div`
-	padding: 5%;
+	width: 300px;
+	height: 80%;
+	position: relative;
 `;
 
 const PlainButton = styled.button`
     border: none;
     background: none;
     cursor: pointer;
-    margin: 7.5px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     padding: 0;
     color: white;
+`;
+const ButtonContainer = styled(FlexColumn)`
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+	height: 50px;
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
@@ -72,7 +79,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& destAddr;
 
 	return <StyledUserInputWindow>
-
+		<br/><br/>
 		<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 		<div><SwapChains/></div>
 		<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/><br/>
@@ -87,6 +94,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				onChange={(e: any) => setDestAddr(e.target.value)}
 			/>
 			<br/>
+		</FlexColumn>
+		<ButtonContainer>
 			<PlainButton disabled={!enableSubmitBtn} onClick={onInitiateTransfer}> {
 				isValidDestinationAddress
 					? "Initiate Asset Transfer"
@@ -98,7 +107,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 						delayBeforeNewChild={3000}
 					/>
 			} </PlainButton>
-		</FlexColumn>
+		</ButtonContainer>
 
 	</StyledUserInputWindow>;
 }

@@ -21,11 +21,11 @@ const GlobalStyle = createGlobalStyle`
 		// width: 100vh;
 		box-sizing: border-box;
 		position: relative;
-		line-height: 1.5;
+		line-height: initial;
 		background-image: url(${backgroundImage});
 		background-repeat: no-repeat;
 		background-position: center center;
-		// background-attachment: fixed;
+		background-attachment: fixed;
 		background-size: initial;
 	}
 

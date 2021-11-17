@@ -38,15 +38,12 @@ const StyledSwapWindow = styled.div`
 `;
 
 const StyledContainer = styled.div`
-	// position: absolute;
-    /* padding: 10% 18% 5% 18%; */
-    /* top: 5%; */
-    /* left: 0; */
-    /* right: 0; */
-    /* bottom: 0; */
-    width: 350px;
+	width: 350px;
     z-index: 10;
-    height: 400px;
+    height: 533px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const SwapWindow = (): ReactElement => {

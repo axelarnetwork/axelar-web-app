@@ -21,7 +21,7 @@ const AssetSelector = () => {
 		image={<SVGImage height={"25px"} width={"25px"} src={image}/>}
 		label={selectedToken
 			? `${selectedToken?.assetName}`
-			: `Select asset`}
+			: `Add asset`}
 	/>;
 
 };
