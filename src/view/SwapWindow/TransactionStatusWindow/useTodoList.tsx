@@ -61,11 +61,11 @@ const useTodoList = () => {
 				classNames="item"
 			>
 				<StyledListItem>
-					<FlexSpaceBetween style={{ width: `100%` }}>
-						<div style={{ width: `35px`, height: `35px`, position: `relative` }}>
-							<StyledImage src={img} />
+					<FlexSpaceBetween style={{width: `100%`}}>
+						<div style={{width: `35px`, height: `35px`, position: `relative`}}>
+							<StyledImage src={img}/>
 						</div>
-					<StyledTextBox>{text}</StyledTextBox>
+						<StyledTextBox>{text}</StyledTextBox>
 					</FlexSpaceBetween>
 				</StyledListItem>
 			</CSSTransition>
@@ -82,7 +82,7 @@ const useTodoList = () => {
 		setItems(items => newState);
 		if (index === 1) {
 			setShowHelperCartoonWidget(true);
-			setTimeout(() => setShowHelperCartoonWidget(false),36_000);
+			setTimeout(() => setShowHelperCartoonWidget(false), 36_000);
 		}
 	}
 

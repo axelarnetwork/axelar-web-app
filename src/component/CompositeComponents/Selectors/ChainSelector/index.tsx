@@ -4,10 +4,9 @@ import {IAssetInfo, IChainInfo}                              from "@axelar-netwo
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
 import AssetSelector
                                                              from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
-import SearchComponent                                       from "component/Widgets/SearchComponent";
-import SearchComponentGeneric, {ISearchItem}                 from "component/Widgets/SearchComponentGeneric";
-import {SVGImage}                                            from "component/Widgets/SVGImage";
+import {FlexSpaceBetween}                    from "component/StyleComponents/FlexSpaceBetween";
+import SearchComponentGeneric, {ISearchItem} from "component/Widgets/SearchComponent";
+import {SVGImage}                            from "component/Widgets/SVGImage";
 import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
 import {ChainList}                                           from "state/ChainList";
 import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";
@@ -31,6 +30,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
 	const [showChainSelectorSearchBox, setShowChainSelectorSearchBox] = useState<boolean>(false);
+	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
 
 	let filteredChainList: IChainInfo[] = chainList;
 
@@ -62,28 +62,30 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		}
 	}));
 
+	/*only show the chain selector widget if the asset selector search box is not open*/
 	const chainSelectorWidget = () => <StyledChainSelectionIconWidget>
-		<SelectedChainComponent chainInfo={selectedChain}/>
-		<SVGImage
-			style={{cursor: `pointer`}}
-			onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
-			src={require(showChainSelectorSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
-			height={"8px"}
-			width={"20px"}
-		/>
+		{!showAssetSearchBox && <SelectedChainComponent chainInfo={selectedChain}/>}
+		{!showAssetSearchBox && <SVGImage
+            style={{cursor: `pointer`}}
+            onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
+            src={require(showChainSelectorSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            height={"8px"}
+            width={"20px"}
+        />}
 	</StyledChainSelectionIconWidget>;
 
+	/*only show the asset selector widget if the chain selector search box is not open*/
 	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
 		<div style={{cursor: `pointer`, marginRight: `5px`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
-			<AssetSelector/>
+			{!showChainSelectorSearchBox && <AssetSelector/>}
 		</div>
-		<SVGImage
-			style={{cursor: `pointer`}}
-			onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
-			src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
-			height={"8px"}
-			width={"20px"}
-		/>
+		{!showChainSelectorSearchBox && <SVGImage
+            style={{cursor: `pointer`}}
+            onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
+            src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            height={"8px"}
+            width={"20px"}
+        />}
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
@@ -99,15 +101,23 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			show={showChainSelectorSearchBox}
 			allItems={chainDropdownOptions}
 			handleClose={() => setShowChainSelectorSearchBox(false)}
-			filterPredicate={(chainItem: ISearchItem, criteriaString: string) => {
-				return !!(chainItem?.title?.toLowerCase()?.includes(criteriaString.toLowerCase()) || chainItem?.symbol?.toLowerCase()?.includes(criteriaString.toLowerCase()));
-			}}
 		/>
-		<SearchComponent
+		<SearchComponentGeneric
 			show={showAssetSearchBox}
+			allItems={initialAssetList.map((asset: IAssetInfo) => {
+				return {
+					title: asset.assetName as string,
+					symbol: asset.assetSymbol as string,
+					active: false,
+					icon: require(`resources/logos/${sourceChain?.chainSymbol}/assets/${asset?.assetSymbol}.svg`)?.default,
+					disabled: false,
+					onClick: () => {
+						setSourceAsset(asset);
+					}
+				}
+			})}
 			handleClose={() => setShowAssetSearchBox(false)}
 		/>
-
 	</StyledChainSelectionComponent>
 
 }

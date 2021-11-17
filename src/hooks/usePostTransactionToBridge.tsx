@@ -3,7 +3,7 @@ import {useRecoilValue, useSetRecoilState}               from "recoil";
 import {
 	IAssetInfoWithTrace,
 	IAssetTransferObject
-} from "@axelar-network/axelarjs-sdk";
+}                                                        from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";

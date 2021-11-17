@@ -12,8 +12,9 @@ interface ICopyToClipboardProps {
 	margin?: string;
 	textToCopy: string;
 }
+
 const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
-	const { height, margin, width, textToCopy } = props;
+	const {height, margin, width, textToCopy} = props;
 
 	const onClick = () => copy(textToCopy);
 
@@ -21,7 +22,7 @@ const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
 		onClick={onClick}
 		height={height}
 		width={width}
-		margin={ margin || `5px`}
+		margin={margin || `5px`}
 		src={require(`resources/copy-to-clipboard.svg`).default}
 	/>
 }

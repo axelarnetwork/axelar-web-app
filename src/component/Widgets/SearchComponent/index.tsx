@@ -1,117 +1,121 @@
-import {useEffect, useState}               from "react";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-import styled, {ThemedStyledProps}         from "styled-components";
-import {IAssetInfo}                        from "@axelar-network/axelarjs-sdk";
-import {SOURCE_TOKEN_KEY}                  from "config/consts";
-import {GridDisplay}                       from "component/StyleComponents/GridDisplay";
-import {SVGImage}                          from "component/Widgets/SVGImage";
-import SearchFilterText                    from "component/Widgets/SearchComponent/SearchFilterText";
-import {ChainList}                         from "state/ChainList";
-import {ChainSelection, SourceAsset}       from "state/ChainSelection";
+import {KeyboardEvent, useEffect, useState} from "react";
+import styled, {ThemedStyledProps}          from "styled-components";
+import {FlexSpaceBetween}                   from "component/StyleComponents/FlexSpaceBetween";
+import {GridDisplay}                        from "component/StyleComponents/GridDisplay";
+import {SVGImage}       from "component/Widgets/SVGImage";
+import SearchFilterText from "component/Widgets/SearchComponent/SearchFilterText";
 
 interface IStyledSearchComponentProps extends ThemedStyledProps<any, any> {
 	show: boolean;
 }
 
 const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
-	padding: ${props => props.show ? '15px' : '0px'};
 	box-sizing: border-box;
 	width: 100%;
-	height: 375px;
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
-	height: ${props => props.show ? '375px' : '0px'};
-	transition: all 250ms;
+	height: ${props => props.show ? '150px' : '0px'};
+	transition: all 200ms;
+    display: flex;
+    flex-direction: column;
 `;
 
 const StyledBox = styled.div`
 	width: 100%;
 	height: 100%;
-	border-radius: 8px;
-	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.21);
-	border: solid 1px #e2e1e2;
-	background-color: rgba(255, 255, 255, 0.02);
 	overflow-y: auto;
 	position: relative;
 `;
 
+export interface ISearchItem {
+	title: string;
+	symbol: string;
+	active: boolean;
+	disabled: boolean;
+	icon: any;
+	onClick: () => void;
+}
+
 interface ISearchMenuProps {
 	show: boolean;
-	handleClose?: () => void;
+	allItems: ISearchItem[];
+	handleClose: () => void;
 }
 
 const SearchMenu = (props: ISearchMenuProps) => {
 
-	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const setSourceChainAsset = useSetRecoilState(SourceAsset);
-	const chainList = useRecoilValue(ChainList);
-	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
-	const [assetList, setAssetList] = useState<IAssetInfo[]>(initialAssetList);
+	const {handleClose, allItems, show} = props;
+	const [listItems, setListItems] = useState<ISearchItem[]>([]);
 
 	useEffect(() => {
-		const newAssetList = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
-		setAssetList(newAssetList);
-	}, [chainList, sourceChain, setAssetList]);
+		setListItems(allItems);
+	}, [allItems]);
 
-	const handleChange = (asset: IAssetInfo) => setSourceChainAsset(asset);
+	const onClick = (item: ISearchItem) => {
+		item.onClick();
+		handleClose && handleClose();
+		setListItems(allItems); //reset list items so that when menu is reopened, all options show again
+	};
 
-	return (<StyledSearchComponent show={props.show}>
-		{props.show && <>
+	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+		e.stopPropagation();
+		e.code === "Enter" && listItems?.length === 1 && onClick(listItems[0]);
+	}
+
+	return (<StyledSearchComponent show={show}>
+		{show && <>
             <SearchFilterText
-                initialAssetList={initialAssetList}
-                callback={(data: IAssetInfo[]) => setAssetList(data)}
+                unfilteredList={allItems}
+                callback={(data: any[]) => setListItems(data)}
                 show={props.show}
+                handleOnEnterPress={handleOnEnterPress}
             />
-            <br/>
             <StyledBox>
-				{assetList.map(assetInfo => (<AssetOption
-						key={assetInfo.assetSymbol}
-						assetInfo={assetInfo} onClick={() => {
-						handleChange(assetInfo);
-						props.handleClose && props.handleClose();
-					}}/>
+				{listItems.map((item: ISearchItem) => (<SearchOption
+						key={item.title}
+						title={item.title}
+						icon={item.icon}
+						onClick={(title: string) => onClick(item)}
+					/>
 				))}
             </StyledBox>
         </>}
 	</StyledSearchComponent>);
 };
 
-interface IAssetOption {
-	assetInfo: IAssetInfo;
-	onClick: any;
+interface ISearchOption {
+	title: string;
+	icon: any;
+	onClick: (title: string) => void;
 }
 
-const StyledToken = styled.div`
+const StyledSearchItem = styled(FlexSpaceBetween)`
 	cursor: pointer;
 	box-sizing: border-box;
 	width: 100%;
-	padding: 20px;
+	padding: 10px 15px 10px 15px;
 	box-sizing: border-box;
-	border: solid 1px #e2e1e2;
-	color: #babbc8;
+	border-top: solid 1px #e2e1e2;
+	color: darkgrey;
 	letter-spacing: 0.78px;
 	font-weight: bold;
 	&:hover {
 		color: black;
 	}
-	transition: color 1000ms;
+	transition: color 500ms;
 `;
 
-const AssetOption = (props: IAssetOption) => {
-
-	const chainInfo = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-
-	let image;
+const SearchOption = (props: ISearchOption) => {
+	const {icon, onClick, title} = props;
+	let imageSrc;
 	try {
-		image = require(`resources/logos/${chainInfo?.chainSymbol}/assets/${props.assetInfo?.assetSymbol}.svg`)?.default;
+		imageSrc = icon;
 	} catch (e) {
-		image = require(`resources/select-chain-icon-black.svg`)?.default;
+		imageSrc = require(`resources/select-chain-icon-black.svg`)?.default;
 	}
-
-	const {assetInfo, onClick}: { assetInfo: IAssetInfo, onClick: any } = props;
-	return <StyledToken onClick={() => onClick(assetInfo)}>
-		<SVGImage height={"25px"} width={"25px"} src={image}/>
-		<span style={{marginLeft: `15px`}}>{assetInfo?.assetName} ({assetInfo?.assetSymbol})</span>
-	</StyledToken>;
+	return <StyledSearchItem onClick={() => onClick(title)}>
+		<SVGImage height={"25px"} width={"25px"} src={imageSrc}/>
+		<div style={{width: `85%`}}>{title}</div>
+	</StyledSearchItem>;
 }
 
 export default SearchMenu;

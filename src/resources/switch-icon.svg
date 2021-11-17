@@ -1,4 +1,5 @@
-<svg width="29" height="28" viewBox="0 0 29 28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="29" height="28" viewBox="0 0 29 28"
+     xmlns="http://www.w3.org/2000/svg">
     <defs>
         <filter x="-10.4%" y="-10.4%" width="120.8%" height="120.8%" filterUnits="objectBoundingBox" id="a">
             <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"/>

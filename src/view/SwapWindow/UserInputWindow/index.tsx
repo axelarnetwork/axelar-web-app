@@ -81,7 +81,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <StyledUserInputWindow>
 		<br/>
-		<div style={{ maxHeight: `350px`, overflow: `hidden` }}>
+		<div style={{maxHeight: `350px`, overflow: `hidden`}}>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>

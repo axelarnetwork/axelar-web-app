@@ -1,5 +1,4 @@
-import styled           from "styled-components";
-import {StyledCentered} from "component/StyleComponents/Centered";
+import styled from "styled-components";
 
 export const StyledAppBody = styled.div`
 

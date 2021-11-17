@@ -1,11 +1,11 @@
 import {useEffect}                                                           from "react";
 import {useRecoilValue}                                                      from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
-import TransferFeeDivider                                                    from "component/CompositeComponents/TransferFeeDivider";
+import TransferFeeDivider
+                                                                             from "component/CompositeComponents/TransferFeeDivider";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import {StyledButton}                                                        from "component/StyleComponents/StyledButton";
-import CopyToClipboard
-                                                                             from "component/Widgets/CopyToClipboard";
+import CopyToClipboard                                                       from "component/Widgets/CopyToClipboard";
 import Tooltip                                                               from "component/Widgets/Tooltip";
 import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
@@ -86,10 +86,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 		<br/>
 		<div style={{bottom: `0`}}>
-			{activeStep > 1 && <StyledButton style={{ marginBottom: `5px`}} onClick={() => {
+			{activeStep > 1 && <StyledButton style={{marginBottom: `5px`}} onClick={() => {
 				resetUserInputs();
 				closeResultsScreen();
-			}} >Go back</StyledButton>}
+			}}>Go back</StyledButton>}
 			<TransferFeeDivider/>
 		</div>
 	</>;
