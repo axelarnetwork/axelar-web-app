@@ -14,11 +14,11 @@ import Info                             from "view/Debug";
 import Login                            from "view/Login";
 import App                              from 'view/App';
 import reportWebVitals                  from './reportWebVitals';
-import GilroyExtraBoldSvg   from "fonts/Gilroy-extrabold/Gilroy-ExtraBold.svg";
-import GilroyExtraBoldEot   from "fonts/Gilroy-extrabold/Gilroy-ExtraBold.eot";
-import GilroyExtraBoldTtf   from "fonts/Gilroy-extrabold/Gilroy-ExtraBold.ttf";
-import GilroyExtraBoldWoff  from "fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff";
-import GilroyExtraBoldWoff2 from "fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff2";
+import GilroyExtraBoldSvg   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.svg";
+import GilroyExtraBoldEot   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.eot";
+import GilroyExtraBoldTtf   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.ttf";
+import GilroyExtraBoldWoff  from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff";
+import GilroyExtraBoldWoff2 from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff2";
 
 const GlobalStyle = createGlobalStyle`
 	@font-face {
