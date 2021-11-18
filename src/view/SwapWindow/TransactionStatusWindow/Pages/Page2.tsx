@@ -13,6 +13,7 @@ import step3Inctive                  from "resources/transaction_status_logos/st
 import caution                       from "resources/transaction_status_logos/caution.svg";
 import {ChainSelection, SourceAsset} from "state/ChainSelection";
 import {SourceDepositAddress}        from "state/TransactionStatus";
+import {StyledPTag}                  from "./StyledPTag";
 
 export const StyledImage = styled.img``;
 
@@ -32,15 +33,11 @@ const NumbersContainer = styled(FlexRow)`
 	height: 40%;
 `;
 
-const StyledPage1 = styled.div`
+const StyledPage2 = styled.div`
 	width: 300px;
 	height: 225px;
 	position: relative;
 	overflow: hidden;
-`;
-const StyledP = styled.div`
-	font-size: 0.75rem;
-	overflow-wrap: break-word;
 `;
 
 const Page2 = () => {
@@ -48,7 +45,7 @@ const Page2 = () => {
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 
-	return <StyledPage1>
+	return <StyledPage2>
 		<NumbersContainer>
 			<Column/>
 			<Column>
@@ -67,7 +64,7 @@ const Page2 = () => {
 		</FlexColumn>
 		<br />
 		<p><StyledImage src={caution} height={`20px`} width={`20px`}/> Next Step: </p>
-		<StyledP>
+		<StyledPTag>
 			{`Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName}
 			to the following address:`}
 			<div>
@@ -81,9 +78,9 @@ const Page2 = () => {
 					tooltipBox={"Copy to Clipboard"}
 				/>
 			</div>
-		</StyledP>
+		</StyledPTag>
 
-	</StyledPage1>
+	</StyledPage2>
 }
 
 export default Page2;

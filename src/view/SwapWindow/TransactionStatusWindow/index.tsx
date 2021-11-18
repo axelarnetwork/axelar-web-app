@@ -103,6 +103,9 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			>{activePage}</CSSTransition>
 		</SwitchTransition>
 	}
+
+	const showButton: boolean = activeStep > 2;
+
 	return <StyledTransactionStatusWindow>
 		<FlexRow style={{color: `white`}}>{activeStep < 4 ? "Transferring" : "Complete!"}</FlexRow>
 		<br/>
@@ -124,12 +127,12 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 		<br/>
 		<TransferFeeDivider/>
-		<StyledButtonContainer>{activeStep > 1 &&
-        <PlainButton disabled={activeStep < 1} dim={activeStep < 1} onClick={() => {
+		<StyledButtonContainer>{showButton &&
+        <PlainButton disabled={!showButton} dim={!showButton} onClick={() => {
 			resetUserInputs();
 			closeResultsScreen();
 		}}>
-            Go back
+            Go Back
         </PlainButton>
 		}</StyledButtonContainer>
 	</StyledTransactionStatusWindow>;

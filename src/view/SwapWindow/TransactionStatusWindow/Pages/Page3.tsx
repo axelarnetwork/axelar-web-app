@@ -1,10 +1,11 @@
 import styled, {ThemedStyledProps} from "styled-components";
-import step1InActive                 from "resources/transaction_status_logos/step-1-inactive.svg";
+import step1InActive               from "resources/transaction_status_logos/step-1-inactive.svg";
 import step2Inctive                from "resources/transaction_status_logos/step-2-inactive.svg";
-import step3Active                from "resources/transaction_status_logos/step-3-active.svg";
+import step3Active                 from "resources/transaction_status_logos/step-3-active.svg";
 import {FlexRow}                   from "component/StyleComponents/FlexRow";
 import {StyledCentered}            from "component/StyleComponents/Centered";
 import {FlexColumn}                from "component/StyleComponents/FlexColumn";
+import {StyledPTag}                from "./StyledPTag";
 
 export const StyledImage = styled.img`
 
@@ -25,14 +26,14 @@ const NumbersContainer = styled(FlexRow)`
 	height: 40%;
 `;
 
-const StyledPage1 = styled.div`
+const StyledPage3 = styled.div`
 	width: 300px;
 	height: 225px;
 	position: relative;
 	overflow: hidden;
 `;
 const Page3 = () => {
-	return <StyledPage1>
+	return <StyledPage3>
 		<NumbersContainer>
 			<Column padding={`0px 0px 0px 35px`}>
 				<StyledImage src={step1InActive} height={`25px`} width={`25px`}/>
@@ -48,10 +49,14 @@ const Page3 = () => {
 		</NumbersContainer>
 		<FlexColumn>
 			<br />
-			<p>Axelar Network is</p>
-			<p>executing your transfer</p>
+			<p>Deposit confirmed.</p>
+			<p>Axelar is completing your transfer</p>
 		</FlexColumn>
-	</StyledPage1>
+		<br />
+		<StyledPTag>
+			{`At this stage, you can leave the rest to us and "Go Back"... or follow along with the rest if you like!`}
+		</StyledPTag>
+	</StyledPage3>
 }
-
+//
 export default Page3;
