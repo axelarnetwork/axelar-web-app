@@ -75,6 +75,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
                 value={searchText}
                 onChange={handleChange}
                 onKeyDown={props.handleOnEnterPress}
+                autoFocus={true}
             />
         </>
 		}
