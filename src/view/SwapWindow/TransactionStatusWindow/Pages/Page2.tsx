@@ -63,11 +63,14 @@ const Page2 = () => {
 			<p>Waiting on your deposit</p>
 		</FlexColumn>
 		<br />
-		<p><StyledImage src={caution} height={`20px`} width={`20px`}/> Next Step: </p>
+		<div style={{ margin: `0px 5px 10px 0px`}}>
+			<StyledImage src={caution} height={`15px`} width={`15px`}/>
+			<span style={{ margin: `0px 0px 0px 10px`}}>Next Step:</span>
+		</div>
 		<StyledPTag>
 			{`Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName}
 			to the following address:`}
-			<div>
+			<div style={{ margin: `10px 0px 0px 0px`}}>
 				<BoldSpan>{depositAddress?.assetAddress}</BoldSpan>
 				<Tooltip
 					tooltipText={<CopyToClipboard
