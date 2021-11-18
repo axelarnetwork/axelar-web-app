@@ -12,7 +12,6 @@
 		"react-dom": "^17.0.2",
 		"react-inlinesvg": "^2.3.0",
 		"react-router-dom": "^5.3.0",
-		"react-scripts": "4.0.3",
 		"react-transition-group": "^4.4.2",
 		"recoil": "^0.4.1",
 		"recoil-devtools-logger": "^0.4.0",
@@ -58,6 +57,7 @@
 		"@types/react-router-dom": "^5.3.2",
 		"@types/react-transition-group": "^4.4.4",
 		"@types/uuid": "^8.3.1",
-		"@types/styled-components": "^5.1.14"
+		"@types/styled-components": "^5.1.14",
+		"react-scripts": "4.0.3"
 	}
 }
