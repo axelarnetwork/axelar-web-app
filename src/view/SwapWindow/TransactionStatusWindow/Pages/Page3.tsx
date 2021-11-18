@@ -58,5 +58,5 @@ const Page3 = () => {
 		</StyledPTag>
 	</StyledPage3>
 }
-//
+
 export default Page3;
