@@ -16,3 +16,8 @@ export const DestinationAddress = atom<Nullable<string>>({
 	key: "DestinationAddress",
 	default: null,
 });
+
+export const IsValidDestinationAddress = atom<boolean>({
+	key: "IsValidDestinationAddress",
+	default: false,
+});

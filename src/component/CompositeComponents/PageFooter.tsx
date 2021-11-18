@@ -41,7 +41,7 @@ const Box = styled.div`
 const PageFooter = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
 	return (<StyledPageFooter>
-		<div style={{ marginLeft: `15px` }}>
+		<div style={{marginLeft: `15px`}}>
 			{transactionTraceId && <>
                 Having issues? Reach out to us on Discord and mention this trace ID: {transactionTraceId}
             </>}

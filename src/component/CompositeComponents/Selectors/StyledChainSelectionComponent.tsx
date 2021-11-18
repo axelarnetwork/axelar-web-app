@@ -6,15 +6,16 @@ interface IStyledChainSelectorProps extends ThemedStyledProps<any, any> {
 }
 
 export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelectorProps>`
-	border-radius: 8px;
-	box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.21);
-	border: solid 1px #e2e1e2;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    height: 100%;
     box-sizing: border-box;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
+	border-radius: 10px;
+	box-shadow: -2px -2px 4px 0 #fff, 2px 2px 4px 0 rgba(0, 0, 0, 0.16), inset 0 0 1px 1px rgba(0, 0, 0, 0.13);
+	border-width: 1.6px;
+	border-image-source: linear-gradient(103deg, #cecfd8 2%, #b8b9c7);
+	border-image-slice: 1;
+	background-origin: border-box;
+	background-clip: content-box, border-box;
+	padding: 5px;
 `;

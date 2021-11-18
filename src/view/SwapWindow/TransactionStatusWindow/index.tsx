@@ -1,36 +1,58 @@
-import {useEffect}                                                           from "react";
+import React, {useEffect, useState}                                          from "react";
 import {useRecoilValue}                                                      from "recoil";
+import {CSSTransition, SwitchTransition}                                     from "react-transition-group";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
-import TransferFeeDivider                                                    from "component/CompositeComponents/TransferFeeDivider";
+import TransferFeeDivider
+                                                                             from "component/CompositeComponents/TransferFeeDivider";
+import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainComponent}                                              from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainComponent";
+import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
-import {StyledButton}                                                        from "component/StyleComponents/StyledButton";
-import CopyToClipboard
-                                                                             from "component/Widgets/CopyToClipboard";
-import Tooltip                                                               from "component/Widgets/Tooltip";
 import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
 import useResetUserInputs                                                    from "hooks/useResetUserInputs";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection, DestinationAddress, SourceAsset}                     from "state/ChainSelection";
-import useTodoList                                                           from "./useTodoList";
+import {ChainSelection}                                                      from "state/ChainSelection";
+import styled                                                                from "styled-components";
+import Page1                                                                 from "./Pages/Page1";
+import Page2                                                                 from "./Pages/Page2";
+import Page3                                                                 from "./Pages/Page3";
+import Page4                                                                 from "./Pages/Page4";
+import ButtonContainer                                                       from "../ButtonContainer";
+import PlainButton                                                           from "../PlainButton";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
 	closeResultsScreen: any;
 }
 
+const StyledTransactionStatusWindow = styled.div`
+	${opacityAnimation}
+	width: 300px;
+	height: 435px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 5px;
+`;
+
+const StyledFlexRow = styled(FlexRow)`
+	padding: 10px;
+	box-sizing: border-box;
+	border-radius: 9px;
+	box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.16);
+	background-color: #fefefe;
+`;
+
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
-	const [activeStep, addStep, stepsJsx] = useTodoList();
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
-	const destAddr = useRecoilValue(DestinationAddress);
 	const destinationConfirmStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
-	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 	const setMessageInCartoon = useCartoonMessageDispatcher();
 	const resetUserInputs = useResetUserInputs();
+	const [activeStep, setActiveStep] = useState(0);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -43,56 +65,74 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		console.log("render transaction status screen");
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
-				addStep(<div>Transaction detected in {destAddr} on the {destinationChain?.chainName} network</div>, 3);
+				setActiveStep(4);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
-				addStep(<div>Deposit confirmed on our network. Axelar is working on your request</div>, 2);
+				setActiveStep(3);
 				break;
 			case !!depositAddress:
-				const jsx = <>
-					<div>Deposit {selectedSourceAsset?.assetSymbol} into {sourceChain?.chainName} here:</div>
-					<div>
-						{depositAddress?.assetAddress}
-						<Tooltip
-							tooltipText={<CopyToClipboard
-								height={`12px`}
-								width={`10px`}
-								textToCopy={depositAddress?.assetAddress || ""}
-							/>}
-							tooltipBox={"Copy to Clipboard"}
-						/>
-					</div>
-				</>;
-				addStep(jsx, 1);
+				setActiveStep(2);
 				setMessageInCartoon(`Once your deposit is confirmed, you can leave the rest to us... or following along with the rest if you would like!`);
 				break;
 			default:
-				addStep(<div>Generating {selectedSourceAsset?.assetSymbol} deposit address</div>, 0);
+				setActiveStep(1);
 				break;
 		}
-		// TODO: uncomment next line with fix above
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [destinationChain?.chainName,
-		selectedSourceAsset?.assetSymbol, sourceChain?.chainName, dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setMessageInCartoon]);
 
-	return <>
-		<FlexRow><h5>Transaction Steps ({activeStep + 1}/4)</h5></FlexRow>
+	const getActivePage = () => {
+		let activePage: any;
+		switch (true) {
+			case (activeStep === 4):
+				activePage = <Page4/>;
+				break;
+			case (activeStep === 3):
+				activePage = <Page3/>;
+				break;
+			case (activeStep === 2):
+				activePage = <Page2/>;
+				break;
+			default:
+				activePage = <Page1/>;
+		}
+		return <SwitchTransition mode={"out-in"}>
+			<CSSTransition
+				key={`transaction-status-active-page-${activeStep}`}
+				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
+				classNames="lighten"
+			>{activePage}</CSSTransition>
+		</SwitchTransition>
+	}
+	return <StyledTransactionStatusWindow>
+		<FlexRow style={{color: `white`}}>{activeStep < 4 ? "Transferring" : "Complete!"}</FlexRow>
+		<br/>
+		<StyledFlexRow>
+			<StyledChainSelectionIconWidget>
+				<SelectedChainComponent chainInfo={sourceChain}/>
+			</StyledChainSelectionIconWidget>
+				{'>>>'}
+			<StyledChainSelectionIconWidget>
+				<SelectedChainComponent chainInfo={destinationChain}/>
+			</StyledChainSelectionIconWidget>
+		</StyledFlexRow>
 		<br/>
 		{isRecaptchaAuthenticated
-			? stepsJsx()
+			? getActivePage()
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
 		<br/>
-		<div style={{bottom: `0`}}>
-			{activeStep > 1 && <StyledButton style={{ marginBottom: `5px`}} onClick={() => {
-				resetUserInputs();
-				closeResultsScreen();
-			}} >Go back</StyledButton>}
-			<TransferFeeDivider/>
-		</div>
-	</>;
+		<TransferFeeDivider/>
+		<ButtonContainer>{activeStep > 1 &&
+        <PlainButton disabled={activeStep < 1} dim={activeStep < 1} onClick={() => {
+			resetUserInputs();
+			closeResultsScreen();
+		}}>
+            Go back
+        </PlainButton>
+		}</ButtonContainer>
+	</StyledTransactionStatusWindow>;
 
 }
 

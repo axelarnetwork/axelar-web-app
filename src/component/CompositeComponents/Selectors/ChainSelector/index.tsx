@@ -4,9 +4,8 @@ import {IAssetInfo, IChainInfo}                              from "@axelar-netwo
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
 import AssetSelector
                                                              from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexRow}                                             from "component/StyleComponents/FlexRow";
-import DropdownComponent, {IDropdownOption}                  from "component/Widgets/DropdownComponent";
-import SearchComponent                                       from "component/Widgets/SearchComponent";
+import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
+import SearchComponentGeneric, {ISearchItem}                 from "component/Widgets/SearchComponent";
 import {SVGImage}                                            from "component/Widgets/SVGImage";
 import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
 import {ChainList}                                           from "state/ChainList";
@@ -30,6 +29,8 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
+	const [showChainSelectorSearchBox, setShowChainSelectorSearchBox] = useState<boolean>(false);
+	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
 
 	let filteredChainList: IChainInfo[] = chainList;
 
@@ -42,12 +43,13 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			return assetsInSupportedChain.map(asset => asset.common_key).includes(sourceAsset.common_key);
 		});
 	}
-	const chainDropdownOptions: IDropdownOption[] = filteredChainList.map((supportedChain: IChainInfo) => ({
+	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
 		symbol: supportedChain.chainSymbol,
 		active: false,
+		icon: require(`resources/logos/${supportedChain?.chainSymbol}/${supportedChain?.chainSymbol}.svg`)?.default,
 		disabled: ["avalanche"].includes(supportedChain?.chainName?.toLowerCase()),
-		action: (param: IDropdownOption) => {
+		onClick: () => {
 			setSelectedChain(supportedChain);
 
 			/* if the selected chain is the source token and the chain only
@@ -60,42 +62,62 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		}
 	}));
 
+	/*only show the chain selector widget if the asset selector search box is not open*/
 	const chainSelectorWidget = () => <StyledChainSelectionIconWidget>
-		<SelectedChainComponent chainInfo={selectedChain}/>
-		{<DropdownComponent
-			id={"dropdown-for-" + props.id}
-			dropdownOptions={chainDropdownOptions}
-		/>}
+		{!showAssetSearchBox && <SelectedChainComponent chainInfo={selectedChain}/>}
+		{!showAssetSearchBox && <SVGImage
+            style={{cursor: `pointer`}}
+            onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
+            src={require(showChainSelectorSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            height={"8px"}
+            width={"20px"}
+        />}
 	</StyledChainSelectionIconWidget>;
 
+	/*only show the asset selector widget if the chain selector search box is not open*/
 	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
 		<div style={{cursor: `pointer`, marginRight: `5px`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
-			<AssetSelector/>
+			{!showChainSelectorSearchBox && <AssetSelector/>}
 		</div>
-		<SVGImage
-			style={{cursor: `pointer`}}
-			onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
-			src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
-			height={"8px"}
-			width={"20px"}
-		/>
+		{!showChainSelectorSearchBox && <SVGImage
+            style={{cursor: `pointer`}}
+            onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
+            src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            height={"8px"}
+            width={"20px"}
+        />}
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
-		<div style={{marginLeft: `10px`, marginBottom: `10px`}}>{props.label}</div>
-		{isSourceChain
-			? <FlexRow style={{width: `100%`}}>
-				{chainSelectorWidget()}
-				{assetSelectorWidget(!sourceChain)}
-			</FlexRow>
-			: chainSelectorWidget()
-		}
-		{isSourceChain
-		&& <SearchComponent
-            show={showAssetSearchBox}
-            handleClose={() => setShowAssetSearchBox(false)}
-        />
-		}
+		<div style={{margin: `10px`, color: `#898994`}}>{props.label}</div>
+		<FlexSpaceBetween style={{width: `95%`, margin: `5px`}}>
+			{chainSelectorWidget()}
+			{isSourceChain
+				? assetSelectorWidget(!sourceChain)
+				: <></>
+			}
+		</FlexSpaceBetween>
+		<SearchComponentGeneric
+			show={showChainSelectorSearchBox}
+			allItems={chainDropdownOptions}
+			handleClose={() => setShowChainSelectorSearchBox(false)}
+		/>
+		<SearchComponentGeneric
+			show={showAssetSearchBox}
+			allItems={initialAssetList.map((asset: IAssetInfo) => {
+				return {
+					title: asset.assetName as string,
+					symbol: asset.assetSymbol as string,
+					active: false,
+					icon: require(`resources/logos/${sourceChain?.chainSymbol}/assets/${asset?.assetSymbol}.svg`)?.default,
+					disabled: false,
+					onClick: () => {
+						setSourceAsset(asset);
+					}
+				}
+			})}
+			handleClose={() => setShowAssetSearchBox(false)}
+		/>
 	</StyledChainSelectionComponent>
 
 }

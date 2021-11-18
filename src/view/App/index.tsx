@@ -4,7 +4,6 @@ import PageFooter           from "component/CompositeComponents/PageFooter";
 import PageHeader           from "component/CompositeComponents/PageHeader";
 import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
-import {StyledAppBody}      from "view/App/styles/StyledAppBody";
 import SwapWindow           from "view/SwapWindow";
 
 const App = () => {
@@ -21,9 +20,7 @@ const App = () => {
 			<HelperCartoonWidget/>
 			<PageHeader/>
 			{isRecaptchaSet
-				? <StyledAppBody>
-					<SwapWindow/>
-				</StyledAppBody>
+				? <SwapWindow/>
 				: null
 			}
 			<PageFooter/>

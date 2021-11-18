@@ -35,6 +35,7 @@ interface ITooltip {
 	tooltipText: any;
 	tooltipBox: any;
 }
+
 const Tooltip = ({tooltipBox, tooltipText}: ITooltip) => (<TooltipCard>
 	<TooltipText>
 		{tooltipText}

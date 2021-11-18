@@ -1,4 +1,9 @@
-import {IAssetInfoWithTrace, IAssetTransferObject, ICallbackStatus, TransferAssetBridge} from "@axelar-network/axelarjs-sdk";
+import {
+	IAssetInfoWithTrace,
+	IAssetTransferObject,
+	ICallbackStatus,
+	TransferAssetBridge
+} from "@axelar-network/axelarjs-sdk";
 
 export class TransferAssetBridgeFacade {
 

@@ -1,8 +1,8 @@
 import {useState}                  from "react";
 import styled, {ThemedStyledProps} from "styled-components";
-import {IAssetInfo}                from "@axelar-network/axelarjs-sdk";
 import {Input}                     from "component/StyleComponents/Input";
 import {SVGImage}                  from "component/Widgets/SVGImage";
+import {ISearchItem}               from "./index";
 
 interface IStyledSearchBoxProps extends ThemedStyledProps<any, any> {
 	show: boolean;
@@ -23,10 +23,14 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 	}
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
 	transition: all 1000ms;
+	width: 100%;
+    padding: 5px;
+    border-top: solid 0.2px lightgray;
 `;
 
 const StyledInput = styled(Input)`
 	width: 100%;
+	height: 25px;
 	outline: none;
 	padding: 8px;
 	box-sizing: border-box;
@@ -36,37 +40,41 @@ const StyledInput = styled(Input)`
 `;
 
 interface IAssetSearchComponentProps {
-	initialAssetList: IAssetInfo[];
-	callback: (filteredAssets: IAssetInfo[]) => void;
+	unfilteredList: ISearchItem[];
+	callback: (filteredAssets: ISearchItem[]) => void;
 	show: boolean;
+	handleOnEnterPress: any;
 }
 
 const SearchFilterText = (props: IAssetSearchComponentProps) => {
 
+	const {callback, show, unfilteredList} = props;
+
 	const initialSearchState: string = "";
 	const [searchText, setSearchText] = useState(initialSearchState);
 
-	const predicate = (asset: IAssetInfo, match: string) => {
-		return !!(asset?.assetName?.toLowerCase()?.includes(match.toLowerCase()) || asset?.assetSymbol?.toLowerCase()?.includes(match.toLowerCase()));
-	};
+	const filterPredicate = (searchItem: ISearchItem, criteriaString: string) => {
+		return (searchItem?.title?.toLowerCase()?.includes(criteriaString.toLowerCase())
+			|| searchItem?.symbol?.toLowerCase()?.includes(criteriaString.toLowerCase()));
+	}
 
 	const handleChange = (e: any) => {
 		setSearchText(e.target.value);
-		const filteredItems = props.initialAssetList?.filter((asset: IAssetInfo) => predicate(asset, e.target.value));
-		props.callback(filteredItems);
+		callback(unfilteredList?.filter((item: any) => filterPredicate(item, e.target.value)));
 	}
 
-	return <StyledSearchBox show={props.show}>
-		{props.show && <>
-            <SVGImage height={"15px"} width={"15px"} margin={"2.5px"}
+	return <StyledSearchBox show={show}>
+		{show && <>
+            <SVGImage height={"12px"} width={"12px"} margin={"5px 0px 0px 10px"}
                       src={require(`resources/search.svg`)?.default}
             />
             <StyledInput
                 name="filter-asset-input"
-                placeholder="Search Assets"
+                placeholder="Search"
                 type="text"
                 value={searchText}
                 onChange={handleChange}
+                onKeyDown={props.handleOnEnterPress}
             />
         </>
 		}

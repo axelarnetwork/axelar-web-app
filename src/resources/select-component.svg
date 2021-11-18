@@ -1,0 +1,37 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="412" height="464" viewBox="0 0 412 464"
+     xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter x="-1.5%" y="-1.3%" width="103%" height="102.6%" filterUnits="objectBoundingBox" id="a">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.238750751 0" in="shadowBlurOuter1"/>
+        </filter>
+        <filter x="-2.1%" y="-1.9%" width="104.3%" height="103.8%" filterUnits="objectBoundingBox" id="c">
+            <feMorphology radius="1.3" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"/>
+            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0" in="shadowBlurOuter1"/>
+        </filter>
+        <path d="M358.713 0c14.912 0 27 12.088 27 27l-.001 269.723 13.26 8.863a9 9 0 0 1 4 7.483v68.945a9 9 0 0 1-4 7.483l-13.26 8.861.001 13.642c0 14.912-12.088 27-27 27h-46.212l-.02 1.96c-.086 8.309-6.846 15-15.156 15h-191.6c-8.31 0-15.07-6.691-15.156-15l-.021-1.96H43.713c-14.912 0-27-12.088-27-27l-.001-14.007-12.713-8.496A9 9 0 0 1 0 382.014v-68.945a9 9 0 0 1 4-7.483l12.712-8.497L16.713 27c0-14.912 12.088-27 27-27h315z"
+              id="b"/>
+        <path d="M355.713 9c12.15 0 22 9.85 22 22l-.001 267.488 14.775 9.874a9 9 0 0 1 3.999 7.483v63.393a9 9 0 0 1-4 7.483l-14.774 9.873.001 11.406c0 12.15-9.85 22-22 22h-52.929l-.149 4.96c-.216 7.242-6.15 13-13.395 13H113.81c-7.246 0-13.179-5.758-13.396-13l-.149-4.96H46.713c-12.15 0-22-9.85-22-22l-.001-11.771-14.227-9.508a9 9 0 0 1-3.999-7.483v-63.393a9 9 0 0 1 4-7.483l14.226-9.509L24.713 31c0-12.15 9.85-22 22-22h309zm-226.809 9.106H47.208c-7.077 0-12.833 5.656-12.996 12.694l-.004.306V405.88c0 7.077 5.655 12.833 12.693 12.996l.307.004 52.688-.001.206-6.878c.217-7.242 6.15-13 13.396-13h175.43c7.245 0 13.179 5.758 13.396 13l.205 6.878h52.728c7.077 0 12.833-5.654 12.996-12.692l.004-.307V31.106c0-7.18-5.82-13-13-13H274.52l-7.661 13.369A9 9 0 0 1 259.05 36H144.375a9 9 0 0 1-7.809-4.525l-7.662-13.369z"
+              id="d"/>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="e">
+            <stop stop-color="#373E49" offset="0%"/>
+            <stop stop-color="#202328" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g transform="translate(4.287 4)" fill="none" fill-rule="evenodd">
+        <rect fill="#FFF" x="27.713" y="10" width="345" height="420" rx="18"/>
+        <g opacity=".433">
+            <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+            <path stroke="#D4DCE8"
+                  d="M358.713.5a26.417 26.417 0 0 1 18.738 7.762A26.417 26.417 0 0 1 385.213 27l-.001 269.99 13.483 9.012a8.5 8.5 0 0 1 3.777 7.067v68.945a8.5 8.5 0 0 1-3.777 7.067l-13.483 9.01.001 13.909a26.417 26.417 0 0 1-7.762 18.738 26.417 26.417 0 0 1-18.738 7.762h-46.707l-.025 2.455a14.612 14.612 0 0 1-4.346 10.265 14.612 14.612 0 0 1-10.31 4.24h-191.6c-4.019 0-7.662-1.618-10.31-4.24a14.612 14.612 0 0 1-4.346-10.265l-.026-2.455h-47.33a26.417 26.417 0 0 1-18.738-7.762A26.417 26.417 0 0 1 17.213 412l-.001-14.274-12.935-8.645A8.5 8.5 0 0 1 .5 382.014v-68.945a8.5 8.5 0 0 1 3.777-7.067l12.935-8.646L17.213 27a26.417 26.417 0 0 1 7.762-18.738A26.417 26.417 0 0 1 43.713.5z"
+                  stroke-linejoin="square" fill="#FCFCFF"/>
+        </g>
+        <use fill="#000" filter="url(#c)" xlink:href="#d"/>
+        <use stroke="#B8B9C7" stroke-width="1.6" fill="url(#e)" xlink:href="#d"/>
+    </g>
+</svg>
