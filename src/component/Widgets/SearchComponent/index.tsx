@@ -58,7 +58,7 @@ const SearchMenu = (props: ISearchMenuProps) => {
 
 	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		e.stopPropagation();
-		e.code === "Enter"
+		(e.code === "Enter" || e.code === "NumpadEnter")
 			&& listItems?.length === 1
 			&& !listItems[0].disabled
 			&& onClick(listItems[0]);
