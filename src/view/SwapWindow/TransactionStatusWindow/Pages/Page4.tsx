@@ -1,7 +1,4 @@
 import styled, {ThemedStyledProps} from "styled-components";
-import step1Active                 from "resources/transaction_status_logos/setp-1-active.svg";
-import step2Inctive                from "resources/transaction_status_logos/step-2-inactive.svg";
-import step3Inctive                from "resources/transaction_status_logos/step-3-inactive.svg";
 import {FlexRow}                   from "component/StyleComponents/FlexRow";
 import {StyledCentered}            from "component/StyleComponents/Centered";
 import {FlexColumn}                from "component/StyleComponents/FlexColumn";
@@ -31,27 +28,15 @@ const StyledPage1 = styled.div`
 	position: relative;
 	overflow: hidden;
 `;
-const Page1 = () => {
+const Page4 = () => {
 	return <StyledPage1>
 		<NumbersContainer>
-			<Column />
-			<Column />
-			<Column >
-				<StyledImage src={step1Active} height={`65px`} width={`65px`}/>
-			</Column>
-			<Column>
-				<StyledImage src={step2Inctive} height={`40px`} width={`40px`}/>
-			</Column>
-			<Column padding={`0px 35px 0px 0px`}>
-				<StyledImage src={step3Inctive} height={`25px`} width={`25px`}/>
-			</Column>
 		</NumbersContainer>
 		<FlexColumn>
 			<br />
-			<p>Generating Source</p>
-			<p>Chain Deposit Address</p>
+			<p>Transfer Completed!</p>
 		</FlexColumn>
 	</StyledPage1>
 }
 
-export default Page1;
+export default Page4;

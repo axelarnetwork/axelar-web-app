@@ -15,6 +15,8 @@ import ButtonContainer                                                       fro
 import PlainButton                                                           from "../PlainButton";
 import Page2                                                                 from "./Pages/Page2";
 import {CSSTransition, SwitchTransition}                                     from "react-transition-group";
+import Page3                                                                 from "./Pages/Page3";
+import Page4                                                                 from "./Pages/Page4";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -72,10 +74,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		let activePage: any;
 		switch (true) {
 			case (activeStep === 4):
-				activePage = <Page2/>;
+				activePage = <Page4/>;
 				break;
 			case (activeStep === 3):
-				activePage = <Page2/>;
+				activePage = <Page3/>;
 				break;
 			case (activeStep === 2):
 				activePage = <Page2/>;
@@ -92,7 +94,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		</SwitchTransition>
 	}
 	return <StyledTransactionStatusWindow>
-		<FlexRow style={{color: `white`}}>Transferring</FlexRow>
+		<FlexRow style={{color: `white`}}>{activeStep < 4 ? "Transferring" : "Complete!"}</FlexRow>
 		<br/>
 		<FlexRow><h5>{sourceChain?.chainName} {'>>>'} {destinationChain?.chainName}</h5></FlexRow>
 		<br/>
