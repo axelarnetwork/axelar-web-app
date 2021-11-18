@@ -4,9 +4,9 @@ import {IAssetInfo, IChainInfo}                              from "@axelar-netwo
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
 import AssetSelector
                                                              from "component/CompositeComponents/Selectors/AssetSelector";
-import {FlexSpaceBetween}                    from "component/StyleComponents/FlexSpaceBetween";
-import SearchComponentGeneric, {ISearchItem} from "component/Widgets/SearchComponent";
-import {SVGImage}                            from "component/Widgets/SVGImage";
+import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
+import SearchComponentGeneric, {ISearchItem}                 from "component/Widgets/SearchComponent";
+import {SVGImage}                                            from "component/Widgets/SVGImage";
 import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
 import {ChainList}                                           from "state/ChainList";
 import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";

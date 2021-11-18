@@ -1,8 +1,11 @@
 import React, {useEffect, useState}                                          from "react";
 import {useRecoilValue}                                                      from "recoil";
+import {CSSTransition, SwitchTransition}                                     from "react-transition-group";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import TransferFeeDivider
                                                                              from "component/CompositeComponents/TransferFeeDivider";
+import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainComponent}                                              from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainComponent";
 import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
@@ -11,12 +14,11 @@ import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} fro
 import {ChainSelection}                                                      from "state/ChainSelection";
 import styled                                                                from "styled-components";
 import Page1                                                                 from "./Pages/Page1";
-import ButtonContainer                                                       from "../ButtonContainer";
-import PlainButton                                                           from "../PlainButton";
 import Page2                                                                 from "./Pages/Page2";
-import {CSSTransition, SwitchTransition}                                     from "react-transition-group";
 import Page3                                                                 from "./Pages/Page3";
 import Page4                                                                 from "./Pages/Page4";
+import ButtonContainer                                                       from "../ButtonContainer";
+import PlainButton                                                           from "../PlainButton";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -30,6 +32,14 @@ const StyledTransactionStatusWindow = styled.div`
     position: relative;
     overflow: hidden;
     margin-bottom: 5px;
+`;
+
+const StyledFlexRow = styled(FlexRow)`
+	padding: 10px;
+	box-sizing: border-box;
+	border-radius: 9px;
+	box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.16);
+	background-color: #fefefe;
 `;
 
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
@@ -96,7 +106,15 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	return <StyledTransactionStatusWindow>
 		<FlexRow style={{color: `white`}}>{activeStep < 4 ? "Transferring" : "Complete!"}</FlexRow>
 		<br/>
-		<FlexRow><h5>{sourceChain?.chainName} {'>>>'} {destinationChain?.chainName}</h5></FlexRow>
+		<StyledFlexRow>
+			<StyledChainSelectionIconWidget>
+				<SelectedChainComponent chainInfo={sourceChain}/>
+			</StyledChainSelectionIconWidget>
+				{'>>>'}
+			<StyledChainSelectionIconWidget>
+				<SelectedChainComponent chainInfo={destinationChain}/>
+			</StyledChainSelectionIconWidget>
+		</StyledFlexRow>
 		<br/>
 		{isRecaptchaAuthenticated
 			? getActivePage()
