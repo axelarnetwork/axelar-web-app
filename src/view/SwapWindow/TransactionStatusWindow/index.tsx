@@ -16,9 +16,9 @@ import styled                                                                fro
 import Page1                                                                 from "./Pages/Page1";
 import Page2                                                                 from "./Pages/Page2";
 import Page3                                                                 from "./Pages/Page3";
-import Page4                                                                 from "./Pages/Page4";
-import ButtonContainer                                                       from "../ButtonContainer";
-import PlainButton                                                           from "../PlainButton";
+import Page4                 from "./Pages/Page4";
+import StyledButtonContainer from "../StyledComponents/StyledButtonContainer";
+import PlainButton           from "../StyledComponents/PlainButton";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -124,14 +124,14 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 		<br/>
 		<TransferFeeDivider/>
-		<ButtonContainer>{activeStep > 1 &&
+		<StyledButtonContainer>{activeStep > 1 &&
         <PlainButton disabled={activeStep < 1} dim={activeStep < 1} onClick={() => {
 			resetUserInputs();
 			closeResultsScreen();
 		}}>
             Go back
         </PlainButton>
-		}</ButtonContainer>
+		}</StyledButtonContainer>
 	</StyledTransactionStatusWindow>;
 
 }

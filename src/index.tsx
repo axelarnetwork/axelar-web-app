@@ -1,24 +1,26 @@
 import React                            from 'react';
 import ReactDOM                         from 'react-dom';
+import {createGlobalStyle}              from "styled-components";
 import {BrowserRouter, Route, Switch}   from "react-router-dom";
-import App                              from './view/App';
-import reportWebVitals                  from './reportWebVitals';
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {RecoilRoot}                     from "recoil";
 import {RecoilLogger}                   from 'recoil-devtools-logger';
-import {createGlobalStyle}              from "styled-components";
 import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
-import Info                             from "./view/Debug";
-import Login                            from "./view/Login";
-import {CSSTransition, TransitionGroup} from "react-transition-group";
-import ProtectedRoute                   from "./component/CompositeComponents/ProtectedRoute";
+import ProtectedRoute                   from "component/CompositeComponents/ProtectedRoute";
+import {PageOpacityAnimation}           from "component/StyleComponents/animations/PageOpacityAnimation";
+import {HideGrecaptchaBadge}            from "component/StyleComponents/HideGrecaptchaBadge";
 import backgroundImage                  from "resources/bg-image.svg";
-import './index.css';
+import Info                             from "view/Debug";
+import Login                            from "view/Login";
+import App                              from 'view/App';
+import reportWebVitals                  from './reportWebVitals';
 
 const GlobalStyle = createGlobalStyle`
 	body {
 		margin: 0 auto;
 		padding: 0;
-		// width: 100vh;
+		${HideGrecaptchaBadge}
+		${PageOpacityAnimation}
 		box-sizing: border-box;
 		position: relative;
 		line-height: initial;
@@ -64,4 +66,3 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-export {StyledImage}                    from "./component/StyleComponents/StyledImage";
