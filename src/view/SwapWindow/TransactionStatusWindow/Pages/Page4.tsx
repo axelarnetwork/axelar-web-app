@@ -34,6 +34,7 @@ const Page4 = () => {
 			<br/>
 			<p>Transfer Completed!</p>
 		</FlexColumn>
+		<br />
 		<StyledPTag>
 			{`Completed ${selectedSourceAsset?.assetSymbol} transfer to ${destinationChain?.chainName} at: `}
 			<br/><br/>
