@@ -14,24 +14,9 @@ import Info                             from "view/Debug";
 import Login                            from "view/Login";
 import App                              from 'view/App';
 import reportWebVitals                  from './reportWebVitals';
-import GilroyExtraBoldSvg   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.svg";
-import GilroyExtraBoldEot   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.eot";
-import GilroyExtraBoldTtf   from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.ttf";
-import GilroyExtraBoldWoff  from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff";
-import GilroyExtraBoldWoff2 from "./fonts/Gilroy-extrabold/Gilroy-ExtraBold.woff2";
 
 const GlobalStyle = createGlobalStyle`
-	@font-face {
-		font-family: ‘Gilroy-ExtraBold’;
-		src: url(${GilroyExtraBoldEot});
-		src: url(${GilroyExtraBoldEot}?#iefix) format(‘embedded-opentype’),
-			url(${GilroyExtraBoldSvg}#Gilroy-ExtraBold) format(‘svg’),
-			url(${GilroyExtraBoldTtf}) format(‘truetype’),
-			url(${GilroyExtraBoldWoff}) format(‘woff’),
-			url(${GilroyExtraBoldWoff2}) format(‘woff2’);
-		font-weight: normal;
-		font-style: normal;
-	}
+
 	body {
 		font-family: ‘Gilroy-ExtraBold’, sans-serif;
 		margin: 0 auto;
