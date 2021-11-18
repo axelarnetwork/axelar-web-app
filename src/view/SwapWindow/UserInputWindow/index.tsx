@@ -1,16 +1,18 @@
-import React, {useCallback, useState}                    from "react";
-import {useRecoilState, useRecoilValue}                  from "recoil";
-import styled                                            from "styled-components";
-import {IAssetInfo, validateDestinationAddress}          from "@axelar-network/axelarjs-sdk";
-import {InputForm}                                       from "component/CompositeComponents/InputForm";
-import ChainSelector                                     from "component/CompositeComponents/Selectors/ChainSelector";
-import SwapChains                                        from "component/CompositeComponents/SwapChains";
-import TransferFeeDivider                                from "component/CompositeComponents/TransferFeeDivider";
-import {FlexColumn}                                      from "component/StyleComponents/FlexColumn";
-import DelayedRender                                     from "component/Widgets/DelayedRender";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
-import useResetUserInputs                                from "hooks/useResetUserInputs";
-import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import React, {useCallback, useEffect, useState}                                    from "react";
+import {useRecoilState, useRecoilValue}                                             from "recoil";
+import styled, {ThemedStyledProps}                                                  from "styled-components";
+import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
+import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
+import ChainSelector
+                                                                                    from "component/CompositeComponents/Selectors/ChainSelector";
+import SwapChains
+                                                                                    from "component/CompositeComponents/SwapChains";
+import TransferFeeDivider
+                                                                                    from "component/CompositeComponents/TransferFeeDivider";
+import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
+import useResetUserInputs                                                           from "hooks/useResetUserInputs";
+import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import "../todelete.css";
 
 interface IUserInputWindowProps {
@@ -24,13 +26,18 @@ const StyledUserInputWindow = styled.div`
 	overflow: hidden;
 `;
 
-const PlainButton = styled.button`
+interface IStyledButtonProps extends ThemedStyledProps<any, any> {
+	dim?: boolean;
+}
+
+const PlainButton = styled.button<IStyledButtonProps>`
     border: none;
     background: none;
-    cursor: pointer;
+	${props => props.dim ? "" : "cursor: pointer;"};
     margin: 0px 0px 0px 0px;
     padding: 0;
-    color: white;
+	color: ${props => props.dim ? "#565656" : "white"};
+	transition: color 1000ms;
 `;
 const ButtonContainer = styled(FlexColumn)`
 	width: 100%;
@@ -45,18 +52,21 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
-	const [isValidDestinationAddress, setIsValidDestinationAddress] = useState(true);
+	const [isValidDestinationAddress, setIsValidDestinationAddress] = useRecoilState(IsValidDestinationAddress);
 	const resetUserInputs = useResetUserInputs();
 	const [mounted, setMounted] = useState(true);
 
-	const onInitiateTransfer = useCallback(async () => {
+	useEffect(() => {
 		const destToken: IAssetInfo = {
 			assetAddress: destAddr as string,
 			assetSymbol: destChainSelection?.chainSymbol
 		}
 		const validAddr: boolean = validateDestinationAddress(destChainSelection?.chainSymbol as string, destToken);
 		setIsValidDestinationAddress(validAddr);
-		if (!(destAddr && validAddr && mounted))
+	}, [destAddr, destChainSelection, setIsValidDestinationAddress]);
+
+	const onInitiateTransfer = useCallback(async () => {
+		if (!(destAddr && isValidDestinationAddress && mounted))
 			return;
 		try {
 			setMounted(false);
@@ -66,10 +76,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			resetUserInputs();
 		}
 	}, [destAddr,
-		destChainSelection,
+		isValidDestinationAddress,
 		handleSwapSubmit,
 		mounted,
-		setIsValidDestinationAddress,
 		setMounted,
 		resetUserInputs
 	]);
@@ -77,7 +86,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const enableSubmitBtn = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
 		&& selectedSourceAsset
-		&& destAddr;
+		&& isValidDestinationAddress;
 
 	return <StyledUserInputWindow>
 		<br/>
@@ -100,17 +109,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			</FlexColumn>
 		</div>
 		<ButtonContainer>
-			<PlainButton disabled={!enableSubmitBtn} onClick={onInitiateTransfer}> {
-				isValidDestinationAddress
-					? "Initiate Asset Transfer"
-					: <DelayedRender
-						prevChild={<span>
-							The {destChainSelection?.chainSymbol} address does not look right...
-						</span>}
-						newChild={<span>Retry and resubmit here</span>}
-						delayBeforeNewChild={3000}
-					/>
-			} </PlainButton>
+			<PlainButton disabled={!enableSubmitBtn} dim={!enableSubmitBtn} onClick={onInitiateTransfer}>
+				Initiate Asset Transfer
+			</PlainButton>
 		</ButtonContainer>
 
 	</StyledUserInputWindow>;
