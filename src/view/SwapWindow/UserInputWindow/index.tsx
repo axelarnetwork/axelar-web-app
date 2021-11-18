@@ -38,6 +38,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
+		setMounted(true);
 		const destToken: IAssetInfo = {
 			assetAddress: destAddr as string,
 			assetSymbol: destChainSelection?.chainSymbol

@@ -22,7 +22,7 @@ const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
 		onClick={onClick}
 		height={height}
 		width={width}
-		margin={margin || `5px`}
+		margin={margin || `2px 5px 0px 5px`}
 		src={require(`resources/copy-to-clipboard.svg`).default}
 	/>
 }
