@@ -23,7 +23,6 @@
 	},
 	"include": [
 		"src",
-		"public/fonts",
         "typings/**/*.d.ts",
         "typings/*.d.ts"
 	]
