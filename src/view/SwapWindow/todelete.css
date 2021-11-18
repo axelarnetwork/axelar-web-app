@@ -1,6 +1,0 @@
-/*TODO: this class overrides the Dropdown.Toggle component that needs
-   to be done in styled component instead
-*/
-.dropdown {
-    position: initial !important; /*overriding position: absolute setting*/
-}

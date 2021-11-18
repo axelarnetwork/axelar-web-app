@@ -13,9 +13,8 @@ import {FlexColumn}                                                             
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
-import "../todelete.css";
-import ButtonContainer                                                              from "../ButtonContainer";
-import PlainButton                                                                  from "../PlainButton";
+import StyledButtonContainer                                                        from "../StyledComponents/StyledButtonContainer";
+import PlainButton                                                                  from "../StyledComponents/PlainButton";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
@@ -90,11 +89,11 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				<br/>
 			</FlexColumn>
 		</div>
-		<ButtonContainer>
+		<StyledButtonContainer>
 			<PlainButton disabled={!enableSubmitBtn} dim={!enableSubmitBtn} onClick={onInitiateTransfer}>
 				Initiate Asset Transfer
 			</PlainButton>
-		</ButtonContainer>
+		</StyledButtonContainer>
 
 	</StyledUserInputWindow>;
 }
