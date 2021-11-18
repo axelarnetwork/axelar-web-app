@@ -3,7 +3,7 @@ import {SVGImage}     from "component/Widgets/SVGImage";
 import {BaseSelector} from "../BaseSelector";
 
 interface IChainComponentProps {
-	chainInfo: IChainInfo | null
+	chainInfo: IChainInfo | null;
 }
 
 export const SelectedChainComponent = (props: IChainComponentProps) => {
@@ -15,7 +15,7 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 		image = require(`resources/select-chain-icon-black.svg`)?.default;
 	}
 	return <BaseSelector
-		image={<SVGImage height={`20px`} width={`20px`} src={image}/>}
-		label={props.chainInfo?.chainName || "Add Chain"}
+		image={<SVGImage height={`22.5px`} width={`22.5px`} src={image}/>}
+		label={props.chainInfo?.chainName || "Select Chain"}
 	/>;
 }

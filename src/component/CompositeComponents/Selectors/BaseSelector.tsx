@@ -2,11 +2,10 @@ import {ReactElement} from "react";
 import styled         from "styled-components";
 
 export const StyledBaseSelector = styled.div`
-	// width: 125px;
-	display: fiex;
+	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-left: 10px;
+	margin-left: 5px;
 	margin-right: 5px;
 	font-weight: bold;
 `;

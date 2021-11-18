@@ -58,7 +58,10 @@ const SearchMenu = (props: ISearchMenuProps) => {
 
 	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		e.stopPropagation();
-		e.code === "Enter" && listItems?.length === 1 && onClick(listItems[0]);
+		e.code === "Enter"
+			&& listItems?.length === 1
+			&& !listItems[0].disabled
+			&& onClick(listItems[0]);
 	}
 
 	return (<StyledSearchComponent show={show}>
@@ -74,7 +77,8 @@ const SearchMenu = (props: ISearchMenuProps) => {
 						key={item.title}
 						title={item.title}
 						icon={item.icon}
-						onClick={(title: string) => onClick(item)}
+						disabled={item.disabled}
+						onClick={(title: string) => !item.disabled && onClick(item)}
 					/>
 				))}
             </StyledBox>
@@ -84,12 +88,17 @@ const SearchMenu = (props: ISearchMenuProps) => {
 
 interface ISearchOption {
 	title: string;
+	disabled: boolean;
 	icon: any;
 	onClick: (title: string) => void;
 }
 
-const StyledSearchItem = styled(FlexSpaceBetween)`
-	cursor: pointer;
+interface IStyledSearchItemProps extends ThemedStyledProps<any, any> {
+	disabled?: boolean;
+}
+
+const StyledSearchItem = styled(FlexSpaceBetween)<IStyledSearchItemProps>`
+	${({ disabled }) => disabled ? '' : 'cursor: pointer' };
 	box-sizing: border-box;
 	width: 100%;
 	padding: 10px 15px 10px 15px;
@@ -99,20 +108,20 @@ const StyledSearchItem = styled(FlexSpaceBetween)`
 	letter-spacing: 0.78px;
 	font-weight: bold;
 	&:hover {
-		color: black;
+		color: ${({ disabled }) => disabled ? 'darkgrey' : 'black' };
 	}
 	transition: color 500ms;
 `;
 
 const SearchOption = (props: ISearchOption) => {
-	const {icon, onClick, title} = props;
+	const {disabled, icon, onClick, title} = props;
 	let imageSrc;
 	try {
 		imageSrc = icon;
 	} catch (e) {
 		imageSrc = require(`resources/select-chain-icon-black.svg`)?.default;
 	}
-	return <StyledSearchItem onClick={() => onClick(title)}>
+	return <StyledSearchItem disabled={disabled} onClick={() => !disabled && onClick(title)}>
 		<SVGImage height={"25px"} width={"25px"} src={imageSrc}/>
 		<div style={{width: `85%`}}>{title}</div>
 	</StyledSearchItem>;

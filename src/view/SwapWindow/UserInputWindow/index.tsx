@@ -21,7 +21,7 @@ interface IUserInputWindowProps {
 }
 
 const StyledUserInputWindow = styled.div`
-	width: 300px;
+	width: 310px;
 	height: 425px;
 	position: relative;
 	overflow: hidden;
@@ -70,12 +70,12 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& isValidDestinationAddress;
 
 	return <StyledUserInputWindow>
-		<br/>
+		<br/><br/>
 		<div style={{maxHeight: `350px`, overflow: `hidden`}}>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
-			<br/>
+			<br/><br/>
 			<TransferFeeDivider/>
 			<FlexColumn>
 				<br/>
