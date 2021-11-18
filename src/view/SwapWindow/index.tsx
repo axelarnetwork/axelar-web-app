@@ -11,7 +11,7 @@ import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/Chai
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
-import TransactionStatusWindow                                  from "./TransactionStatusWindow";
+import TransactionStatusWindow                                  from "./TransactionStatusWindow2";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;

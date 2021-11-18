@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState}                                    from "react";
 import {useRecoilState, useRecoilValue}                                             from "recoil";
-import styled, {ThemedStyledProps}                                                  from "styled-components";
+import styled                                                                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
@@ -14,6 +14,8 @@ import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import "../todelete.css";
+import ButtonContainer                                                              from "../ButtonContainer";
+import PlainButton                                                                  from "../PlainButton";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
@@ -24,26 +26,6 @@ const StyledUserInputWindow = styled.div`
 	height: 425px;
 	position: relative;
 	overflow: hidden;
-`;
-
-interface IStyledButtonProps extends ThemedStyledProps<any, any> {
-	dim?: boolean;
-}
-
-const PlainButton = styled.button<IStyledButtonProps>`
-    border: none;
-    background: none;
-	${props => props.dim ? "" : "cursor: pointer;"};
-    margin: 0px 0px 0px 0px;
-    padding: 0;
-	color: ${props => props.dim ? "#565656" : "white"};
-	transition: color 1000ms;
-`;
-const ButtonContainer = styled(FlexColumn)`
-	width: 100%;
-	bottom: 0;
-	position: absolute;
-	height: 50px;
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {

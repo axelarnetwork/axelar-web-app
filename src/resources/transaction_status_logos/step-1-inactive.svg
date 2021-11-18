@@ -1,0 +1,21 @@
+<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-5.6%" y="-5.6%" width="111.1%" height="111.1%" filterUnits="objectBoundingBox" id="b">
+            <feMorphology radius="1" in="SourceAlpha" result="shadowSpreadInner1"/>
+            <feGaussianBlur stdDeviation="1.5" in="shadowSpreadInner1" result="shadowBlurInner1"/>
+            <feOffset in="shadowBlurInner1" result="shadowOffsetInner1"/>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.160847697 0" in="shadowInnerInner1"/>
+        </filter>
+        <rect id="a" x="0" y="0" width="36" height="36" rx="18"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <use fill="#EEEDF2" xlink:href="#a"/>
+            <use fill="#000" filter="url(#b)" xlink:href="#a"/>
+        </g>
+        <text font-family="Gilroy-ExtraBold, Gilroy" font-size="24" font-weight="700" letter-spacing=".048" fill="#131519">
+                    <tspan x="13.14" y="26.909">1</tspan>
+                </text>
+    </g>
+</svg>
