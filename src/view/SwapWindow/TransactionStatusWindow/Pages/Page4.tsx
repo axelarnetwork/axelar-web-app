@@ -8,6 +8,7 @@ import CopyToClipboard                                   from "component/Widgets
 import {DESTINATION_TOKEN_KEY}                           from "config/consts";
 import completedLogo                                     from "resources/transaction_status_logos/axelar-logo.svg";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import {StyledPTag}                                      from "./StyledPTag";
 
 const NumbersContainer = styled(FlexRow)`
 	height: 40%;
@@ -18,11 +19,6 @@ const StyledPage4 = styled.div`
 	height: 225px;
 	position: relative;
 	overflow: hidden;
-`;
-const StyledP = styled.div`
-	font-size: 0.75rem;
-	overflow-wrap: break-word;
-	width: 95%;
 `;
 
 const Page4 = () => {
@@ -38,7 +34,7 @@ const Page4 = () => {
 			<br/>
 			<p>Transfer Completed!</p>
 		</FlexColumn>
-		<StyledP>
+		<StyledPTag>
 			{`Completed ${selectedSourceAsset?.assetSymbol} transfer to ${destinationChain?.chainName} at: `}
 			<br/><br/>
 			<BoldSpan>{destinationAddr}</BoldSpan>
@@ -50,7 +46,7 @@ const Page4 = () => {
 				/>}
 				tooltipBox={"Copy to Clipboard"}
 			/>
-		</StyledP>
+		</StyledPTag>
 	</StyledPage4>
 }
 

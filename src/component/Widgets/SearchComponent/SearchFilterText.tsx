@@ -25,12 +25,13 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 	transition: all 1000ms;
 	width: 100%;
     padding: 5px;
+    margin-top: 5px;
     border-top: solid 0.2px lightgray;
 `;
 
 const StyledInput = styled(Input)`
 	width: 100%;
-	height: 25px;
+	height: 30px;
 	outline: none;
 	padding: 8px;
 	box-sizing: border-box;
@@ -75,6 +76,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
                 value={searchText}
                 onChange={handleChange}
                 onKeyDown={props.handleOnEnterPress}
+                autoFocus={true}
             />
         </>
 		}

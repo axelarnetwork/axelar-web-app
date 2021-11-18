@@ -64,33 +64,35 @@ const ChainSelector = (props: IChainSelectorProps) => {
 
 	/*only show the chain selector widget if the asset selector search box is not open*/
 	const chainSelectorWidget = () => <StyledChainSelectionIconWidget>
-		{!showAssetSearchBox && <SelectedChainComponent chainInfo={selectedChain}/>}
-		{!showAssetSearchBox && <SVGImage
+		<div style={{cursor: `pointer`}} onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}>
+			<SelectedChainComponent chainInfo={selectedChain}/>
+		</div>
+		<SVGImage
             style={{cursor: `pointer`}}
             onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
-            src={require(showChainSelectorSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
             height={"8px"}
-            width={"20px"}
-        />}
+            width={"8px"}
+        />
 	</StyledChainSelectionIconWidget>;
 
 	/*only show the asset selector widget if the chain selector search box is not open*/
 	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
-		<div style={{cursor: `pointer`, marginRight: `5px`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
-			{!showChainSelectorSearchBox && <AssetSelector/>}
+		<div style={{cursor: `pointer`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
+			<AssetSelector/>
 		</div>
-		{!showChainSelectorSearchBox && <SVGImage
+		<SVGImage
             style={{cursor: `pointer`}}
             onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
-            src={require(showAssetSearchBox ? `resources/chevron-up-black.svg` : `resources/chevron-down-black.svg`)?.default}
+            src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
             height={"8px"}
-            width={"20px"}
-        />}
+            width={"8px"}
+        />
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
-		<div style={{margin: `10px`, color: `#898994`}}>{props.label}</div>
-		<FlexSpaceBetween style={{width: `95%`, margin: `5px`}}>
+		<div style={{margin: `10px`, color: `#898994`, fontSize: `0.8em` }}>{props.label}</div>
+		<FlexSpaceBetween style={{width: `100%`, marginRight: `5px`}}>
 			{chainSelectorWidget()}
 			{isSourceChain
 				? assetSelectorWidget(!sourceChain)
