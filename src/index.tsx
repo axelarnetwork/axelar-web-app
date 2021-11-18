@@ -16,7 +16,9 @@ import App                              from 'view/App';
 import reportWebVitals                  from './reportWebVitals';
 
 const GlobalStyle = createGlobalStyle`
+
 	body {
+		font-family: ‘Gilroy-ExtraBold’, sans-serif;
 		margin: 0 auto;
 		padding: 0;
 		${HideGrecaptchaBadge}
@@ -29,6 +31,13 @@ const GlobalStyle = createGlobalStyle`
 		background-position: 50% 50%;
 		background-attachment: fixed;
 		background-size: cover;
+	}
+	
+	p {
+		margin-block-start: 5px;
+	    margin-block-end: 5px;
+	    margin-inline-start: 0;
+	    margin-inline-end: 0;
 	}
 
 	code {

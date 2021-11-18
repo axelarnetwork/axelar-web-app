@@ -9,10 +9,12 @@ import {FlexColumn}                from "component/StyleComponents/FlexColumn";
 export const StyledImage = styled.img`
 
 `;
+
 interface IColumnProps extends ThemedStyledProps<any, any> {
 	width?: string;
 	padding?: number;
 }
+
 export const Column = styled.div<IColumnProps>`
 	height: 100%;
 	width: 20%;
@@ -34,9 +36,9 @@ const StyledPage1 = styled.div`
 const Page1 = () => {
 	return <StyledPage1>
 		<NumbersContainer>
-			<Column />
-			<Column />
-			<Column >
+			<Column/>
+			<Column/>
+			<Column>
 				<StyledImage src={step1Active} height={`65px`} width={`65px`}/>
 			</Column>
 			<Column>
@@ -47,7 +49,7 @@ const Page1 = () => {
 			</Column>
 		</NumbersContainer>
 		<FlexColumn>
-			<br />
+			<br/>
 			<p>Generating Source</p>
 			<p>Chain Deposit Address</p>
 		</FlexColumn>

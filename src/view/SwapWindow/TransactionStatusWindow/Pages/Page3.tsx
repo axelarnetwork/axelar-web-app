@@ -48,11 +48,10 @@ const Page3 = () => {
 			<Column />
 		</NumbersContainer>
 		<FlexColumn>
-			<br />
 			<p>Deposit confirmed.</p>
 			<p>Axelar is completing your transfer</p>
 		</FlexColumn>
-		<br />
+		<br /><br />
 		<StyledPTag>
 			{`At this stage, you can leave the rest to us and "Go Back"... or follow along with the rest if you like!`}
 		</StyledPTag>
