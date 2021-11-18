@@ -13,7 +13,7 @@ const TransferFeeDivider = () => {
 	return <StyledTransferFeeDivider showContents={!!sourceChainSelection}>
 		<StyledImage src={dividerImage}/>
 		<div style={{display: `flex`, justifyContent: `space-between`}}>
-			<div style={{marginLeft: `15px`, marginTop: `15px`}}>
+			<div style={{marginLeft: `10px`, marginTop: `15px`}}>
 				<div><BoldSpan>Approximate wait time: </BoldSpan></div>
 				<div>XX minutes</div>
 			</div>
