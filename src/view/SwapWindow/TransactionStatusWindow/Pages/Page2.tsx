@@ -69,7 +69,7 @@ const Page2 = () => {
 		</div>
 		<StyledPTag>
 			{`Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName}
-			to the following address:`}
+			to this address:`}
 			<div style={{ margin: `10px 0px 0px 0px`}}>
 				<BoldSpan>{depositAddress?.assetAddress}</BoldSpan>
 				<Tooltip
