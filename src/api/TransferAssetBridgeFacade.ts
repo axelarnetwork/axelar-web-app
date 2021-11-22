@@ -18,7 +18,7 @@ export class TransferAssetBridgeFacade {
 	public static async transferAssets(message: IAssetTransferObject, sourceCbs: ICallbackStatus, destCbs: ICallbackStatus): Promise<IAssetInfoWithTrace> {
 
 		try {
-			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, sourceCbs, destCbs);
+			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, sourceCbs, destCbs, false);
 		} catch (e: any) {
 			sourceCbs?.failCb();
 			throw e;

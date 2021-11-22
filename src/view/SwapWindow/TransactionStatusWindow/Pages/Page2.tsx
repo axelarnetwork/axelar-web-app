@@ -77,6 +77,7 @@ const Page2 = () => {
 						height={`12px`}
 						width={`10px`}
 						textToCopy={depositAddress?.assetAddress || ""}
+						showImage={true}
 					/>}
 					tooltipBox={"Copy to Clipboard"}
 				/>

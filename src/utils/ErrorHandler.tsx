@@ -1,21 +1,42 @@
-import { store } from 'react-notifications-component';
+import { store }       from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css/animate.min.css';
+import Tooltip         from "../component/Widgets/Tooltip";
+import CopyToClipboard from "../component/Widgets/CopyToClipboard";
 
-const getErrorType = (error: any): string => {
+const traceIdDiv = (traceId: string | undefined) => {
+	if (!traceId)
+		return null;
+	return <div>You can also contact us with this traceId: <Tooltip
+		tooltipText={<CopyToClipboard
+			height={`15px`}
+			width={`15px`}
+			textToCopy={traceId || ""}
+			showImage={false}
+		/>}
+		tooltipBox={"Copy to Clipboard"}
+	/></div>
+}
+const errorContent = (message: string, traceId: string) => {
+	return <div>
+		{message}
+		{traceIdDiv(traceId)}
+	</div>
+}
+const getErrorType = (error: any): JSX.Element => {
 
-	const unexpectedErrorMsg: string = "An error occurred connecting to the network. Please try again later.";
+	const unexpectedErrorMsg: string = `Unexpected error occurred, try again later.`;
 	if (error.uncaught)
-		return unexpectedErrorMsg;
+		return errorContent(unexpectedErrorMsg, error.traceId);
 
 	const errorsMap: { [statusCode: number]: string} = {
-		503: "Service unavailable. TODO"
+		503: unexpectedErrorMsg
 	};
 
-	debugger;
-
 	if (errorsMap[error.statusCode])
-		return errorsMap[error.statusCode];
+		return errorContent(errorsMap[error.statusCode], error.traceId);
 
-	return unexpectedErrorMsg;
+	return errorContent(unexpectedErrorMsg, error.traceId);
 
 }
 
@@ -26,7 +47,7 @@ const ErrorHandler = () => {
 		const notification = getErrorType(error);
 
 		store.addNotification({
-			title: "Error",
+			title: "Oops...",
 			message: notification,
 			type: "danger",
 			insert: "top",
@@ -34,8 +55,10 @@ const ErrorHandler = () => {
 			animationIn: ["animate__animated", "animate__fadeIn"],
 			animationOut: ["animate__animated", "animate__fadeOut"],
 			dismiss: {
-				duration: 5000,
-				onScreen: false
+				showIcon: true,
+				touch: true,
+				duration: 0,
+				click: false
 			}
 		});
 	}

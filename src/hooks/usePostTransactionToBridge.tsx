@@ -79,10 +79,11 @@ export default function usePostTransactionToBridge() {
 					setDepositAddress(res.assetInfo);
 					setTransactionTraceId(res.traceId);
 					resolve(res);
-				} catch (e) {
+				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
-					console.log("transfer bridge error", e);
+					e.traceId = msg.transactionTraceId as string;
 					errorHandler.notifyError(e);
+					setTransactionTraceId(msg.transactionTraceId as string);
 					reject("transfer bridge error" + e);
 				}
 
