@@ -1,9 +1,6 @@
 import {useCallback, useState}                           from "react";
 import {useRecoilValue, useSetRecoilState}               from "recoil";
-import {
-	IAssetInfoWithTrace,
-	IAssetTransferObject
-}                                                        from "@axelar-network/axelarjs-sdk";
+import {IAssetInfoWithTrace, IAssetTransferObject}       from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
@@ -40,7 +37,6 @@ export default function usePostTransactionToBridge() {
 		setShowTransactionStatusWindow(true);
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
-			debugger;
 			const confirms: IConfirmationStatus = {
 				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
@@ -80,6 +76,7 @@ export default function usePostTransactionToBridge() {
 					resolve(res);
 				} catch (e) {
 					setShowTransactionStatusWindow(false);
+					console.log("transfer bridge error",e);
 					reject("transfer bridge error" + e);
 				}
 
