@@ -14,7 +14,7 @@ const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
 	width: 100%;
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
 	height: ${props => props.show ? '150px' : '0px'};
-	transition: all 200ms;
+	transition: all 50ms;
     display: flex;
     flex-direction: column;
 `;
