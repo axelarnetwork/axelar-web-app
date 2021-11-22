@@ -16,6 +16,7 @@ import {
 import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
 import {depositConfirmCbMap}                             from "./helper";
 import {v4 as uuidv4}                                    from 'uuid';
+import ErrorHandler                                      from "../utils/ErrorHandler";
 
 export default function usePostTransactionToBridge() {
 
@@ -29,6 +30,7 @@ export default function usePostTransactionToBridge() {
 	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
+	const errorHandler = ErrorHandler();
 
 	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
 
@@ -40,7 +42,6 @@ export default function usePostTransactionToBridge() {
 		setShowTransactionStatusWindow(true);
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
-			debugger;
 			const confirms: IConfirmationStatus = {
 				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
@@ -78,8 +79,11 @@ export default function usePostTransactionToBridge() {
 					setDepositAddress(res.assetInfo);
 					setTransactionTraceId(res.traceId);
 					resolve(res);
-				} catch (e) {
+				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
+					e.traceId = msg.transactionTraceId as string;
+					errorHandler.notifyError(e);
+					setTransactionTraceId(msg.transactionTraceId as string);
 					reject("transfer bridge error" + e);
 				}
 
@@ -96,7 +100,8 @@ export default function usePostTransactionToBridge() {
 		setTransactionTraceId,
 		sourceAsset,
 		isRecaptchaAuthenticated,
-		authenticateWithRecaptcha
+		authenticateWithRecaptcha,
+		errorHandler
 	]);
 
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);

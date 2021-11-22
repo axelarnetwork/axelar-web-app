@@ -44,6 +44,7 @@ const Page4 = () => {
 					height={`12px`}
 					width={`10px`}
 					textToCopy={destinationAddr || ""}
+					showImage={true}
 				/>}
 				tooltipBox={"Copy to Clipboard"}
 			/>

@@ -1,6 +1,7 @@
 import React                            from 'react';
 import ReactDOM                         from 'react-dom';
 import {createGlobalStyle}              from "styled-components";
+import ReactNotification from 'react-notifications-component';
 import {BrowserRouter, Route, Switch}   from "react-router-dom";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {RecoilRoot}                     from "recoil";
@@ -14,6 +15,7 @@ import Info                             from "view/Debug";
 import Login                            from "view/Login";
 import App                              from 'view/App';
 import reportWebVitals                  from './reportWebVitals';
+import 'react-notifications-component/dist/theme.css';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -64,6 +66,7 @@ const routesWithCSSTransition = <BrowserRouter>
 
 ReactDOM.render(
 	<RecoilRoot>
+		<ReactNotification />
 		<RecoilLogger/>
 		{routesWithCSSTransition}
 		<GlobalStyle/>
