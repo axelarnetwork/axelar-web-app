@@ -1,8 +1,8 @@
 import styled                        from "styled-components";
 import screenConfigs                 from "config/screenConfigs";
-import {useRecoilValue}              from "recoil";
-import {SOURCE_TOKEN_KEY}            from "config/consts";
-import CopyToClipboard               from "component/Widgets/CopyToClipboard";
+import {useRecoilValue}                          from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
+import CopyToClipboard                           from "component/Widgets/CopyToClipboard";
 import Tooltip                       from "component/Widgets/Tooltip";
 import BoldSpan                      from "component/StyleComponents/BoldSpan";
 import {ChainSelection, SourceAsset} from "state/ChainSelection";
@@ -64,8 +64,14 @@ const ListItem = (props: IListItemProps) => {
 				alt={""}
 			/>
 		</div>
-		<div style={{ width: `80%`, height: `100%`, display: `flex`, alignItems: `center` }}>
-			{activeStep >= step ? text : null}
+		<div style={{
+			width: `80%`,
+			height: `100%`,
+			display: `flex`,
+			alignItems: `center`,
+			color: activeStep >= step ? 'black' : 'lightgray'
+		}}>
+			{text}
 		</div>
 	</StyledListItem>
 }
@@ -76,6 +82,7 @@ const StatusList = (props: IStatusListProps) => {
 	const { activeStep } = props;
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 
 	return <StyledStatusList>
@@ -85,31 +92,39 @@ const StatusList = (props: IStatusListProps) => {
 		/>
 		<ListItem
 			step={2} activeStep={activeStep}
-			text={<div style={{overflowWrap: `break-word`, overflow: `hidden` }}>
-				Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} to this address:
-				<div style={{ margin: `5px 0px 0px 0px`}}>
-					<Tooltip
-						tooltipText={<>
-							<CopyToClipboard
+			text={activeStep >= 2
+				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em` }}>
+					Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} to this address:
+					<div style={{ margin: `5px 0px 0px 0px`}}>
+						<Tooltip
+							anchorContent={<CopyToClipboard
 								JSXToShow={<BoldSpan>{depositAddress?.assetAddress} </BoldSpan>}
 								height={`12px`}
 								width={`10px`}
 								textToCopy={depositAddress?.assetAddress || ""}
 								showImage={true}
-							/>
-						</>}
-						tooltipBox={"Copy to Clipboard"}
-					/>
+							/>}
+							tooltipText={"Copy to Clipboard"}
+							tooltipAltText={"Copied to Clipboard!"}
+						/>
+					</div>
 				</div>
-			</div>}
+				: `Wait for your deposit into a temporary deposit account.`
+			}
 		/>
 		<ListItem
 			step={3} activeStep={activeStep}
-			text={`Deposit Confirmed. Axelar is completing your transfer`}
+			text={activeStep >= 3
+				? `Axelar is completing your transfer; you may exit this window if you wish.`
+				: `Deposit confirmation on the Axelar network.`
+			}
 		/>
 		<ListItem
 			step={4} activeStep={activeStep}
-			text={`Transfer Complete!`}
+			text={activeStep >= 4
+				? `Transfer Completed!`
+				: `Transaction detected on ${destinationChain?.chainName}`
+			}
 		/>
 	</StyledStatusList>
 }

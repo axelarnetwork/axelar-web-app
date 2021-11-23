@@ -40,13 +40,14 @@ const Page4 = () => {
 			<br/><br/>
 			<BoldSpan>{destinationAddr}</BoldSpan>
 			<Tooltip
-				tooltipText={<CopyToClipboard
+				anchorContent={<CopyToClipboard
 					height={`12px`}
 					width={`10px`}
 					textToCopy={destinationAddr || ""}
 					showImage={true}
 				/>}
-				tooltipBox={"Copy to Clipboard"}
+				tooltipText={"Copy to Clipboard"}
+				tooltipAltText={"Copied to Clipboard!"}
 			/>
 		</StyledPTag>
 	</StyledPage4>
