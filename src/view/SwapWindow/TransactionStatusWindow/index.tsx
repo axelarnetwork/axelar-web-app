@@ -1,9 +1,7 @@
 import React, {useEffect, useState}                                          from "react";
 import {useRecoilValue}                                                      from "recoil";
-import {CSSTransition, SwitchTransition}                                     from "react-transition-group";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
-import TransferFeeDivider
-                                                                             from "component/CompositeComponents/TransferFeeDivider";
+import screenConfigs                                                         from "config/screenConfigs";
 import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
 import {SelectedChainComponent}                                              from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainComponent";
 import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
@@ -13,12 +11,9 @@ import useResetUserInputs                                                    fro
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection}                                                      from "state/ChainSelection";
 import styled                                                                from "styled-components";
-import Page1                                                                 from "./Pages/Page1";
-import Page2                                                                 from "./Pages/Page2";
-import Page3                                                                 from "./Pages/Page3";
-import Page4                 from "./Pages/Page4";
-import StyledButtonContainer from "../StyledComponents/StyledButtonContainer";
-import PlainButton           from "../StyledComponents/PlainButton";
+import StyledButtonContainer                                                 from "../StyledComponents/StyledButtonContainer";
+import PlainButton                                                           from "../StyledComponents/PlainButton";
+import StatusList                                                            from "./StatusList";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -27,11 +22,23 @@ interface ITransactionStatusWindowProps {
 
 const StyledTransactionStatusWindow = styled.div`
 	${opacityAnimation}
-	width: 300px;
-	height: 435px;
     position: relative;
     overflow: hidden;
     margin-bottom: 5px;
+
+	@media ${screenConfigs.media.laptop} {
+		width: 100%;
+	    height: 685px;
+	}
+	@media ${screenConfigs.media.tablet} {
+		width: 310px;
+		height: 435px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		width: 310px;
+		height: 435px;
+	}
+	    
 `;
 
 const StyledFlexRow = styled(FlexRow)`
@@ -80,30 +87,6 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setMessageInCartoon]);
 
-	const getActivePage = () => {
-		let activePage: any;
-		switch (true) {
-			case (activeStep === 4):
-				activePage = <Page4/>;
-				break;
-			case (activeStep === 3):
-				activePage = <Page3/>;
-				break;
-			case (activeStep === 2):
-				activePage = <Page2/>;
-				break;
-			default:
-				activePage = <Page1/>;
-		}
-		return <SwitchTransition mode={"out-in"}>
-			<CSSTransition
-				key={`transaction-status-active-page-${activeStep}`}
-				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
-				classNames="lighten"
-			>{activePage}</CSSTransition>
-		</SwitchTransition>
-	}
-
 	const showButton: boolean = activeStep > 2;
 
 	return <StyledTransactionStatusWindow>
@@ -113,26 +96,26 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			<StyledChainSelectionIconWidget>
 				<SelectedChainComponent chainInfo={sourceChain}/>
 			</StyledChainSelectionIconWidget>
-				{'>>>'}
-			<StyledChainSelectionIconWidget>
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
+			<StyledChainSelectionIconWidget style={{ display: `flex`, justifyContent: `flex-end` }}>
 				<SelectedChainComponent chainInfo={destinationChain}/>
 			</StyledChainSelectionIconWidget>
 		</StyledFlexRow>
-		<br/>
 		{isRecaptchaAuthenticated
-			? getActivePage()
+			? <StatusList activeStep={activeStep}/>
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>
 		}
 		<br/>
-		<TransferFeeDivider/>
+
 		<StyledButtonContainer>{showButton &&
         <PlainButton disabled={!showButton} dim={!showButton} onClick={() => {
 			resetUserInputs();
 			closeResultsScreen();
 		}}>
-            Go Back
+            Start New Transaction
         </PlainButton>
 		}</StyledButtonContainer>
 	</StyledTransactionStatusWindow>;

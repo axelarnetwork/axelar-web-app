@@ -1,7 +1,7 @@
 import React                            from 'react';
 import ReactDOM                         from 'react-dom';
 import {createGlobalStyle}              from "styled-components";
-import ReactNotification from 'react-notifications-component';
+import ReactNotification                from 'react-notifications-component';
 import {BrowserRouter, Route, Switch}   from "react-router-dom";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {RecoilRoot}                     from "recoil";
@@ -10,6 +10,7 @@ import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
 import ProtectedRoute                   from "component/CompositeComponents/ProtectedRoute";
 import {PageOpacityAnimation}           from "component/StyleComponents/animations/PageOpacityAnimation";
 import {HideGrecaptchaBadge}            from "component/StyleComponents/HideGrecaptchaBadge";
+import screenConfigs                    from "config/screenConfigs";
 import backgroundImage                  from "resources/bg-image.svg";
 import Info                             from "view/Debug";
 import Login                            from "view/Login";
@@ -33,6 +34,16 @@ const GlobalStyle = createGlobalStyle`
 		background-position: 50% 50%;
 		background-attachment: fixed;
 		background-size: cover;
+
+		@media ${screenConfigs.media.laptop} {
+			font-size: 20px;
+		}
+		@media ${screenConfigs.media.tablet} {
+			font-size: 16px;
+		}
+		@media ${screenConfigs.media.mobile} {
+			
+		}
 	}
 	
 	p {
@@ -40,6 +51,18 @@ const GlobalStyle = createGlobalStyle`
 	    margin-block-end: 5px;
 	    margin-inline-start: 0;
 	    margin-inline-end: 0;
+	}
+	
+	button {
+		@media ${screenConfigs.media.laptop} {
+			font-size: 20px;
+		}
+		@media ${screenConfigs.media.tablet} {
+			font-size: 16px;
+		}
+		@media ${screenConfigs.media.mobile} {
+	
+		}		
 	}
 
 	code {
@@ -66,7 +89,7 @@ const routesWithCSSTransition = <BrowserRouter>
 
 ReactDOM.render(
 	<RecoilRoot>
-		<ReactNotification />
+		<ReactNotification/>
 		<RecoilLogger/>
 		{routesWithCSSTransition}
 		<GlobalStyle/>

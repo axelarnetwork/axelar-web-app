@@ -2,6 +2,7 @@ import {useState}                  from "react";
 import styled, {ThemedStyledProps} from "styled-components";
 import {Input}                     from "component/StyleComponents/Input";
 import {SVGImage}                  from "component/Widgets/SVGImage";
+import screenConfigs               from "config/screenConfigs";
 import {ISearchItem}               from "./index";
 
 interface IStyledSearchBoxProps extends ThemedStyledProps<any, any> {
@@ -16,6 +17,9 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 		top: 7px;
 		fill: black;
 		transition: 0.3s;
+		@media ${screenConfigs.media.laptop} {
+			top: 17px;
+		}	
 	}
 	
 	input:focus + svg {
@@ -31,12 +35,10 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 
 const StyledInput = styled(Input)`
 	width: 100%;
-	height: 30px;
 	outline: none;
 	padding: 8px;
 	box-sizing: border-box;
 	font-style: italic;
-	font-size: 13px;
 	padding-left: 25px !important;
 `;
 

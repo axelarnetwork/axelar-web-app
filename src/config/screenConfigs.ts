@@ -1,7 +1,7 @@
 // https://gist.github.com/gokulkrishh/242e68d1ee94ad05f488
 const deviceWidth = {
-	mobileBreakpoint: '480px',
-	tabletBreakpoint: `1000px`
+	mobileBreakpoint: '400px',
+	tabletBreakpoint: `1280px`
 }
 
 const media = {

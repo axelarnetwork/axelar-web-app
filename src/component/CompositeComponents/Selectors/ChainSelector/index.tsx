@@ -45,7 +45,6 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	}
 	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
-		symbol: supportedChain.chainSymbol,
 		active: false,
 		icon: require(`resources/logos/${supportedChain?.chainSymbol}/${supportedChain?.chainSymbol}.svg`)?.default,
 		disabled: ["avalanche"].includes(supportedChain?.chainName?.toLowerCase()),
@@ -71,8 +70,8 @@ const ChainSelector = (props: IChainSelectorProps) => {
             style={{cursor: `pointer`}}
             onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
             src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-            height={"8px"}
-            width={"8px"}
+            height={"0.75em"}
+            width={"0.75em"}
         />
 	</StyledChainSelectionIconWidget>;
 
@@ -85,8 +84,8 @@ const ChainSelector = (props: IChainSelectorProps) => {
             style={{cursor: `pointer`}}
             onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
             src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-            height={"8px"}
-            width={"8px"}
+            height={"0.75em"}
+            width={"0.75em"}
         />
 	</StyledChainSelectionIconWidget>;
 

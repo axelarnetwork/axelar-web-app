@@ -19,10 +19,22 @@ interface IStyledImageProps extends ThemedStyledProps<any, any> {
 
 const StyledImage = styled.img<IStyledImageProps>`
 	position: absolute;
-	width: 1256px;
-	height: 533px;
 	opacity: ${props => props.showContents ? "1" : "0"};
 	${props => props.showContents ? `transition: opacity 500ms ease-in;` : `transition: opacity 500ms ease-out; transition-delay: 500ms;`}
+
+	@media ${screenConfigs.media.laptop} {
+		width: 2048px;
+		height: 869px;	
+	}
+	@media ${screenConfigs.media.tablet} {
+		width: 1256px;
+		height: 533px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		width: 0px;
+		height: 0px;
+	}
+	
 `;
 
 const StyledSwapWindow = styled.div`
@@ -33,23 +45,28 @@ const StyledSwapWindow = styled.div`
     height: 100%;
     position: relative;
     box-sizing: border-box;
-    
-	/*TODO: this is where the responsive breakpoint screens would be set*/
-	@media ${screenConfigs.media.laptop} {
-	}
-	@media ${screenConfigs.media.tablet} {
-	}
-	@media ${screenConfigs.media.mobile} {
-	}
 `;
 
 const StyledContainer = styled.div`
-	width: 350px;
     z-index: 10;
-    height: 533px;
     display: flex;
     align-items: center;
     justify-content: center;
+    
+	@media ${screenConfigs.media.laptop} {
+		width: 510px;
+	    height: 710px;
+        display: flex;
+	    align-items: flex-start;
+	}
+	@media ${screenConfigs.media.tablet} {
+		width: 350px;
+	    height: 533px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		width: 350px;
+	    height: 533px;
+	}
 `;
 
 const SwapWindow = (): ReactElement => {

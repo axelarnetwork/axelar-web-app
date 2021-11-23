@@ -4,13 +4,22 @@ import styled                                    from "styled-components";
 import {StyledCentered}                          from "component/StyleComponents/Centered";
 import {SVGImage}                                from "component/Widgets/SVGImage";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
+import screenConfigs                             from "config/screenConfigs";
 import useResetUserInputs                        from "hooks/useResetUserInputs";
 import {ChainSelection}                          from "state/ChainSelection";
 
 const StyledSwapChains = styled.div`
 	${StyledCentered}
-	height: 28px;
 	
+	@media ${screenConfigs.media.laptop} {
+		height: 50px;
+	}
+	@media ${screenConfigs.media.tablet} {
+		height: 30px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		height: 30px;
+	}		
 `;
 
 const ClickableSvgImage = styled(SVGImage)`
@@ -35,8 +44,8 @@ const SwapChains = () => {
 	return <StyledSwapChains>{
 		sourceChain && destinationChain && <ClickableSvgImage
             onClick={swapChains}
-            width={`20px`}
-            height={`20px`}
+            width={`1.5em`}
+            height={`1.5em`}
             src={require(`resources/switch-icon.svg`).default}
         />
 	}

@@ -14,14 +14,14 @@ const AssetSelector = () => {
 	try {
 		image = require(`resources/logos/${chainInfo?.chainSymbol}/assets/${selectedToken?.assetSymbol}.svg`)?.default;
 	} catch (e) {
-		image = require(`resources/select-chain-icon-black.svg`)?.default;
+		image = require(`resources/select-asset-eyes.svg`)?.default;
 	}
 
 	return <BaseSelector
 		image={<SVGImage height={"25px"} width={"25px"} src={image}/>}
 		label={selectedToken
 			? `${selectedToken?.assetName}`
-			: `Add asset`}
+			: `Select asset`}
 	/>;
 
 };

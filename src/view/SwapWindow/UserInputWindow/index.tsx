@@ -4,13 +4,14 @@ import styled                                                                   
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
-                                                                                    from "component/CompositeComponents/Selectors/ChainSelector";
+	                                                                                from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
-                                                                                    from "component/CompositeComponents/SwapChains";
+	                                                                                from "component/CompositeComponents/SwapChains";
 import TransferFeeDivider
-                                                                                    from "component/CompositeComponents/TransferFeeDivider";
+	                                                                                from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
+import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import StyledButtonContainer                                                        from "../StyledComponents/StyledButtonContainer";
@@ -21,10 +22,41 @@ interface IUserInputWindowProps {
 }
 
 const StyledUserInputWindow = styled.div`
-	width: 310px;
-	height: 425px;
 	position: relative;
 	overflow: hidden;
+	
+	@media ${screenConfigs.media.laptop} {
+		width: 100%;
+	    height: 685px;
+	}
+	@media ${screenConfigs.media.tablet} {
+		width: 310px;
+		height: 425px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		width: 310px;
+		height: 425px;
+	}
+
+`;
+
+const StyledChainSelectorSection = styled.div`
+	overflow: hidden;
+	@media ${screenConfigs.media.laptop} {
+		max-height: 500px;
+	}
+	@media ${screenConfigs.media.tablet} {
+		max-height: 350px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		max-height: 350px;
+	}	
+`;
+
+const StyledInputFormSection = styled(FlexColumn)`
+	@media ${screenConfigs.media.laptop} {
+		margin-top: 25px;
+	}
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
@@ -72,13 +104,13 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	return <StyledUserInputWindow>
 		<br/><br/>
-		<div style={{maxHeight: `350px`, overflow: `hidden`}}>
+		<StyledChainSelectorSection>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/><br/>
 			<TransferFeeDivider/>
-			<FlexColumn>
+			<StyledInputFormSection>
 				<br/>
 				<InputForm
 					name={"destination-address-input"}
@@ -88,8 +120,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					onChange={(e: any) => setDestAddr(e.target.value)}
 				/>
 				<br/>
-			</FlexColumn>
-		</div>
+			</StyledInputFormSection>
+		</StyledChainSelectorSection>
 		<StyledButtonContainer>
 			<PlainButton disabled={!enableSubmitBtn} dim={!enableSubmitBtn} onClick={onInitiateTransfer}>
 				Initiate Asset Transfer
