@@ -12,7 +12,7 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 	try {
 		image = require(`resources/logos/${props.chainInfo?.chainSymbol}/${props.chainInfo?.chainSymbol}.svg`)?.default;
 	} catch (e) {
-		image = require(`resources/select-chain-icon-black.svg`)?.default;
+		image = require(`resources/select-chain-eye.svg`)?.default;
 	}
 	return <BaseSelector
 		image={<SVGImage height={`22.5px`} width={`22.5px`} src={image}/>}

@@ -2,8 +2,9 @@ import {KeyboardEvent, useEffect, useState} from "react";
 import styled, {ThemedStyledProps}          from "styled-components";
 import {FlexSpaceBetween}                   from "component/StyleComponents/FlexSpaceBetween";
 import {GridDisplay}                        from "component/StyleComponents/GridDisplay";
-import {SVGImage}       from "component/Widgets/SVGImage";
-import SearchFilterText from "component/Widgets/SearchComponent/SearchFilterText";
+import {SVGImage}                           from "component/Widgets/SVGImage";
+import SearchFilterText                     from "component/Widgets/SearchComponent/SearchFilterText";
+import screenConfigs                        from "config/screenConfigs";
 
 interface IStyledSearchComponentProps extends ThemedStyledProps<any, any> {
 	show: boolean;
@@ -13,22 +14,43 @@ const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
 	box-sizing: border-box;
 	width: 100%;
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
-	height: ${props => props.show ? '150px' : '0px'};
-	transition: all 50ms;
+	transition: all 10ms;
     display: flex;
     flex-direction: column;
+    
+	@media ${screenConfigs.media.laptop} {
+		height: ${props => props.show ? '245px' : '0px'};
+	}
+	@media ${screenConfigs.media.tablet} {
+		height: ${props => props.show ? '150px' : '0px'};
+	}
+	@media ${screenConfigs.media.mobile} {
+		height: ${props => props.show ? '150px' : '0px'};
+	}	
 `;
 
 const StyledBox = styled.div`
 	width: 100%;
 	height: 100%;
-	overflow-y: auto;
+	max-height: 100%;
+	overflow-y: scroll !important;
 	position: relative;
+
+	::-webkit-scrollbar {
+	  -webkit-appearance: none;
+	  width: 10px;
+	}
+	
+	::-webkit-scrollbar-thumb {
+	  border-radius: 5px;
+	  background-color: rgba(0,0,0,.5);
+	  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+	}
 `;
 
 export interface ISearchItem {
 	title: string;
-	symbol: string;
+	symbol?: string;
 	active: boolean;
 	disabled: boolean;
 	icon: any;
