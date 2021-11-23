@@ -88,14 +88,16 @@ const StatusList = (props: IStatusListProps) => {
 			text={<div style={{overflowWrap: `break-word`, overflow: `hidden` }}>
 				Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} to this address:
 				<div style={{ margin: `5px 0px 0px 0px`}}>
-					<BoldSpan>{depositAddress?.assetAddress}</BoldSpan>
 					<Tooltip
-						tooltipText={<CopyToClipboard
+						tooltipText={<>
+							<CopyToClipboard
+								JSXToShow={<BoldSpan>{depositAddress?.assetAddress} </BoldSpan>}
 								height={`12px`}
 								width={`10px`}
 								textToCopy={depositAddress?.assetAddress || ""}
 								showImage={true}
-							/>}
+							/>
+						</>}
 						tooltipBox={"Copy to Clipboard"}
 					/>
 				</div>

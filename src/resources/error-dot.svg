@@ -1,0 +1,26 @@
+<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient cx="-186.039%" cy="492.217%" fx="-186.039%" fy="492.217%" r="50.052%" id="a">
+            <stop stop-color="#E90A42" offset="0%"/>
+            <stop stop-color="#E90A42" offset="100%"/>
+        </radialGradient>
+        <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="49.94%" id="b">
+            <stop stop-color="#FFF" offset="0%"/>
+            <stop stop-color="#F7F7F7" offset="16.625%"/>
+            <stop stop-color="#F74370" offset="33.25%"/>
+            <stop stop-color="#E90A42" offset="53.77%"/>
+            <stop stop-color="#1D1B1B" offset="100%"/>
+        </radialGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g fill-rule="nonzero" transform="translate(1 1)">
+            <circle fill="#E90A42" cx="6.5" cy="6.5" r="6.5"/>
+            <circle stroke="url(#a)" stroke-width=".388" cx="6.5" cy="6.5" r="6.21"/>
+            <circle fill="#1D1B1B" cx="6.5" cy="6.5" r="5.956"/>
+            <circle fill="url(#b)" cx="6.5" cy="6.5" r="5.3"/>
+        </g>
+        <g opacity=".21" stroke="#1D1B1B" stroke-linecap="round" stroke-width="3.878">
+            <path d="m10.393 5.028.607-.52M9.92 4.563l.509-.615M9.373 4.186l.394-.692M8.769 3.913l.265-.752M8.126 3.746l.131-.785M7.508 3.694l-.02-.796M6.805 3.759l-.147-.784M6.166 3.934l-.279-.743M5.567 4.222l-.405-.687M5.028 4.607 4.511 4M4.56 5.08l-.615-.506M4.186 5.627l-.695-.391M3.912 6.23l-.752-.267M3.745 6.874l-.784-.131M3.693 7.565l-.798.02M3.756 8.195l-.782.147M3.937 8.835l-.749.279M4.219 9.434l-.684.404M4.607 9.972l-.605.52M5.08 10.44l-.506.612M5.627 10.814l-.391.695M6.231 11.088l-.265.752M6.874 11.257l-.132.785M7.565 11.307l.02.798M8.195 11.244l.144.782M8.834 11.066l.279.747M9.433 10.782l.405.683M9.975 10.396l.517.604M10.44 9.923l.615.503M10.814 9.376l.695.388M11.09 8.772l.75.265M11.254 8.129l.785.13M11.306 7.515l.796-.03M11.244 6.806l.784-.145M11.066 6.166l.744-.276M10.779 5.567l.686-.405"/>
+        </g>
+    </g>
+</svg>

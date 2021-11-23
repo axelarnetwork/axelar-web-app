@@ -10,6 +10,8 @@ import SwapChains
 import TransferFeeDivider
 	                                                                                from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
+import ValidationErrorWidget
+	                                                                                from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
@@ -23,7 +25,7 @@ interface IUserInputWindowProps {
 
 const StyledUserInputWindow = styled.div`
 	position: relative;
-	overflow: hidden;
+	overflow-y: hidden;
 	
 	@media ${screenConfigs.media.laptop} {
 		width: 100%;
@@ -41,7 +43,7 @@ const StyledUserInputWindow = styled.div`
 `;
 
 const StyledChainSelectorSection = styled.div`
-	overflow: hidden;
+	overflow-y: hidden;
 	@media ${screenConfigs.media.laptop} {
 		max-height: 500px;
 	}
@@ -54,9 +56,7 @@ const StyledChainSelectorSection = styled.div`
 `;
 
 const StyledInputFormSection = styled(FlexColumn)`
-	@media ${screenConfigs.media.laptop} {
-		margin-top: 25px;
-	}
+	margin-top: 10px;
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
@@ -68,6 +68,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useRecoilState(IsValidDestinationAddress);
 	const resetUserInputs = useResetUserInputs();
 	const [mounted, setMounted] = useState(true);
+	const [showValidationErrors, setShowValidationErrors] = useState(false);
 
 	useEffect(() => {
 		setMounted(true);
@@ -97,6 +98,19 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		resetUserInputs
 	]);
 
+	const renderValidationErrors = useCallback(() => {
+		if (!sourceChainSelection)
+			return <ValidationErrorWidget text={`Select a source chain.`} />
+		if (!selectedSourceAsset)
+			return <ValidationErrorWidget text={`Select an asset on the source chain.`} />
+		if (!destChainSelection)
+			return <ValidationErrorWidget text={`Select a destination chain.`} />
+		if (sourceChainSelection.chainName === destChainSelection.chainName)
+			return <ValidationErrorWidget text={`Source and destination chains can't be equal.`} />
+		if (!isValidDestinationAddress)
+			return <ValidationErrorWidget text={`Invalid input address for ${destChainSelection.chainName}.`} />
+	},[sourceChainSelection, destChainSelection, selectedSourceAsset, isValidDestinationAddress]);
+
 	const enableSubmitBtn = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
 		&& selectedSourceAsset
@@ -108,7 +122,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
 			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
-			<br/><br/>
+			<br/>
 			<TransferFeeDivider/>
 			<StyledInputFormSection>
 				<br/>
@@ -119,11 +133,16 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					type={"text"}
 					onChange={(e: any) => setDestAddr(e.target.value)}
 				/>
-				<br/>
 			</StyledInputFormSection>
 		</StyledChainSelectorSection>
+		{ showValidationErrors && renderValidationErrors()}
 		<StyledButtonContainer>
-			<PlainButton disabled={!enableSubmitBtn} dim={!enableSubmitBtn} onClick={onInitiateTransfer}>
+			<PlainButton
+				dim={!enableSubmitBtn}
+				onClick={onInitiateTransfer}
+				onMouseEnter={() => !enableSubmitBtn && setShowValidationErrors(true)}
+				onMouseLeave={() => setShowValidationErrors(false)}
+			>
 				Initiate Asset Transfer
 			</PlainButton>
 		</StyledButtonContainer>

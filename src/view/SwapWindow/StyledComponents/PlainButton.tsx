@@ -7,7 +7,7 @@ interface IStyledButtonProps extends ThemedStyledProps<any, any> {
 const PlainButton = styled.button<IStyledButtonProps>`
     border: none;
     background: none;
-	${props => props.dim ? "" : "cursor: pointer;"};
+    cursor: pointer;
     margin: 0px 0px 0px 0px;
     padding: 0;
 	color: ${props => props.dim ? "#565656" : "white"};

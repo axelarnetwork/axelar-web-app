@@ -14,7 +14,7 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
     ${props => props.showContents ? `transition: opacity 1000ms;` : ``}
     
     @media ${screenConfigs.media.laptop} {
-        margin-top: 50px;
+        margin-top: 40px;
 		font-size: 14px;
 	}
 	@media ${screenConfigs.media.tablet} {
