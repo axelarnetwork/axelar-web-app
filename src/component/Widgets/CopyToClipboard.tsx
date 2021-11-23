@@ -13,12 +13,16 @@ interface ICopyToClipboardProps {
 	textToCopy: string;
 	showImage: boolean;
 	JSXToShow?: JSX.Element;
+	cbOnClick?: (...args: any[]) => void;
 }
 
 const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
-	const {height, margin, width, showImage, textToCopy} = props;
+	const {cbOnClick, height, margin, width, showImage, textToCopy} = props;
 
-	const onClick = () => copy(textToCopy);
+	const onClick = () => {
+		copy(textToCopy);
+		cbOnClick && cbOnClick();
+	};
 
 	return showImage
 		? <div onClick={onClick}>

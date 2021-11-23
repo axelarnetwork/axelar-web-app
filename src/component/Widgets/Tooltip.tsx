@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled                                from "styled-components";
+import {cloneElement, useCallback, useState} from "react";
 
-const TooltipText = styled.div`
+const AnchorText = styled.div`
   cursor: pointer;
 `;
 
-const TooltipBox = styled.div`
+const TooltipText = styled.div`
 	white-space: nowrap;
 	bottom: 0;
 	visibility: hidden;
@@ -22,9 +23,9 @@ const TooltipBox = styled.div`
 		transition: border 0.3s ease-in-out;
 	}
 `;
-const TooltipCard = styled.div`
+const TooltipContainer = styled.div`
 	position: relative;
-	& ${TooltipText}:hover + ${TooltipBox} {
+	& ${AnchorText}:hover + ${TooltipText} {
 		visibility: visible;
 		color: #fff;
 		background-color: rgba(0, 0, 0, 0.5);
@@ -35,17 +36,27 @@ const TooltipCard = styled.div`
 `;
 
 interface ITooltip {
-	tooltipText: any;
-	tooltipBox: any;
+	anchorContent: JSX.Element | string;
+	tooltipText: string;
+	tooltipAltText: string;
 }
+const Tooltip = ({anchorContent, tooltipText, tooltipAltText}: ITooltip) => {
 
-const Tooltip = ({tooltipBox, tooltipText}: ITooltip) => (<TooltipCard>
-	<TooltipText>
-		{tooltipText}
-	</TooltipText>
-	<TooltipBox>
-		{tooltipBox}
-	</TooltipBox>
-</TooltipCard>);
+	const [textToShow, setTextToShow] = useState(tooltipText);
+
+	const updateTextToShow = useCallback(() => {
+		setTextToShow(tooltipAltText);
+		setTimeout(() => setTextToShow(tooltipText), 2000);
+	}, [setTextToShow, tooltipText, tooltipAltText]);
+
+	return <TooltipContainer>
+		<AnchorText>
+			{cloneElement(anchorContent as JSX.Element, {cbOnClick: updateTextToShow})}
+		</AnchorText>
+		<TooltipText>
+			{textToShow}
+		</TooltipText>
+	</TooltipContainer>;
+};
 
 export default Tooltip;

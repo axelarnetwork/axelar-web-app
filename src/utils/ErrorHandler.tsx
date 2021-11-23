@@ -8,13 +8,14 @@ const traceIdDiv = (traceId: string | undefined) => {
 	if (!traceId)
 		return null;
 	return <div>You can also contact us with this traceId: <Tooltip
-		tooltipText={<CopyToClipboard
+		anchorContent={<CopyToClipboard
 			height={`15px`}
 			width={`15px`}
 			textToCopy={traceId || ""}
 			showImage={false}
 		/>}
-		tooltipBox={"Copy to Clipboard"}
+		tooltipText={"Copy to Clipboard"}
+		tooltipAltText={"Copied to Clipboard!"}
 	/></div>
 }
 const errorContent = (message: string, traceId: string) => {

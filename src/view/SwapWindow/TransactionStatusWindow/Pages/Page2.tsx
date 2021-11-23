@@ -73,13 +73,14 @@ const Page2 = () => {
 			<div style={{ margin: `10px 0px 0px 0px`}}>
 				<BoldSpan>{depositAddress?.assetAddress}</BoldSpan>
 				<Tooltip
-					tooltipText={<CopyToClipboard
+					anchorContent={<CopyToClipboard
 						height={`12px`}
 						width={`10px`}
 						textToCopy={depositAddress?.assetAddress || ""}
 						showImage={true}
 					/>}
-					tooltipBox={"Copy to Clipboard"}
+					tooltipText={"Copy to Clipboard"}
+					tooltipAltText={"Copied to Clipboard!"}
 				/>
 			</div>
 		</StyledPTag>
