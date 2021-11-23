@@ -26,11 +26,16 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 		fill: dodgerBlue;
 	}
 	visibility: ${props => props.show ? 'visible' : 'hidden'};
-	transition: all 1000ms;
 	width: 100%;
     padding: 5px;
     margin-top: 5px;
     border-top: solid 0.2px lightgray;
+	
+	transition: all 1000ms;
+	@media ${screenConfigs.media.laptop} {
+		transition: none;
+	}
+
 `;
 
 const StyledInput = styled(Input)`

@@ -20,6 +20,7 @@ const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
     
 	@media ${screenConfigs.media.laptop} {
 		height: ${props => props.show ? '245px' : '0px'};
+		transition: none;
 	}
 	@media ${screenConfigs.media.tablet} {
 		height: ${props => props.show ? '150px' : '0px'};
