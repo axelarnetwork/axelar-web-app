@@ -13,13 +13,13 @@ const TransferFeeDivider = () => {
 	return <StyledTransferFeeDivider showContents={!!sourceChainSelection}>
 		<StyledImage src={dividerImage}/>
 		<div style={{display: `flex`, justifyContent: `space-between`}}>
-			<div style={{marginLeft: `10px`, marginTop: `15px`}}>
+			<div style={{marginLeft: `15px`, marginTop: `10px`}}>
 				<div><BoldSpan>Approximate wait time: </BoldSpan></div>
 				<div>XX minutes</div>
 			</div>
 			<div style={{textAlign: `right`}}>
 				<div><BoldSpan>Transfer Fee: </BoldSpan></div>
-				<div>XX% of transferred {sourceChainSelection?.chainSymbol}</div>
+				<div>XX% of transferred tokens on {sourceChainSelection?.chainName}</div>
 			</div>
 		</div>
 	</StyledTransferFeeDivider>;
