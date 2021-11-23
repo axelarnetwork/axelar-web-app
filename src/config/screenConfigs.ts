@@ -7,7 +7,7 @@ const deviceWidth = {
 const media = {
 	mobile: `(max-width: ${deviceWidth.mobileBreakpoint})`,
 	tablet: `(max-width: ${deviceWidth.tabletBreakpoint})`,
-	laptop: `(min-width: ${deviceWidth.tabletBreakpoint})`
+	laptop: `(min-width: ${deviceWidth.tabletBreakpoint + 1})`
 }
 const css = {}
 
