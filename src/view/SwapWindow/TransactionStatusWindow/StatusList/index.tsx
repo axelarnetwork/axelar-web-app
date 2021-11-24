@@ -94,7 +94,7 @@ const StatusList = (props: IStatusListProps) => {
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
 				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em` }}>
-					Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} to this address:
+					Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} here:
 					<div style={{ margin: `5px 0px 0px 0px`}}>
 						<Tooltip
 							anchorContent={<CopyToClipboard
@@ -109,21 +109,21 @@ const StatusList = (props: IStatusListProps) => {
 						/>
 					</div>
 				</div>
-				: `Wait for your deposit into a temporary deposit account.`
+				: `Waiting for your deposit into a temporary deposit account.`
 			}
 		/>
 		<ListItem
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
-				? `Axelar is completing your transfer; you may exit this window if you wish.`
-				: `Deposit confirmation on the Axelar network.`
+				? <div><div>Confirmed. Completing your transfer.</div><div> You may exit this window if you wish.</div></div>
+				: `Axelar to confirm your deposit.`
 			}
 		/>
 		<ListItem
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
 				? `Transfer Completed!`
-				: `Transaction detected on ${destinationChain?.chainName}`
+				: `Waiting to detect transaction on ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>
