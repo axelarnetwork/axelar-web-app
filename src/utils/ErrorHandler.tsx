@@ -1,13 +1,14 @@
-import { store }       from 'react-notifications-component';
+import { store }         from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
-import Tooltip         from "../component/Widgets/Tooltip";
-import CopyToClipboard from "../component/Widgets/CopyToClipboard";
+import Tooltip           from "../component/Widgets/Tooltip";
+import CopyToClipboard   from "../component/Widgets/CopyToClipboard";
+import {getErrorMessage} from "../config/errorsMap";
 
 const traceIdDiv = (traceId: string | undefined) => {
 	if (!traceId)
 		return null;
-	return <div>You can also contact us with this traceId: <Tooltip
+	return <div><br/>You can also let us know with this traceId: <Tooltip
 		anchorContent={<CopyToClipboard
 			height={`15px`}
 			width={`15px`}
@@ -26,18 +27,12 @@ const errorContent = (message: string, traceId: string) => {
 }
 const getErrorType = (error: any): JSX.Element => {
 
-	const unexpectedErrorMsg: string = `Unexpected error occurred, try again later.`;
+	const unexpectedErrorMsg: string = getErrorMessage(503, error);
+
 	if (error.uncaught)
 		return errorContent(unexpectedErrorMsg, error.traceId);
 
-	const errorsMap: { [statusCode: number]: string} = {
-		503: unexpectedErrorMsg
-	};
-
-	if (errorsMap[error.statusCode])
-		return errorContent(errorsMap[error.statusCode], error.traceId);
-
-	return errorContent(unexpectedErrorMsg, error.traceId);
+	return errorContent(getErrorMessage(error.statusCode, error), error.traceId);
 
 }
 
