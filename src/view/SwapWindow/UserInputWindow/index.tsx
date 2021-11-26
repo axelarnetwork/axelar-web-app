@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState}                                    from "react";
-import {useRecoilState, useRecoilValue}                        from "recoil";
+import {useRecoilState, useRecoilValue}                                             from "recoil";
 import styled                                                                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
-	                                                                                from "component/CompositeComponents/Selectors/ChainSelector";
+                                                                                    from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
-	                                                                                from "component/CompositeComponents/SwapChains";
+                                                                                    from "component/CompositeComponents/SwapChains";
 import TransferFeeDivider
                                                                                     from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
@@ -16,8 +16,10 @@ import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
-import StyledButtonContainer                                                        from "../StyledComponents/StyledButtonContainer";
-import PlainButton                                                                  from "../StyledComponents/PlainButton";
+import StyledButtonContainer
+                                                                                    from "../StyledComponents/StyledButtonContainer";
+import PlainButton
+                                                                                    from "../StyledComponents/PlainButton";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
@@ -101,16 +103,16 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const renderValidationErrors = useCallback(() => {
 		if (!sourceChainSelection)
-			return <ValidationErrorWidget text={`Select a source chain.`} />
+			return <ValidationErrorWidget text={`Select a source chain.`}/>
 		if (!selectedSourceAsset)
-			return <ValidationErrorWidget text={`Select an asset on the source chain.`} />
+			return <ValidationErrorWidget text={`Select an asset on the source chain.`}/>
 		if (!destChainSelection)
-			return <ValidationErrorWidget text={`Select a destination chain.`} />
+			return <ValidationErrorWidget text={`Select a destination chain.`}/>
 		if (sourceChainSelection.chainName === destChainSelection.chainName)
-			return <ValidationErrorWidget text={`Source and destination chains can't be equal.`} />
+			return <ValidationErrorWidget text={`Source and destination chains can't be equal.`}/>
 		if (!isValidDestinationAddress)
-			return <ValidationErrorWidget text={`Invalid input address for ${destChainSelection.chainName}.`} />
-	},[sourceChainSelection, destChainSelection, selectedSourceAsset, isValidDestinationAddress]);
+			return <ValidationErrorWidget text={`Invalid input address for ${destChainSelection.chainName}.`}/>
+	}, [sourceChainSelection, destChainSelection, selectedSourceAsset, isValidDestinationAddress]);
 
 	const enableSubmitBtn = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -136,7 +138,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 				/>
 			</StyledInputFormSection>
 		</StyledChainSelectorSection>
-		{ showValidationErrors && renderValidationErrors()}
+		{showValidationErrors && renderValidationErrors()}
 		<StyledButtonContainer>
 			<PlainButton
 				dim={!enableSubmitBtn}

@@ -24,10 +24,12 @@ const Modal = ({handleClose, show, children}: any) => {
 const StyledSVGImage = styled(SVGImage)`
 	cursor: pointer;
 `;
+
 interface IModalContainerProps {
 	triggerText?: string;
 	children?: any;
 }
+
 const ModalContainer = (props: IModalContainerProps) => {
 	const [show, setShow] = useState(false);
 
@@ -36,8 +38,8 @@ const ModalContainer = (props: IModalContainerProps) => {
 
 	return (
 		<div>
-			{ props.triggerText
-				? <div onClick={showModal} style={{ cursor: `pointer` }}>{props.triggerText}</div>
+			{props.triggerText
+				? <div onClick={showModal} style={{cursor: `pointer`}}>{props.triggerText}</div>
 				: <StyledSVGImage
 					onClick={showModal}
 					src={require(`resources/chevron-down-black.svg`)?.default}

@@ -67,12 +67,12 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			<SelectedChainComponent chainInfo={selectedChain}/>
 		</div>
 		<SVGImage
-            style={{cursor: `pointer`}}
-            onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
-            src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-            height={"0.75em"}
-            width={"0.75em"}
-        />
+			style={{cursor: `pointer`}}
+			onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
+			src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
+			height={"0.75em"}
+			width={"0.75em"}
+		/>
 	</StyledChainSelectionIconWidget>;
 
 	/*only show the asset selector widget if the chain selector search box is not open*/
@@ -81,16 +81,16 @@ const ChainSelector = (props: IChainSelectorProps) => {
 			<AssetSelector/>
 		</div>
 		<SVGImage
-            style={{cursor: `pointer`}}
-            onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
-            src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-            height={"0.75em"}
-            width={"0.75em"}
-        />
+			style={{cursor: `pointer`}}
+			onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
+			src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
+			height={"0.75em"}
+			width={"0.75em"}
+		/>
 	</StyledChainSelectionIconWidget>;
 
 	return <StyledChainSelectionComponent>
-		<div style={{margin: `10px`, color: `#898994`, fontSize: `0.8em` }}>{props.label}</div>
+		<div style={{margin: `10px`, color: `#898994`, fontSize: `0.8em`}}>{props.label}</div>
 		<FlexSpaceBetween style={{width: `100%`, marginRight: `5px`}}>
 			{chainSelectorWidget()}
 			{isSourceChain

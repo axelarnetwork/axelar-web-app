@@ -26,17 +26,18 @@ const FAQPage = () => {
 		<div>TBU</div>
 		<h1>Having issues?</h1>
 		<div>Reach out to us on Discord and reference the following info:</div>
-		<br />
+		<br/>
 
 		<Tooltip
 			anchorContent={<CopyToClipboard
 				JSXToShow={<>
 					<div>TraceID - <BoldSpan>{transactionTraceId}</BoldSpan></div>
-					<div>{depositAddress ? "Deposit Address - " + <BoldSpan>depositAddress.assetAddress</BoldSpan> : null}</div>
+					<div>{depositAddress ? "Deposit Address - " +
+                        <BoldSpan>depositAddress.assetAddress</BoldSpan> : null}</div>
 				</>}
 				height={`12px`}
 				width={`10px`}
-				textToCopy={JSON.stringify({ transactionTraceId: transactionTraceId, ...(depositAddress) })}
+				textToCopy={JSON.stringify({transactionTraceId: transactionTraceId, ...(depositAddress)})}
 				showImage={false}
 			/>}
 			tooltipText={(transactionTraceId && depositAddress ? "Copy both to Clipboard" : "Copy to Clipboard")}

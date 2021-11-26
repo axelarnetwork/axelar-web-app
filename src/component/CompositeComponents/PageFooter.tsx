@@ -8,7 +8,7 @@ import {SVGImage}           from "../Widgets/SVGImage";
 import Link                 from "../Widgets/Link";
 import {StyledCentered}     from "../StyleComponents/Centered";
 import {FlexRow}            from "../StyleComponents/FlexRow";
-import ModalContainer       from "../Widgets/DEPRECATED_BasicModal/ModalContainer";
+import ModalContainer       from "../Widgets/BasicModal/ModalContainer";
 
 const StyledPageFooter = styled(Container)`
 	position: fixed;
@@ -44,7 +44,7 @@ const PageFooter = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
 	return (<StyledPageFooter>
 		<div style={{marginLeft: `15px`}}>
-			{transactionTraceId && <ModalContainer triggerText={`Support Center`}><FAQPage /></ModalContainer>}
+			{transactionTraceId && <ModalContainer triggerText={`Support Center`}><FAQPage/></ModalContainer>}
 		</div>
 		<Box>
 			<DocsLinks href={downstreamServices.GITHUB_LINK}>

@@ -1,7 +1,7 @@
-import { store }          from 'react-notifications-component';
-import Tooltip            from "component/Widgets/Tooltip";
-import CopyToClipboard    from "component/Widgets/CopyToClipboard";
-import {getErrorMessage}  from "config/errorsMap";
+import {store}           from 'react-notifications-component';
+import Tooltip           from "component/Widgets/Tooltip";
+import CopyToClipboard   from "component/Widgets/CopyToClipboard";
+import {getErrorMessage} from "config/errorsMap";
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
 

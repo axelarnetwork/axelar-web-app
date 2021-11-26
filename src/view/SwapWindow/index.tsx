@@ -10,8 +10,8 @@ import usePostTransactionToBridge                               from "hooks/useP
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
-import UserInputWindow         from "./UserInputWindow";
-import TransactionStatusWindow from "./TransactionStatusWindow";
+import UserInputWindow                                          from "./UserInputWindow";
+import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;

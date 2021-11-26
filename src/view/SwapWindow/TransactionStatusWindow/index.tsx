@@ -11,7 +11,8 @@ import useResetAllState                                                      fro
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection}                                                      from "state/ChainSelection";
 import styled                                                                from "styled-components";
-import StyledButtonContainer                                                 from "../StyledComponents/StyledButtonContainer";
+import StyledButtonContainer
+                                                                             from "../StyledComponents/StyledButtonContainer";
 import PlainButton                                                           from "../StyledComponents/PlainButton";
 import StatusList                                                            from "./StatusList";
 
@@ -96,9 +97,9 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			<StyledChainSelectionIconWidget>
 				<SelectedChainComponent chainInfo={sourceChain}/>
 			</StyledChainSelectionIconWidget>
-			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
-			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
-			<StyledChainSelectionIconWidget style={{ display: `flex`, justifyContent: `flex-end` }}>
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
+			<StyledChainSelectionIconWidget style={{display: `flex`, justifyContent: `flex-end`}}>
 				<SelectedChainComponent chainInfo={destinationChain}/>
 			</StyledChainSelectionIconWidget>
 		</StyledFlexRow>
@@ -112,7 +113,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 		<StyledButtonContainer>{showButton &&
         <PlainButton disabled={!showButton} dim={!showButton} onClick={() => {
-	        resetAllstate();
+			resetAllstate();
 			closeResultsScreen();
 		}}>
             Start New Transaction
