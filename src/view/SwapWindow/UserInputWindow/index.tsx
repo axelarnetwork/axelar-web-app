@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState}                                    from "react";
-import {useRecoilState, useRecoilValue}                                             from "recoil";
+import {useRecoilState, useRecoilValue}                        from "recoil";
 import styled                                                                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
@@ -8,10 +8,10 @@ import ChainSelector
 import SwapChains
 	                                                                                from "component/CompositeComponents/SwapChains";
 import TransferFeeDivider
-	                                                                                from "component/CompositeComponents/TransferFeeDivider";
+                                                                                    from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
-	                                                                                from "component/Widgets/ValidationErrorWidget";
+                                                                                    from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
@@ -81,6 +81,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	}, [destAddr, destChainSelection, setIsValidDestinationAddress]);
 
 	const onInitiateTransfer = useCallback(async () => {
+
 		if (!(destAddr && isValidDestinationAddress && mounted))
 			return;
 		try {

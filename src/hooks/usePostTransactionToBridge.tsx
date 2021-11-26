@@ -1,9 +1,9 @@
-import {useCallback, useState}                           from "react";
-import {useRecoilValue, useSetRecoilState}               from "recoil";
+import {useCallback, useState}                                  from "react";
+import {useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
 import {
 	IAssetInfoWithTrace,
 	IAssetTransferObject
-}                                                        from "@axelar-network/axelarjs-sdk";
+}                                                               from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
@@ -31,6 +31,7 @@ export default function usePostTransactionToBridge() {
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 	const errorHandler = ErrorHandler();
+	const [transactionTraceId, resetTransactionTraceId] = [useRecoilValue(TransactionTraceId), useResetRecoilState(TransactionTraceId)];
 
 	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
 
@@ -69,21 +70,21 @@ export default function usePostTransactionToBridge() {
 
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
+				transactionTraceId && resetTransactionTraceId(); // reset any transaction trace ID if one exists in state
 				msg.recaptchaToken = token;
 				try {
 					const res: IAssetInfoWithTrace = await TransferAssetBridgeFacade
 					.transferAssets(msg,
 						{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
 						{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
-					debugger;
 					setDepositAddress(res.assetInfo);
 					setTransactionTraceId(res.traceId);
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
 					e.traceId = msg.transactionTraceId as string;
-					errorHandler.notifyError(e);
 					setTransactionTraceId(msg.transactionTraceId as string);
+					errorHandler.notifyError(e);
 					reject("transfer bridge error" + e);
 				}
 
@@ -94,6 +95,8 @@ export default function usePostTransactionToBridge() {
 		sourceChain,
 		destinationChain,
 		destinationAddress,
+		resetTransactionTraceId,
+		transactionTraceId,
 		setDepositAddress,
 		setSourceNumConfirmations,
 		setDestinationNumConfirmations,

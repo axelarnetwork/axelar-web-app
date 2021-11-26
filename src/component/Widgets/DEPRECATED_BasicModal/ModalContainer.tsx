@@ -1,7 +1,7 @@
 import {cloneElement, useState} from "react";
 import {SVGImage}               from "../SVGImage";
-import './modal.css';
 import styled                   from "styled-components";
+import './modal.css';
 
 const Modal = ({handleClose, show, children}: any) => {
 	const showHideClassName = show ? "modal showing" : "modal not-showing";
@@ -24,7 +24,11 @@ const Modal = ({handleClose, show, children}: any) => {
 const StyledSVGImage = styled(SVGImage)`
 	cursor: pointer;
 `;
-const ModalContainer = (props: any) => {
+interface IModalContainerProps {
+	triggerText?: string;
+	children?: any;
+}
+const ModalContainer = (props: IModalContainerProps) => {
 	const [show, setShow] = useState(false);
 
 	const showModal = () => setShow(true);
@@ -32,12 +36,14 @@ const ModalContainer = (props: any) => {
 
 	return (
 		<div>
-			<StyledSVGImage
-				onClick={showModal}
-				src={require(`resources/chevron-down-black.svg`)?.default}
-				height={"8px"}
-				width={"20px"}
-			/>
+			{ props.triggerText
+				? <div onClick={showModal} style={{ cursor: `pointer` }}>{props.triggerText}</div>
+				: <StyledSVGImage
+					onClick={showModal}
+					src={require(`resources/chevron-down-black.svg`)?.default}
+					height={"8px"}
+					width={"20px"}
+				/>}
 			<Modal show={show} handleClose={hideModal}>
 				{cloneElement(props.children, {...props, handleClose: hideModal})}
 			</Modal>

@@ -1,9 +1,9 @@
-import { store }         from 'react-notifications-component';
+import { store }          from 'react-notifications-component';
+import Tooltip            from "component/Widgets/Tooltip";
+import CopyToClipboard    from "component/Widgets/CopyToClipboard";
+import {getErrorMessage}  from "config/errorsMap";
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
-import Tooltip           from "../component/Widgets/Tooltip";
-import CopyToClipboard   from "../component/Widgets/CopyToClipboard";
-import {getErrorMessage} from "../config/errorsMap";
 
 const traceIdDiv = (traceId: string | undefined) => {
 	if (!traceId)
@@ -53,7 +53,7 @@ const ErrorHandler = () => {
 			dismiss: {
 				showIcon: true,
 				touch: true,
-				duration: 0,
+				duration: 15000,
 				click: false
 			}
 		});
