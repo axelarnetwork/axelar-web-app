@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState}                                    from "react";
-import {useRecoilState, useRecoilValue}                                             from "recoil";
+import React, {KeyboardEvent, useCallback, useEffect, useState} from "react";
+import {useRecoilState, useRecoilValue}                         from "recoil";
 import styled                                                                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
@@ -119,6 +119,14 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& selectedSourceAsset
 		&& isValidDestinationAddress;
 
+	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+		console.log("keypress in UserInputWindow/index.tsx");
+		e.stopPropagation();
+		(e.code === "Enter" || e.code === "NumpadEnter")
+		&& enableSubmitBtn
+		&& onInitiateTransfer();
+	}
+
 	return <StyledUserInputWindow>
 		<br/><br/>
 		<StyledChainSelectorSection>
@@ -134,6 +142,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 					value={destAddr || ""}
 					placeholder={"Enter Destination Address (Public Key)"}
 					type={"text"}
+					handleOnEnterPress={handleOnEnterPress}
 					onChange={(e: any) => setDestAddr(e.target.value)}
 				/>
 			</StyledInputFormSection>

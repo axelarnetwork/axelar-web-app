@@ -1,5 +1,5 @@
 import {HTMLInputTypeAttribute} from "react";
-import {Input}                  from "component/StyleComponents/Input";
+import {StyledInput}            from "component/StyleComponents/StyledInput";
 
 interface IInputProps {
 	name: string;
@@ -7,7 +7,7 @@ interface IInputProps {
 	type: ((HTMLInputTypeAttribute | undefined) & "text") | undefined;
 	onChange: (e: any) => void;
 	value: string;
-
+	handleOnEnterPress?: any;
 }
 
 export const InputForm = (props: IInputProps) => {
@@ -16,12 +16,13 @@ export const InputForm = (props: IInputProps) => {
 		props.onChange && props.onChange(event);
 	};
 
-	return <Input
+	return <StyledInput
 		name={props.name}
 		placeholder={props.placeholder}
 		type={props.type}
 		value={props.value || ""}
 		onChange={handleChange}
+		onKeyDown={props.handleOnEnterPress}
 	/>;
 
 };

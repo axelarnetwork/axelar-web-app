@@ -80,6 +80,7 @@ const SearchMenu = (props: ISearchMenuProps) => {
 	};
 
 	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+		console.log("keypress in SearchComponent/index.tsx");
 		e.stopPropagation();
 		(e.code === "Enter" || e.code === "NumpadEnter")
 		&& listItems?.length === 1

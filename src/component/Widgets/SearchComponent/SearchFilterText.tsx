@@ -1,6 +1,6 @@
 import {useState}                  from "react";
 import styled, {ThemedStyledProps} from "styled-components";
-import {Input}                     from "component/StyleComponents/Input";
+import {StyledInput}               from "component/StyleComponents/StyledInput";
 import {SVGImage}                  from "component/Widgets/SVGImage";
 import screenConfigs               from "config/screenConfigs";
 import {ISearchItem}               from "./index";
@@ -38,7 +38,7 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 
 `;
 
-const StyledInput = styled(Input)`
+const StyledSearchInputBox = styled(StyledInput)`
 	width: 100%;
 	outline: none;
 	padding: 8px;
@@ -76,7 +76,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
             <SVGImage height={"12px"} width={"12px"} margin={"5px 0px 0px 10px"}
                       src={require(`resources/search.svg`)?.default}
             />
-            <StyledInput
+            <StyledSearchInputBox
                 name="filter-asset-input"
                 placeholder="Search"
                 type="text"

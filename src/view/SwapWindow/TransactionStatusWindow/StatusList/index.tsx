@@ -90,7 +90,7 @@ const StatusList = (props: IStatusListProps) => {
 	return <StyledStatusList>
 		<ListItem
 			step={1} activeStep={activeStep}
-			text={`Generating Source Chain Deposit Address`}
+			text={`Generating a Deposit Address`}
 		/>
 		<ListItem
 			step={2} activeStep={activeStep}
@@ -121,7 +121,7 @@ const StatusList = (props: IStatusListProps) => {
 					<div>Confirmed. Completing your transfer.</div>
 					<div> You may exit this window if you wish.</div>
 				</div>
-				: `Axelar to confirm your deposit.`
+				: `Axelar to confirm your deposit on ${sourceChain?.chainName}.`
 			}
 		/>
 		<ListItem
