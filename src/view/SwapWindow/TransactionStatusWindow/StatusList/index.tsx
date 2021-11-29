@@ -1,12 +1,12 @@
-import styled                        from "styled-components";
-import screenConfigs                 from "config/screenConfigs";
+import styled                                    from "styled-components";
+import screenConfigs                             from "config/screenConfigs";
 import {useRecoilValue}                          from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import CopyToClipboard                           from "component/Widgets/CopyToClipboard";
-import Tooltip                       from "component/Widgets/Tooltip";
-import BoldSpan                      from "component/StyleComponents/BoldSpan";
-import {ChainSelection, SourceAsset} from "state/ChainSelection";
-import {SourceDepositAddress}        from "state/TransactionStatus";
+import Tooltip                                   from "component/Widgets/Tooltip";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {ChainSelection, SourceAsset}             from "state/ChainSelection";
+import {SourceDepositAddress}                    from "state/TransactionStatus";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -37,11 +37,13 @@ const StyledImage = styled.img`
 	height: 50%;
 	width: 50%;
 `;
+
 interface IListItemProps {
 	activeStep: number;
 	step: number;
 	text: any;
 }
+
 const ListItem = (props: IListItemProps) => {
 
 	const {activeStep, step, text} = props;
@@ -49,16 +51,14 @@ const ListItem = (props: IListItemProps) => {
 
 	if (activeStep > step) {
 		suffix = "complete";
-	}
-	else if (activeStep === step) {
+	} else if (activeStep === step) {
 		suffix = "active";
-	}
-	else {
+	} else {
 		suffix = "inactive";
 	}
 
 	return <StyledListItem>
-		<div style={{ width: `20%`, height: `100%`, display: `flex`, alignItems: `center`, justifyContent: `center` }}>
+		<div style={{width: `20%`, height: `100%`, display: `flex`, alignItems: `center`, justifyContent: `center`}}>
 			<StyledImage
 				src={require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)?.default}
 				alt={""}
@@ -75,11 +75,13 @@ const ListItem = (props: IListItemProps) => {
 		</div>
 	</StyledListItem>
 }
+
 interface IStatusListProps {
 	activeStep: number;
 }
+
 const StatusList = (props: IStatusListProps) => {
-	const { activeStep } = props;
+	const {activeStep} = props;
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
@@ -93,9 +95,9 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
-				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em` }}>
+				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
 					Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} here:
-					<div style={{ margin: `5px 0px 0px 0px`}}>
+					<div style={{margin: `5px 0px 0px 0px`}}>
 						<Tooltip
 							anchorContent={<CopyToClipboard
 								JSXToShow={<BoldSpan>{depositAddress?.assetAddress} </BoldSpan>}
@@ -115,7 +117,10 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
-				? <div><div>Confirmed. Completing your transfer.</div><div> You may exit this window if you wish.</div></div>
+				? <div>
+					<div>Confirmed. Completing your transfer.</div>
+					<div> You may exit this window if you wish.</div>
+				</div>
 				: `Axelar to confirm your deposit.`
 			}
 		/>

@@ -1,5 +1,6 @@
 import {useCallback, useState}                           from "react";
 import {useRecoilValue, useSetRecoilState}               from "recoil";
+import {v4 as uuidv4}                                    from 'uuid';
 import {
 	IAssetInfoWithTrace,
 	IAssetTransferObject
@@ -7,6 +8,7 @@ import {
 import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import ErrorHandler                                      from "utils/ErrorHandler";
 import {
 	IConfirmationStatus,
 	NumberConfirmations,
@@ -15,8 +17,6 @@ import {
 }                                                        from "state/TransactionStatus";
 import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
 import {depositConfirmCbMap}                             from "./helper";
-import {v4 as uuidv4}                                    from 'uuid';
-import ErrorHandler                                      from "../utils/ErrorHandler";
 
 export default function usePostTransactionToBridge() {
 
@@ -25,14 +25,17 @@ export default function usePostTransactionToBridge() {
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
-	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const setSourceNumConfirmations = useSetRecoilState(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
+	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 	const errorHandler = ErrorHandler();
 
 	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
+
+		const traceId: string = uuidv4();
+		setTransactionTraceId(traceId);
 
 		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset)) {
 			reject("no input params");
@@ -62,7 +65,7 @@ export default function usePostTransactionToBridge() {
 				common_key: sourceAsset.common_key
 			},
 			recaptchaToken: null,
-			transactionTraceId: uuidv4()
+			transactionTraceId: traceId
 		}
 
 		console.log("transaction trace id generated", msg.transactionTraceId);
@@ -75,15 +78,12 @@ export default function usePostTransactionToBridge() {
 					.transferAssets(msg,
 						{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
 						{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
-					debugger;
 					setDepositAddress(res.assetInfo);
-					setTransactionTraceId(res.traceId);
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
-					e.traceId = msg.transactionTraceId as string;
+					e.traceId = traceId;
 					errorHandler.notifyError(e);
-					setTransactionTraceId(msg.transactionTraceId as string);
 					reject("transfer bridge error" + e);
 				}
 

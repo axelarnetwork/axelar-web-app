@@ -10,10 +10,12 @@ import {StyledPTag}                from "./StyledPTag";
 export const StyledImage = styled.img`
 
 `;
+
 interface IColumnProps extends ThemedStyledProps<any, any> {
 	width?: string;
 	padding?: number;
 }
+
 export const Column = styled.div<IColumnProps>`
 	height: 100%;
 	width: 20%;
@@ -38,20 +40,20 @@ const Page3 = () => {
 			<Column padding={`0px 0px 0px 35px`}>
 				<StyledImage src={step1InActive} height={`25px`} width={`25px`}/>
 			</Column>
-			<Column >
+			<Column>
 				<StyledImage src={step2Inctive} height={`40px`} width={`40px`}/>
 			</Column>
 			<Column>
 				<StyledImage src={step3Active} height={`65px`} width={`65px`}/>
 			</Column>
-			<Column />
-			<Column />
+			<Column/>
+			<Column/>
 		</NumbersContainer>
 		<FlexColumn>
 			<p>Deposit confirmed.</p>
 			<p>Axelar is completing your transfer</p>
 		</FlexColumn>
-		<br /><br />
+		<br/><br/>
 		<StyledPTag>
 			{`At this stage, you can leave the rest to us and "Go Back"... or follow along with the rest if you like!`}
 		</StyledPTag>

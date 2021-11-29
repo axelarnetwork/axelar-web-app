@@ -17,7 +17,7 @@ interface ICopyToClipboardProps {
 }
 
 const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
-	const {cbOnClick, height, margin, width, showImage, textToCopy} = props;
+	const {cbOnClick, height, JSXToShow, margin, width, showImage, textToCopy} = props;
 
 	const onClick = () => {
 		copy(textToCopy);
@@ -26,14 +26,14 @@ const CopyToClipboardImage = (props: ICopyToClipboardProps) => {
 
 	return showImage
 		? <div onClick={onClick}>
-			{props.JSXToShow}
+			{JSXToShow}
 			<StyledSVGImage
 				height={height}
 				width={width}
 				margin={margin}
 				src={require(`resources/copy-to-clipboard.svg`).default}
 			/></div>
-		: <div onClick={onClick}>{textToCopy}</div>
+		: <div onClick={onClick}>{JSXToShow || textToCopy}</div>
 }
 
 export default CopyToClipboardImage;

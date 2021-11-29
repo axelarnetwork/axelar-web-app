@@ -40,6 +40,7 @@ interface ITooltip {
 	tooltipText: string;
 	tooltipAltText: string;
 }
+
 const Tooltip = ({anchorContent, tooltipText, tooltipAltText}: ITooltip) => {
 
 	const [textToShow, setTextToShow] = useState(tooltipText);

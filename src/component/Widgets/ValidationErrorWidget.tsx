@@ -31,24 +31,24 @@ const StyledValidationErrorWidget = styled.div`
 const StyledImage = styled.img<ThemedStyledProps<any, any>>`
 	height: 0.625em;
 	width: 0.625em;
-	${props => props.marginSm 
-		? `margin-left: ${props.marginSm}; margin-right: ${props.marginSm};` 
-		: ``
-	};
+	${props => props.marginSm
+	? `margin-left: ${props.marginSm}; margin-right: ${props.marginSm};`
+	: ``
+};
 	
     @media ${screenConfigs.media.laptop} {
 		${props => props.marginLg
-			? `margin-left: ${props.marginLg}; margin-right: ${props.marginLg};`
-			: ``
-		};
+	? `margin-left: ${props.marginLg}; margin-right: ${props.marginLg};`
+	: ``
+};
 	}
 `;
 
-const ValidationErrorWidget = ({ text }: { text: string}) => {
+const ValidationErrorWidget = ({text}: { text: string }) => {
 	return <StyledValidationErrorWidget>
-		<StyledImage src={require(`resources/error-dot.svg`).default} alt={""} marginSm={`-6px`} marginLg={`-20px`} />
+		<StyledImage src={require(`resources/error-dot.svg`).default} alt={""} marginSm={`-6px`} marginLg={`-20px`}/>
 		{text}
-		<StyledImage src={require(`resources/error-dot.svg`).default} alt={""} marginSm={`-6px`} marginLg={`-20px`} />
+		<StyledImage src={require(`resources/error-dot.svg`).default} alt={""} marginSm={`-6px`} marginLg={`-20px`}/>
 	</StyledValidationErrorWidget>
 }
 

@@ -7,11 +7,12 @@ import {SelectedChainComponent}                                              fro
 import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
-import useResetUserInputs                                                    from "hooks/useResetUserInputs";
+import useResetAllState                                                      from "hooks/useResetAllState";
 import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection}                                                      from "state/ChainSelection";
 import styled                                                                from "styled-components";
-import StyledButtonContainer                                                 from "../StyledComponents/StyledButtonContainer";
+import StyledButtonContainer
+                                                                             from "../StyledComponents/StyledButtonContainer";
 import PlainButton                                                           from "../StyledComponents/PlainButton";
 import StatusList                                                            from "./StatusList";
 
@@ -58,7 +59,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 	const setMessageInCartoon = useCartoonMessageDispatcher();
-	const resetUserInputs = useResetUserInputs();
+	const resetAllstate = useResetAllState();
 	const [activeStep, setActiveStep] = useState(0);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
@@ -96,9 +97,9 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			<StyledChainSelectionIconWidget>
 				<SelectedChainComponent chainInfo={sourceChain}/>
 			</StyledChainSelectionIconWidget>
-			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
-			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""} />
-			<StyledChainSelectionIconWidget style={{ display: `flex`, justifyContent: `flex-end` }}>
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
+			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
+			<StyledChainSelectionIconWidget style={{display: `flex`, justifyContent: `flex-end`}}>
 				<SelectedChainComponent chainInfo={destinationChain}/>
 			</StyledChainSelectionIconWidget>
 		</StyledFlexRow>
@@ -112,7 +113,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 
 		<StyledButtonContainer>{showButton &&
         <PlainButton disabled={!showButton} dim={!showButton} onClick={() => {
-			resetUserInputs();
+			resetAllstate();
 			closeResultsScreen();
 		}}>
             Start New Transaction

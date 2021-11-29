@@ -1,16 +1,18 @@
-import { store }         from 'react-notifications-component';
+import {store}           from 'react-notifications-component';
+import BoldSpan          from "component/StyleComponents/BoldSpan";
+import Tooltip           from "component/Widgets/Tooltip";
+import CopyToClipboard   from "component/Widgets/CopyToClipboard";
+import {getErrorMessage} from "config/errorsMap";
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
-import Tooltip           from "../component/Widgets/Tooltip";
-import CopyToClipboard   from "../component/Widgets/CopyToClipboard";
-import {getErrorMessage} from "../config/errorsMap";
 
 const traceIdDiv = (traceId: string | undefined) => {
 	if (!traceId)
 		return null;
-	return <div><br/>You can also let us know with this traceId: <Tooltip
+	return <div><br/>For support, reach out on Discord with this <Tooltip
 		anchorContent={<CopyToClipboard
 			height={`15px`}
+			JSXToShow={<div>traceId: <BoldSpan>{traceId}</BoldSpan></div>}
 			width={`15px`}
 			textToCopy={traceId || ""}
 			showImage={false}
@@ -53,7 +55,7 @@ const ErrorHandler = () => {
 			dismiss: {
 				showIcon: true,
 				touch: true,
-				duration: 0,
+				duration: 15000,
 				click: false
 			}
 		});

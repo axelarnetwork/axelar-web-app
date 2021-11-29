@@ -1,8 +1,8 @@
-import {useRecoilValue}           from "recoil";
-import BoldSpan                   from "component/StyleComponents/BoldSpan";
-import {StyledImage}              from "component/StyleComponents/StyledImage";
-import {StyledTransferFeeDivider} from "component/StyleComponents/StyledTransferFeeDivider";
-import {SOURCE_TOKEN_KEY}         from "config/consts";
+import {useRecoilValue}              from "recoil";
+import BoldSpan                      from "component/StyleComponents/BoldSpan";
+import {StyledImage}                 from "component/StyleComponents/StyledImage";
+import {StyledTransferFeeDivider}    from "component/StyleComponents/StyledTransferFeeDivider";
+import {SOURCE_TOKEN_KEY}            from "config/consts";
 import dividerImage                  from "resources/group.svg";
 import {ChainSelection, SourceAsset} from "state/ChainSelection";
 

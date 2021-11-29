@@ -82,9 +82,9 @@ const SearchMenu = (props: ISearchMenuProps) => {
 	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		e.stopPropagation();
 		(e.code === "Enter" || e.code === "NumpadEnter")
-			&& listItems?.length === 1
-			&& !listItems[0].disabled
-			&& onClick(listItems[0]);
+		&& listItems?.length === 1
+		&& !listItems[0].disabled
+		&& onClick(listItems[0]);
 	}
 
 	return (<StyledSearchComponent show={show}>
@@ -121,7 +121,7 @@ interface IStyledSearchItemProps extends ThemedStyledProps<any, any> {
 }
 
 const StyledSearchItem = styled(FlexSpaceBetween)<IStyledSearchItemProps>`
-	${({ disabled }) => disabled ? '' : 'cursor: pointer' };
+	${({disabled}) => disabled ? '' : 'cursor: pointer'};
 	box-sizing: border-box;
 	width: 100%;
 	padding: 10px 15px 10px 15px;
@@ -131,7 +131,7 @@ const StyledSearchItem = styled(FlexSpaceBetween)<IStyledSearchItemProps>`
 	letter-spacing: 0.78px;
 	font-weight: bold;
 	&:hover {
-		color: ${({ disabled }) => disabled ? 'darkgrey' : 'black' };
+		color: ${({disabled}) => disabled ? 'darkgrey' : 'black'};
 	}
 	transition: color 500ms;
 `;
