@@ -1,22 +1,22 @@
-import {useCallback, useState}                                  from "react";
-import {useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
+import {useCallback, useState}                           from "react";
+import {useRecoilValue, useSetRecoilState}               from "recoil";
+import {v4 as uuidv4}                                    from 'uuid';
 import {
 	IAssetInfoWithTrace,
 	IAssetTransferObject
-}                                                               from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}                              from "api/TransferAssetBridgeFacade";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/consts";
-import {ChainSelection, DestinationAddress, SourceAsset}        from "state/ChainSelection";
+}                                                        from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+import ErrorHandler                                      from "utils/ErrorHandler";
 import {
 	IConfirmationStatus,
 	NumberConfirmations,
 	SourceDepositAddress,
 	TransactionTraceId
-}                                                               from "state/TransactionStatus";
-import useRecaptchaAuthenticate                                 from "./auth/useRecaptchaAuthenticate";
-import {depositConfirmCbMap}                                    from "./helper";
-import {v4 as uuidv4}                                           from 'uuid';
-import ErrorHandler                                             from "../utils/ErrorHandler";
+}                                                        from "state/TransactionStatus";
+import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
+import {depositConfirmCbMap}                             from "./helper";
 
 export default function usePostTransactionToBridge() {
 
@@ -25,15 +25,17 @@ export default function usePostTransactionToBridge() {
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
 	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
-	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const setSourceNumConfirmations = useSetRecoilState(NumberConfirmations(SOURCE_TOKEN_KEY));
 	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
+	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const [isRecaptchaAuthenticated, authenticateWithRecaptcha] = useRecaptchaAuthenticate();
 	const errorHandler = ErrorHandler();
-	const [transactionTraceId, resetTransactionTraceId] = [useRecoilValue(TransactionTraceId), useResetRecoilState(TransactionTraceId)];
 
 	const handleTransactionSubmission = useCallback(async () => new Promise((resolve, reject) => {
+
+		const traceId: string = uuidv4();
+		setTransactionTraceId(traceId);
 
 		if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset)) {
 			reject("no input params");
@@ -63,14 +65,13 @@ export default function usePostTransactionToBridge() {
 				common_key: sourceAsset.common_key
 			},
 			recaptchaToken: null,
-			transactionTraceId: uuidv4()
+			transactionTraceId: traceId
 		}
 
 		console.log("transaction trace id generated", msg.transactionTraceId);
 
 		authenticateWithRecaptcha().then(async (token: any) => {
 			if (isRecaptchaAuthenticated) {
-				transactionTraceId && resetTransactionTraceId(); // reset any transaction trace ID if one exists in state
 				msg.recaptchaToken = token;
 				try {
 					const res: IAssetInfoWithTrace = await TransferAssetBridgeFacade
@@ -78,12 +79,10 @@ export default function usePostTransactionToBridge() {
 						{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
 						{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
 					setDepositAddress(res.assetInfo);
-					setTransactionTraceId(res.traceId);
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
-					e.traceId = msg.transactionTraceId as string;
-					setTransactionTraceId(msg.transactionTraceId as string);
+					e.traceId = traceId;
 					errorHandler.notifyError(e);
 					reject("transfer bridge error" + e);
 				}
@@ -95,8 +94,6 @@ export default function usePostTransactionToBridge() {
 		sourceChain,
 		destinationChain,
 		destinationAddress,
-		resetTransactionTraceId,
-		transactionTraceId,
 		setDepositAddress,
 		setSourceNumConfirmations,
 		setDestinationNumConfirmations,
