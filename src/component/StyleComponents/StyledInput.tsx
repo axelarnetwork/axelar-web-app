@@ -1,7 +1,7 @@
 import styled        from "styled-components";
 import screenConfigs from "config/screenConfigs";
 
-export const Input = styled.input.attrs({})`
+export const StyledInput = styled.input.attrs({})`
 	width: 100%;
 	border-radius: 5px;
 	border: solid 1px #e2e1e2;

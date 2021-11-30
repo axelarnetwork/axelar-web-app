@@ -1,8 +1,16 @@
 import styled                                from "styled-components";
 import {cloneElement, useCallback, useState} from "react";
+import {StyledCentered}                      from "../StyleComponents/Centered";
 
 const AnchorText = styled.div`
-  cursor: pointer;
+	cursor: pointer;
+	padding: 1px;
+	box-sizing: border-box;
+	&:hover {
+		background-color: rgba(82, 82, 82, 0.5);
+		border-radius: 5px;
+		color: black;
+	}
 `;
 
 const TooltipText = styled.div`
@@ -14,25 +22,25 @@ const TooltipText = styled.div`
 	padding: 0.1em 0.1em;
 	margin: 0.25em 0.25em;
 	border-radius: 4px;
-	text-align: center;
+	width: 100%;
+	${StyledCentered}
+	transform: translateY(-5px);
 	transition: all 0.1s ease-in-out;
-	&:before {
-		content: "";
-		width: 0;
-		height: 0;
-		transition: border 0.3s ease-in-out;
-	}
 `;
 const TooltipContainer = styled.div`
 	position: relative;
+	background-color: transparent;
 	& ${AnchorText}:hover + ${TooltipText} {
 		visibility: visible;
-		color: #fff;
-		background-color: rgba(0, 0, 0, 0.5);
-		&:before {
-			border-color: transparent transparent rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.5);
-		}
+		transform: translateY(0px);
 	}
+`;
+
+const SpanText = styled.span`
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 2.5px;
+	border-radius: 5px;
 `;
 
 interface ITooltip {
@@ -55,7 +63,7 @@ const Tooltip = ({anchorContent, tooltipText, tooltipAltText}: ITooltip) => {
 			{cloneElement(anchorContent as JSX.Element, {cbOnClick: updateTextToShow})}
 		</AnchorText>
 		<TooltipText>
-			{textToShow}
+			<SpanText>{textToShow}</SpanText>
 		</TooltipText>
 	</TooltipContainer>;
 };

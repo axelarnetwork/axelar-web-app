@@ -34,6 +34,8 @@ const GlobalStyle = createGlobalStyle`
 		background-position: 50% 50%;
 		background-attachment: fixed;
 		background-size: cover;
+	    max-width: 100%;
+        overflow-x: hidden;
 
 		@media ${screenConfigs.media.laptop} {
 			font-size: 20px;
