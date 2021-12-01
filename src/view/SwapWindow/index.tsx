@@ -1,4 +1,4 @@
-import {ReactElement}                                           from "react";
+import React, {ReactElement}                                    from "react";
 import {CSSTransition, SwitchTransition}                        from "react-transition-group";
 import {useRecoilValue}                                         from "recoil";
 import styled, {ThemedStyledProps}                              from "styled-components";
@@ -14,6 +14,7 @@ import activeBox                                                from "resources/
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
+import TopFlowsSelectorWidget                                   from "./TopFlowsSelector";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -50,6 +51,7 @@ const StyledSwapWindow = styled.div`
 `;
 
 const StyledContainer = styled.div`
+	position: relative;
     z-index: 10;
     display: flex;
     align-items: center;
@@ -103,7 +105,9 @@ const SwapWindow = (): ReactElement => {
 				key={userInputNeeded ? "user-input-window" : "transaction-status-window"}
 				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 				classNames="fade"
-			><StyledContainer>{userInputNeeded
+			><StyledContainer>
+			{userInputNeeded && <TopFlowsSelectorWidget />}
+			{userInputNeeded
 				? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
 				: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
 				                           closeResultsScreen={closeResultsScreen}/>
