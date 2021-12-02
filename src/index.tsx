@@ -66,13 +66,6 @@ const GlobalStyle = createGlobalStyle`
 	
 		}		
 	}
-	
-	select {
-	  -webkit-appearance: none;
-	  -moz-appearance: none;
-	  appearance: none;
-	  background: url(https://stackoverflow.com/favicon.ico) 96% / 15% no-repeat #EEE;
-	}
 
 	code {
 	    // font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
