@@ -71,7 +71,7 @@ const FAQPage = () => {
 	return <StyledHelperComponent>
 		{ showFAQ && <StyledFAQPopup>
             <StyledHeader>
-                <span>Frequently Asked Questions</span>
+                <span>FAQ & Support</span>
                 <div
 	                style={{ position: `absolute`, right: 8, top: 5, cursor: `pointer` }}
 	                onClick={() => setShowFAQ(false)}
@@ -80,8 +80,8 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-                <div><BoldSpan>Question 1?</BoldSpan></div>
-                <div>TBU</div>
+                <div><BoldSpan>Once my deposit is confirmed in Step 3, do I have to wait for Step 4?</BoldSpan></div>
+                <div>No; instead, you can go and check your updated wallet balance on the destination chain shortly after the deposit confirmation in Step 3.</div>
                 <br/>
                 <div><BoldSpan>Question 2?</BoldSpan></div>
                 <div>TBU</div>
