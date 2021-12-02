@@ -1,14 +1,10 @@
-import {useRecoilValue}     from "recoil";
 import styled               from "styled-components";
 import downstreamServices   from "config/downstreamServices";
-import {TransactionTraceId} from "state/TransactionStatus";
-import FAQPage              from "view/FAQPage";
 import Container            from "../StyleComponents/Container";
 import {SVGImage}           from "../Widgets/SVGImage";
 import Link                 from "../Widgets/Link";
 import {StyledCentered}     from "../StyleComponents/Centered";
 import {FlexRow}            from "../StyleComponents/FlexRow";
-import ModalContainer       from "../Widgets/BasicModal/ModalContainer";
 
 const StyledPageFooter = styled(Container)`
 	position: fixed;
@@ -18,7 +14,7 @@ const StyledPageFooter = styled(Container)`
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.21);
 	background-image: linear-gradient(92deg, #1b1c1e 2%, #0b0b0c 100%);
 	display: flex;
-	justify-content: space-between !important;
+	justify-content: flex-end !important;
 	align-items: center !important;
 	z-index: 1000;
 	color: white;
@@ -41,11 +37,7 @@ const Box = styled.div`
 `;
 
 const PageFooter = () => {
-	const transactionTraceId = useRecoilValue(TransactionTraceId);
 	return (<StyledPageFooter>
-		<div style={{marginLeft: `15px`}}>
-			{transactionTraceId && <ModalContainer triggerText={`Support Center`}><FAQPage/></ModalContainer>}
-		</div>
 		<Box>
 			<DocsLinks href={downstreamServices.GITHUB_LINK}>
 				<FlexRow>

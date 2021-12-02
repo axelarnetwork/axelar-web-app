@@ -8,10 +8,12 @@ import {animateStyles}                                          from "component/
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
+import {TransactionTraceId}                                     from "state/TransactionStatus";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
+import FAQPage                                                  from "../FAQPage";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -71,6 +73,8 @@ const StyledContainer = styled.div`
 
 const SwapWindow = (): ReactElement => {
 
+	const transactionTraceId = useRecoilValue(TransactionTraceId);
+
 	const [
 		showTransactionStatusWindow,
 		handleTransactionSubmission,
@@ -105,6 +109,7 @@ const SwapWindow = (): ReactElement => {
 				                           closeResultsScreen={closeResultsScreen}/>
 			}</StyledContainer></CSSTransition>
 		</SwitchTransition>
+		{transactionTraceId && <FAQPage/>}
 	</StyledSwapWindow>;
 
 }
