@@ -59,7 +59,7 @@ const TopFlowsSelectorWidget = () => {
 			] }
 			onChange={onChange}
 			arrowClosed={<TopFlowOptionsToggle>
-				<div>Preselected popular flows </div>
+				<div>Preselected popular flows (TBU better UI)</div>
 				<SVGImage
 					style={{cursor: `pointer`}}
 					src={require(`resources/drop-down-arrow.svg`)?.default}
