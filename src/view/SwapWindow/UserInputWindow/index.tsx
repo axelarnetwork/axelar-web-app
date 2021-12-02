@@ -11,15 +11,15 @@ import TransferFeeDivider
                                                                                     from "component/CompositeComponents/TransferFeeDivider";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
-                                                                                    from "component/Widgets/ValidationErrorWidget";
+	                                                                                from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import StyledButtonContainer
-                                                                                    from "../StyledComponents/StyledButtonContainer";
+	                                                                                from "../StyledComponents/StyledButtonContainer";
 import PlainButton
-                                                                                    from "../StyledComponents/PlainButton";
+	                                                                                from "../StyledComponents/PlainButton";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
@@ -128,7 +128,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	}
 
 	return <StyledUserInputWindow>
-		<br/><br/>
+		<br/>
+		<br/>
 		<StyledChainSelectorSection>
 			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
