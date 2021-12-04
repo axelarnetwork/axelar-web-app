@@ -52,6 +52,7 @@ const StyledChainSelectorSection = styled.div`
 	overflow-y: hidden;
 	@media ${screenConfigs.media.desktop} {
 		max-height: 500px;
+		margin-top: 25px;
 	}
 	@media ${screenConfigs.media.laptop} {
 		max-height: 425px;

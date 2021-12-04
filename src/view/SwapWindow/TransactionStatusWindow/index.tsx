@@ -119,7 +119,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		}
 		<br/>
 
-		<StyledButtonContainer>{showButton &&
+		<StyledButtonContainer>{true &&
         <PlainButton disabled={!showButton} dim={!showButton} onClick={() => {
 			resetAllstate();
 			closeResultsScreen();
