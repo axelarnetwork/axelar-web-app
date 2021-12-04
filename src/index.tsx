@@ -37,8 +37,11 @@ const GlobalStyle = createGlobalStyle`
 	    max-width: 100%;
         overflow-x: hidden;
 
-		@media ${screenConfigs.media.laptop} {
+		@media ${screenConfigs.media.desktop} {
 			font-size: 20px;
+		}
+		@media ${screenConfigs.media.laptop} {
+			font-size: 18px;
 		}
 		@media ${screenConfigs.media.tablet} {
 			font-size: 16px;
@@ -56,8 +59,11 @@ const GlobalStyle = createGlobalStyle`
 	}
 	
 	button {
-		@media ${screenConfigs.media.laptop} {
+		@media ${screenConfigs.media.desktop} {
 			font-size: 20px;
+		}
+		@media ${screenConfigs.media.laptop} {
+			font-size: 18px;
 		}
 		@media ${screenConfigs.media.tablet} {
 			font-size: 16px;

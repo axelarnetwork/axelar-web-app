@@ -11,8 +11,11 @@ import {ChainSelection}                          from "state/ChainSelection";
 const StyledSwapChains = styled.div`
 	${StyledCentered}
 	
+	@media ${screenConfigs.media.desktop} {
+		height: 45px;
+	}
 	@media ${screenConfigs.media.laptop} {
-		height: 50px;
+		height: 34px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		height: 30px;

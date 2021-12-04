@@ -2,13 +2,15 @@
 const deviceWidth = {
 	mobileBreakpoint: '400px',
 	tabletBreakpoint: `1280px`,
-	laptopBreakpoint: `1281px`
+	laptopBreakpoint: `1860px`,
+	desktopBreakpoint: `1861px`
 }
 
 const media = {
 	mobile: `(max-width: ${deviceWidth.mobileBreakpoint})`,
 	tablet: `(max-width: ${deviceWidth.tabletBreakpoint})`,
-	laptop: `(min-width: ${deviceWidth.laptopBreakpoint})`
+	laptop: `(max-width: ${deviceWidth.laptopBreakpoint})`,
+	desktop: `(min-width: ${deviceWidth.desktopBreakpoint})`
 }
 const css = {}
 

@@ -11,12 +11,16 @@ export const StyledInput = styled.input.attrs({})`
 	&:focus {
 		outline: none !important;
 	    border-color: darkgrey;
-	    box-shadow: 0 0 8px 0 darkgrey;
+	    box-shadow: 0 0 1px 0 darkgrey;
 	}
 
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		font-size: 16px;
 		height: 50px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		font-size: 14px;
+		height: 40px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		font-size: 11px;

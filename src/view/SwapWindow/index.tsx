@@ -25,9 +25,13 @@ const StyledImage = styled.img<IStyledImageProps>`
 	opacity: ${props => props.showContents ? "1" : "0"};
 	${props => props.showContents ? `transition: opacity 500ms ease-in;` : `transition: opacity 500ms ease-out; transition-delay: 500ms;`}
 
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		width: 2048px;
 		height: 869px;	
+	}
+	@media ${screenConfigs.media.laptop} {
+		width: 1900px;
+		height: 700px;	
 	}
 	@media ${screenConfigs.media.tablet} {
 		width: 1256px;
@@ -57,11 +61,15 @@ const StyledContainer = styled.div`
     align-items: center;
     justify-content: center;
     
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		width: 510px;
 	    height: 710px;
         display: flex;
 	    align-items: flex-start;
+	}
+	@media ${screenConfigs.media.laptop} {
+		width: 400px;
+	    height: 650px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		width: 350px;

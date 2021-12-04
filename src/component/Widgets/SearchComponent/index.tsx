@@ -18,8 +18,12 @@ const StyledSearchComponent = styled(GridDisplay)<IStyledSearchComponentProps>`
     display: flex;
     flex-direction: column;
     
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		height: ${props => props.show ? '245px' : '0px'};
+		transition: none;
+	}
+	@media ${screenConfigs.media.laptop} {
+		height: ${props => props.show ? '225px' : '0px'};
 		transition: none;
 	}
 	@media ${screenConfigs.media.tablet} {

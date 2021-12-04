@@ -29,9 +29,13 @@ const StyledUserInputWindow = styled.div`
 	position: relative;
 	overflow-y: hidden;
 	
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		width: 100%;
 	    height: 685px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		width: 100%;
+	    height: 545px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		width: 310px;
@@ -46,8 +50,11 @@ const StyledUserInputWindow = styled.div`
 
 const StyledChainSelectorSection = styled.div`
 	overflow-y: hidden;
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		max-height: 500px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		max-height: 425px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		max-height: 350px;
@@ -58,7 +65,19 @@ const StyledChainSelectorSection = styled.div`
 `;
 
 const StyledInputFormSection = styled(FlexColumn)`
-	margin-top: 10px;
+	
+	@media ${screenConfigs.media.desktop} {
+		margin-top: 50px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		margin-top: 30px;
+	}
+	@media ${screenConfigs.media.tablet} {
+		margin-top: 10px;
+	}
+	@media ${screenConfigs.media.mobile} {
+		margin-top: 10px;
+	}	
 `;
 
 const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
