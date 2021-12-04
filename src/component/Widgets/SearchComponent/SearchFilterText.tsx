@@ -17,8 +17,11 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
 		top: 7px;
 		fill: black;
 		transition: 0.3s;
-		@media ${screenConfigs.media.laptop} {
+		@media ${screenConfigs.media.desktop} {
 			top: 17px;
+		}	
+		@media ${screenConfigs.media.laptop} {
+			top: 13px;
 		}	
 	}
 	
@@ -32,7 +35,7 @@ const StyledSearchBox = styled.div<IStyledSearchBoxProps>`
     border-top: solid 0.2px lightgray;
 	
 	transition: all 1000ms;
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		transition: none;
 	}
 
@@ -44,7 +47,7 @@ const StyledSearchInputBox = styled(StyledInput)`
 	padding: 8px;
 	box-sizing: border-box;
 	font-style: italic;
-	padding-left: 25px !important;
+	padding-left: 2em !important;
 `;
 
 interface IAssetSearchComponentProps {
@@ -73,7 +76,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
 
 	return <StyledSearchBox show={show}>
 		{show && <>
-            <SVGImage height={"12px"} width={"12px"} margin={"5px 0px 0px 10px"}
+            <SVGImage height={"0.75em"} width={"0.75em"} margin={"0.25em 0px 0px 0.5em"}
                       src={require(`resources/search.svg`)?.default}
             />
             <StyledSearchInputBox

@@ -11,7 +11,7 @@ import {SourceDepositAddress}                    from "state/TransactionStatus";
 const StyledStatusList = styled.div`
     width: 100%;
     height: 65%;
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		margin-top: 20px;
 	}
 `;
@@ -22,8 +22,11 @@ const StyledListItem = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		font-size: 18px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		font-size: 16px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		font-size: 13px;

@@ -15,10 +15,13 @@ const StyledValidationErrorWidget = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	
-    @media ${screenConfigs.media.laptop} {
-        margin-top: 40px;
+    @media ${screenConfigs.media.desktop} {
+        margin-top: 20px;
         padding: 0.75em;
         font-size: 1em;
+	}
+	@media ${screenConfigs.media.laptop} {
+        margin-top: 15px;
 	}
 	@media ${screenConfigs.media.tablet} {
         margin-top: 15px;
@@ -36,7 +39,7 @@ const StyledImage = styled.img<ThemedStyledProps<any, any>>`
 	: ``
 };
 	
-    @media ${screenConfigs.media.laptop} {
+    @media ${screenConfigs.media.desktop} {
 		${props => props.marginLg
 	? `margin-left: ${props.marginLg}; margin-right: ${props.marginLg};`
 	: ``

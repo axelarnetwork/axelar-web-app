@@ -21,8 +21,11 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
 	
 	white-space: nowrap;
 
+	@media ${screenConfigs.media.desktop} {
+		padding: 10px 15px 15px 15px;
+	}
 	@media ${screenConfigs.media.laptop} {
-		padding: 15px 15px 25px 15px;
+		padding: 5px 10px 15px 10px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		padding: 5px 5px 10px 5px;

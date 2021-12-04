@@ -27,17 +27,25 @@ const StyledTransactionStatusWindow = styled.div`
     overflow: hidden;
     margin-bottom: 5px;
 
-	@media ${screenConfigs.media.laptop} {
+	@media ${screenConfigs.media.desktop} {
 		width: 100%;
 	    height: 685px;
+	    margin-bottom: 5px;
+	}
+	@media ${screenConfigs.media.laptop} {
+		width: 100%;
+	    height: 565px;
+	    margin-bottom: 20px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		width: 310px;
 		height: 435px;
+		margin-bottom: 5px;
 	}
 	@media ${screenConfigs.media.mobile} {
 		width: 310px;
 		height: 435px;
+		margin-bottom: 5px;
 	}
 	    
 `;

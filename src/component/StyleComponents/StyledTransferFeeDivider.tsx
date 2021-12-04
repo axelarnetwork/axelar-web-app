@@ -13,14 +13,20 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
 	opacity: ${props => props.showContents ? `1` : `0`};
     ${props => props.showContents ? `transition: opacity 1000ms;` : ``}
     
-    @media ${screenConfigs.media.laptop} {
-        margin-top: 40px;
+    @media ${screenConfigs.media.desktop} {
+        margin-top: 50px;
 		font-size: 14px;
 	}
+    @media ${screenConfigs.media.laptop} {
+        margin-top: 30px;
+		font-size: 12px;
+	}
 	@media ${screenConfigs.media.tablet} {
+		margin-top: 0px;
 		font-size: 10px;
 	}
 	@media ${screenConfigs.media.mobile} {
 		font-size: 10px;
+		margin-top: 0px;
 	}
 `;
