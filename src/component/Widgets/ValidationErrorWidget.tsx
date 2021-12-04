@@ -16,7 +16,7 @@ const StyledValidationErrorWidget = styled.div`
 	justify-content: space-between;
 	
     @media ${screenConfigs.media.desktop} {
-        margin-top: 40px;
+        margin-top: 20px;
         padding: 0.75em;
         font-size: 1em;
 	}
