@@ -14,7 +14,6 @@ import activeBox                                                from "resources/
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
-import TopFlowsSelectorWidget                                   from "./TopFlowsSelector";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -114,7 +113,6 @@ const SwapWindow = (): ReactElement => {
 				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 				classNames="fade"
 			><StyledContainer>
-			{userInputNeeded && <TopFlowsSelectorWidget />}
 			{userInputNeeded
 				? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
 				: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
