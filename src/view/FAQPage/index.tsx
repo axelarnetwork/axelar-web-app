@@ -118,7 +118,7 @@ const FAQPage = () => {
         </StyledFAQPopup>}
 		<HelperWidget onClick={() => setShowFAQ(!showFAQ)}>
 			<FlexRow>
-				<img src={require(`resources/active-eye.svg`).default} alt={""} />
+				<img src={require(`resources/active-eye-orange.svg`).default} alt={""} />
 				<div style={{ marginLeft: `10px`}}>Support Center</div>
 			</FlexRow>
 		</HelperWidget>
