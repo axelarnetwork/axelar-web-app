@@ -30,7 +30,6 @@ const StyledHelperComponent = styled.div<IStyledDivProps>`
 	width: ${props => props.appear ? `70%` : `auto`};
 	background-color: ${props => props.appear ? `none` : `#444`};
 	color: ${props => props.appear ? `black` : `white`};
-	transition: all 50ms;
 
     @media ${screenConfigs.media.desktop} {
         margin-top: 0.75em;
@@ -40,10 +39,10 @@ const StyledHelperComponent = styled.div<IStyledDivProps>`
 
 const TopFlowsPopup = styled.div<IStyledDivProps>`
 	overflow-wrap: break-word;
-    font-size: 1em;
-    border-radius: 50px;
+    font-size: 0.9em;
+    border-radius: 50px 0px 50px 50px;
 	opacity: ${props => props.appear ? 1 : 0};
-	height: ${props => props.appear ? `100%` : `0px`};
+	height: 100%;
 	width: ${props => props.appear ? `100%` : `0px`};
 	margin-top: ${props => props.appear ? `5px` : `0px`};
 	background-color: ${props => props.appear ? `rgba(0,0,0,0.05)` : `none`};
@@ -66,7 +65,7 @@ const FlowOptionChainContainer = styled(FlexRow)`
 
 const StyledFlowOption = styled.div`
 	cursor: pointer;
-	font-size: 0.8em;
+	font-size: 0.75em;
 	border-radius: 10px;
 	border: solid 0.6px #b9bac8;
 	box-sizing: border-box;
@@ -86,7 +85,7 @@ interface IFlowOptionProps {
 const FlowOption = (props: IFlowOptionProps) => {
 
 	const { assetCommonKey, assetSymbol, sourceChainName, sourceChainSymbol, destinationChainSymbol, destinationChainName } = props;
-	const dimension: string = `1.5em`;
+	const dimension: string = `1.75em`;
 
 	return <Tooltip
 		anchorContent={<StyledFlowOption onClick={() => props.onClick(props)}>

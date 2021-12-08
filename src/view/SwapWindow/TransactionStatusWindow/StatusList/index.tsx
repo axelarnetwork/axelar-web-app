@@ -36,9 +36,9 @@ const StyledListItem = styled.div`
 	}
 `;
 
-const StyledImage = styled.img`
-	height: 50%;
-	width: 50%;
+const StyledImage = styled.object`
+	height: 75%;
+	width: 75%;
 `;
 
 interface IListItemProps {
@@ -63,8 +63,7 @@ const ListItem = (props: IListItemProps) => {
 	return <StyledListItem>
 		<div style={{width: `20%`, height: `100%`, display: `flex`, alignItems: `center`, justifyContent: `center`}}>
 			<StyledImage
-				src={require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)?.default}
-				alt={""}
+				data={require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)?.default}
 			/>
 		</div>
 		<div style={{
