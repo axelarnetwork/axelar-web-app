@@ -5,7 +5,8 @@ import Tooltip                                    from "component/Widgets/Toolti
 import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
-import {useState}                                 from "react";
+import {useState} from "react";
+import QAs, {IQA} from "./QA";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -80,13 +81,15 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-                <div><BoldSpan>Once my deposit is confirmed in Step 3, do I have to wait for Step 4?</BoldSpan></div>
-                <div>No; instead, you can go and check your updated wallet balance on the destination chain shortly after the deposit confirmation in Step 3.</div>
-                <br/>
-                <div><BoldSpan>Question 2?</BoldSpan></div>
-                <div>TBU</div>
+	            {QAs.map((qa: IQA, i: number) => {
+	            	return <div key={`qa-${i}`}>
+			            <div><BoldSpan>{qa.question}</BoldSpan></div>
+			            <div>{qa.answer}</div>
+                        <br/>
+		            </div>
+	            })}
             </FAQSection>
-            <ContactUsSection>
+			{transactionTraceId && <ContactUsSection>
                 <br/>
                 <div><BoldSpan>Having issues with a live transaction?</BoldSpan></div>
                 <br/>
@@ -114,12 +117,12 @@ const FAQPage = () => {
                     tooltipText={(transactionTraceId && depositAddress ? "Copy both to Clipboard" : "Copy to Clipboard")}
                     tooltipAltText={"Copied to Clipboard!"}
                 />
-            </ContactUsSection>
+            </ContactUsSection>}
         </StyledFAQPopup>}
 		<HelperWidget onClick={() => setShowFAQ(!showFAQ)}>
 			<FlexRow>
 				<img src={require(`resources/active-eye-orange.svg`).default} alt={""} />
-				<div style={{ marginLeft: `10px`}}>Support Center</div>
+				<div style={{ marginLeft: `10px`}}>Support</div>
 			</FlexRow>
 		</HelperWidget>
 	</StyledHelperComponent>;

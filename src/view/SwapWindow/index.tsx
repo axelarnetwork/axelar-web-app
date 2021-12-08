@@ -119,7 +119,7 @@ const SwapWindow = (): ReactElement => {
 				                           closeResultsScreen={closeResultsScreen}/>
 			}</StyledContainer></CSSTransition>
 		</SwitchTransition>
-		{transactionTraceId && <FAQPage/>}
+		<FAQPage/>
 	</StyledSwapWindow>;
 
 }
