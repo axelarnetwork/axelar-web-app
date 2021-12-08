@@ -3,7 +3,8 @@
 	"version": "0.2.10",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "0.2.12",
+		"@axelar-network/axelarjs-sdk": "0.3.0",
+		"@types/react-table": "^7.7.9",
 		"animate.css": "^4.1.1",
 		"copy-to-clipboard": "^3.3.1",
 		"dotenv": "^10.0.0",
@@ -15,6 +16,7 @@
 		"react-inlinesvg": "^2.3.0",
 		"react-notifications-component": "^3.1.0",
 		"react-router-dom": "^5.3.0",
+		"react-table": "^7.7.0",
 		"react-transition-group": "^4.4.2",
 		"recoil": "^0.4.1",
 		"recoil-devtools-logger": "^0.4.0",
