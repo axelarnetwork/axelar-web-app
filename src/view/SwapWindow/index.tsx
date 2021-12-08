@@ -82,8 +82,6 @@ const StyledContainer = styled.div`
 
 const SwapWindow = (): ReactElement => {
 
-	const transactionTraceId = useRecoilValue(TransactionTraceId);
-
 	const [
 		showTransactionStatusWindow,
 		handleTransactionSubmission,
