@@ -8,7 +8,6 @@ import {animateStyles}                                          from "component/
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
-import {TransactionTraceId}                                     from "state/TransactionStatus";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
