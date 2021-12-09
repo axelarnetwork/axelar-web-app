@@ -108,7 +108,7 @@ const FlowOption = (props: IFlowOptionProps) => {
 	/>
 }
 
-const TopFlowsSelector = () => {
+const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: () => void}) => {
 
 	const [showFlows, setShowFlows] = useState(false);
 
@@ -133,6 +133,7 @@ const TopFlowsSelector = () => {
 		setDestinationChain(map[selection.destinationChainName]);
 		setSourceAsset(map[selection.sourceChainName]?.assets?.find(asset => asset.common_key === selection.assetCommonKey) as IAssetInfo);
 		setShowFlows(false);
+		closeAllSearchWindows();
 	};
 
 	return <StyledHelperComponent appear={showFlows}

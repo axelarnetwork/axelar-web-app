@@ -1,4 +1,4 @@
-import React, {useState}                                     from "react";
+import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
@@ -18,9 +18,10 @@ interface IChainSelectorProps {
 	label: string;
 	animate?: boolean;
 	hideContents?: boolean;
+	ref: any;
 }
 
-const ChainSelector = (props: IChainSelectorProps) => {
+const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 
 	const isSourceChain: boolean = props.id === SOURCE_TOKEN_KEY;
 	const [selectedChain, setSelectedChain] = useRecoilState<IChainInfo | null>(ChainSelection(props.id));
@@ -31,6 +32,16 @@ const ChainSelector = (props: IChainSelectorProps) => {
 	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
 	const [showChainSelectorSearchBox, setShowChainSelectorSearchBox] = useState<boolean>(false);
 	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
+
+	/*closeAllSearchWindows is a ref method called
+	from the parent component (UserInputWindow/index.tsx)
+	to programmatically close the asset search windows */
+	useImperativeHandle(ref, () => ({
+		closeAllSearchWindows () {
+			setShowChainSelectorSearchBox(false);
+			setShowAssetSearchBox(false);
+		}
+	}))
 
 	let filteredChainList: IChainInfo[] = chainList;
 
@@ -47,7 +58,7 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		title: supportedChain.chainName,
 		active: false,
 		icon: require(`resources/logos/${supportedChain?.chainSymbol}/${supportedChain?.chainSymbol}.svg`)?.default,
-		disabled: ["avalanche"].includes(supportedChain?.chainName?.toLowerCase()),
+		disabled: false,
 		onClick: () => {
 			setSelectedChain(supportedChain);
 
@@ -121,6 +132,6 @@ const ChainSelector = (props: IChainSelectorProps) => {
 		/>
 	</StyledChainSelectionComponent>
 
-}
+});
 
 export default ChainSelector;
