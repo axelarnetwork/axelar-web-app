@@ -1,4 +1,4 @@
-import React, {KeyboardEvent, useCallback, useEffect, useState}                     from "react";
+import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
 import {useRecoilState, useRecoilValue}                                             from "recoil";
 import styled                                                                       from "styled-components";
 import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
@@ -19,8 +19,8 @@ import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAss
 import StyledButtonContainer
                                                                                     from "../StyledComponents/StyledButtonContainer";
 import PlainButton
-	                          from "../StyledComponents/PlainButton";
-import TopFlowsSelectorWidget from "../TopFlowsSelector";
+                                                                                    from "../StyledComponents/PlainButton";
+import TopFlowsSelectorWidget                                                       from "../TopFlowsSelector";
 
 interface IUserInputWindowProps {
 	handleSwapSubmit: () => Promise<string>;
@@ -92,6 +92,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 	const resetUserInputs = useResetUserInputs();
 	const [mounted, setMounted] = useState(true);
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
+	const srcChainComponentRef = createRef();
+	const destChainComponentRef = createRef();
 
 	useEffect(() => {
 		setMounted(true);
@@ -148,14 +150,21 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		&& onInitiateTransfer();
 	}
 
+	/*closeAllSearchWindows is a method inside ChainSelector children called
+	to programmatically close the asset search windows, i.e. when TopFlowsSelectorWidget is made */
+	const closeAllSearchWindows = () => {
+		(srcChainComponentRef?.current as any)?.closeAllSearchWindows();
+		(destChainComponentRef?.current as any)?.closeAllSearchWindows();
+	}
+
 	return <StyledUserInputWindow>
 		<br/>
 		<br/>
-		<TopFlowsSelectorWidget />
+		<TopFlowsSelectorWidget closeAllSearchWindows={closeAllSearchWindows}/>
 		<StyledChainSelectorSection>
-			<ChainSelector id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
+			<ChainSelector ref={srcChainComponentRef} id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
 			<div><SwapChains/></div>
-			<ChainSelector id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
 			<br/>
 			<TransferFeeDivider/>
 			<StyledInputFormSection>
