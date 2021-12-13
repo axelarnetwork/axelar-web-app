@@ -1,4 +1,4 @@
-import React, {useCallback, useState}            from "react";
+import React, {useMemo, useState}                from "react";
 import {useRecoilValue, useSetRecoilState}       from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
 import {IAssetInfo, IChainInfo}                  from "@axelar-network/axelarjs-sdk";
@@ -126,18 +126,19 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 	const setDestinationChain = useSetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const setSourceAsset = useSetRecoilState(SourceAsset);
 
-	const getChainMap = useCallback(() => {
+	const topChainsMap = useMemo(() => {
 
 		const map: { [key: string]: IChainInfo } = {};
 		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as IChainInfo;
 		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as IChainInfo;
 		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as IChainInfo;
+		console.log("getting map", map);
 		return map;
 
 	}, [chainList]);
 
 	const onClick = (selection: IFlowOptionProps) => {
-		const map = getChainMap();
+		const map = topChainsMap;
 		setSourceChain(map[selection.sourceChainName]);
 		setDestinationChain(map[selection.destinationChainName]);
 		setSourceAsset(map[selection.sourceChainName]?.assets?.find(asset => asset.common_key === selection.assetCommonKey) as IAssetInfo);
