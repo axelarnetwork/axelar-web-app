@@ -1,0 +1,19 @@
+name: deploy-ui-to-testnet
+on:
+  workflow_dispatch:
+jobs:
+  deploy-ui-to-testnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: amondnet/vercel-action@v20
+        id: vercel-action-testnet
+        with:
+          scope: ${{ secrets.AXELAR_TEAM_ID_VERCEL }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_BRIDGET_TESTNET_PROJECT_ID }}
+          vercel-args: '--prod'
+          alias-domains: |
+            axelar-bridge-testnet.vercel.app
+            bridge.testnet.axelar.dev

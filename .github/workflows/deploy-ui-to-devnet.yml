@@ -1,0 +1,22 @@
+name: deploy-ui-to-devnet
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  deploy-ui-to-devnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: amondnet/vercel-action@v20
+        id: vercel-action-devnet
+        with:
+          scope: ${{ secrets.AXELAR_TEAM_ID_VERCEL }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_BRIDGET_DEVNET_PROJECT_ID }}
+          vercel-args: '--prod'
+          alias-domains: |
+            axelar-bridge-devnet.vercel.app
+            bridge.devnet.axelar.dev
