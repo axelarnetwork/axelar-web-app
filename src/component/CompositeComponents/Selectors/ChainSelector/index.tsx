@@ -57,7 +57,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
 		active: false,
-		icon: require(`resources/logos/${supportedChain?.chainSymbol}/${supportedChain?.chainSymbol}.svg`)?.default,
+		icon: require(`resources/logos/${supportedChain?.chainSymbol}.svg`)?.default,
 		disabled: false,
 		onClick: () => {
 			setSelectedChain(supportedChain);
@@ -121,7 +121,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 					title: asset.assetName as string,
 					symbol: asset.assetSymbol as string,
 					active: false,
-					icon: require(`resources/logos/${sourceChain?.chainSymbol}/assets/${asset?.assetSymbol}.svg`)?.default,
+					icon: require(`resources/tokenAssets/${asset?.common_key}.svg`)?.default,
 					disabled: false,
 					onClick: () => {
 						setSourceAsset(asset);

@@ -33,6 +33,7 @@ export interface IConfirmationStatus {
 	numberRequiredConfirmations: Nullable<number>;
 	transactionHash: Nullable<string>;
 }
+
 export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
 	key: "NumberConfirmations",
 	default: {

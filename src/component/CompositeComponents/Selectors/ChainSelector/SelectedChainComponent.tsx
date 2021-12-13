@@ -10,7 +10,7 @@ export const SelectedChainComponent = (props: IChainComponentProps) => {
 
 	let image;
 	try {
-		image = require(`resources/logos/${props.chainInfo?.chainSymbol}/${props.chainInfo?.chainSymbol}.svg`)?.default;
+		image = require(`resources/logos/${props.chainInfo?.chainSymbol}.svg`)?.default;
 	} catch (e) {
 		image = require(`resources/select-chain-eye.svg`)?.default;
 	}

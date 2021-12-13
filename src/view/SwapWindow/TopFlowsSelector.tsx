@@ -99,17 +99,17 @@ const FlowOption = (props: IFlowOptionProps) => {
 		anchorContent={<StyledFlowOption onClick={() => props.onClick(props)}>
 			<FlexRow style={{marginBottom: `10px`}}>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/assetTokens/${assetCommonKey}.svg`).default}
+				          src={require(`resources/tokenAssets/${assetCommonKey}.svg`).default}
 				/>
 				<BoldSpan style={{marginLeft: `10px`}}>{assetSymbol}</BoldSpan>
 			</FlexRow>
 			<FlowOptionChainContainer>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/logos/${sourceChainSymbol}/${sourceChainSymbol}.svg`).default}/>
+				          src={require(`resources/logos/${sourceChainSymbol}.svg`).default}/>
 				<div style={{margin: `0px 10px 0px 10px`}}><img
 					src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/></div>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/logos/${destinationChainSymbol}/${destinationChainSymbol}.svg`).default}/>
+				          src={require(`resources/logos/${destinationChainSymbol}.svg`).default}/>
 			</FlowOptionChainContainer>
 		</StyledFlowOption>}
 		tooltipText={`${sourceChainName} to ${destinationChainName}`}
