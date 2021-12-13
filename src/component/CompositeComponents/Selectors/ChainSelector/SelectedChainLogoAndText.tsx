@@ -6,7 +6,7 @@ interface IChainComponentProps {
 	chainInfo: IChainInfo | null;
 }
 
-export const SelectedChainComponent = (props: IChainComponentProps) => {
+export const SelectedChainLogoAndText = (props: IChainComponentProps) => {
 
 	let image;
 	try {

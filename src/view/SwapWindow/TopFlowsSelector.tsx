@@ -132,7 +132,6 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as IChainInfo;
 		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as IChainInfo;
 		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as IChainInfo;
-		console.log("getting map", map);
 		return map;
 
 	}, [chainList]);

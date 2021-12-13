@@ -3,7 +3,7 @@ import {useRecoilValue}                                                      fro
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
 import screenConfigs                                                         from "config/screenConfigs";
 import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainComponent}                                              from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainComponent";
+import {SelectedChainLogoAndText}                                            from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
 import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
@@ -103,12 +103,12 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		<br/>
 		<StyledFlexRow>
 			<StyledChainSelectionIconWidget>
-				<SelectedChainComponent chainInfo={sourceChain}/>
+				<SelectedChainLogoAndText chainInfo={sourceChain}/>
 			</StyledChainSelectionIconWidget>
 			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
 			<img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/>
 			<StyledChainSelectionIconWidget style={{display: `flex`, justifyContent: `flex-end`}}>
-				<SelectedChainComponent chainInfo={destinationChain}/>
+				<SelectedChainLogoAndText chainInfo={destinationChain}/>
 			</StyledChainSelectionIconWidget>
 		</StyledFlexRow>
 		{isRecaptchaAuthenticated

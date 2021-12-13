@@ -1,6 +1,6 @@
 import styled, {ThemedStyledProps} from "styled-components";
+import {FlexRow}                   from "component/StyleComponents/FlexRow";
 import screenConfigs               from "config/screenConfigs";
-import {FlexRow}                   from "../../StyleComponents/FlexRow";
 
 interface IStyledChainSelectorProps extends ThemedStyledProps<any, any> {
 	animate: boolean;
@@ -18,7 +18,6 @@ export const StyledChainSelectionComponent = styled(FlexRow)<IStyledChainSelecto
 	border-image-slice: 1;
 	background-origin: border-box;
 	background-clip: content-box, border-box;
-	
 	white-space: nowrap;
 
 	@media ${screenConfigs.media.desktop} {

@@ -1,9 +1,12 @@
+/*
+TODO: the cartoon character isn't used at the moment, but we'll incorporate this shortly
+* */
 import {useRecoilValue}                                 from "recoil";
 import styled, {ThemedStyledProps}                      from "styled-components";
+import screenConfigs                                    from "config/screenConfigs";
 import {MessageShownInCartoon, ShowHelperCartoonWidget} from "state/ApplicationStatus";
 import {fadeIn, fadeInFromLeft}                         from "../StyleComponents/animations/fadeInKeyframe";
 import {fadeOutKeyframe}                                from "../StyleComponents/animations/fadeOutKeyframe";
-import screenConfigs                                    from "../../config/screenConfigs";
 
 const HelperCartoonWidgetStyles = styled.div`
     position: absolute;
