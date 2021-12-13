@@ -1,4 +1,4 @@
-import React, {useCallback, useState}            from "react";
+import React, {useMemo, useState}                from "react";
 import {useRecoilValue, useSetRecoilState}       from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
 import {IAssetInfo, IChainInfo}                  from "@axelar-network/axelarjs-sdk";
@@ -45,7 +45,7 @@ const TopFlowsPopup = styled.div<IStyledDivProps>`
 	height: 100%;
 	width: ${props => props.appear ? `100%` : `0px`};
 	margin-top: ${props => props.appear ? `5px` : `0px`};
-	background-color: ${props => props.appear ? `rgba(0,0,0,0.05)` : `none`};
+	background-color: ${props => props.appear ? `rgba(0, 0, 0, 0.05)` : `none`};
 	transform: ${props => props.appear ? `translateY(0px); translateX(0px)` : `translateY(-10px); translateX(-50px)`};
     transition: all 500ms;
 `;
@@ -82,25 +82,34 @@ interface IFlowOptionProps {
 	destinationChainSymbol: string;
 	onClick: any;
 }
+
 const FlowOption = (props: IFlowOptionProps) => {
 
-	const { assetCommonKey, assetSymbol, sourceChainName, sourceChainSymbol, destinationChainSymbol, destinationChainName } = props;
+	const {
+		assetCommonKey,
+		assetSymbol,
+		sourceChainName,
+		sourceChainSymbol,
+		destinationChainSymbol,
+		destinationChainName
+	} = props;
 	const dimension: string = `1.75em`;
 
 	return <Tooltip
 		anchorContent={<StyledFlowOption onClick={() => props.onClick(props)}>
-			<FlexRow style={{marginBottom: `10px` }}>
+			<FlexRow style={{marginBottom: `10px`}}>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/assetTokens/${assetCommonKey}.svg`).default}
+				          src={require(`resources/tokenAssets/${assetCommonKey}.svg`).default}
 				/>
-				<BoldSpan style={{marginLeft: `10px` }}>{assetSymbol}</BoldSpan>
+				<BoldSpan style={{marginLeft: `10px`}}>{assetSymbol}</BoldSpan>
 			</FlexRow>
 			<FlowOptionChainContainer>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/logos/${sourceChainSymbol}/${sourceChainSymbol}.svg`).default} />
-				<div style={{ margin: `0px 10px 0px 10px`}}><img src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/></div>
+				          src={require(`resources/logos/${sourceChainSymbol}.svg`).default}/>
+				<div style={{margin: `0px 10px 0px 10px`}}><img
+					src={require(`resources/transaction_status_logos/transferring-icon.svg`)?.default} alt={""}/></div>
 				<SVGImage width={dimension} height={dimension}
-				          src={require(`resources/logos/${destinationChainSymbol}/${destinationChainSymbol}.svg`).default} />
+				          src={require(`resources/logos/${destinationChainSymbol}.svg`).default}/>
 			</FlowOptionChainContainer>
 		</StyledFlowOption>}
 		tooltipText={`${sourceChainName} to ${destinationChainName}`}
@@ -108,7 +117,7 @@ const FlowOption = (props: IFlowOptionProps) => {
 	/>
 }
 
-const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: () => void}) => {
+const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () => void }) => {
 
 	const [showFlows, setShowFlows] = useState(false);
 
@@ -117,7 +126,7 @@ const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: ()
 	const setDestinationChain = useSetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const setSourceAsset = useSetRecoilState(SourceAsset);
 
-	const getChainMap = useCallback(() => {
+	const topChainsMap = useMemo(() => {
 
 		const map: { [key: string]: IChainInfo } = {};
 		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as IChainInfo;
@@ -128,7 +137,7 @@ const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: ()
 	}, [chainList]);
 
 	const onClick = (selection: IFlowOptionProps) => {
-		const map = getChainMap();
+		const map = topChainsMap;
 		setSourceChain(map[selection.sourceChainName]);
 		setDestinationChain(map[selection.destinationChainName]);
 		setSourceAsset(map[selection.sourceChainName]?.assets?.find(asset => asset.common_key === selection.assetCommonKey) as IAssetInfo);
@@ -137,16 +146,16 @@ const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: ()
 	};
 
 	return <StyledHelperComponent appear={showFlows}
-		onMouseLeave={() => setShowFlows(false)}
-		onMouseEnter={() => !showFlows && setShowFlows(true)}
+	                              onMouseLeave={() => setShowFlows(false)}
+	                              onMouseEnter={() => !showFlows && setShowFlows(true)}
 	>
 		<TopFlowsToggle onClick={() => setShowFlows(!showFlows)}>
 			<img src={require(`resources/active-eye-blue.svg`).default} alt={""} width={`12px`} height={`12px`}/>
-			<div style={{marginLeft: `5px`, fontSize: `0.75em` }}>Top Flows</div>
+			<div style={{marginLeft: `5px`, fontSize: `0.75em`}}>Top Flows</div>
 		</TopFlowsToggle>
 
 		<TopFlowsPopup appear={showFlows}>
-			{ showFlows && <FlowOptionList>{
+			{showFlows && <FlowOptionList>{
 				topFlowOptions.map((flowOption) => {
 					return <FlowOption
 						key={`flow-option-${flowOption.common_key}-${flowOption.sourceChainSymbol}-${flowOption.destinationChainSymbol}`}
@@ -160,7 +169,7 @@ const TopFlowsSelector = ({ closeAllSearchWindows }: { closeAllSearchWindows: ()
 					/>
 				})
 			}</FlowOptionList>}
-        </TopFlowsPopup>
+		</TopFlowsPopup>
 	</StyledHelperComponent>;
 }
 

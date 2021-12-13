@@ -2,16 +2,15 @@ import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
 import {SOURCE_TOKEN_KEY}                                    from "config/consts";
-import AssetSelector
-                                                             from "component/CompositeComponents/Selectors/AssetSelector";
+import AssetSelector                                         from "component/CompositeComponents/Selectors/AssetSelector";
 import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
-import SearchComponentGeneric, {ISearchItem}                 from "component/Widgets/SearchComponent";
+import SearchComponent, {ISearchItem}                        from "component/Widgets/SearchComponent";
 import {SVGImage}                                            from "component/Widgets/SVGImage";
 import {ChainSelection, SourceAsset}                         from "state/ChainSelection";
 import {ChainList}                                           from "state/ChainList";
-import {StyledChainSelectionComponent}                       from "../StyledChainSelectionComponent";
+import {StyledChainSelectionComponent}                       from "./StyleComponents/StyledChainSelectionComponent";
 import {StyledChainSelectionIconWidget}                      from "./StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainComponent}                              from "./SelectedChainComponent";
+import {SelectedChainLogoAndText}                            from "./SelectedChainLogoAndText";
 
 interface IChainSelectorProps {
 	id: string;
@@ -37,7 +36,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	from the parent component (UserInputWindow/index.tsx)
 	to programmatically close the asset search windows */
 	useImperativeHandle(ref, () => ({
-		closeAllSearchWindows () {
+		closeAllSearchWindows() {
 			setShowChainSelectorSearchBox(false);
 			setShowAssetSearchBox(false);
 		}
@@ -57,7 +56,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: IChainInfo) => ({
 		title: supportedChain.chainName,
 		active: false,
-		icon: require(`resources/logos/${supportedChain?.chainSymbol}/${supportedChain?.chainSymbol}.svg`)?.default,
+		icon: require(`resources/logos/${supportedChain?.chainSymbol}.svg`)?.default,
 		disabled: false,
 		onClick: () => {
 			setSelectedChain(supportedChain);
@@ -75,7 +74,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	/*only show the chain selector widget if the asset selector search box is not open*/
 	const chainSelectorWidget = () => <StyledChainSelectionIconWidget>
 		<div style={{cursor: `pointer`}} onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}>
-			<SelectedChainComponent chainInfo={selectedChain}/>
+			<SelectedChainLogoAndText chainInfo={selectedChain}/>
 		</div>
 		<SVGImage
 			style={{cursor: `pointer`}}
@@ -109,19 +108,23 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 				: <></>
 			}
 		</FlexSpaceBetween>
-		<SearchComponentGeneric
+
+		{/*search dropdown for chain selection*/}
+		<SearchComponent
 			show={showChainSelectorSearchBox}
 			allItems={chainDropdownOptions}
 			handleClose={() => setShowChainSelectorSearchBox(false)}
 		/>
-		<SearchComponentGeneric
+
+		{/*search dropdown for asset selection*/}
+		<SearchComponent
 			show={showAssetSearchBox}
 			allItems={initialAssetList.map((asset: IAssetInfo) => {
 				return {
 					title: asset.assetName as string,
 					symbol: asset.assetSymbol as string,
 					active: false,
-					icon: require(`resources/logos/${sourceChain?.chainSymbol}/assets/${asset?.assetSymbol}.svg`)?.default,
+					icon: require(`resources/tokenAssets/${asset?.common_key}.svg`)?.default,
 					disabled: false,
 					onClick: () => {
 						setSourceAsset(asset);

@@ -1,10 +1,10 @@
-import styled               from "styled-components";
-import downstreamServices   from "config/downstreamServices";
-import Container            from "../StyleComponents/Container";
-import {SVGImage}           from "../Widgets/SVGImage";
-import Link                 from "../Widgets/Link";
-import {StyledCentered}     from "../StyleComponents/Centered";
-import {FlexRow}            from "../StyleComponents/FlexRow";
+import styled             from "styled-components";
+import downstreamServices from "config/downstreamServices";
+import Container          from "../StyleComponents/Container";
+import {SVGImage}         from "../Widgets/SVGImage";
+import Link               from "../Widgets/Link";
+import {StyledCentered}   from "../StyleComponents/Centered";
+import {FlexRow}          from "../StyleComponents/FlexRow";
 
 const StyledPageFooter = styled(Container)`
 	position: fixed;

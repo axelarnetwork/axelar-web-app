@@ -1,10 +1,10 @@
-import {useRecoilValue}              from "recoil";
-import BoldSpan                      from "component/StyleComponents/BoldSpan";
-import {StyledImage}                 from "component/StyleComponents/StyledImage";
+import {useRecoilValue}                          from "recoil";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {StyledImage}                             from "component/StyleComponents/StyledImage";
 import {StyledTransferFeeDivider}                from "component/StyleComponents/StyledTransferFeeDivider";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import dividerImage                              from "resources/group.svg";
-import {ChainSelection, SourceAsset} from "state/ChainSelection";
+import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 
 const TransferFeeDivider = () => {
 
@@ -19,7 +19,7 @@ const TransferFeeDivider = () => {
 		<div style={{display: `flex`, justifyContent: `space-between`}}>
 			<div style={{marginLeft: `15px`, marginTop: `10px`}}>
 				<div><BoldSpan>Approximate wait time: </BoldSpan></div>
-				<div>~{waitTime}-{waitTime+5} minutes</div>
+				<div>~{waitTime}-{waitTime + 5} minutes</div>
 			</div>
 			<div style={{textAlign: `right`}}>
 				<div><BoldSpan>Transfer Fee: </BoldSpan></div>
