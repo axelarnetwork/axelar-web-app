@@ -110,11 +110,11 @@ const SwapWindow = (): ReactElement => {
 				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 				classNames="fade"
 			><StyledContainer>
-			{userInputNeeded
-				? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
-				: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
-				                           closeResultsScreen={closeResultsScreen}/>
-			}</StyledContainer></CSSTransition>
+				{userInputNeeded
+					? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
+					: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
+					                           closeResultsScreen={closeResultsScreen}/>
+				}</StyledContainer></CSSTransition>
 		</SwitchTransition>
 		<FAQPage/>
 	</StyledSwapWindow>;

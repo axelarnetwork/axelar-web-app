@@ -37,7 +37,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	from the parent component (UserInputWindow/index.tsx)
 	to programmatically close the asset search windows */
 	useImperativeHandle(ref, () => ({
-		closeAllSearchWindows () {
+		closeAllSearchWindows() {
 			setShowChainSelectorSearchBox(false);
 			setShowAssetSearchBox(false);
 		}

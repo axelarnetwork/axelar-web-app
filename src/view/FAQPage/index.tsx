@@ -5,8 +5,8 @@ import Tooltip                                    from "component/Widgets/Toolti
 import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
-import {useState} from "react";
-import QAs, {IQA} from "./QA";
+import {useState}                                 from "react";
+import QAs, {IQA}                                 from "./QA";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -70,30 +70,30 @@ const FAQPage = () => {
 	const [showFAQ, setShowFAQ] = useState(false);
 
 	return <StyledHelperComponent>
-		{ showFAQ && <StyledFAQPopup>
+		{showFAQ && <StyledFAQPopup>
             <StyledHeader>
                 <span>FAQ & Support</span>
                 <div
-	                style={{ position: `absolute`, right: 8, top: 5, cursor: `pointer` }}
-	                onClick={() => setShowFAQ(false)}
+                    style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
+                    onClick={() => setShowFAQ(false)}
                 >
-	                <img src={require(`resources/close-icon.svg`).default} alt={""} />
+                    <img src={require(`resources/close-icon.svg`).default} alt={""}/>
                 </div>
             </StyledHeader>
             <FAQSection>
-	            {QAs.map((qa: IQA, i: number) => {
-	            	return <div key={`qa-${i}`}>
-			            <div><BoldSpan>{qa.question}</BoldSpan></div>
-			            <div>{qa.answer}</div>
-                        <br/>
-		            </div>
-	            })}
+				{QAs.map((qa: IQA, i: number) => {
+					return <div key={`qa-${i}`}>
+						<div><BoldSpan>{qa.question}</BoldSpan></div>
+						<div>{qa.answer}</div>
+						<br/>
+					</div>
+				})}
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
                 <br/>
                 <div><BoldSpan>Having issues with a live transaction?</BoldSpan></div>
                 <br/>
-                <div style={{ marginBottom: `5px` }}>Reach out to us on Discord, referencing</div>
+                <div style={{marginBottom: `5px`}}>Reach out to us on Discord, referencing</div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
@@ -121,8 +121,8 @@ const FAQPage = () => {
         </StyledFAQPopup>}
 		<HelperWidget onClick={() => setShowFAQ(!showFAQ)}>
 			<FlexRow>
-				<img src={require(`resources/active-eye-orange.svg`).default} alt={""} />
-				<div style={{ marginLeft: `10px`}}>Support</div>
+				<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
+				<div style={{marginLeft: `10px`}}>Support</div>
 			</FlexRow>
 		</HelperWidget>
 	</StyledHelperComponent>;
