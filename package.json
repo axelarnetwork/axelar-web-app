@@ -1,9 +1,9 @@
 {
 	"name": "@axelar-network/axelarjs-ui",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "0.3.0",
+		"@axelar-network/axelarjs-sdk": "0.3.1",
 		"animate.css": "^4.1.1",
 		"copy-to-clipboard": "^3.3.1",
 		"dotenv": "^10.0.0",

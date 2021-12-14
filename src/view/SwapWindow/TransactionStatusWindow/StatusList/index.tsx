@@ -1,12 +1,14 @@
-import styled                                    from "styled-components";
-import screenConfigs                             from "config/screenConfigs";
-import {useRecoilValue}                          from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
-import CopyToClipboard                           from "component/Widgets/CopyToClipboard";
-import Tooltip                                   from "component/Widgets/Tooltip";
-import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import {ChainSelection, SourceAsset}             from "state/ChainSelection";
-import {SourceDepositAddress}                    from "state/TransactionStatus";
+import {IChainInfo}                                                     from "@axelar-network/axelarjs-sdk";
+import styled                                                           from "styled-components";
+import screenConfigs                                                    from "config/screenConfigs";
+import {useRecoilValue}                                                 from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
+import CopyToClipboard                                                  from "component/Widgets/CopyToClipboard";
+import Tooltip                                                          from "component/Widgets/Tooltip";
+import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
+import {Nullable}                                                       from "interface/Nullable";
+import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
+import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -88,6 +90,7 @@ const StatusList = (props: IStatusListProps) => {
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 
 	return <StyledStatusList>
 		<ListItem
@@ -129,11 +132,34 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
-				? `Transfer Completed!`
+				? ShowTransactionComplete({destNumConfirm, destinationChain})
 				: `Waiting to detect transaction on ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>
+}
+
+
+const ShowTransactionComplete = ({destNumConfirm, destinationChain}: {destNumConfirm: IConfirmationStatus, destinationChain: Nullable<IChainInfo>}) => {
+
+	return <>{destNumConfirm.transactionHash
+		? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
+			Transaction completed! View on {destinationChain?.chainName} (TODO: link to explorer):
+			<div style={{margin: `5px 0px 0px 0px`}}>
+				<Tooltip
+					anchorContent={<CopyToClipboard
+						JSXToShow={<BoldSpan>{destNumConfirm.transactionHash} </BoldSpan>}
+						height={`12px`}
+						width={`10px`}
+						textToCopy={destNumConfirm.transactionHash || ""}
+						showImage={true}
+					/>}
+					tooltipText={"Copy to Clipboard"}
+					tooltipAltText={"Copied to Clipboard!"}
+				/>
+			</div>
+		</div>
+		: "Transfer Completed!"}</>;
 }
 
 export default StatusList;
