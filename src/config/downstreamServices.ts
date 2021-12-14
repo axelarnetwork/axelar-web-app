@@ -7,12 +7,24 @@ interface IConfig {
 	GITHUB_LINK: string;
 	RECAPTCHA_SITE_KEY: string;
 	AXELAR_BRIDGE_URL: string;
+	blockExplorers: { [environment: string]: { [chain: string]: string } }
 }
+
+const blockExplorers = {
+	devnet: {
+		ethereum: "https://ropsten.etherscan.io/tx/",
+		moonbeam: "https://moonbase.moonscan.io/tx/"
+	},
+	testnet: {},
+	mainnet: {}
+}
+blockExplorers.testnet = blockExplorers.devnet;
 
 const configs: IConfig = {
 	GITHUB_LINK,
 	RECAPTCHA_SITE_KEY,
-	AXELAR_BRIDGE_URL: process.env.REACT_APP_REST_SERVER_URL as string
+	AXELAR_BRIDGE_URL: process.env.REACT_APP_REST_SERVER_URL as string,
+	blockExplorers
 }
 
 export default configs;

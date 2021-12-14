@@ -3,7 +3,9 @@ import styled                                                           from "st
 import screenConfigs                                                    from "config/screenConfigs";
 import {useRecoilValue}                                                 from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
+import downstreamServices                                               from "config/downstreamServices";
 import CopyToClipboard                                                  from "component/Widgets/CopyToClipboard";
+import Link                                                             from "component/Widgets/Link";
 import Tooltip                                                          from "component/Widgets/Tooltip";
 import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
 import {Nullable}                                                       from "interface/Nullable";
@@ -142,22 +144,12 @@ const StatusList = (props: IStatusListProps) => {
 
 const ShowTransactionComplete = ({destNumConfirm, destinationChain}: {destNumConfirm: IConfirmationStatus, destinationChain: Nullable<IChainInfo>}) => {
 
-	return <>{destNumConfirm.transactionHash
+	const blockExplorer = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
+		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName as string];
+	return <>{destNumConfirm.transactionHash && blockExplorer
 		? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
-			Transaction completed! View on {destinationChain?.chainName} (TODO: link to explorer):
-			<div style={{margin: `5px 0px 0px 0px`}}>
-				<Tooltip
-					anchorContent={<CopyToClipboard
-						JSXToShow={<BoldSpan>{destNumConfirm.transactionHash} </BoldSpan>}
-						height={`12px`}
-						width={`10px`}
-						textToCopy={destNumConfirm.transactionHash || ""}
-						showImage={true}
-					/>}
-					tooltipText={"Copy to Clipboard"}
-					tooltipAltText={"Copied to Clipboard!"}
-				/>
-			</div>
+			Transaction completed! See it on {destinationChain?.chainName}'s
+			<Link href={`${blockExplorer}${destNumConfirm.transactionHash}`}>block explorer.</Link>
 		</div>
 		: "Transfer Completed!"}</>;
 }
