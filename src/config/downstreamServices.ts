@@ -13,7 +13,10 @@ interface IConfig {
 const blockExplorers = {
 	devnet: {
 		ethereum: "https://ropsten.etherscan.io/tx/",
-		moonbeam: "https://moonbase.moonscan.io/tx/"
+		moonbeam: "https://moonbase.moonscan.io/tx/",
+		avalanche: "https://testnet.snowtrace.io/tx/",
+		polygon: "https://mumbai.polygonscan.com/tx/",
+		fantom: "https://testnet.ftmscan.com/tx/"
 	},
 	testnet: {},
 	mainnet: {}
