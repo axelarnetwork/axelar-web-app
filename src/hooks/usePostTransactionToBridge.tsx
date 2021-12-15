@@ -50,7 +50,7 @@ export default function usePostTransactionToBridge() {
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
 			const confirms: IConfirmationStatus = {
-				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
+				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()] ? depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status) : 1,
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
 				transactionHash: status?.transactionHash
 			};
