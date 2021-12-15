@@ -144,14 +144,16 @@ const StatusList = (props: IStatusListProps) => {
 
 const ShowTransactionComplete = ({destNumConfirm, destinationChain}: {destNumConfirm: IConfirmationStatus, destinationChain: Nullable<IChainInfo>}) => {
 
-	const blockExplorer = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
-		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName as string];
-	return <>{destNumConfirm.transactionHash && blockExplorer
-		? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
-			Transaction completed! See it on {destinationChain?.chainName}'s
-			<Link href={`${blockExplorer}${destNumConfirm.transactionHash}`}>block explorer.</Link>
+	const blockExplorer: { name: string, url: string } = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
+		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName?.toLowerCase() as string];
+	console.log("block exploer",blockExplorer, destNumConfirm, process.env.REACT_APP_STAGE);
+	return destNumConfirm.transactionHash && blockExplorer
+		? <div style={{overflowWrap: `break-word`, overflow: `hidden`}}>
+			Transaction completed - see it {" "}
+			<Link href={`${blockExplorer.url}${destNumConfirm.transactionHash}`}>here</Link>
+			{" "} on {blockExplorer.name}!
 		</div>
-		: "Transfer Completed!"}</>;
+		: "Transfer Completed!";
 }
 
 export default StatusList;
