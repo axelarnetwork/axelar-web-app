@@ -15,7 +15,7 @@ export const ShowHelperCartoonWidget = atom<boolean>({
 	default: false,
 });
 
-export const MessageShownInCartoon = atom<Nullable<string>>({
+export const MessageShownInCartoon = atom<Nullable<any>>({
 	key: "MessageShownInCartoon",
 	default: null
 });
