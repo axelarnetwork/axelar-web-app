@@ -162,9 +162,9 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		<br/>
 		<TopFlowsSelectorWidget closeAllSearchWindows={closeAllSearchWindows}/>
 		<StyledChainSelectorSection>
-			<ChainSelector ref={srcChainComponentRef} id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
+			<ChainSelector ref={srcChainComponentRef} id={SOURCE_TOKEN_KEY} label={"Source Chain"} closeOtherWindow={() => (destChainComponentRef?.current as any)?.closeAllSearchWindows()}/>
 			<div><SwapChains/></div>
-			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"} closeOtherWindow={() => (srcChainComponentRef?.current as any)?.closeAllSearchWindows()}/>
 			<br/>
 			<TransferFeeDivider/>
 			<StyledInputFormSection>
