@@ -1,7 +1,7 @@
 import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
-import {SOURCE_TOKEN_KEY}                                    from "config/consts";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
 import AssetSelector                                         from "component/CompositeComponents/Selectors/AssetSelector";
 import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
 import SearchComponent, {ISearchItem}                        from "component/Widgets/SearchComponent";
@@ -26,6 +26,8 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	const isSourceChain: boolean = props.id === SOURCE_TOKEN_KEY;
 	const [selectedChain, setSelectedChain] = useRecoilState<IChainInfo | null>(ChainSelection(props.id));
 	const sourceChain = useRecoilValue<IChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue<IChainInfo | null>(ChainSelection(DESTINATION_TOKEN_KEY));
+	const resetDestinationChain = useResetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const chainList = useRecoilValue(ChainList);
 	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
@@ -148,6 +150,10 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 					icon: require(`resources/tokenAssets/${asset?.common_key}.svg`)?.default,
 					disabled: false,
 					onClick: () => {
+						// if you happen to select a source asset that isn't supported on the destination chain, reset the dest chain selection
+						if (isSourceChain && !destinationChain?.assets?.find(destAsset => destAsset?.common_key === asset?.common_key)) {
+							resetDestinationChain();
+						}
 						setSourceAsset(asset);
 					}
 				}
