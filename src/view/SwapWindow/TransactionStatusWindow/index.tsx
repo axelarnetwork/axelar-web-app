@@ -1,16 +1,16 @@
 import styled                                                                from "styled-components";
-import React, {useEffect, useState}                                          from "react";
-import {useRecoilValue, useSetRecoilState}                                   from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
+import React, {useEffect}                        from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import screenConfigs                                                         from "config/screenConfigs";
 import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
 import {SelectedChainLogoAndText}                                            from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
 import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
 import useResetAllState                                                      from "hooks/useResetAllState";
-import {MessageShownInCartoon}                                               from "state/ApplicationStatus";
-import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection}                                                      from "state/ChainSelection";
+import {MessageShownInCartoon}                                                           from "state/ApplicationStatus";
+import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {ChainSelection}                                                                  from "state/ChainSelection";
 import StyledButtonContainer                                                 from "../StyledComponents/StyledButtonContainer";
 import PlainButton                                                           from "../StyledComponents/PlainButton";
 import StatusList                                                            from "./StatusList";
@@ -67,8 +67,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const setCartoonMessage = useSetRecoilState(MessageShownInCartoon);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
+	const [activeStep, setActiveStep] = useRecoilState(ActiveStep);
 	const resetAllstate = useResetAllState();
-	const [activeStep, setActiveStep] = useState(0);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -95,7 +95,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				setActiveStep(1);
 				break;
 		}
-	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setCartoonMessage]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep]);
 
 	const showButton: boolean = activeStep > 2;
 

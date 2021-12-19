@@ -119,7 +119,7 @@ const FAQPage = () => {
                 />
             </ContactUsSection>}
         </StyledFAQPopup>}
-		<HelperWidget onClick={() => setShowFAQ(!showFAQ)}>
+		<HelperWidget className={"joyride-faq"} onClick={() => setShowFAQ(!showFAQ)}>
 			<FlexRow>
 				<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
 				<div style={{marginLeft: `10px`}}>Support</div>

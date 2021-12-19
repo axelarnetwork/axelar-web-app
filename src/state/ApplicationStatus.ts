@@ -19,3 +19,8 @@ export const MessageShownInCartoon = atom<Nullable<any>>({
 	key: "MessageShownInCartoon",
 	default: null
 });
+
+export const ShowTransactionStatusWindow = atom<boolean>({
+	key: "ShowTransactionStatusWindow",
+	default: false,
+});

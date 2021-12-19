@@ -148,6 +148,7 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 	return <StyledHelperComponent appear={showFlows}
 	                              onMouseLeave={() => setShowFlows(false)}
 	                              onMouseEnter={() => !showFlows && setShowFlows(true)}
+	                              className={"joyride-top-flows"}
 	>
 		<TopFlowsToggle onClick={() => setShowFlows(!showFlows)}>
 			<img src={require(`resources/active-eye-blue.svg`).default} alt={""} width={`12px`} height={`12px`}/>

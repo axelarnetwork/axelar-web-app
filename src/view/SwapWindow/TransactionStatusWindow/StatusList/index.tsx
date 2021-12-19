@@ -49,11 +49,12 @@ interface IListItemProps {
 	activeStep: number;
 	step: number;
 	text: any;
+	className?: string;
 }
 
 const ListItem = (props: IListItemProps) => {
 
-	const {activeStep, step, text} = props;
+	const {activeStep, className, step, text} = props;
 	let suffix: string;
 
 	if (activeStep > step) {
@@ -64,7 +65,7 @@ const ListItem = (props: IListItemProps) => {
 		suffix = "inactive";
 	}
 
-	return <StyledListItem>
+	return <StyledListItem className={className}>
 		<div style={{width: `20%`, height: `100%`, display: `flex`, alignItems: `center`, justifyContent: `center`}}>
 			<StyledImage
 				data={require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)?.default}
@@ -96,10 +97,12 @@ const StatusList = (props: IStatusListProps) => {
 
 	return <StyledStatusList>
 		<ListItem
+			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
 			text={`Generating a one-time deposit address`}
 		/>
 		<ListItem
+			className={"joyride-status-step-2"}
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
 				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
@@ -122,6 +125,7 @@ const StatusList = (props: IStatusListProps) => {
 			}
 		/>
 		<ListItem
+			className={"joyride-status-step-3"}
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
@@ -132,6 +136,7 @@ const StatusList = (props: IStatusListProps) => {
 			}
 		/>
 		<ListItem
+			className={"joyride-status-step-4"}
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
 				? ShowTransactionComplete({destNumConfirm, destinationChain})
@@ -146,7 +151,7 @@ const ShowTransactionComplete = ({destNumConfirm, destinationChain}: {destNumCon
 
 	const blockExplorer: { name: string, url: string } = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
 		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName?.toLowerCase() as string];
-	console.log("block exploer",blockExplorer, destNumConfirm, process.env.REACT_APP_STAGE);
+	console.log("block explorer",blockExplorer, destNumConfirm, process.env.REACT_APP_STAGE);
 	return destNumConfirm.transactionHash && blockExplorer
 		? <div style={{overflowWrap: `break-word`, overflow: `hidden`}}>
 			Transaction completed - see it {" "}
