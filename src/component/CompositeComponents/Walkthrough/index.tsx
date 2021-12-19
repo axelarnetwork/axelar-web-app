@@ -65,7 +65,7 @@ const WalkThrough = () => {
 		showSkipButton={true}
 		run={shouldRun}
 		hideBackButton={currStepIndex === breakIndex + 1}
-		styles={{ options: styles }}
+		styles={{options: styles}}
 	/>;
 }
 

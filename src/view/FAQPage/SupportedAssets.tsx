@@ -27,20 +27,20 @@ const StyledHeader = styled.th`
 const SupportedAssets = () => {
 	return <StyledTable>
 		<thead>
-			<StyledRow>
-				<StyledHeader>Asset</StyledHeader>
-				<StyledHeader>Supported Chains (formatting TBU)</StyledHeader>
-			</StyledRow>
+		<StyledRow>
+			<StyledHeader>Asset</StyledHeader>
+			<StyledHeader>Supported Chains (formatting TBU)</StyledHeader>
+		</StyledRow>
 		</thead>
 		<tbody>
-			<StyledRow>
-				<StyledCell>UST</StyledCell>
-				<StyledCell>Axelar, Avalanche, Ethereum, Fantom, Moonbeam, Polygon, Terra</StyledCell>
-			</StyledRow>
-			<StyledRow>
-				<StyledCell>AXL</StyledCell>
-				<StyledCell>Axelar, Avalanche, Ethereum, Fantom, Moonbeam, Polygon</StyledCell>
-			</StyledRow>
+		<StyledRow>
+			<StyledCell>UST</StyledCell>
+			<StyledCell>Axelar, Avalanche, Ethereum, Fantom, Moonbeam, Polygon, Terra</StyledCell>
+		</StyledRow>
+		<StyledRow>
+			<StyledCell>AXL</StyledCell>
+			<StyledCell>Axelar, Avalanche, Ethereum, Fantom, Moonbeam, Polygon</StyledCell>
+		</StyledRow>
 		</tbody>
 	</StyledTable>
 }

@@ -44,7 +44,8 @@ const InfoForWidget = () => {
 			<tbody>
 			<StyledRow>
 				<StyledCell><BoldSpan>Fee</BoldSpan></StyledCell>
-				<StyledCell>{sourceChain?.txFeeInPercent}% of transferred {sourceAsset?.assetSymbol} on {sourceChain?.chainName}</StyledCell>
+				<StyledCell>{sourceChain?.txFeeInPercent}% of
+					transferred {sourceAsset?.assetSymbol} on {sourceChain?.chainName}</StyledCell>
 			</StyledRow>
 			<StyledRow>
 				<StyledCell><BoldSpan>Minimum amount</BoldSpan></StyledCell>
@@ -52,7 +53,8 @@ const InfoForWidget = () => {
 			</StyledRow>
 			<StyledRow>
 				<StyledCell><BoldSpan>Wait time</BoldSpan></StyledCell>
-				<StyledCell>It'll take upwards of ~{sourceChain?.estimatedWaitTime} minutes to confirm your deposit on {sourceChain?.chainName}</StyledCell>
+				<StyledCell>It'll take upwards of ~{sourceChain?.estimatedWaitTime} minutes to confirm your deposit
+					on {sourceChain?.chainName}</StyledCell>
 			</StyledRow>
 			<StyledRow>TODO: let's make this look nicer.</StyledRow>
 			</tbody>

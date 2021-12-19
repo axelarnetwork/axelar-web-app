@@ -1,20 +1,23 @@
-import styled                                                                from "styled-components";
-import React, {useEffect}                        from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
-import screenConfigs                                                         from "config/screenConfigs";
-import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainLogoAndText}                                            from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
-import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
-import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
-import useResetAllState                                                      from "hooks/useResetAllState";
+import styled                                                                            from "styled-components";
+import React, {useEffect}                                                                from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
+import screenConfigs                                                                     from "config/screenConfigs";
+import {StyledChainSelectionIconWidget}                                                  from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainLogoAndText}                                                        from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
+import {opacityAnimation}                                                                from "component/StyleComponents/animations/OpacityAnimation";
+import {FlexRow}                                                                         from "component/StyleComponents/FlexRow";
+import useResetAllState                                                                  from "hooks/useResetAllState";
 import {MessageShownInCartoon}                                                           from "state/ApplicationStatus";
 import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection}                                                                  from "state/ChainSelection";
-import StyledButtonContainer                                                 from "../StyledComponents/StyledButtonContainer";
-import PlainButton                                                           from "../StyledComponents/PlainButton";
-import StatusList                                                            from "./StatusList";
-import InfoForWidget                                                         from "./StatusList/InfoForWidget";
+import StyledButtonContainer
+                                                                                         from "../StyledComponents/StyledButtonContainer";
+import PlainButton
+                                                                                         from "../StyledComponents/PlainButton";
+import StatusList                                                                        from "./StatusList";
+import InfoForWidget
+                                                                                         from "./StatusList/InfoForWidget";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -89,7 +92,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setCartoonMessage(<InfoForWidget />);
+				setCartoonMessage(<InfoForWidget/>);
 				break;
 			default:
 				setActiveStep(1);

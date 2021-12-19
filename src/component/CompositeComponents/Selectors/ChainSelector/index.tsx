@@ -2,7 +2,8 @@ import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
-import AssetSelector                                         from "component/CompositeComponents/Selectors/AssetSelector";
+import AssetSelector
+                                                             from "component/CompositeComponents/Selectors/AssetSelector";
 import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
 import SearchComponent, {ISearchItem}                        from "component/Widgets/SearchComponent";
 import {SVGImage}                                            from "component/Widgets/SVGImage";
