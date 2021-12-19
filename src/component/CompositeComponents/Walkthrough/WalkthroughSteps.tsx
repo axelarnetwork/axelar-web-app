@@ -44,6 +44,10 @@ export const WalkthroughSteps: Step[] = [
 		content: `Step 2`,
 	},
 	{
+		target: ".joyride-status-step-2-important-info",
+		content: `Important info`,
+	},
+	{
 		target: ".joyride-status-step-3",
 		content: `Step 3`,
 	},
@@ -61,4 +65,4 @@ export const WalkthroughSteps: Step[] = [
 	},
 ];
 
-export const BreakIndex: number = WalkthroughSteps.findIndex(step => step.target === ".joyride-status-step-1") || -1;
+export const BreakIndex: number = (WalkthroughSteps.findIndex(step => step.target === ".joyride-status-step-1") - 1) || -1;

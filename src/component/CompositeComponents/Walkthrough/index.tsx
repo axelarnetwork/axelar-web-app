@@ -1,29 +1,38 @@
 import Joyride, {ACTIONS, CallBackProps, EVENTS, STATUS, Step} from 'react-joyride';
-import {useState}                                              from "react";
-import {useSetRecoilState}                                     from "recoil";
-import {ShowTransactionStatusWindow}                           from "state/ApplicationStatus";
+import React, {useState}                                       from "react";
+import {useRecoilState, useSetRecoilState}                     from "recoil";
+import {MessageShownInCartoon, ShowTransactionStatusWindow}    from "state/ApplicationStatus";
 import {ActiveStep}                                            from "state/TransactionStatus";
 import {BreakIndex, WalkthroughSteps}                          from "./WalkthroughSteps";
 import {styles}                                                from "./styles";
+import InfoForWidget
+                                                               from "view/SwapWindow/TransactionStatusWindow/StatusList/InfoForWidget";
+import useResetAllState                                        from "../../../hooks/useResetAllState";
 
 const WalkThrough = () => {
 
 	const setShowTransactionStatusWindow = useSetRecoilState(ShowTransactionStatusWindow);
 	const setActiveStepOnTxStatusWindow = useSetRecoilState(ActiveStep);
+	const [cartoonMessage, setCartoonMessage] = useRecoilState(MessageShownInCartoon);
+	const resetAllState = useResetAllState();
 	const [shouldRun, setShouldRun] = useState(true);
 	const [currStepIndex, setCurrStepIndex] = useState(0);
 	const [breakIndex] = useState(BreakIndex);
 	const [steps] = useState<Step[]>(WalkthroughSteps);
+
+	const closeOut = () => {
+		setShouldRun(false);
+		setShowTransactionStatusWindow(false);
+		setCurrStepIndex(0);
+		resetAllState();
+	}
 
 	const handleJoyrideCallback = (data: CallBackProps) => {
 
 		const {action, index, size, status, type} = data;
 
 		if (([STATUS.FINISHED] as string[]).includes(status) && index + 1 === size) {
-			setShouldRun(false);
-			setShowTransactionStatusWindow(false);
-			setActiveStepOnTxStatusWindow(0);
-			setCurrStepIndex(0);
+			closeOut();
 		} else if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
 
 			const currStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
@@ -42,16 +51,18 @@ const WalkThrough = () => {
 				}, 1000);
 
 			} else if (index > breakIndex)
-				/*for the "blue" active buttons on TransactionStatusWindow;
-				there are only four steps in our flow process,
-				so anything greater would cause an out-of-bounds exception
-				* */
-				setActiveStepOnTxStatusWindow(Math.min(currStepIndex - breakIndex, 4));
+
+				if (!cartoonMessage) setCartoonMessage(<InfoForWidget/>);
+
+			/*for the "blue" active buttons on TransactionStatusWindow;
+			there are only four steps in our flow process,
+			so anything greater would cause an out-of-bounds exception
+			* */
+			setActiveStepOnTxStatusWindow(Math.min(currStepIndex - breakIndex, 4));
 		}
 
 		if (["close", "skip"].includes(data.action)) {
-			setShouldRun(false);
-			setShowTransactionStatusWindow(false);
+			closeOut();
 		}
 	}
 
@@ -64,7 +75,7 @@ const WalkThrough = () => {
 		showProgress={true}
 		showSkipButton={true}
 		run={shouldRun}
-		hideBackButton={currStepIndex === breakIndex + 1}
+		hideBackButton={currStepIndex === breakIndex || currStepIndex === breakIndex + 1}
 		styles={{options: styles}}
 	/>;
 }

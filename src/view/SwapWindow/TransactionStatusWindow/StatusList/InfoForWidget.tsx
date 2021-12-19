@@ -31,7 +31,7 @@ const InfoForWidget = () => {
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 
-	return <div>
+	return <div className={"joyride-status-step-2-important-info"}>
 		<HeaderImage><SVGImage
 			src={require(`resources/caution.svg`)?.default}
 			height={"2.5em"}
