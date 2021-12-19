@@ -10,6 +10,12 @@ export const IsLoggedIn = atom<boolean>({
 	effects_UNSTABLE: [persistAtom]
 });
 
+export const DismissWalkThrough = atom<boolean>({
+	key: "DismissWalkThrough",
+	default: false,
+	effects_UNSTABLE: [persistAtom]
+});
+
 export const ShowHelperCartoonWidget = atom<boolean>({
 	key: "ShowHelperCartoonWidget",
 	default: false,
