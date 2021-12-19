@@ -13,6 +13,14 @@ export const StyledInput = styled.input.attrs({})`
 	    border-color: darkgrey;
 	    box-shadow: 0 0 1px 0 darkgrey;
 	}
+    ::-webkit-inner-spin-button{
+        -webkit-appearance: none; 
+        margin: 0; 
+    }
+    ::-webkit-outer-spin-button{
+        -webkit-appearance: none; 
+        margin: 0; 
+    }    
 
 	@media ${screenConfigs.media.desktop} {
 		font-size: 16px;

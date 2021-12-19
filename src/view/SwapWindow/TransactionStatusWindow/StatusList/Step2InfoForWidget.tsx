@@ -6,6 +6,7 @@ import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 import {SourceDepositAddress}                    from "state/TransactionStatus";
 import {getShortenedWord}                        from "utils/wordShortener";
 import {getMinDepositAmount}                     from "utils/getMinDepositAmount";
+import {DepositFromWallet}                       from "./DepositFromWallet";
 
 export const StyledHeader = styled.div`
 	position: relative;
@@ -44,12 +45,13 @@ const Step2InfoForWidget = () => {
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
+		{generateLine("(Optional) Send deposit here!", <DepositFromWallet/>)}
 		<br/>
 	</div>
 
 }
 
-const generateLine = (header: string, text: string) => {
+const generateLine = (header: string, text: string | JSX.Element) => {
 	return <div style={{padding: `0.75em`, fontSize: `0.8em`}}>
 		<BoldSpan>{header}</BoldSpan>
 		<div>{text}</div>

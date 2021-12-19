@@ -2,7 +2,7 @@ name: ctt-personal-devnet
 on:
   push:
     branches:
-      - bkdf-design
+      - keplr
   pull_request_target:
   workflow_dispatch:
 jobs:
@@ -17,4 +17,4 @@ jobs:
           vercel-org-id: ${{ secrets.CTT_PERSONAL_VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.CTT_PERSONAL_VERCEL_PROJECT_ID }}
           alias-domains: |
-            canh-devnet.vercel.app
+            canh-testing.vercel.app

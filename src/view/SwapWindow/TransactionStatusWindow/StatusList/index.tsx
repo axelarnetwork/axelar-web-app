@@ -1,4 +1,4 @@
-import {ChainInfo}                                                     from "@axelar-network/axelarjs-sdk";
+import {ChainInfo}                                                      from "@axelar-network/axelarjs-sdk";
 import styled                                                           from "styled-components";
 import screenConfigs                                                    from "config/screenConfigs";
 import {useRecoilValue}                                                 from "recoil";

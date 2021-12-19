@@ -1,6 +1,6 @@
-import {atom, atomFamily}       from "recoil";
+import {atom, atomFamily}     from "recoil";
 import {AssetInfo, ChainInfo} from "@axelar-network/axelarjs-sdk";
-import {Nullable}               from "interface/Nullable";
+import {Nullable}             from "interface/Nullable";
 
 /*
 tracks selections for source and destination chain selections, noted by

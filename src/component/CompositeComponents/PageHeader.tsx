@@ -16,11 +16,13 @@ const StyledPageHeader = styled(Container)`
 `
 
 const PageHeader = () => {
+
 	return (
 		<StyledPageHeader>
 			<SVGImage src={require(`resources/axelar-logo-horizontal-white.svg`)?.default} height={"30px"}
 			          width={"125px"}
-			          margin={"4px"}/>
+			          margin={"4px"}
+			/>
 			<FlexColumn style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder`}}>
 				{(process.env.REACT_APP_STAGE || "").toUpperCase()}
 			</FlexColumn>
