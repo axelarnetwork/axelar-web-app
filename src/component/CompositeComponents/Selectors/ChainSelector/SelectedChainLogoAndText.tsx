@@ -1,4 +1,4 @@
-import {ChainInfo}   from "@axelar-network/axelarjs-sdk";
+import {ChainInfo}    from "@axelar-network/axelarjs-sdk";
 import {SVGImage}     from "component/Widgets/SVGImage";
 import {BaseSelector} from "../BaseSelector";
 

@@ -4,7 +4,7 @@ import {StyledInput}            from "component/StyleComponents/StyledInput";
 interface IInputProps {
 	name: string;
 	placeholder: string;
-	type: ((HTMLInputTypeAttribute | undefined) & "text") | undefined;
+	type: ((HTMLInputTypeAttribute | undefined) & "text" | "number") | undefined;
 	onChange: (e: any) => void;
 	value: string;
 	handleOnEnterPress?: any;

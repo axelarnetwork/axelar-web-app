@@ -15,6 +15,7 @@ const StyledPageHeader = styled(Container)`
 `
 
 const PageHeader = () => {
+
 	return (
 		<StyledPageHeader>
 			<img src={require(`resources/satellite.png`)?.default} alt={""} />

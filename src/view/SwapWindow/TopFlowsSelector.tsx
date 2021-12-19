@@ -1,7 +1,7 @@
 import React, {useMemo, useState}                from "react";
 import {useRecoilValue, useSetRecoilState}       from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
-import {AssetInfo, ChainInfo}                  from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo}                    from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import screenConfigs                             from "config/screenConfigs";
 import {topFlowOptions}                          from "config/topFlowOptions";
