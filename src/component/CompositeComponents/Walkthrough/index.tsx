@@ -1,13 +1,13 @@
-import Joyride, {ACTIONS, CallBackProps, EVENTS, STATUS, Step}               from 'react-joyride';
-import React, {useState}                                                     from "react";
-import {useRecoilState, useSetRecoilState}                                   from "recoil";
+import Joyride, {ACTIONS, CallBackProps, EVENTS, STATUS}                        from 'react-joyride';
+import React, {useState}                                                        from "react";
+import {useRecoilState, useSetRecoilState}                                      from "recoil";
 import useResetAllState                                                         from "hooks/useResetAllState";
-import {MessageShownInCartoon, ShowTransactionStatusWindow, DismissWalkThrough} from "state/ApplicationStatus";
+import {DismissWalkThrough, MessageShownInCartoon, ShowTransactionStatusWindow} from "state/ApplicationStatus";
 import {ActiveStep}                                                             from "state/TransactionStatus";
-import {BreakIndex, WalkthroughSteps}                                        from "./WalkthroughSteps";
-import {styles}                                                              from "./styles";
+import {BreakIndex, WalkthroughSteps}                                           from "./WalkthroughSteps";
+import {styles}                                                                 from "./styles";
 import InfoForWidget
-                                                                             from "view/SwapWindow/TransactionStatusWindow/StatusList/InfoForWidget";
+                                                                                from "view/SwapWindow/TransactionStatusWindow/StatusList/InfoForWidget";
 
 const WalkThrough = () => {
 
@@ -17,7 +17,6 @@ const WalkThrough = () => {
 	const resetAllState = useResetAllState();
 	const [currStepIndex, setCurrStepIndex] = useState(0);
 	const [breakIndex] = useState(BreakIndex);
-	const [steps] = useState<Step[]>(WalkthroughSteps);
 	const [dismissed, setDismissed] = useRecoilState(DismissWalkThrough);
 	const [shouldRun, setShouldRun] = useState(true && !dismissed);
 
@@ -72,13 +71,15 @@ const WalkThrough = () => {
 
 	return <Joyride
 		callback={handleJoyrideCallback}
-		steps={steps}
+		steps={WalkthroughSteps}
 		stepIndex={currStepIndex}
 		continuous={true}
 		scrollToFirstStep={true}
 		showProgress={true}
 		showSkipButton={true}
 		run={shouldRun}
+		disableOverlayClose={true}
+		locale={ { skip: "Skip (and never show again)"} }
 		hideBackButton={currStepIndex === breakIndex || currStepIndex === breakIndex + 1}
 		styles={{options: styles}}
 	/>;
