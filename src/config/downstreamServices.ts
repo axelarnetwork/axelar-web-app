@@ -12,11 +12,11 @@ interface IConfig {
 
 const blockExplorers = {
 	devnet: {
-		ethereum: { name: "Etherscan", url: "https://ropsten.etherscan.io/tx/" },
-		moonbeam: { name: "Moonscan", url: "https://moonbase.moonscan.io/tx/" },
-		avalanche: { name: "Snowtrace", url: "https://testnet.snowtrace.io/tx/" },
-		polygon: { name: "Polygonscan", url: "https://mumbai.polygonscan.com/tx/" },
-		fantom: { name: "FTMScan", url: "https://testnet.ftmscan.com/tx/" }
+		ethereum: {name: "Etherscan", url: "https://ropsten.etherscan.io/tx/"},
+		moonbeam: {name: "Moonscan", url: "https://moonbase.moonscan.io/tx/"},
+		avalanche: {name: "Snowtrace", url: "https://testnet.snowtrace.io/tx/"},
+		polygon: {name: "Polygonscan", url: "https://mumbai.polygonscan.com/tx/"},
+		fantom: {name: "FTMScan", url: "https://testnet.ftmscan.com/tx/"}
 	},
 	testnet: {},
 	local: {},

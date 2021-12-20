@@ -1,4 +1,4 @@
-import {useRecoilValue}                                 from "recoil";
+import {useRecoilValue}            from "recoil";
 import styled, {ThemedStyledProps} from "styled-components";
 import screenConfigs               from "config/screenConfigs";
 import {MessageShownInCartoon}     from "state/ApplicationStatus";
