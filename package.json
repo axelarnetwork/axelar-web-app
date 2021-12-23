@@ -3,7 +3,7 @@
 	"version": "0.3.9",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "0.3.9",
+		"@axelar-network/axelarjs-sdk": "0.3.10",
 		"animate.css": "^4.1.1",
 		"copy-to-clipboard": "^3.3.1",
 		"dotenv": "^10.0.0",
