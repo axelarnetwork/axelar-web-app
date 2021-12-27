@@ -6,10 +6,10 @@ import {InputForm}                                                              
 import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
-                                                                                    from "component/CompositeComponents/SwapChains";
-import TransferFeeDivider
-                                                                                    from "component/CompositeComponents/TransferFeeDivider";
-import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
+	                from "component/CompositeComponents/SwapChains";
+import TransactionInfo
+	                from "component/CompositeComponents/TransactionInfo";
+import {FlexColumn} from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
                                                                                     from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
@@ -168,9 +168,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}
 			               closeOtherWindow={() => (srcChainComponentRef?.current as any)?.closeAllSearchWindows()}/>
 			<br/>
-			<TransferFeeDivider/>
+			<TransactionInfo/>
 			<StyledInputFormSection>
-				<br/>
 				<InputForm
 					name={"destination-address-input"}
 					value={destAddr || ""}
