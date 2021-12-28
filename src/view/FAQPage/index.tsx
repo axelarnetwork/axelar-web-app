@@ -25,7 +25,7 @@ const HelperWidget = styled.div`
 	box-sizing: border-box;
 	padding: 0.5em 0.75em 0.5em 0.75em;
 	margin: 0.5em;
-	background-color: black;
+	background-color: ${props => props.theme.headerBackgroundColor};
 	border-radius: 50px;
 	color: white;
 	cursor: pointer;
@@ -33,7 +33,7 @@ const HelperWidget = styled.div`
 
 const StyledFAQPopup = styled.div`
 	background-color: rgb(255,255,255,0.9);
-	color: black;
+	color: ${props => props.theme.headerBackgroundColor};
 	box-sizing: border-box;
 	border: 2px solid #b9bac8;
 	border-radius: 10px;
@@ -46,7 +46,8 @@ const StyledFAQPopup = styled.div`
 export const StyledHeader = styled.div`
 	position: relative;
 	width: 100%;
-    background-color: black;
+    background-color: ${props => props.theme.headerBackgroundColor};
+    border-radius: 7px 7px 0px 0px;
     color: white;
     text-align: center;
     font-size: large;

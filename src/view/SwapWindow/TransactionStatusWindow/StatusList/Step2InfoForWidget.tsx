@@ -11,7 +11,7 @@ import {getShortenedWord}            from "utils/wordShortener";
 export const StyledHeader = styled.div`
 	position: relative;
 	width: 100%;
-    background-color: black;
+    background-color: ${props => props.theme.headerBackgroundColor};
     border-radius: 9px 9px 0px 0px;
     color: white;
     font-size: .8em;
