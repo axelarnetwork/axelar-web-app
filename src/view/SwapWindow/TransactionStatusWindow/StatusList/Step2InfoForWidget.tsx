@@ -1,6 +1,6 @@
 import {useRecoilValue}              from "recoil";
 import styled                        from "styled-components";
-import BigNumber                     from "bignumber.js";
+import BigNumber                     from "decimal.js";
 import BoldSpan                      from "component/StyleComponents/BoldSpan";
 import {SVGImage}                    from "component/Widgets/SVGImage";
 import {SOURCE_TOKEN_KEY}            from "config/consts";
@@ -20,7 +20,7 @@ export const StyledHeader = styled.div`
     padding: 0.25em;
 `;
 
-const InfoForWidget = () => {
+const Step2InfoForWidget = () => {
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
@@ -57,4 +57,4 @@ const generateLine = (header: string, text: string) => {
 	</div>;
 }
 
-export default InfoForWidget;
+export default Step2InfoForWidget;

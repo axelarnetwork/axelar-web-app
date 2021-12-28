@@ -49,7 +49,8 @@ export default function usePostTransactionToBridge() {
 			const confirms: IConfirmationStatus = {
 				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()] ? depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status) : 1,
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
-				transactionHash: status?.transactionHash
+				transactionHash: status?.transactionHash,
+				amountConfirmedString: status?.Attributes?.amount
 			};
 			setConfirms(confirms);
 		};

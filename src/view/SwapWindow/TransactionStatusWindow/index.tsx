@@ -16,8 +16,10 @@ import StyledButtonContainer
 import PlainButton
                                                                                          from "../StyledComponents/PlainButton";
 import StatusList                                                                        from "./StatusList";
-import InfoForWidget
-                                                                                         from "./StatusList/InfoForWidget";
+import Step2InfoForWidget
+                                                                                         from "./StatusList/Step2InfoForWidget";
+import Step3InfoForWidget
+                                                                                         from "./StatusList/Step3InfoForWidget";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -85,14 +87,15 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
 				setActiveStep(4);
+				setCartoonMessage(null);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
 				setActiveStep(3);
-				setCartoonMessage(null);
+				setCartoonMessage(<Step3InfoForWidget/>);
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setCartoonMessage(<InfoForWidget/>);
+				setCartoonMessage(<Step2InfoForWidget/>);
 				break;
 			default:
 				setActiveStep(1);

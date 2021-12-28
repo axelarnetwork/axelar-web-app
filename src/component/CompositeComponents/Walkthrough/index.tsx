@@ -5,9 +5,9 @@ import useResetAllState                                                         
 import {DismissWalkThrough, MessageShownInCartoon, ShowTransactionStatusWindow} from "state/ApplicationStatus";
 import {ActiveStep}                                                             from "state/TransactionStatus";
 import {BreakIndex, WalkthroughSteps}                                           from "./WalkthroughSteps";
-import {styles}                                                                 from "./styles";
-import InfoForWidget
-                                                                                from "view/SwapWindow/TransactionStatusWindow/StatusList/InfoForWidget";
+import {styles} from "./styles";
+import Step2InfoForWidget
+                from "view/SwapWindow/TransactionStatusWindow/StatusList/Step2InfoForWidget";
 
 const WalkThrough = () => {
 
@@ -52,7 +52,7 @@ const WalkThrough = () => {
 
 			} else if (index > breakIndex)
 
-				if (!cartoonMessage) setCartoonMessage(<InfoForWidget/>);
+				if (!cartoonMessage) setCartoonMessage(<Step2InfoForWidget/>);
 
 			/*for the "blue" active buttons on TransactionStatusWindow;
 			there are only four steps in our flow process,
