@@ -1,5 +1,6 @@
 import {useRecoilValue}                          from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
+import BigNumber                                 from "bignumber.js";
 import BoldSpan                                  from "component/StyleComponents/BoldSpan";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import screenConfigs                             from "config/screenConfigs";
@@ -41,9 +42,10 @@ const TransactionInfo = () => {
 
 	const waitTime: number = srcChainSelection?.estimatedWaitTime || 0;
 
+	const minDeposit: BigNumber = (new BigNumber(selectedSrcAsset?.minDepositAmt || 0)).times(1.15);
 	return <StyledTransferFeeDivider showContents={!!(srcChainSelection && selectedSrcAsset && destChainSelection)}>
 		<div style={{display: `flex`, flexDirection: `column`}}>
-			{generateInfoLine("Minimum Transfer Amount", `${selectedSrcAsset?.minDepositAmt} ${selectedSrcAsset?.assetSymbol}`)}
+			{generateInfoLine(`Minimum Transfer Amount`, `${minDeposit} ${selectedSrcAsset?.assetSymbol}`)}
 			{generateInfoLine("Fee (% of assets transferred)", `${srcChainSelection?.txFeeInPercent}%`)}
 			{generateInfoLine("Total Approximate Wait Time", `~${waitTime}-${waitTime + 5} minutes`)}
 		</div>

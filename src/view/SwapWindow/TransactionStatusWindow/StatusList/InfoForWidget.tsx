@@ -1,5 +1,6 @@
 import {useRecoilValue}              from "recoil";
 import styled                        from "styled-components";
+import BigNumber                     from "bignumber.js";
 import BoldSpan                      from "component/StyleComponents/BoldSpan";
 import {SVGImage}                    from "component/Widgets/SVGImage";
 import {SOURCE_TOKEN_KEY}            from "config/consts";
@@ -42,7 +43,7 @@ const InfoForWidget = () => {
 		</StyledHeader>
 		<br/>
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol} on the ${sourceChain?.chainName} network`)}
-		{generateLine("Minimum Transfer Amount", `${sourceAsset?.minDepositAmt || "XX"} ${sourceAsset?.assetSymbol || "XX"} sent to the one-time deposit address ("${getShortenedWord(depositAddress?.assetAddress)}") on ${sourceChain?.chainName || "XX"}`)}
+		{generateLine("Minimum Transfer Amount", `${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} sent to the one-time deposit address ("${getShortenedWord(depositAddress?.assetAddress)}") on ${sourceChain?.chainName || "XX"}`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
 		<br/>
 	</div>
