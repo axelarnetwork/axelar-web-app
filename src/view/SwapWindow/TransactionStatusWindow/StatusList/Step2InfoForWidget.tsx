@@ -2,7 +2,6 @@ import {useRecoilValue}              from "recoil";
 import styled                        from "styled-components";
 import BigNumber                     from "decimal.js";
 import BoldSpan                      from "component/StyleComponents/BoldSpan";
-import {SVGImage}                    from "component/Widgets/SVGImage";
 import {SOURCE_TOKEN_KEY}            from "config/consts";
 import {ChainSelection, SourceAsset} from "state/ChainSelection";
 import {SourceDepositAddress}        from "state/TransactionStatus";
@@ -32,18 +31,12 @@ const Step2InfoForWidget = () => {
 	>
 		<StyledHeader>
 			<br/>
-			<SVGImage
-				src={require(`resources/caution.svg`)?.default}
-				height={"1.5em"}
-				width={"1.5em"}
-			/>
-			<br/>
-			<div><BoldSpan>Important Deposit Information</BoldSpan></div>
+			<div><BoldSpan>Helpful Deposit Notes</BoldSpan></div>
 			<br/>
 		</StyledHeader>
 		<br/>
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
-		{generateLine("Minimum Transfer Amount", `Send at least ${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} to the one-time deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
+		{generateLine("Minimum Transfer Amount", `Send at least ${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
 		<br/>
 	</div>

@@ -2,7 +2,6 @@ import {useRecoilValue}                          from "recoil";
 import styled                                    from "styled-components";
 import BigNumber                                 from "decimal.js";
 import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import {SVGImage}                                from "component/Widgets/SVGImage";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 import {NumberConfirmations}                     from "state/TransactionStatus";
@@ -39,13 +38,7 @@ const Step3InfoForWidget = () => {
 	>
 		<StyledHeader>
 			<br/>
-			<SVGImage
-				src={require(`resources/caution.svg`)?.default}
-				height={"1.5em"}
-				width={"1.5em"}
-			/>
-			<br/>
-			<div><BoldSpan>Deposit Confirmation</BoldSpan></div>
+			<div><BoldSpan>Deposit Confirmed!</BoldSpan></div>
 			<br/>
 		</StyledHeader>
 		<br/>
