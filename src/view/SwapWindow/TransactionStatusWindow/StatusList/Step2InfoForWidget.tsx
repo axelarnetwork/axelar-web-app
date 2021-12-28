@@ -42,8 +42,8 @@ const Step2InfoForWidget = () => {
 			<br/>
 		</StyledHeader>
 		<br/>
-		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol} on the ${sourceChain?.chainName} network`)}
-		{generateLine("Minimum Transfer Amount", `${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} sent to the one-time deposit address ("${getShortenedWord(depositAddress?.assetAddress)}") on ${sourceChain?.chainName || "XX"}`)}
+		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
+		{generateLine("Minimum Transfer Amount", `Send at least ${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} to the one-time deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
 		<br/>
 	</div>
