@@ -18,7 +18,7 @@ const WalkThrough = () => {
 	const [currStepIndex, setCurrStepIndex] = useState(0);
 	const [breakIndex] = useState(BreakIndex);
 	const [dismissed, setDismissed] = useRecoilState(DismissWalkThrough);
-	const [shouldRun, setShouldRun] = useState(true && !dismissed);
+	const [shouldRun, setShouldRun] = useState(/*true && !dismissed*/false && !dismissed);
 
 	const closeOut = () => {
 		setShouldRun(false);
