@@ -43,7 +43,7 @@ const StyledFAQPopup = styled.div`
     font-size: 12px;
 `;
 
-const StyledHeader = styled.div`
+export const StyledHeader = styled.div`
 	position: relative;
 	width: 100%;
     background-color: black;
