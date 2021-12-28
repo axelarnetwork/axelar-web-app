@@ -1,11 +1,11 @@
-import {useRecoilValue}              from "recoil";
-import styled                        from "styled-components";
-import BigNumber                     from "decimal.js";
-import BoldSpan                      from "component/StyleComponents/BoldSpan";
-import {SOURCE_TOKEN_KEY}            from "config/consts";
-import {ChainSelection, SourceAsset} from "state/ChainSelection";
-import {SourceDepositAddress}        from "state/TransactionStatus";
-import {getShortenedWord}            from "utils/wordShortener";
+import {useRecoilValue}                          from "recoil";
+import styled                                    from "styled-components";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
+import {ChainSelection, SourceAsset}             from "state/ChainSelection";
+import {SourceDepositAddress}                    from "state/TransactionStatus";
+import {getShortenedWord}                        from "utils/wordShortener";
+import {getMinDepositAmount}                     from "utils/getMinDepositAmount";
 
 export const StyledHeader = styled.div`
 	position: relative;
@@ -24,9 +24,15 @@ const Step2InfoForWidget = () => {
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+
+	if (!sourceAsset || !depositAddress || !sourceChain || !destChain)
+		return null;
+
+	const minDepositAmt = getMinDepositAmount(sourceAsset, destChain);
 
 	return <div
-		style={{ width: `100%`, height: `100%`}}
+		style={{width: `100%`, height: `100%`}}
 		className={"joyride-status-step-2-important-info"}
 	>
 		<StyledHeader>
@@ -36,7 +42,7 @@ const Step2InfoForWidget = () => {
 		</StyledHeader>
 		<br/>
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
-		{generateLine("Minimum Transfer Amount", `Send at least ${(new BigNumber(sourceAsset?.minDepositAmt || 0)).times(1.15)} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
+		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
 		<br/>
 	</div>
