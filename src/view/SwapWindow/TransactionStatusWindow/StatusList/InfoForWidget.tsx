@@ -49,7 +49,7 @@ const InfoForWidget = () => {
 			</StyledRow>
 			<StyledRow>
 				<StyledCell><BoldSpan>Minimum amount</BoldSpan></StyledCell>
-				<StyledCell>{`${sourceAsset?.minDepositAmt || "XX"} ${sourceAsset?.assetSymbol|| "XX"} on ${sourceChain?.chainName|| "XX"}`}</StyledCell>
+				<StyledCell>{`${sourceAsset?.minDepositAmt || "XX"} ${sourceAsset?.assetSymbol || "XX"} on ${sourceChain?.chainName || "XX"}`}</StyledCell>
 			</StyledRow>
 			<StyledRow>
 				<StyledCell><BoldSpan>Wait time</BoldSpan></StyledCell>

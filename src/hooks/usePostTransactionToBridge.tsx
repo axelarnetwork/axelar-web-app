@@ -6,17 +6,13 @@ import {useCallback}                                       from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {v4 as uuidv4}                                      from 'uuid';
 import {
-	IAssetInfoWithTrace,
-	IAssetTransferObject
+	IAssetInfoWithTrace, IAssetTransferObject
 }                                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                         from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
 import {
-	IConfirmationStatus,
-	NumberConfirmations,
-	SourceDepositAddress,
-	TransactionTraceId
+	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
 }                                                          from "state/TransactionStatus";
 import ErrorHandler                                        from "utils/ErrorHandler";
 import useRecaptchaAuthenticate                            from "./auth/useRecaptchaAuthenticate";

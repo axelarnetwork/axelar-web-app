@@ -79,7 +79,7 @@ const WalkThrough = () => {
 		showSkipButton={true}
 		run={shouldRun}
 		disableOverlayClose={true}
-		locale={ { skip: "Skip (and never show again)"} }
+		locale={{skip: "Skip (and never show again)"}}
 		hideBackButton={currStepIndex === breakIndex || currStepIndex === breakIndex + 1}
 		styles={{options: styles}}
 	/>;

@@ -13,15 +13,15 @@ export const WalkthroughSteps: Step[] = [
 		content: <div>
 			<h1>First time here?</h1>
 			<br/>
-			<div style={{ padding: `30px`, fontSize: `larger`}}>Here's a brief step-by-step
+			<div style={{padding: `30px`, fontSize: `larger`}}>Here's a brief step-by-step
 				walkthrough of how you can use this app to transfer your crypto holdings
 				across our universe of supported blockchains and assets.
 			</div>
-			<div style={{ padding: `30px`, fontSize: `larger`}}>
-				<div>We currently support asset transfers across five EVM chains: </div>
+			<div style={{padding: `30px`, fontSize: `larger`}}>
+				<div>We currently support asset transfers across five EVM chains:</div>
 				<div>Avalanche, Ethereum, Fantom, Moonbeam, and Polygon - along with Terra and Axelar.</div>
 			</div>
-			<div style={{ padding: `30px`, fontSize: `larger`}}>And the list is growing fast!
+			<div style={{padding: `30px`, fontSize: `larger`}}>And the list is growing fast!
 			</div>
 			<br/>
 		</div>,
@@ -47,7 +47,8 @@ export const WalkthroughSteps: Step[] = [
 	{
 		target: '.joyride-input-button',
 		title: 'Initiate Asset Transfer',
-		content: <Text>You will be able to send a transaction once you enter valid inputs, which you'll know once the app lights up :-)</Text>,
+		content: <Text>You will be able to send a transaction once you enter valid inputs, which you'll know once the
+			app lights up :-)</Text>,
 	},
 	{
 		target: ".joyride-faq",
@@ -82,13 +83,15 @@ export const WalkthroughSteps: Step[] = [
 				Cosmos-based tokens like UST, AXL, etc).
 			</Text>
 			<br/>
-			<Text>As mentioned, the deposit address is monitored for 24 hours after it is generated, then it is destroyed.
+			<Text>As mentioned, the deposit address is monitored for 24 hours after it is generated, then it is
+				destroyed.
 				Anything you transfer in those 24 hours will be processed real-time and transferred, but try and
 				send a single deposit soon after it's been generated, if possible!
 			</Text>
 			<br/>
 			<Text>*** Be sure to send the right tokens over the right networks!
-				We won't be responsible for any misappropriated funds (though we'll try our best to help you out if that happens).
+				We won't be responsible for any misappropriated funds (though we'll try our best to help you out if that
+				happens).
 			</Text>
 		</div>,
 	},

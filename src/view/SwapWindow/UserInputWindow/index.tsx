@@ -6,10 +6,10 @@ import {InputForm}                                                              
 import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
-	                from "component/CompositeComponents/SwapChains";
+                                                                                    from "component/CompositeComponents/SwapChains";
 import TransactionInfo
-	                from "component/CompositeComponents/TransactionInfo";
-import {FlexColumn} from "component/StyleComponents/FlexColumn";
+                                                                                    from "component/CompositeComponents/TransactionInfo";
+import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
                                                                                     from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
