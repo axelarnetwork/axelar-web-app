@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - mainnet-configs
   workflow_dispatch:
 jobs:
   deploy-ui-to-devnet:
@@ -20,3 +21,7 @@ jobs:
           alias-domains: |
             axelar-bridge-devnet.vercel.app
             bridge.devnet.axelar.dev
+        env:
+          REACT_APP_STAGE: "devnet"
+          REACT_APP_TEST_EV: "test_ev"
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
