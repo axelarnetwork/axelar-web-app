@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - mainnet-configs
   workflow_dispatch:
 jobs:
   deploy-ui-to-devnet:
