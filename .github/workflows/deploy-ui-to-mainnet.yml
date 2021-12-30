@@ -19,6 +19,3 @@ jobs:
           vercel-args: '--prod'
           alias-domains: |
             axelar-bridge-mainnet.vercel.app
-        env:
-          REACT_APP_STAGE: "mainnet"
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

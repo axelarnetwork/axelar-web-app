@@ -17,6 +17,3 @@ jobs:
           alias-domains: |
             axelar-bridge-testnet.vercel.app
             bridge.testnet.axelar.dev
-        env:
-          REACT_APP_STAGE: "devnet"
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
