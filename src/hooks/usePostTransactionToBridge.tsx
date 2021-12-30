@@ -2,29 +2,26 @@
 This component makes the API call to the SDK
 * */
 
-import {useCallback, useState}                           from "react";
-import {useRecoilValue, useSetRecoilState}               from "recoil";
-import {v4 as uuidv4}                                    from 'uuid';
+import {useCallback}                                       from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {v4 as uuidv4}                                      from 'uuid';
 import {
-	IAssetInfoWithTrace,
-	IAssetTransferObject
-}                                                        from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}                       from "api/TransferAssetBridgeFacade";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
-import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
+	IAssetInfoWithTrace, IAssetTransferObject
+}                                                          from "@axelar-network/axelarjs-sdk";
+import {TransferAssetBridgeFacade}                         from "api/TransferAssetBridgeFacade";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
+import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
 import {
-	IConfirmationStatus,
-	NumberConfirmations,
-	SourceDepositAddress,
-	TransactionTraceId
-}                                                        from "state/TransactionStatus";
-import ErrorHandler                                      from "utils/ErrorHandler";
-import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
-import {depositConfirmCbMap}                             from "./helper";
+	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
+}                                                          from "state/TransactionStatus";
+import ErrorHandler                                        from "utils/ErrorHandler";
+import useRecaptchaAuthenticate                            from "./auth/useRecaptchaAuthenticate";
+import {depositConfirmCbMap}                               from "./helper";
+import {ShowTransactionStatusWindow}                       from "../state/ApplicationStatus";
 
 export default function usePostTransactionToBridge() {
 
-	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useState(false);
+	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useRecoilState(ShowTransactionStatusWindow);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
@@ -50,9 +47,10 @@ export default function usePostTransactionToBridge() {
 
 		const sCb: (status: any, setConfirms: any) => void = (status: any, setConfirms: any): void => {
 			const confirms: IConfirmationStatus = {
-				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status),
+				numberConfirmations: depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()] ? depositConfirmCbMap[sourceChain.chainSymbol.toLowerCase()](status) : 1,
 				numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
-				transactionHash: status?.transactionHash
+				transactionHash: status?.transactionHash,
+				amountConfirmedString: status?.Attributes?.amount
 			};
 			setConfirms(confirms);
 		};
@@ -101,6 +99,7 @@ export default function usePostTransactionToBridge() {
 		setDepositAddress,
 		setSourceNumConfirmations,
 		setDestinationNumConfirmations,
+		setShowTransactionStatusWindow,
 		setTransactionTraceId,
 		sourceAsset,
 		isRecaptchaAuthenticated,

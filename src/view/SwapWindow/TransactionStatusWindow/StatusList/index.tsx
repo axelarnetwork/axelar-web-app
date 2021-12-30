@@ -1,12 +1,16 @@
-import styled                                    from "styled-components";
-import screenConfigs                             from "config/screenConfigs";
-import {useRecoilValue}                          from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
-import CopyToClipboard                           from "component/Widgets/CopyToClipboard";
-import Tooltip                                   from "component/Widgets/Tooltip";
-import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import {ChainSelection, SourceAsset}             from "state/ChainSelection";
-import {SourceDepositAddress}                    from "state/TransactionStatus";
+import {IChainInfo}                                                     from "@axelar-network/axelarjs-sdk";
+import styled                                                           from "styled-components";
+import screenConfigs                                                    from "config/screenConfigs";
+import {useRecoilValue}                                                 from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
+import downstreamServices                                               from "config/downstreamServices";
+import CopyToClipboard                                                  from "component/Widgets/CopyToClipboard";
+import Link                                                             from "component/Widgets/Link";
+import Tooltip                                                          from "component/Widgets/Tooltip";
+import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
+import {Nullable}                                                       from "interface/Nullable";
+import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
+import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -45,11 +49,12 @@ interface IListItemProps {
 	activeStep: number;
 	step: number;
 	text: any;
+	className?: string;
 }
 
 const ListItem = (props: IListItemProps) => {
 
-	const {activeStep, step, text} = props;
+	const {activeStep, className, step, text} = props;
 	let suffix: string;
 
 	if (activeStep > step) {
@@ -60,7 +65,7 @@ const ListItem = (props: IListItemProps) => {
 		suffix = "inactive";
 	}
 
-	return <StyledListItem>
+	return <StyledListItem className={className}>
 		<div style={{width: `20%`, height: `100%`, display: `flex`, alignItems: `center`, justifyContent: `center`}}>
 			<StyledImage
 				data={require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)?.default}
@@ -88,13 +93,16 @@ const StatusList = (props: IStatusListProps) => {
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 
 	return <StyledStatusList>
 		<ListItem
+			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
-			text={`Generating a Deposit Address`}
+			text={`Generating a one-time deposit address`}
 		/>
 		<ListItem
+			className={"joyride-status-step-2"}
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
 				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
@@ -117,23 +125,43 @@ const StatusList = (props: IStatusListProps) => {
 			}
 		/>
 		<ListItem
+			className={"joyride-status-step-3"}
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
 					<div>Confirmed. Completing your transfer.</div>
 					<div> You may exit this window if you wish.</div>
 				</div>
-				: `Axelar to confirm your deposit on ${sourceChain?.chainName}.`
+				: `Axelar Network confirming your deposit on ${sourceChain?.chainName}.`
 			}
 		/>
 		<ListItem
+			className={"joyride-status-step-4"}
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
-				? `Transfer Completed!`
+				? ShowTransactionComplete({destNumConfirm, destinationChain})
 				: `Waiting to detect transaction on ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>
+}
+
+
+const ShowTransactionComplete = ({
+	                                 destNumConfirm,
+	                                 destinationChain
+                                 }: { destNumConfirm: IConfirmationStatus, destinationChain: Nullable<IChainInfo> }) => {
+
+	const blockExplorer: { name: string, url: string } = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
+		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName?.toLowerCase() as string];
+	console.log("block explorer", blockExplorer, destNumConfirm, process.env.REACT_APP_STAGE);
+	return destNumConfirm.transactionHash && blockExplorer
+		? <div style={{overflowWrap: `break-word`, overflow: `hidden`}}>
+			Transaction completed - see it {" "}
+			<Link href={`${blockExplorer.url}${destNumConfirm.transactionHash}`}>here</Link>
+			{" "} on {blockExplorer.name}!
+		</div>
+		: "Transfer Completed!";
 }
 
 export default StatusList;

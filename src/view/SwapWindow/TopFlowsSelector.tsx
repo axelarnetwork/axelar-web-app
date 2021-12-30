@@ -28,7 +28,7 @@ const StyledHelperComponent = styled.div<IStyledDivProps>`
 	padding: 0.4em;
 	border-radius: ${props => props.appear ? `7px` : `50px`};
 	width: ${props => props.appear ? `70%` : `auto`};
-	background-color: ${props => props.appear ? `none` : `#444`};
+	background-color: ${props => props.appear ? `none` : props.theme.headerBackgroundColor};
 	color: ${props => props.appear ? `black` : `white`};
 
     @media ${screenConfigs.media.desktop} {
@@ -148,6 +148,7 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 	return <StyledHelperComponent appear={showFlows}
 	                              onMouseLeave={() => setShowFlows(false)}
 	                              onMouseEnter={() => !showFlows && setShowFlows(true)}
+	                              className={"joyride-top-flows"}
 	>
 		<TopFlowsToggle onClick={() => setShowFlows(!showFlows)}>
 			<img src={require(`resources/active-eye-blue.svg`).default} alt={""} width={`12px`} height={`12px`}/>

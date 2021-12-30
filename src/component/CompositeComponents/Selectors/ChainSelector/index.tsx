@@ -1,8 +1,9 @@
 import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
-import {SOURCE_TOKEN_KEY}                                    from "config/consts";
-import AssetSelector                                         from "component/CompositeComponents/Selectors/AssetSelector";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
+import AssetSelector
+                                                             from "component/CompositeComponents/Selectors/AssetSelector";
 import {FlexSpaceBetween}                                    from "component/StyleComponents/FlexSpaceBetween";
 import SearchComponent, {ISearchItem}                        from "component/Widgets/SearchComponent";
 import {SVGImage}                                            from "component/Widgets/SVGImage";
@@ -18,6 +19,7 @@ interface IChainSelectorProps {
 	animate?: boolean;
 	hideContents?: boolean;
 	ref: any;
+	closeOtherWindow: () => void;
 }
 
 const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
@@ -25,6 +27,8 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	const isSourceChain: boolean = props.id === SOURCE_TOKEN_KEY;
 	const [selectedChain, setSelectedChain] = useRecoilState<IChainInfo | null>(ChainSelection(props.id));
 	const sourceChain = useRecoilValue<IChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue<IChainInfo | null>(ChainSelection(DESTINATION_TOKEN_KEY));
+	const resetDestinationChain = useResetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const chainList = useRecoilValue(ChainList);
 	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
@@ -72,32 +76,52 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 	}));
 
 	/*only show the chain selector widget if the asset selector search box is not open*/
-	const chainSelectorWidget = () => <StyledChainSelectionIconWidget>
-		<div style={{cursor: `pointer`}} onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}>
-			<SelectedChainLogoAndText chainInfo={selectedChain}/>
-		</div>
-		<SVGImage
-			style={{cursor: `pointer`}}
-			onClick={() => setShowChainSelectorSearchBox(!showChainSelectorSearchBox)}
-			src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-			height={"0.75em"}
-			width={"0.75em"}
-		/>
-	</StyledChainSelectionIconWidget>;
+	const chainSelectorWidget = () => {
+		const onClick = () => {
+			props.closeOtherWindow();
+			/*if you're about to toggle open the chain selector search box
+			* and the asset search box is already open, close the asset search box first */
+			if (!showChainSelectorSearchBox && showAssetSearchBox)
+				setShowAssetSearchBox(false);
+			setShowChainSelectorSearchBox(!showChainSelectorSearchBox);
+		}
+		return <StyledChainSelectionIconWidget>
+			<div style={{cursor: `pointer`}} onClick={onClick}>
+				<SelectedChainLogoAndText chainInfo={selectedChain}/>
+			</div>
+			<SVGImage
+				style={{cursor: `pointer`}}
+				onClick={onClick}
+				src={require(showChainSelectorSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
+				height={"0.75em"}
+				width={"0.75em"}
+			/>
+		</StyledChainSelectionIconWidget>;
+	};
 
 	/*only show the asset selector widget if the chain selector search box is not open*/
-	const assetSelectorWidget = (shouldHide: boolean) => <StyledChainSelectionIconWidget hide={shouldHide}>
-		<div style={{cursor: `pointer`}} onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}>
-			<AssetSelector/>
-		</div>
-		<SVGImage
-			style={{cursor: `pointer`}}
-			onClick={() => setShowAssetSearchBox(!showAssetSearchBox)}
-			src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
-			height={"0.75em"}
-			width={"0.75em"}
-		/>
-	</StyledChainSelectionIconWidget>;
+	const assetSelectorWidget = (shouldHide: boolean) => {
+		const onClick = () => {
+			props.closeOtherWindow();
+			/*if you're about to toggle open the asset selector search box
+			* and the chain search box is already open, close the chain search box first */
+			if (!showAssetSearchBox && showChainSelectorSearchBox)
+				setShowChainSelectorSearchBox(false);
+			setShowAssetSearchBox(!showAssetSearchBox);
+		}
+		return <StyledChainSelectionIconWidget hide={shouldHide}>
+			<div style={{cursor: `pointer`}} onClick={onClick}>
+				<AssetSelector/>
+			</div>
+			<SVGImage
+				style={{cursor: `pointer`}}
+				onClick={onClick}
+				src={require(showAssetSearchBox ? `resources/drop-up-arrow.svg` : `resources/drop-down-arrow.svg`)?.default}
+				height={"0.75em"}
+				width={"0.75em"}
+			/>
+		</StyledChainSelectionIconWidget>;
+	}
 
 	return <StyledChainSelectionComponent>
 		<div style={{margin: `10px`, color: `#898994`, fontSize: `0.8em`}}>{props.label}</div>
@@ -127,6 +151,10 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 					icon: require(`resources/tokenAssets/${asset?.common_key}.svg`)?.default,
 					disabled: false,
 					onClick: () => {
+						// if you happen to select a source asset that isn't supported on the destination chain, reset the dest chain selection
+						if (isSourceChain && !destinationChain?.assets?.find(destAsset => destAsset?.common_key === asset?.common_key)) {
+							resetDestinationChain();
+						}
 						setSourceAsset(asset);
 					}
 				}

@@ -1,7 +1,7 @@
 import React                            from 'react';
-import ReactDOM                         from 'react-dom';
-import {createGlobalStyle}              from "styled-components";
-import ReactNotification                from 'react-notifications-component';
+import ReactDOM                           from 'react-dom';
+import {createGlobalStyle, ThemeProvider} from "styled-components";
+import ReactNotification                  from 'react-notifications-component';
 import {BrowserRouter, Route, Switch}   from "react-router-dom";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {RecoilRoot}                     from "recoil";
@@ -94,12 +94,19 @@ const routesWithCSSTransition = <BrowserRouter>
 	<Route path="/" component={routes}/>
 </BrowserRouter>;
 
+
+const theme = {
+	headerBackgroundColor: `rgba(0,0,0,0.82)`
+};
+
 ReactDOM.render(
 	<RecoilRoot>
-		<ReactNotification/>
-		<RecoilLogger/>
-		{routesWithCSSTransition}
-		<GlobalStyle/>
+		<ThemeProvider theme={theme} >
+			<ReactNotification/>
+			<RecoilLogger/>
+			{routesWithCSSTransition}
+			<GlobalStyle/>
+		</ThemeProvider>
 	</RecoilRoot>,
 	document.getElementById('root')
 );

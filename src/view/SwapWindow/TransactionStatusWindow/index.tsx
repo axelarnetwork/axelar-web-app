@@ -1,20 +1,25 @@
-import React, {useEffect, useState}                                          from "react";
-import {useRecoilValue}                                                      from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                             from "config/consts";
-import screenConfigs                                                         from "config/screenConfigs";
-import {StyledChainSelectionIconWidget}                                      from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
-import {SelectedChainLogoAndText}                                            from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
-import {opacityAnimation}                                                    from "component/StyleComponents/animations/OpacityAnimation";
-import {FlexRow}                                                             from "component/StyleComponents/FlexRow";
-import useCartoonMessageDispatcher                                           from "hooks/useCartoonMessageDispatcher";
-import useResetAllState                                                      from "hooks/useResetAllState";
-import {IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection}                                                      from "state/ChainSelection";
-import styled                                                                from "styled-components";
+import styled                                                                            from "styled-components";
+import React, {useEffect}                                                                from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
+import screenConfigs                                                                     from "config/screenConfigs";
+import {StyledChainSelectionIconWidget}                                                  from "component/CompositeComponents/Selectors/ChainSelector/StyleComponents/StyledChainSelectionIconWidget";
+import {SelectedChainLogoAndText}                                                        from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
+import {opacityAnimation}                                                                from "component/StyleComponents/animations/OpacityAnimation";
+import {FlexRow}                                                                         from "component/StyleComponents/FlexRow";
+import useResetAllState                                                                  from "hooks/useResetAllState";
+import {MessageShownInCartoon}                                                           from "state/ApplicationStatus";
+import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {ChainSelection}                                                                  from "state/ChainSelection";
 import StyledButtonContainer
-                                                                             from "../StyledComponents/StyledButtonContainer";
-import PlainButton                                                           from "../StyledComponents/PlainButton";
-import StatusList                                                            from "./StatusList";
+                                                                                         from "../StyledComponents/StyledButtonContainer";
+import PlainButton
+                                                                                         from "../StyledComponents/PlainButton";
+import StatusList                                                                        from "./StatusList";
+import Step2InfoForWidget
+                                                                                         from "./StatusList/Step2InfoForWidget";
+import Step3InfoForWidget
+                                                                                         from "./StatusList/Step3InfoForWidget";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -65,10 +70,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
+	const setCartoonMessage = useSetRecoilState(MessageShownInCartoon);
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
-	const setMessageInCartoon = useCartoonMessageDispatcher();
+	const [activeStep, setActiveStep] = useRecoilState(ActiveStep);
 	const resetAllstate = useResetAllState();
-	const [activeStep, setActiveStep] = useState(0);
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -82,19 +87,21 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
 				setActiveStep(4);
+				setCartoonMessage(null);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
 				setActiveStep(3);
+				setCartoonMessage(<Step3InfoForWidget/>);
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setMessageInCartoon(`Once your deposit is confirmed, you can leave the rest to us... or following along with the rest if you would like!`);
+				setCartoonMessage(<Step2InfoForWidget/>);
 				break;
 			default:
 				setActiveStep(1);
 				break;
 		}
-	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setMessageInCartoon]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep]);
 
 	const showButton: boolean = activeStep > 2;
 

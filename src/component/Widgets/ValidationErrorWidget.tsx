@@ -24,10 +24,10 @@ const StyledValidationErrorWidget = styled.div`
         margin-top: 15px;
 	}
 	@media ${screenConfigs.media.tablet} {
-        margin-top: 15px;
+        margin-top: 5px;
 	}
 	@media ${screenConfigs.media.mobile} {
-		margin-top: 15px;
+		margin-top: 5px;
 	}
 `;
 

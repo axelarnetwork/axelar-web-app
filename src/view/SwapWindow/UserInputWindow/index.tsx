@@ -7,8 +7,8 @@ import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
                                                                                     from "component/CompositeComponents/SwapChains";
-import TransferFeeDivider
-                                                                                    from "component/CompositeComponents/TransferFeeDivider";
+import TransactionInfo
+                                                                                    from "component/CompositeComponents/TransactionInfo";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
                                                                                     from "component/Widgets/ValidationErrorWidget";
@@ -161,14 +161,15 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		<br/>
 		<br/>
 		<TopFlowsSelectorWidget closeAllSearchWindows={closeAllSearchWindows}/>
-		<StyledChainSelectorSection>
-			<ChainSelector ref={srcChainComponentRef} id={SOURCE_TOKEN_KEY} label={"Source Chain"}/>
+		<StyledChainSelectorSection className={"joyride-chain-selector"}>
+			<ChainSelector ref={srcChainComponentRef} id={SOURCE_TOKEN_KEY} label={"Source Chain"}
+			               closeOtherWindow={() => (destChainComponentRef?.current as any)?.closeAllSearchWindows()}/>
 			<div><SwapChains/></div>
-			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}/>
+			<ChainSelector ref={destChainComponentRef} id={DESTINATION_TOKEN_KEY} label={"Destination Chain"}
+			               closeOtherWindow={() => (srcChainComponentRef?.current as any)?.closeAllSearchWindows()}/>
 			<br/>
-			<TransferFeeDivider/>
+			<TransactionInfo/>
 			<StyledInputFormSection>
-				<br/>
 				<InputForm
 					name={"destination-address-input"}
 					value={destAddr || ""}
@@ -180,7 +181,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 			</StyledInputFormSection>
 		</StyledChainSelectorSection>
 		{showValidationErrors && renderValidationErrors()}
-		<StyledButtonContainer>
+		<StyledButtonContainer className={"joyride-input-button"}>
 			<PlainButton
 				dim={!enableSubmitBtn}
 				onClick={onInitiateTransfer}

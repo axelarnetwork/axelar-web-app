@@ -32,6 +32,7 @@ export interface IConfirmationStatus {
 	numberConfirmations: Nullable<number>;
 	numberRequiredConfirmations: Nullable<number>;
 	transactionHash: Nullable<string>;
+	amountConfirmedString: Nullable<string>;
 }
 
 export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
@@ -39,11 +40,17 @@ export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
 	default: {
 		numberConfirmations: null,
 		numberRequiredConfirmations: null,
-		transactionHash: null
+		transactionHash: null,
+		amountConfirmedString: null
 	},
 });
 
 export const IsRecaptchaAuthenticated = atom<boolean>({
 	key: "IsRecaptchaAuthenticated",
 	default: true,
+});
+
+export const ActiveStep = atom<number>({
+	key: "ActiveStep",
+	default: 0,
 });

@@ -11,7 +11,7 @@ import QAs, {IQA}                                 from "./QA";
 const StyledHelperComponent = styled.div`
     position: absolute;
     z-index: 15;
-    bottom: 50px;
+    bottom: 10px;
     right: 10px;
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@ const HelperWidget = styled.div`
 	box-sizing: border-box;
 	padding: 0.5em 0.75em 0.5em 0.75em;
 	margin: 0.5em;
-	background-color: black;
+	background-color: ${props => props.theme.headerBackgroundColor};
 	border-radius: 50px;
 	color: white;
 	cursor: pointer;
@@ -33,7 +33,7 @@ const HelperWidget = styled.div`
 
 const StyledFAQPopup = styled.div`
 	background-color: rgb(255,255,255,0.9);
-	color: black;
+	color: ${props => props.theme.headerBackgroundColor};
 	box-sizing: border-box;
 	border: 2px solid #b9bac8;
 	border-radius: 10px;
@@ -43,10 +43,11 @@ const StyledFAQPopup = styled.div`
     font-size: 12px;
 `;
 
-const StyledHeader = styled.div`
+export const StyledHeader = styled.div`
 	position: relative;
 	width: 100%;
-    background-color: black;
+    background-color: ${props => props.theme.headerBackgroundColor};
+    border-radius: 7px 7px 0px 0px;
     color: white;
     text-align: center;
     font-size: large;
@@ -119,7 +120,7 @@ const FAQPage = () => {
                 />
             </ContactUsSection>}
         </StyledFAQPopup>}
-		<HelperWidget onClick={() => setShowFAQ(!showFAQ)}>
+		<HelperWidget className={"joyride-faq"} onClick={() => setShowFAQ(!showFAQ)}>
 			<FlexRow>
 				<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
 				<div style={{marginLeft: `10px`}}>Support</div>
