@@ -1,17 +1,19 @@
 import {KeyboardEvent, useState} from "react";
 import {InputForm}               from "component/CompositeComponents/InputForm";
-import {SVGImage}  from "component/Widgets/SVGImage";
+import {SVGImage}                from "component/Widgets/SVGImage";
 
-const usePasswordInput = () => {
+const usePasswordInput = ({handleOnEnterPress}: { handleOnEnterPress: () => void }) => {
 
 	const [password, setPassword] = useState("");
 	const [passwordShown, setPasswordShown] = useState(false);
 	const togglePassword = () => setPasswordShown(!passwordShown);
 
-	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+	const handleOnKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
 		e.stopPropagation();
-		if (e.code === "Enter" || e.code === "NumpadEnter")
+		if (e.code === "Enter" || e.code === "NumpadEnter") {
 			setPassword((e.target as any)?.value);
+			handleOnEnterPress && handleOnEnterPress();
+		}
 	}
 
 	return [
@@ -19,11 +21,11 @@ const usePasswordInput = () => {
 		(<div style={{width: `50%`, position: `relative`}}>
 			<InputForm
 				name={"usePasswordInput"}
-				placeholder={"Enter password"}
+				placeholder={"Early Access Password"}
 				value={password}
 				type={(passwordShown ? "text" : "password") as any}
 				onChange={(e: any) => setPassword(e.target.value)}
-				handleOnEnterPress={handleOnEnterPress}
+				handleOnEnterPress={handleOnKeyPress}
 			/>
 			<div style={{position: `absolute`, marginTop: `-32px`, right: `20px`, cursor: `pointer`}}>
 				<SVGImage

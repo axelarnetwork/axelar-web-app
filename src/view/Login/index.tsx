@@ -1,4 +1,4 @@
-import {useRef}         from "react";
+import React, {useRef}  from "react";
 import {useRecoilState} from "recoil";
 import {Redirect}       from "react-router-dom";
 import styled           from "styled-components";
@@ -28,7 +28,7 @@ const StyledLoginSection = styled.div`
 `;
 
 const LeftStyledLoginSection = styled(StyledLoginSection)`
-	background-image: linear-gradient(to right, grey, white);
+	background-image: linear-gradient(to right, lightgrey, white);
 	width: 40%;
 `;
 
@@ -39,7 +39,7 @@ const StyledImage = styled.img`
 `;
 
 const SlaminDiv = styled(StyledImage)`
-    animation: ${slamKeyframe} 1500ms ease-in;
+    animation: ${slamKeyframe} 1000ms ease-in;
     display: block;
     font-size: 6em;
     font-weight: 600;
@@ -50,14 +50,14 @@ const Login = () => {
 
 	const imageRef = useRef(null);
 	const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
-	const [userPassword, passwordComponent] = usePasswordInput();
-
 	const onClick = () => {
 		if (!(userPassword === process.env.REACT_APP_LOGIN_PASSWORD))
 			return;
 		disintegrate(imageRef.current)
-		.then(() => setTimeout(() => setIsLoggedIn(true), 2000));
+		.then(() => setTimeout(() => setIsLoggedIn(true), 1000));
 	}
+	const [userPassword, passwordComponent] = usePasswordInput({ handleOnEnterPress: onClick});
+
 
 	return <>{isLoggedIn
 		? <Redirect to={"/"}/>
@@ -65,7 +65,7 @@ const Login = () => {
 			<LeftStyledLoginSection>
 				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
 				<br/>
-				{passwordComponent}
+				{React.cloneElement(passwordComponent, { handleOnEnterPress: onClick })}
 				<br/>
 				<div style={{width: `50%`}}>
 					<StyledButton onClick={onClick}>Enter</StyledButton>
