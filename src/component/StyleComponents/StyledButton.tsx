@@ -12,5 +12,4 @@ export const StyledButton = styled.button<IStyledButtonProps>`
 	box-shadow: 0 0 3px 0 rgba(11, 11, 12, 0.38);
 	background-color: ${props => props.dim ? "lightgray" : "#0b0b0f"};
 	color: white;
-	cursor: pointer;
 `;
