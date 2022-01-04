@@ -5,7 +5,7 @@ import styled           from "styled-components";
 import {slamKeyframe}   from "component/StyleComponents/animations/slamKeyframe";
 import {StyledButton}   from "component/StyleComponents/StyledButton";
 import usePasswordInput from "hooks/usePasswordInput";
-import backgroundImage  from "resources/jarold-sng-axo-explorer-jsd.png";
+import backgroundImage  from "resources/globe.svg";
 import {IsLoggedIn}     from "state/ApplicationStatus";
 import disintegrate     from "./animation";
 
@@ -20,20 +20,21 @@ const StyledLoginPage = styled.div`
 
 const StyledLoginSection = styled.div`
 	height: 100%;
-	width: 50%;
+	width: 60%;
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: center;
 	flex-direction: column;
 `;
 
-const RightStyledLoginSection = styled(StyledLoginSection)`
-	background-image: linear-gradient(to right, white, grey);
+const LeftStyledLoginSection = styled(StyledLoginSection)`
+	background-image: linear-gradient(to right, grey, white);
+	width: 40%;
 `;
 
 const StyledImage = styled.img`
 	height: auto;
-	width: 65%;
+	width: 90%;
 	object-fit: cover;
 `;
 
@@ -42,7 +43,7 @@ const SlaminDiv = styled(StyledImage)`
     display: block;
     font-size: 6em;
     font-weight: 600;
-    margin-left: -20px;
+    margin-left: 20px;
 `;
 
 const Login = () => {
@@ -61,10 +62,7 @@ const Login = () => {
 	return <>{isLoggedIn
 		? <Redirect to={"/"}/>
 		: <StyledLoginPage>
-			<StyledLoginSection>
-				<StyledImage ref={imageRef} src={backgroundImage}/>
-			</StyledLoginSection>
-			<RightStyledLoginSection>
+			<LeftStyledLoginSection>
 				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
 				<br/>
 				{passwordComponent}
@@ -72,7 +70,10 @@ const Login = () => {
 				<div style={{width: `50%`}}>
 					<StyledButton onClick={onClick}>Enter</StyledButton>
 				</div>
-			</RightStyledLoginSection>
+			</LeftStyledLoginSection>
+			<StyledLoginSection>
+				<StyledImage ref={imageRef} src={backgroundImage}/>
+			</StyledLoginSection>
 		</StyledLoginPage>
 	}</>;
 }
