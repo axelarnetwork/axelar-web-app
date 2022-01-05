@@ -105,7 +105,7 @@ const SearchMenu = (props: ISearchMenuProps) => {
 						key={item.title}
 						title={item.title}
 						icon={item.icon}
-						disabled={item.disabled || item.title.toLowerCase() === "luna"}
+						disabled={item.disabled}
 						onClick={(title: string) => !item.disabled && onClick(item)}
 					/>
 				))}
@@ -151,7 +151,7 @@ const SearchOption = (props: ISearchOption) => {
 	}
 	return <StyledSearchItem disabled={disabled} onClick={() => !disabled && onClick(title)}>
 		<SVGImage height={"25px"} width={"25px"} src={imageSrc}/>
-		<div style={{width: `85%`}}>{title + (disabled ? ", TODO - not ready yet" : "")}</div>
+		<div style={{width: `85%`}}>{title}</div>
 	</StyledSearchItem>;
 }
 
