@@ -1,7 +1,7 @@
 import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
 import {useRecoilState, useRecoilValue}                                             from "recoil";
 import styled                                                                       from "styled-components";
-import {IAssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
@@ -97,7 +97,7 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	useEffect(() => {
 		setMounted(true);
-		const destToken: IAssetInfo = {
+		const destToken: AssetInfo = {
 			assetAddress: destAddr as string,
 			assetSymbol: destChainSelection?.chainSymbol
 		}
