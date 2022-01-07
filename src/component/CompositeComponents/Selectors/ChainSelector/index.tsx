@@ -1,6 +1,6 @@
 import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
-import {AssetInfo, ChainInfo}                              from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo}                                from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
 import AssetSelector
                                                              from "component/CompositeComponents/Selectors/AssetSelector";
