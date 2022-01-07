@@ -1,8 +1,8 @@
-import {IAssetInfo, IChainInfo} from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo} from "@axelar-network/axelarjs-sdk";
 import BigNumber                from "decimal.js";
 import {Nullable}               from "interface/Nullable";
 
-export const getMinDepositAmount = (sourceAsset: Nullable<IAssetInfo>, destinationChain: Nullable<IChainInfo>) => {
+export const getMinDepositAmount = (sourceAsset: Nullable<AssetInfo>, destinationChain: Nullable<ChainInfo>) => {
 
 	if (!sourceAsset || !destinationChain)
 		return null;

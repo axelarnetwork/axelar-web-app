@@ -15,5 +15,5 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_BRIDGET_TESTNET_PROJECT_ID }}
           vercel-args: '--prod'
           alias-domains: |
-            axelar-bridge-testnet.vercel.app
             bridge.testnet.axelar.dev
+            axelar-satellite-testnet.vercel.app

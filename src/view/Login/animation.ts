@@ -4,9 +4,8 @@ import "./animation.css";
 
 const html2canvas = require("html2canvas");
 
-const DEBUG = false;
-const REPETITION_COUNT = 16; // number of times each pixel is assigned to a canvas
-const NUM_FRAMES = 64;
+const REPETITION_COUNT = 8; // number of times each pixel is assigned to a canvas
+const NUM_FRAMES = 16;
 
 /**
  * Generates the individual subsets of pixels that are animated to create the effect
@@ -14,7 +13,7 @@ const NUM_FRAMES = 64;
  * @param {number} count The higher the frame count, the less grouped the pixels will look - Google use 32, but for our elms we use 128 since we have images near the edges
  * @return {HTMLCanvasElement[]} Each canvas contains a subset of the original pixels
  */
-function generateFrames($canvas, count = 32) {
+function generateFrames($canvas, count = 8) {
 	const {width, height} = $canvas;
 	const ctx = $canvas.getContext("2d");
 	const originalData = ctx.getImageData(0, 0, width, height);
@@ -75,7 +74,7 @@ function disintegrate($elm) {
 			// setup the frames for animation
 			const $frames = generateFrames($canvas, NUM_FRAMES);
 			$frames.forEach(($frame, i) => {
-				$frame.style.transitionDelay = `${1.35 * i / $frames.length}s`;
+				// $frame.style.transitionDelay = `${i / $frames.length}s`;
 				$container.appendChild($frame);
 			});
 
@@ -83,23 +82,17 @@ function disintegrate($elm) {
 			replaceElementVisually($elm, $container);
 
 			// then animate them
-			$container.offsetLeft && $container.offsetLeft(); // forces reflow, so CSS we apply below does transition
-			if (!DEBUG) {
-				// set the values the frame should animate to
-				// note that this is done after reflow so the transitions trigger
-				$frames.forEach($frame => {
-					const randomRadian = 2 * Math.PI * (Math.random() - 0.5);
-					$frame.style.transform =
-						`rotate(${15 * (Math.random() - 0.5)}deg) 
-                    translate(${60 * Math.cos(randomRadian)}px, ${30 * Math.sin(randomRadian)}px)
-                    rotate(${15 * (Math.random() - 0.5)}deg)`;
-					$frame.style.opacity = 0;
-				});
-			} else {
-				$frames.forEach($frame => {
-					$frame.style.animation = `debug-pulse 1s ease ${$frame.style.transitionDelay} infinite alternate`;
-				});
-			}
+			$container && $container.offsetLeft && typeof $container.offsetLeft === 'function' && $container.offsetLeft();
+
+			$frames.forEach($frame => {
+				const randomRadian = 2 * Math.PI * (Math.random() - 0.5);
+				$frame.style.transform =
+					`rotate(${15 * (Math.random() - 0.5)}deg) 
+                translate(${60 * Math.cos(randomRadian)}px, ${30 * Math.sin(randomRadian)}px)
+                rotate(${15 * (Math.random() - 0.5)}deg)`;
+				$frame.style.opacity = 0;
+			});
+
 			resolve();
 		});
 	});

@@ -1,4 +1,4 @@
-import {IChainInfo}                                                     from "@axelar-network/axelarjs-sdk";
+import {ChainInfo}                                                     from "@axelar-network/axelarjs-sdk";
 import styled                                                           from "styled-components";
 import screenConfigs                                                    from "config/screenConfigs";
 import {useRecoilValue}                                                 from "recoil";
@@ -150,7 +150,7 @@ const StatusList = (props: IStatusListProps) => {
 const ShowTransactionComplete = ({
 	                                 destNumConfirm,
 	                                 destinationChain
-                                 }: { destNumConfirm: IConfirmationStatus, destinationChain: Nullable<IChainInfo> }) => {
+                                 }: { destNumConfirm: IConfirmationStatus, destinationChain: Nullable<ChainInfo> }) => {
 
 	const blockExplorer: { name: string, url: string } = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
 		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][destinationChain?.chainName?.toLowerCase() as string];

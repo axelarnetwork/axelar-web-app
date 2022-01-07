@@ -1,5 +1,5 @@
 import {atom, atomFamily}       from "recoil";
-import {IAssetInfo, IChainInfo} from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo} from "@axelar-network/axelarjs-sdk";
 import {Nullable}               from "interface/Nullable";
 
 /*
@@ -7,7 +7,7 @@ tracks selections for source and destination chain selections, noted by
 const SOURCE_TOKEN_KEY: string = "first-chain-selection";
 const DESTINATION_TOKEN_KEY: string = "second-chain-selection";
 */
-export const ChainSelection = atomFamily<Nullable<IChainInfo>, string>({
+export const ChainSelection = atomFamily<Nullable<ChainInfo>, string>({
 	key: "ChainSelection",
 	default: null,
 });
@@ -15,7 +15,7 @@ export const ChainSelection = atomFamily<Nullable<IChainInfo>, string>({
 /*
 tracks selection of the source asset to be transferred to the destination chain
 */
-export const SourceAsset = atom<Nullable<IAssetInfo>>({
+export const SourceAsset = atom<Nullable<AssetInfo>>({
 	key: "SourceAsset",
 	default: null,
 });
