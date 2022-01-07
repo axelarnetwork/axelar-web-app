@@ -5,7 +5,7 @@ on:
       - main
   workflow_dispatch:
 jobs:
-  deploy-ui-to-devnet:
+  deploy-ui-to-mainnet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
