@@ -1,6 +1,6 @@
 import React, {useImperativeHandle, useState}                from "react";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
-import {IAssetInfo, IChainInfo}                              from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo}                              from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}             from "config/consts";
 import AssetSelector
                                                              from "component/CompositeComponents/Selectors/AssetSelector";
@@ -25,16 +25,16 @@ interface IChainSelectorProps {
 const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 
 	const isSourceChain: boolean = props.id === SOURCE_TOKEN_KEY;
-	const [selectedChain, setSelectedChain] = useRecoilState<IChainInfo | null>(ChainSelection(props.id));
-	const sourceChain = useRecoilValue<IChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
-	const destinationChain = useRecoilValue<IChainInfo | null>(ChainSelection(DESTINATION_TOKEN_KEY));
+	const [selectedChain, setSelectedChain] = useRecoilState<ChainInfo | null>(ChainSelection(props.id));
+	const sourceChain = useRecoilValue<ChainInfo | null>(ChainSelection(SOURCE_TOKEN_KEY));
+	const destinationChain = useRecoilValue<ChainInfo | null>(ChainSelection(DESTINATION_TOKEN_KEY));
 	const resetDestinationChain = useResetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const chainList = useRecoilValue(ChainList);
 	const [sourceAsset, setSourceAsset] = useRecoilState(SourceAsset);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
 	const [showAssetSearchBox, setShowAssetSearchBox] = useState<boolean>(false);
 	const [showChainSelectorSearchBox, setShowChainSelectorSearchBox] = useState<boolean>(false);
-	const initialAssetList: IAssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
+	const initialAssetList: AssetInfo[] = chainList?.find(chain => chain?.chainName === sourceChain?.chainName)?.assets || [];
 
 	/*closeAllSearchWindows is a ref method called
 	from the parent component (UserInputWindow/index.tsx)
@@ -46,18 +46,18 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 		}
 	}))
 
-	let filteredChainList: IChainInfo[] = chainList;
+	let filteredChainList: ChainInfo[] = chainList;
 
 	/*for the destination chain, if source chain and source asset are selected,
 	* only enable chains which also have that asset, based on common_key
 	* */
 	if (!!sourceChain && !!sourceAsset && !isSourceChain) {
 		filteredChainList = filteredChainList.filter((supportedChain) => {
-			const assetsInSupportedChain: IAssetInfo[] = supportedChain.assets || [];
+			const assetsInSupportedChain: AssetInfo[] = supportedChain.assets || [];
 			return assetsInSupportedChain.map(asset => asset.common_key).includes(sourceAsset.common_key);
 		});
 	}
-	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: IChainInfo) => ({
+	const chainDropdownOptions: ISearchItem[] = filteredChainList.map((supportedChain: ChainInfo) => ({
 		title: supportedChain.chainName,
 		active: false,
 		icon: require(`resources/logos/${supportedChain?.chainSymbol}.svg`)?.default,
@@ -143,7 +143,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 		{/*search dropdown for asset selection*/}
 		<SearchComponent
 			show={showAssetSearchBox}
-			allItems={initialAssetList.map((asset: IAssetInfo) => {
+			allItems={initialAssetList.map((asset: AssetInfo) => {
 				return {
 					title: asset.assetName as string,
 					symbol: asset.assetSymbol as string,

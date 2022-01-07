@@ -1,9 +1,9 @@
-import {IChainInfo}   from "@axelar-network/axelarjs-sdk";
+import {ChainInfo}   from "@axelar-network/axelarjs-sdk";
 import {SVGImage}     from "component/Widgets/SVGImage";
 import {BaseSelector} from "../BaseSelector";
 
 interface IChainComponentProps {
-	chainInfo: IChainInfo | null;
+	chainInfo: ChainInfo | null;
 }
 
 export const SelectedChainLogoAndText = (props: IChainComponentProps) => {

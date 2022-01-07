@@ -1,7 +1,7 @@
 import React, {useMemo, useState}                from "react";
 import {useRecoilValue, useSetRecoilState}       from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
-import {IAssetInfo, IChainInfo}                  from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo}                  from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import screenConfigs                             from "config/screenConfigs";
 import {topFlowOptions}                          from "config/topFlowOptions";
@@ -121,17 +121,17 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 
 	const [showFlows, setShowFlows] = useState(false);
 
-	const chainList = useRecoilValue<IChainInfo[]>(ChainList);
+	const chainList = useRecoilValue<ChainInfo[]>(ChainList);
 	const setSourceChain = useSetRecoilState(ChainSelection(SOURCE_TOKEN_KEY));
 	const setDestinationChain = useSetRecoilState(ChainSelection(DESTINATION_TOKEN_KEY));
 	const setSourceAsset = useSetRecoilState(SourceAsset);
 
 	const topChainsMap = useMemo(() => {
 
-		const map: { [key: string]: IChainInfo } = {};
-		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as IChainInfo;
-		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as IChainInfo;
-		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as IChainInfo;
+		const map: { [key: string]: ChainInfo } = {};
+		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as ChainInfo;
+		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as ChainInfo;
+		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as ChainInfo;
 		return map;
 
 	}, [chainList]);
@@ -140,7 +140,7 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 		const map = topChainsMap;
 		setSourceChain(map[selection.sourceChainName]);
 		setDestinationChain(map[selection.destinationChainName]);
-		setSourceAsset(map[selection.sourceChainName]?.assets?.find(asset => asset.common_key === selection.assetCommonKey) as IAssetInfo);
+		setSourceAsset(map[selection.sourceChainName]?.assets?.find(asset => asset.common_key === selection.assetCommonKey) as AssetInfo);
 		setShowFlows(false);
 		closeAllSearchWindows();
 	};
