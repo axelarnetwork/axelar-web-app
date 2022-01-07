@@ -19,5 +19,5 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_BRIDGET_DEVNET_PROJECT_ID }}
           vercel-args: '--prod'
           alias-domains: |
-            axelar-bridge-devnet.vercel.app
             bridge.devnet.axelar.dev
+            axelar-satellite-devnet.vercel.app
