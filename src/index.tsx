@@ -103,7 +103,7 @@ ReactDOM.render(
 	<RecoilRoot>
 		<ThemeProvider theme={theme} >
 			<ReactNotification/>
-			<RecoilLogger/>
+			{process.env.REACT_APP_STAGE !== "mainnet" && <RecoilLogger/>}
 			{routesWithCSSTransition}
 			<GlobalStyle/>
 		</ThemeProvider>
