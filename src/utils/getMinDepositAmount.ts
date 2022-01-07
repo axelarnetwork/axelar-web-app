@@ -1,6 +1,7 @@
 import {AssetInfo, ChainInfo} from "@axelar-network/axelarjs-sdk";
-import BigNumber                from "decimal.js";
-import {Nullable}               from "interface/Nullable";
+import BigNumber              from "decimal.js";
+import {Nullable}             from "interface/Nullable";
+import {roundUp}              from "./roundUp";
 
 export const getMinDepositAmount = (sourceAsset: Nullable<AssetInfo>, destinationChain: Nullable<ChainInfo>) => {
 
@@ -12,6 +13,6 @@ export const getMinDepositAmount = (sourceAsset: Nullable<AssetInfo>, destinatio
 	if (!minDepAmtOnDestChain)
 		return null;
 
-	return (new BigNumber(minDepAmtOnDestChain)).times(1.0015).toNumber();
+	return roundUp((new BigNumber(minDepAmtOnDestChain)).times(1.0015).toNumber());
 }
 
