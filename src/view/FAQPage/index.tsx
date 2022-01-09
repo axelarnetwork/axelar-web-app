@@ -11,7 +11,7 @@ import QAs, {IQA}                                 from "./QA";
 const StyledHelperComponent = styled.div`
     position: absolute;
     z-index: 15;
-    bottom: 10px;
+    bottom: 60px;
     right: 10px;
     display: flex;
     flex-direction: column;

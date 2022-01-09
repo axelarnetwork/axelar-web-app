@@ -2,6 +2,7 @@ import {useResetRecoilState}                             from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {NumberConfirmations, SourceDepositAddress}       from "state/TransactionStatus";
+import {ShowRecaptchaV2Retry}                            from "../state/ApplicationStatus";
 
 const useResetUserInputs = () => {
 	const resetSourceTokenKey = useResetRecoilState(ChainSelection(SOURCE_TOKEN_KEY));
@@ -11,6 +12,7 @@ const useResetUserInputs = () => {
 	const resetSourceDepositAddress = useResetRecoilState(SourceDepositAddress);
 	const resetDestAddress = useResetRecoilState(DestinationAddress);
 	const resetSourceAsset = useResetRecoilState(SourceAsset);
+	const resetShowRecaptchaV2 = useResetRecoilState(ShowRecaptchaV2Retry);
 
 	return () => {
 		resetSourceTokenKey();
@@ -20,6 +22,7 @@ const useResetUserInputs = () => {
 		resetSourceNumConfirmations();
 		resetDestNumConfirmations();
 		resetSourceDepositAddress();
+		resetShowRecaptchaV2();
 	}
 }
 

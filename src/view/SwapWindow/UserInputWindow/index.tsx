@@ -1,7 +1,7 @@
 import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
-import {useRecoilState, useRecoilValue}                                             from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState}                          from "recoil";
 import styled                                                                       from "styled-components";
-import {AssetInfo, validateDestinationAddress}                                     from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, validateDestinationAddress}                                      from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
@@ -15,6 +15,7 @@ import ValidationErrorWidget
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
+import {ShowRecaptchaV2Retry}                                                       from "state/ApplicationStatus";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import StyledButtonContainer
                                                                                     from "../StyledComponents/StyledButtonContainer";
@@ -23,7 +24,7 @@ import PlainButton
 import TopFlowsSelectorWidget                                                       from "../TopFlowsSelector";
 
 interface IUserInputWindowProps {
-	handleSwapSubmit: () => Promise<string>;
+	handleTransactionSubmission: (numAttempt: number) => Promise<string>;
 }
 
 const StyledUserInputWindow = styled.div`
@@ -82,18 +83,20 @@ const StyledInputFormSection = styled(FlexColumn)`
 	}	
 `;
 
-const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
+const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) => {
 
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
+	const setShowRecaptchaV2 = useSetRecoilState(ShowRecaptchaV2Retry);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useRecoilState(IsValidDestinationAddress);
 	const resetUserInputs = useResetUserInputs();
-	const [mounted, setMounted] = useState(true);
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
 	const srcChainComponentRef = createRef();
 	const destChainComponentRef = createRef();
+	const [attemptNumber, setAttemptNumber] = useState(1);
+	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
 		setMounted(true);
@@ -107,21 +110,30 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 
 	const onInitiateTransfer = useCallback(async () => {
 
-		if (!(destAddr && isValidDestinationAddress && mounted))
+		if (!(destAddr && isValidDestinationAddress))
 			return;
 		try {
+			mounted && await handleTransactionSubmission(attemptNumber);
 			setMounted(false);
-			await handleSwapSubmit();
 			return;
-		} catch (e) {
-			resetUserInputs();
+		} catch (e: any) {
+			console.log("Try again with the tractor" + JSON.stringify(e));
+			if (e?.statusCode === 403 && attemptNumber === 1) {
+				const answer: boolean = window.confirm("Mind trying again validating a blurry image?" + JSON.stringify(e));
+				if (answer) {
+					//updating values here but the second attempt will
+					//actually be invoked from the parent component `SwapWindow`
+					//in the `onChange` callback of the recaptcha window after the
+					//challenge is completed
+					setAttemptNumber(2);
+					setShowRecaptchaV2(true);
+				} else
+					resetUserInputs();
+			} else
+				resetUserInputs();
 		}
-	}, [destAddr,
-		isValidDestinationAddress,
-		handleSwapSubmit,
-		mounted,
-		setMounted,
-		resetUserInputs
+	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission, resetUserInputs,
+		setShowRecaptchaV2, mounted, setMounted
 	]);
 
 	const renderValidationErrors = useCallback(() => {
@@ -156,6 +168,8 @@ const UserInputWindow = ({handleSwapSubmit}: IUserInputWindowProps) => {
 		(srcChainComponentRef?.current as any)?.closeAllSearchWindows();
 		(destChainComponentRef?.current as any)?.closeAllSearchWindows();
 	}
+
+	console.log("attempt number", attemptNumber);
 
 	return <StyledUserInputWindow>
 		<br/>
