@@ -11,12 +11,13 @@ import TransactionInfo
                                                                                     from "component/CompositeComponents/TransactionInfo";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
 import ValidationErrorWidget
-                                                                                    from "component/Widgets/ValidationErrorWidget";
+	                                                                                from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
 import {ShowRecaptchaV2Retry}                                                       from "state/ApplicationStatus";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
+import NotificationHandler                                                          from "utils/NotificationHandler";
 import StyledButtonContainer
                                                                                     from "../StyledComponents/StyledButtonContainer";
 import PlainButton
@@ -97,6 +98,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const destChainComponentRef = createRef();
 	const [attemptNumber, setAttemptNumber] = useState(1);
 	const [mounted, setMounted] = useState(true);
+	const notificationHandler = NotificationHandler();
 
 	useEffect(() => {
 		setMounted(true);
@@ -117,23 +119,25 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			setMounted(false);
 			return;
 		} catch (e: any) {
-			console.log("Try again with the tractor" + JSON.stringify(e));
 			if (e?.statusCode === 403 && attemptNumber === 1) {
-				const answer: boolean = window.confirm("Mind trying again validating a blurry image?" + JSON.stringify(e));
-				if (answer) {
-					//updating values here but the second attempt will
-					//actually be invoked from the parent component `SwapWindow`
-					//in the `onChange` callback of the recaptcha window after the
-					//challenge is completed
-					setAttemptNumber(2);
-					setShowRecaptchaV2(true);
-				} else
-					resetUserInputs();
+
+				notificationHandler.notifyMessage({
+					statusCode: 403.2,
+					message: "Seems our automated authentication didn't work for you. Try again after validating a few blurry images below?",
+					traceId: e?.traceId
+				});
+
+				//updating values here but the second attempt will
+				//actually be invoked from the parent component `SwapWindow`
+				//in the `onChange` callback of the recaptcha window after the
+				//challenge is completed
+				setAttemptNumber(2);
+				setShowRecaptchaV2(true);
 			} else
 				resetUserInputs();
 		}
-	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission, resetUserInputs,
-		setShowRecaptchaV2, mounted, setMounted
+	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission, notificationHandler,
+		resetUserInputs, setShowRecaptchaV2, mounted, setMounted
 	]);
 
 	const renderValidationErrors = useCallback(() => {
@@ -168,8 +172,6 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		(srcChainComponentRef?.current as any)?.closeAllSearchWindows();
 		(destChainComponentRef?.current as any)?.closeAllSearchWindows();
 	}
-
-	console.log("attempt number", attemptNumber);
 
 	return <StyledUserInputWindow>
 		<br/>

@@ -11,9 +11,9 @@ import {TransferAssetBridgeFacade}                         from "api/TransferAss
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
-}                                                          from "state/TransactionStatus";
-import ErrorHandler                                        from "utils/ErrorHandler";
-import useRecaptchaAuthenticate                            from "./auth/useRecaptchaAuthenticate";
+}                               from "state/TransactionStatus";
+import NotificationHandler      from "utils/NotificationHandler";
+import useRecaptchaAuthenticate from "./auth/useRecaptchaAuthenticate";
 import {depositConfirmCbMap}                               from "./helper";
 import {ShowRecaptchaV2Retry, ShowTransactionStatusWindow} from "../state/ApplicationStatus";
 
@@ -30,7 +30,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const {authenticateWithRecaptchaV3, authenticateWithRecaptchaV2} = useRecaptchaAuthenticate(recaptchaV2Ref);
-	const errorHandler = ErrorHandler();
+	const notificationHandler = NotificationHandler();
 
 	const sCb: (status: any, setConfirms: any) => void = useCallback((status: any, setConfirms: any): void => {
 		const confirms: IConfirmationStatus = {
@@ -76,29 +76,30 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 			if (attemptNumber > 1) {
 				setShowTransactionStatusWindow(false);
 				e.traceId = traceId;
-				errorHandler.notifyError(e);
+				notificationHandler.notifyError(e);
 			}
 			throw e;
 		}
-	}, [errorHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowTransactionStatusWindow, setSourceNumConfirmations]);
+	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowTransactionStatusWindow, setSourceNumConfirmations]);
 
 	const handleTransactionSubmission = useCallback( (attemptNumber: number) => {
 
 		const traceId: string = uuidv4();
 		setTransactionTraceId(traceId);
+		msg.transactionTraceId = traceId;
 		console.log("transaction trace id generated", msg.transactionTraceId);
 
 		const recaptchaAuthenticator = attemptNumber === 1 ? authenticateWithRecaptchaV3 : authenticateWithRecaptchaV2;
 		const useLegacyRecaptcha = attemptNumber !== 1;
 
 		return new Promise(async (resolve, reject) => {
+
 			if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset)) {
 				reject("no input params");
 				return;
 			}
 
 			try {
-
 				let recaptchaToken: string;
 
 				try {
@@ -106,7 +107,8 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 				} catch (e: any) {
 					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
 						from this site - your request didn't even hit our servers`;
-					errorHandler.notifyError({ statusCode: 403, message: msg });
+					notificationHandler.notifyError({ statusCode: 403, message: msg });
+					console.log("eeeee from usePost",e);
 					throw new Error(msg + e);
 				}
 
@@ -117,6 +119,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
+					if (!e.traceId) { e.traceId = traceId}
 					reject(e);
 					throw new Error(e);
 				}
@@ -126,7 +129,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 			}
 
 		})
-	}, [sourceChain, destinationChain, destinationAddress, errorHandler, setShowTransactionStatusWindow, setTransactionTraceId,
+	}, [sourceChain, destinationChain, destinationAddress, notificationHandler, setShowTransactionStatusWindow, setTransactionTraceId,
 		sourceAsset, authenticateWithRecaptchaV3, msg, postRequest, authenticateWithRecaptchaV2, setShowRecaptchaV2Retry
 	]);
 

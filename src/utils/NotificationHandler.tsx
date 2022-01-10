@@ -1,8 +1,8 @@
 import {store}           from 'react-notifications-component';
 import BoldSpan          from "component/StyleComponents/BoldSpan";
 import Tooltip           from "component/Widgets/Tooltip";
-import CopyToClipboard   from "component/Widgets/CopyToClipboard";
-import {getErrorMessage} from "config/errorsMap";
+import CopyToClipboard          from "component/Widgets/CopyToClipboard";
+import {getNotificationMessage} from "config/errorsMap";
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
 
@@ -21,28 +21,28 @@ const traceIdDiv = (traceId: string | undefined) => {
 		tooltipAltText={"Copied to Clipboard!"}
 	/></div>
 }
-const errorContent = (message: string, traceId: string) => {
+const MessageContent = (message: string, traceId: string) => {
 	return <div>
 		{message}
 		{traceIdDiv(traceId)}
 	</div>
 }
-const getErrorType = (error: any): JSX.Element => {
+const getMessageType = (error: any): JSX.Element => {
 
-	const unexpectedErrorMsg: string = getErrorMessage(503, error);
+	const unexpectedErrorMsg: string = getNotificationMessage(503, error);
 
 	if (error.uncaught)
-		return errorContent(unexpectedErrorMsg, error.traceId);
+		return MessageContent(unexpectedErrorMsg, error.traceId);
 
-	return errorContent(getErrorMessage(error.statusCode, error), error.traceId);
+	return MessageContent(getNotificationMessage(error.statusCode, error), error.traceId);
 
 }
 
-const ErrorHandler = () => {
+const NotificationHandler = () => {
 
 	const notifyError = (error: any) => {
 
-		const notification = getErrorType(error);
+		const notification = getMessageType(error);
 
 		store.addNotification({
 			title: "Oops...",
@@ -61,11 +61,13 @@ const ErrorHandler = () => {
 		});
 	}
 
-	const notifyMessage = (message: string) => {
+	const notifyMessage = (message: any) => {
+
+		const notification = getMessageType(message);
 
 		store.addNotification({
 			title: "Hmm...",
-			message,
+			message: notification,
 			type: "warning",
 			insert: "top",
 			container: "top-right",
@@ -74,7 +76,7 @@ const ErrorHandler = () => {
 			dismiss: {
 				showIcon: true,
 				touch: true,
-				duration: 3000,
+				duration: 10000,
 				click: false
 			}
 		});
@@ -86,4 +88,4 @@ const ErrorHandler = () => {
 	} as const;
 }
 
-export default ErrorHandler;
+export default NotificationHandler;

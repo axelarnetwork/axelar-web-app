@@ -1,15 +1,19 @@
-export const getErrorMessage: (errorCode: number, error: any) => string = (errorCode: number, error: any) => {
+export const getNotificationMessage: (messageCode: number, fullMessageObj: any) => string = (messageCode: number, fullMessageObj: any) => {
 
 	const errorsMap: { [statusCode: number]: string } = {
 		503: `Unexpected error occurred, try again later.`,
-		403: error.message + "; Refresh this page and try again.", //handle recaptcha error
-		400: error.message + "; Check your inputs and try again.", //handle bad request error
-		429: error.message + "; Try again in a few minutes.", //handle rate limit error
-		504: error.message + "; Apologies; try again in a few minutes.", //handle gateway timeout error
+		403: fullMessageObj.message + "; Refresh this page and try again.", //handle recaptcha error
+		400: fullMessageObj.message + "; Check your inputs and try again.", //handle bad request error
+		429: fullMessageObj.message + "; Try again in a few minutes.", //handle rate limit error
+		504: fullMessageObj.message + "; Apologies; try again in a few minutes.", //handle gateway timeout error
 	};
 
-	if (errorsMap[errorCode])
-		return errorsMap[errorCode];
+	const messageMap: { [statusCode: number]: string } = {
+		403.2: fullMessageObj.message, //handle recaptcha error, but try again...
+	}
+
+	if (errorsMap[messageCode]) return errorsMap[messageCode];
+	if (messageMap[messageCode]) return messageMap[messageCode];
 
 	return errorsMap[503];
 
