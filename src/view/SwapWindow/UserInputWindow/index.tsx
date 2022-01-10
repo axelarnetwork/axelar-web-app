@@ -123,7 +123,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 				notificationHandler.notifyMessage({
 					statusCode: 403.2,
-					message: "Seems our automated authentication didn't work for you. Try again after validating a few blurry images below?",
+					message: "Seems our automated authentication didn't work for you. Try again after validating a few ::blurry:: images below?",
 					traceId: e?.traceId
 				});
 
@@ -159,7 +159,6 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		&& isValidDestinationAddress;
 
 	const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
-		console.log("keypress in UserInputWindow/index.tsx");
 		e.stopPropagation();
 		(e.code === "Enter" || e.code === "NumpadEnter")
 		&& enableSubmitBtn

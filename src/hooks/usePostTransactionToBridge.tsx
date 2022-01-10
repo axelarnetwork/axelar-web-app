@@ -84,10 +84,12 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
 	const handleTransactionSubmission = useCallback( (attemptNumber: number) => {
 
-		const traceId: string = uuidv4();
-		setTransactionTraceId(traceId);
-		msg.transactionTraceId = traceId;
-		console.log("transaction trace id generated", msg.transactionTraceId);
+		let traceId: string = msg.transactionTraceId || uuidv4();
+		if (attemptNumber === 1) {
+			setTransactionTraceId(traceId);
+			msg.transactionTraceId = traceId;
+		}
+		console.log("transaction trace id to use", msg.transactionTraceId);
 
 		const recaptchaAuthenticator = attemptNumber === 1 ? authenticateWithRecaptchaV3 : authenticateWithRecaptchaV2;
 		const useLegacyRecaptcha = attemptNumber !== 1;

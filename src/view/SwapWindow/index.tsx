@@ -131,9 +131,9 @@ const SwapWindow = (): ReactElement => {
 		<FAQPage/>
 		<div
 			style={{
-				zIndex: 10000, position: `absolute`, right: `15%`, bottom: `70px`,
+				zIndex: 10000, position: `absolute`, right: `25%`, bottom: `70px`,
 				visibility: showRecaptchaV2Retry ? "inherit" : "hidden",
-				boxShadow: `0 5px 10px 0 darkred`
+				boxShadow: `5px 5px 5px 5px #eab000`
 			}}>
             <ReCAPTCHA
                 ref={recaptchaV2Ref}

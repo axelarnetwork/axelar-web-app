@@ -76,7 +76,7 @@ const NotificationHandler = () => {
 			dismiss: {
 				showIcon: true,
 				touch: true,
-				duration: 10000,
+				duration: 15000,
 				click: false
 			}
 		});

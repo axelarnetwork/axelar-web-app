@@ -18,7 +18,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 	}, [inputRef]);
 
 	const authenticateWithRecaptchaV3 = useCallback((): Promise<string> => {
-		console.log("using v3");
+
 		return new Promise((resolve, reject) => {
 			grecaptcha.ready(async () => {
 				try {
@@ -34,7 +34,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 	}, [setIsRecaptchaAuthenticated]);
 
 	const authenticateWithRecaptchaV2 = useCallback((): Promise<string> => {
-		console.log("using v2");
+
 		return new Promise(async (resolve, reject) => {
 			try {
 				const token = await (recaptchaV2Ref as any).getValue();
