@@ -29,7 +29,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
 	const sourceAsset = useRecoilValue(SourceAsset);
-	const {isRecaptchaAuthenticated, authenticateWithRecaptchaV3, authenticateWithRecaptchaV2} = useRecaptchaAuthenticate(recaptchaV2Ref);
+	const {authenticateWithRecaptchaV3, authenticateWithRecaptchaV2} = useRecaptchaAuthenticate(recaptchaV2Ref);
 	const errorHandler = ErrorHandler();
 
 	const sCb: (status: any, setConfirms: any) => void = useCallback((status: any, setConfirms: any): void => {
@@ -99,9 +99,16 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
 			try {
 
-				const recaptchaToken: string = await recaptchaAuthenticator();
-				if (!isRecaptchaAuthenticated)
-					throw new Error("failed recaptcha from frontend");
+				let recaptchaToken: string;
+
+				try {
+					recaptchaToken = await recaptchaAuthenticator();
+				} catch (e: any) {
+					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
+						from this site - your request didn't even hit our servers`;
+					errorHandler.notifyError({ statusCode: 403, message: msg });
+					throw new Error(msg + e);
+				}
 
 				try {
 					setShowTransactionStatusWindow(true);
@@ -115,11 +122,12 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 				}
 			} catch (err: any) {
 				//todo log recpatcha v3 error
+				console.log("recaptcha error from frontend",err);
 			}
 
 		})
-	}, [sourceChain, destinationChain, destinationAddress, setShowTransactionStatusWindow, setTransactionTraceId,
-		sourceAsset, isRecaptchaAuthenticated, authenticateWithRecaptchaV3, msg, postRequest, authenticateWithRecaptchaV2, setShowRecaptchaV2Retry
+	}, [sourceChain, destinationChain, destinationAddress, errorHandler, setShowTransactionStatusWindow, setTransactionTraceId,
+		sourceAsset, authenticateWithRecaptchaV3, msg, postRequest, authenticateWithRecaptchaV2, setShowRecaptchaV2Retry
 	]);
 
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);

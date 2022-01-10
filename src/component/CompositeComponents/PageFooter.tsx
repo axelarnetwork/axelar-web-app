@@ -18,24 +18,15 @@ const StyledPageFooter = styled(Container)`
 
 const PageFooter = () => {
 	return (<StyledPageFooter>
-		{/*<Box>*/}
-		{/*	<DocsLinks href={downstreamServices.GITHUB_LINK}>*/}
-		{/*		<FlexRow>*/}
-		{/*			<SVGImage*/}
-		{/*				src={require(`resources/github.svg`)?.default}*/}
-		{/*				height={"18px"}*/}
-		{/*				width={"18px"}*/}
-		{/*				margin={"0px"}*/}
-		{/*			/>*/}
-		{/*			<p style={{margin: `10px`}}>*/}
-		{/*				Github*/}
-		{/*			</p>*/}
-		{/*		</FlexRow>*/}
-		{/*	</DocsLinks>*/}
-		{/*</Box>*/}
-		<span>This site is protected by reCAPTCHA and the Google
-		    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-		    <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+		<span>This site is protected by reCAPTCHA, and the Google{" "}
+		    <a href="https://policies.google.com/privacy" style={{ color: `lightgrey`}} target={"_blank"} rel="noreferrer">
+			    Privacy Policy
+		    </a>
+			{" "}and{" "}
+		    <a href="https://policies.google.com/terms" style={{ color: `lightgrey`}} target={"_blank"} rel="noreferrer">
+			    Terms of Service
+		    </a>
+			{" "}apply.
 		</span>
 	</StyledPageFooter>);
 }

@@ -61,8 +61,28 @@ const ErrorHandler = () => {
 		});
 	}
 
+	const notifyMessage = (message: string) => {
+
+		store.addNotification({
+			title: "Hmm...",
+			message,
+			type: "warning",
+			insert: "top",
+			container: "top-right",
+			animationIn: ["animate__animated", "animate__fadeIn"],
+			animationOut: ["animate__animated", "animate__fadeOut"],
+			dismiss: {
+				showIcon: true,
+				touch: true,
+				duration: 3000,
+				click: false
+			}
+		});
+	}
+
 	return {
-		notifyError
+		notifyError,
+		notifyMessage
 	} as const;
 }
 
