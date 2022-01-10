@@ -199,6 +199,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		<StyledButtonContainer className={"joyride-input-button"}>
 			<PlainButton
 				dim={!enableSubmitBtn}
+				disabled={!enableSubmitBtn}
 				onClick={onInitiateTransfer}
 				onMouseEnter={() => !enableSubmitBtn && setShowValidationErrors(true)}
 				onMouseLeave={() => setShowValidationErrors(false)}
