@@ -30,3 +30,9 @@ export const ShowTransactionStatusWindow = atom<boolean>({
 	key: "ShowTransactionStatusWindow",
 	default: false,
 });
+
+export const ShowRecaptchaV2Retry = atom<boolean>({
+	key: "ShowRecaptchaV2Retry",
+	default: false,
+});
+

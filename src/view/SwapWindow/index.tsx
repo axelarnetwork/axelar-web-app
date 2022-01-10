@@ -1,4 +1,4 @@
-import React, {ReactElement}                                    from "react";
+import React, {ReactElement, useRef}                            from "react";
 import {CSSTransition, SwitchTransition}                        from "react-transition-group";
 import {useRecoilValue}                                         from "recoil";
 import styled, {ThemedStyledProps}                              from "styled-components";
@@ -7,12 +7,16 @@ import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/con
 import {animateStyles}                                          from "component/StyleComponents/animations/SwitchToggleAnimation";
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
+import useRecaptchaAuthenticate                                 from "hooks/auth/useRecaptchaAuthenticate";
+import {ShowRecaptchaV2Retry}                                   from "state/ApplicationStatus";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
+import ReCAPTCHA                                                from "react-google-recaptcha";
+import downstreamServices                                       from "../../config/downstreamServices";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -81,11 +85,15 @@ const StyledContainer = styled.div`
 
 const SwapWindow = (): ReactElement => {
 
+	const recaptchaV2Ref = useRef(null);
+	useRecaptchaAuthenticate(recaptchaV2Ref);
+	const showRecaptchaV2Retry = useRecoilValue(ShowRecaptchaV2Retry);
+
 	const [
 		showTransactionStatusWindow,
 		handleTransactionSubmission,
 		closeResultsScreen
-	] = usePostTransactionToBridge();
+	] = usePostTransactionToBridge(recaptchaV2Ref);
 
 	const userInputNeeded = !showTransactionStatusWindow;
 
@@ -99,6 +107,10 @@ const SwapWindow = (): ReactElement => {
 		&& selectedSourceAsset
 		&& isValidDestinationAddr;
 
+	const handleUserSubmit = async (attemptNumber: number) => {
+		return await handleTransactionSubmission(attemptNumber);
+	}
+
 	return <StyledSwapWindow>
 
 		<StyledImage src={activeBox} showContents={canLightUp}/>
@@ -111,12 +123,25 @@ const SwapWindow = (): ReactElement => {
 				classNames="fade"
 			><StyledContainer>
 				{userInputNeeded
-					? <UserInputWindow handleSwapSubmit={handleTransactionSubmission}/>
+					? <UserInputWindow handleTransactionSubmission={handleUserSubmit}/>
 					: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
 					                           closeResultsScreen={closeResultsScreen}/>
 				}</StyledContainer></CSSTransition>
 		</SwitchTransition>
 		<FAQPage/>
+		<div
+			style={{
+				zIndex: 10000, position: `absolute`, right: `25%`, bottom: `70px`,
+				visibility: showRecaptchaV2Retry ? "inherit" : "hidden",
+				boxShadow: `5px 5px 5px 5px #eab000`
+			}}>
+            <ReCAPTCHA
+                ref={recaptchaV2Ref}
+                sitekey={downstreamServices.RECAPTCHA_V2_SITE_KEY}
+                size={"compact"}
+                onChange={() => handleUserSubmit(2)}
+            />
+        </div>
 	</StyledSwapWindow>;
 
 }
