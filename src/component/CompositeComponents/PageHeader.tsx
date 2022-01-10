@@ -1,6 +1,7 @@
-import Container  from "../StyleComponents/Container";
-import styled     from "styled-components";
-import {SVGImage} from "../Widgets/SVGImage";
+import Container    from "../StyleComponents/Container";
+import styled       from "styled-components";
+import {SVGImage}   from "../Widgets/SVGImage";
+import {FlexColumn} from "../StyleComponents/FlexColumn";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
@@ -10,6 +11,8 @@ const StyledPageHeader = styled(Container)`
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.21);
 	background-color: ${props => props.theme.headerBackgroundColor};
 	z-index: 1000;
+	display: flex;
+	flex-direction: flex-start;
 `
 
 const PageHeader = () => {
@@ -18,6 +21,9 @@ const PageHeader = () => {
 			<SVGImage src={require(`resources/axelar-logo-horizontal-white.svg`)?.default} height={"30px"}
 			          width={"125px"}
 			          margin={"4px"}/>
+			<FlexColumn style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder`}}>
+				{(process.env.REACT_APP_STAGE || "").toUpperCase()}
+			</FlexColumn>
 		</StyledPageHeader>
 	);
 }
