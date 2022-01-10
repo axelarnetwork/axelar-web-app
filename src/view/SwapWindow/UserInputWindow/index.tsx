@@ -112,11 +112,11 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 	const onInitiateTransfer = useCallback(async () => {
 
-		if (!(destAddr && isValidDestinationAddress))
+		if (!(destAddr && isValidDestinationAddress && mounted))
 			return;
 		try {
-			mounted && await handleTransactionSubmission(attemptNumber);
 			setMounted(false);
+			await handleTransactionSubmission(attemptNumber);
 			return;
 		} catch (e: any) {
 			if (e?.statusCode === 403 && attemptNumber === 1) {
