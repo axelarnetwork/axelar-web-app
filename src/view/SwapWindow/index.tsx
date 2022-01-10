@@ -16,6 +16,7 @@ import UserInputWindow                                          from "./UserInpu
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
 import ReCAPTCHA                                                from "react-google-recaptcha";
+import downstreamServices                                       from "../../config/downstreamServices";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -136,7 +137,7 @@ const SwapWindow = (): ReactElement => {
 			}}>
             <ReCAPTCHA
                 ref={recaptchaV2Ref}
-                sitekey={"6LfjBv0dAAAAABkAG9sq3XK94F3GEHHOcJcag156"}
+                sitekey={downstreamServices.RECAPTCHA_V2_SITE_KEY}
                 size={"compact"}
                 onChange={() => handleUserSubmit(2)}
             />

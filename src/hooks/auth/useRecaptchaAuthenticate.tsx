@@ -22,7 +22,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 		return new Promise((resolve, reject) => {
 			grecaptcha.ready(async () => {
 				try {
-					const token = await grecaptcha.execute(downstreamServices.RECAPTCHA_SITE_KEY);
+					const token = await grecaptcha.execute(downstreamServices.RECAPTCHA_V3_SITE_KEY);
 					setIsRecaptchaAuthenticated(true);
 					resolve(token);
 				} catch (e: any) {
