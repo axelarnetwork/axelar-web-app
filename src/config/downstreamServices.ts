@@ -1,11 +1,13 @@
 require('dotenv').config()
 
 const GITHUB_LINK: string = "https://github.com/axelarnetwork/axelar-web-app";
-const RECAPTCHA_SITE_KEY: string = "6LcxwsocAAAAANQ1t72JEcligfeSr7SSq_pDC9vR"; //this is intentionally public
+const RECAPTCHA_V3_SITE_KEY: string = "6LcxwsocAAAAANQ1t72JEcligfeSr7SSq_pDC9vR"; //this is intentionally public
+const RECAPTCHA_V2_SITE_KEY: string = "6LfjBv0dAAAAABkAG9sq3XK94F3GEHHOcJcag156"; //this is intentionally public
 
 interface IConfig {
 	GITHUB_LINK: string;
-	RECAPTCHA_SITE_KEY: string;
+	RECAPTCHA_V3_SITE_KEY: string;
+	RECAPTCHA_V2_SITE_KEY: string;
 	blockExplorers: { [environment: string]: { [chain: string]: { name: string; url: string; } } }
 }
 
@@ -32,7 +34,8 @@ blockExplorers.local = blockExplorers.devnet;
 
 const configs: IConfig = {
 	GITHUB_LINK,
-	RECAPTCHA_SITE_KEY,
+	RECAPTCHA_V3_SITE_KEY: RECAPTCHA_V3_SITE_KEY,
+	RECAPTCHA_V2_SITE_KEY: RECAPTCHA_V2_SITE_KEY,
 	blockExplorers
 }
 

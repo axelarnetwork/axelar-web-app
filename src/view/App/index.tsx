@@ -5,6 +5,7 @@ import WalkThrough          from "component/CompositeComponents/Walkthrough";
 import useLoadRecaptcha     from "hooks/auth/useLoadRecaptcha";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 import SwapWindow           from "view/SwapWindow";
+import PageFooter           from "../../component/CompositeComponents/PageFooter";
 
 const App = () => {
 
@@ -24,7 +25,7 @@ const App = () => {
 				? <SwapWindow/>
 				: null
 			}
-			{/*<PageFooter/> let's disable this for now*/}
+			<PageFooter/>
 		</StyledAppContainer>
 	);
 }

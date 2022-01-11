@@ -18,4 +18,5 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_BRIDGE_MAINNET_PROJECT_ID }}
           vercel-args: '--prod'
           alias-domains: |
+            satellite.axelar.network
             axelar-satellite-mainnet.vercel.app
