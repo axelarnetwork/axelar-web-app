@@ -73,14 +73,21 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 			setDepositAddress(res.assetInfo);
 			return res;
 		} catch (e: any) {
-			if (attemptNumber > 1) {
+			if (e?.statusCode === 403 && attemptNumber === 1) {
+				notificationHandler.notifyMessage({
+					statusCode: 403.2,
+					message: "Seems our automated authentication didn't work for you. Try again after validating a few ::blurry:: images below?",
+					traceId: e?.traceId
+				});
+				setShowRecaptchaV2Retry(true);
+			} else {
 				setShowTransactionStatusWindow(false);
 				e.traceId = traceId;
 				notificationHandler.notifyError(e);
 			}
 			throw e;
 		}
-	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowTransactionStatusWindow, setSourceNumConfirmations]);
+	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowRecaptchaV2Retry, setShowTransactionStatusWindow, setSourceNumConfirmations]);
 
 	const handleTransactionSubmission = useCallback( (attemptNumber: number) => {
 
@@ -110,7 +117,6 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
 						from this site - your request didn't even hit our servers`;
 					notificationHandler.notifyError({ statusCode: 403, message: msg });
-					console.log("eeeee from usePost",e);
 					throw new Error(msg + e);
 				}
 

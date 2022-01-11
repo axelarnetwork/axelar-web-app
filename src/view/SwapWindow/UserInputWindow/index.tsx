@@ -1,5 +1,5 @@
 import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState}                          from "recoil";
+import {useRecoilState, useRecoilValue}                          from "recoil";
 import styled                                                                       from "styled-components";
 import {AssetInfo, validateDestinationAddress}                                      from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
@@ -15,9 +15,7 @@ import ValidationErrorWidget
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
-import {ShowRecaptchaV2Retry}                                                       from "state/ApplicationStatus";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
-import NotificationHandler                                                          from "utils/NotificationHandler";
 import StyledButtonContainer
                                                                                     from "../StyledComponents/StyledButtonContainer";
 import PlainButton
@@ -90,7 +88,6 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [destAddr, setDestAddr] = useRecoilState(DestinationAddress);
-	const setShowRecaptchaV2 = useSetRecoilState(ShowRecaptchaV2Retry);
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useRecoilState(IsValidDestinationAddress);
 	const resetUserInputs = useResetUserInputs();
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
@@ -98,7 +95,6 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const destChainComponentRef = createRef();
 	const [attemptNumber, setAttemptNumber] = useState(1);
 	const [mounted, setMounted] = useState(true);
-	const notificationHandler = NotificationHandler();
 
 	useEffect(() => {
 		setMounted(true);
@@ -121,23 +117,17 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		} catch (e: any) {
 			if (e?.statusCode === 403 && attemptNumber === 1) {
 
-				notificationHandler.notifyMessage({
-					statusCode: 403.2,
-					message: "Seems our automated authentication didn't work for you. Try again after validating a few ::blurry:: images below?",
-					traceId: e?.traceId
-				});
-
 				//updating values here but the second attempt will
 				//actually be invoked from the parent component `SwapWindow`
 				//in the `onChange` callback of the recaptcha window after the
 				//challenge is completed
 				setAttemptNumber(2);
-				setShowRecaptchaV2(true);
+
 			} else
 				resetUserInputs();
 		}
-	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission, notificationHandler,
-		resetUserInputs, setShowRecaptchaV2, mounted, setMounted
+	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission,
+		resetUserInputs, mounted, setMounted
 	]);
 
 	const renderValidationErrors = useCallback(() => {
