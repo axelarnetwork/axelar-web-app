@@ -70,7 +70,7 @@ const Disclaimer = () => {
 				disabled={!checked}
 				onClick={() => setDisclaimerAgreed(true)}
 			>
-				Accept
+				Enter
 			</StyledButton>
 		</StyledLoginPage>
 	</Mask>;
