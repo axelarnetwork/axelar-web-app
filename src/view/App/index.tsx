@@ -9,7 +9,6 @@ import {DisclaimerAgreed}   from "state/ApplicationStatus";
 import {StyledAppContainer} from "view/App/styles/StyledAppContainer";
 import SwapWindow           from "view/SwapWindow";
 import Disclaimer           from "../Disclaimer";
-import PageFooter           from "../../component/CompositeComponents/PageFooter";
 
 const App = () => {
 
