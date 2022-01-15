@@ -1,5 +1,5 @@
 const text: string[] = [
-	`All goods or services provided through the [Axelar Bridge Protocol] (the “Protocol”) are 
+	`All goods or services provided through the Satellite application (the “Protocol”) are 
 	provided on an “as is,” “as available” basis. The Protocol is constantly under active 
 	development, and it is currently undergoing its “beta” testing phase, meaning that while the core 
 	features of the Protocol have been implemented, undetected bugs, errors, and vulnerabilities may
