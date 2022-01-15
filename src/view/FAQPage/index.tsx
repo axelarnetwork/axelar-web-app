@@ -1,12 +1,13 @@
-import {useRecoilValue}                           from "recoil";
+import {useState}                                 from "react";
+import {useRecoilValue, useSetRecoilState}        from "recoil";
 import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
 import styled                                     from "styled-components";
 import Tooltip                                    from "component/Widgets/Tooltip";
 import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
-import {useState}                                 from "react";
-import QAs, {IQA}                                 from "./QA";
+import {SVGImage}                                 from "component/Widgets/SVGImage";
+import {DisclaimerAgreed}                         from "state/ApplicationStatus";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -18,7 +19,7 @@ const StyledHelperComponent = styled.div`
     align-items: flex-end;
     width: 30%;
     min-width: 275px;
-    max-width: 300px;
+    max-width: 500px;
 `;
 
 const HelperWidget = styled.div`
@@ -40,7 +41,7 @@ const StyledFAQPopup = styled.div`
 	overflow-wrap: break-word;
     background-color: white;
     width: 100%;
-    font-size: 12px;
+    font-size: 0.8em;
 `;
 
 export const StyledHeader = styled.div`
@@ -67,13 +68,14 @@ const ContactUsSection = styled(FAQSection)`
 
 const FAQPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
+	const setDisclaimerAgreed = useSetRecoilState(DisclaimerAgreed);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [showFAQ, setShowFAQ] = useState(false);
 
 	return <StyledHelperComponent>
 		{showFAQ && <StyledFAQPopup>
             <StyledHeader>
-                <span>FAQ & Support</span>
+                <span>Support</span>
                 <div
                     style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
                     onClick={() => setShowFAQ(false)}
@@ -82,24 +84,22 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-				{QAs.map((qa: IQA, i: number) => {
-					return <div key={`qa-${i}`}>
-						<div><BoldSpan>{qa.question}</BoldSpan></div>
-						<div>{qa.answer}</div>
-						<br/>
-					</div>
-				})}
+	            <h2>Helpful Links</h2>
+	            <NewLink text={"Frequently Asked Questions (TBD)"} />
+                <NewLink text={"Instructional Video (TBD)"} />
+                <NewLink text={"Medium Instructional Guide (TBD)"} />
+                <NewLink text={"Terms of Use"} onClick={() => setDisclaimerAgreed(false)} />
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
-                <br/>
-                <div><BoldSpan>Having issues with a live transaction?</BoldSpan></div>
-                <br/>
-                <div style={{marginBottom: `5px`}}>Reach out to us on Discord, referencing</div>
+                {/*<br/>*/}
+                <h2>Issues with a live transaction?</h2>
+                {/*<br/>*/}
+                <div style={{marginBottom: `5px`}}>Reach out on Discord with:</div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
 							<div>
-								<div><BoldSpan>Trace ID:</BoldSpan></div>
+								<div><BoldSpan>Trace ID</BoldSpan></div>
 								{transactionTraceId}
 							</div>
 							<div>{depositAddress
@@ -129,4 +129,17 @@ const FAQPage = () => {
 	</StyledHelperComponent>;
 }
 
+const NewLink = ({text, onClick, link}: {text: string, onClick?: any, link?: string}) => {
+	return <FlexRow style={{ justifyContent: `flex-start`, marginBottom: `1em` }}>
+		{text}
+		{"  "}
+		<SVGImage
+			onClick={onClick}
+			style={{ cursor: `pointer`, marginLeft: `5px` }}
+			src={require(`resources/link-new-tab.svg`).default}
+			height={`1em`}
+			width={`1em`}
+		/>
+	</FlexRow>
+}
 export default FAQPage;
