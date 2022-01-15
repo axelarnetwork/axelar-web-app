@@ -147,6 +147,11 @@ export const DepositFromWallet = () => {
 		</>
 
 
+	const disableTransferButton: boolean = !amountToDeposit
+		|| (amountToDeposit < minDepositAmt)
+		|| !hasEnoughInWalletForMin
+		|| (amountToDeposit > walletBalance);
+
 	return <div style={{width: `95%`}}><br/>{isWalletConnected
 		? <div>
 			<FlexRow>
@@ -159,12 +164,13 @@ export const DepositFromWallet = () => {
 				/>
 				<div style={{marginLeft: `0.5em`}}>{selectedSourceAsset?.assetSymbol}</div>
 			</FlexRow>
+			<br/>
 			<div>Balance: {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}</div>
 			{!hasEnoughInWalletForMin && <div>Not enough money in this account</div>}
 			<br/><br/>
 			<TransferButton
-				dim={!amountToDeposit || (amountToDeposit < minDepositAmt) || !hasEnoughInWalletForMin}
-				disabled={!amountToDeposit || (amountToDeposit < minDepositAmt) || !hasEnoughInWalletForMin}
+				dim={disableTransferButton}
+				disabled={disableTransferButton}
 				onClick={transfer}
 			>
 				{buttonText}
