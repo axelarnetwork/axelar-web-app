@@ -1,9 +1,11 @@
 import React, {ReactElement, useRef}                            from "react";
+import ReCAPTCHA                                                from "react-google-recaptcha";
 import {CSSTransition, SwitchTransition}                        from "react-transition-group";
 import {useRecoilValue}                                         from "recoil";
 import styled, {ThemedStyledProps}                              from "styled-components";
-import screenConfigs                                            from "config/screenConfigs";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/consts";
+import downstreamServices                                       from "config/downstreamServices";
+import screenConfigs                                            from "config/screenConfigs";
 import {animateStyles}                                          from "component/StyleComponents/animations/SwitchToggleAnimation";
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
@@ -15,8 +17,6 @@ import activeBox                                                from "resources/
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
-import ReCAPTCHA                                                from "react-google-recaptcha";
-import downstreamServices                                       from "../../config/downstreamServices";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -135,13 +135,13 @@ const SwapWindow = (): ReactElement => {
 				visibility: showRecaptchaV2Retry ? "inherit" : "hidden",
 				boxShadow: `5px 5px 5px 5px #eab000`
 			}}>
-            <ReCAPTCHA
-                ref={recaptchaV2Ref}
-                sitekey={downstreamServices.RECAPTCHA_V2_SITE_KEY}
-                size={"compact"}
-                onChange={() => handleUserSubmit(2)}
-            />
-        </div>
+			<ReCAPTCHA
+				ref={recaptchaV2Ref}
+				sitekey={downstreamServices.RECAPTCHA_V2_SITE_KEY}
+				size={"compact"}
+				onChange={() => handleUserSubmit(2)}
+			/>
+		</div>
 	</StyledSwapWindow>;
 
 }

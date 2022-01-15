@@ -56,7 +56,7 @@ const Login = () => {
 		disintegrate(imageRef.current)
 		.then(() => setTimeout(() => setIsLoggedIn(true), 1000));
 	}
-	const [userPassword, passwordComponent] = usePasswordInput({ handleOnEnterPress: onClick});
+	const [userPassword, passwordComponent] = usePasswordInput({handleOnEnterPress: onClick});
 
 
 	return <>{isLoggedIn
@@ -65,7 +65,7 @@ const Login = () => {
 			<LeftStyledLoginSection>
 				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
 				<br/>
-				{React.cloneElement(passwordComponent, { handleOnEnterPress: onClick })}
+				{React.cloneElement(passwordComponent, {handleOnEnterPress: onClick})}
 				<br/>
 				<div style={{width: `50%`}}>
 					<StyledButton onClick={onClick}>Enter</StyledButton>

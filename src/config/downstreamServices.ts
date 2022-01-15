@@ -17,7 +17,9 @@ const blockExplorers = {
 		moonbeam: {name: "Moonscan", url: "https://moonbase.moonscan.io/tx/"},
 		avalanche: {name: "Snowtrace", url: "https://testnet.snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://mumbai.polygonscan.com/tx/"},
-		fantom: {name: "FTMScan", url: "https://testnet.ftmscan.com/tx/"}
+		fantom: {name: "FTMScan", url: "https://testnet.ftmscan.com/tx/"},
+		terra: {name: "Terra's testnet block explorer", url: "https://finder.terra.money/testnet/tx/"},
+		axelar: {name: "Coinhippo's testnet block explorer", url: "https://axelar-testnet.coinhippo.io/tx/"},
 	},
 	testnet: {},
 	local: {},
@@ -26,7 +28,9 @@ const blockExplorers = {
 		moonbeam: {name: "Moonscan", url: "https://moonriver.moonscan.io/tx/"},
 		avalanche: {name: "Snowtrace", url: "https://snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://polygonscan.com/tx/"},
-		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"}
+		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"},
+		terra: {name: "Terra's block explorer", url: "https://finder.terra.money/tx/"},
+		axelar: {name: "Coinhippo's block explorer", url: "https://axelar.coinhippo.io/tx/"},
 	}
 }
 blockExplorers.testnet = blockExplorers.devnet;

@@ -1,5 +1,5 @@
-import {atom}                                            from "recoil";
-import {ChainList as ImportedChains, Chain, ChainInfo} from "@axelar-network/axelarjs-sdk";
+import {atom}                                          from "recoil";
+import {Chain, ChainInfo, ChainList as ImportedChains} from "@axelar-network/axelarjs-sdk";
 
 const initialState: ChainInfo[] = ImportedChains.map((chain: Chain) => chain.chainInfo);
 
