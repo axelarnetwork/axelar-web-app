@@ -29,7 +29,7 @@ const blockExplorers = {
 		avalanche: {name: "Snowtrace", url: "https://snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://polygonscan.com/tx/"},
 		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"},
-		terra: {name: "Terra's block explorer", url: "https://finder.terra.money/tx/"},
+		terra: {name: "Terra's block explorer", url: "https://finder.terra.money/mainnet/tx/"},
 		axelar: {name: "Coinhippo's block explorer", url: "https://axelar.coinhippo.io/tx/"},
 	}
 }
