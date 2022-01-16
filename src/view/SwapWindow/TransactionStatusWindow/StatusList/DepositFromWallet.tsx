@@ -17,6 +17,7 @@ import {getMinDepositAmount}                     from "utils/getMinDepositAmount
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
 	cursor: ${props => props.dim ? "not-allowed" : "pointer"};
+	font-size: small;
 `;
 
 export const DepositFromWallet = ({
