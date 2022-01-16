@@ -1,5 +1,5 @@
-import styled                                                                            from "styled-components";
-import React, {useEffect, useState}                                                      from "react";
+import styled, {ThemedStyledProps}  from "styled-components";
+import React, {useEffect, useState} from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -26,6 +26,32 @@ interface ITransactionStatusWindowProps {
 	isOpen: boolean;
 	closeResultsScreen: any;
 }
+
+interface IStyledDivProps extends ThemedStyledProps<any, any> {
+	appear?: any;
+}
+const StyledHelperComponent = styled.div<IStyledDivProps>`
+    position: absolute;
+    z-index: 15;
+    top: 10px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    box-sizing: border-box;
+	padding: 0.4em;
+	border-radius: 50px;
+	width: auto;
+	background-color: ${props => props.theme.headerBackgroundColor};
+	color: white;
+	cursor: pointer;
+
+    @media ${screenConfigs.media.desktop} {
+        margin-top: 0.75em;
+        font-size: 1.1em;
+        top: 0px;
+	}
+`;
 
 const StyledTransactionStatusWindow = styled.div`
 	${opacityAnimation}
@@ -135,6 +161,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	return <StyledTransactionStatusWindow>
 		<FlexRow style={{color: `white`}}>{activeStep < 4 ? "Transferring" : "Complete!"}</FlexRow>
 		<br/>
+		<br/>
+		<StyledHelperComponent onClick={() => {
+			resetAllstate();
+			closeResultsScreen();
+		}}>
+			<div style={{marginLeft: `5px`, fontSize: `0.75em`}}>Start Over</div>
+		</StyledHelperComponent>
 		<StyledFlexRow>
 			<StyledChainSelectionIconWidget>
 				<SelectedChainLogoAndText chainInfo={sourceChain}/>
@@ -147,7 +180,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		</StyledFlexRow>
 		{isRecaptchaAuthenticated
 			? <StatusList
-				activeStep={3}
+				activeStep={activeStep}
 				isWalletConnected={isWalletConnected}
 				connectToWallet={connectToWallet}
 			/>
