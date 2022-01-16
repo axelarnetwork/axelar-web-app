@@ -39,6 +39,7 @@ const StyledTransactionStatusWindow = styled.div`
 		width: 100%;
 	    height: 685px;
 	    margin-bottom: 5px;
+	    margin-top: 50px;
 	}
 	@media ${screenConfigs.media.laptop} {
 		width: 100%;
