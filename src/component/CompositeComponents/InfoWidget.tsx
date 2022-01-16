@@ -20,14 +20,13 @@ const StyledDiv = styled.div<IStyledDivProps>`
     box-sizing: border-box;
     display: flex;
     justify-content: start;
-    top: 3%;
+    align-items: center;
     left: 1%;
     color: black;
 	border-radius: 9px;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
 	border: solid 1px #b9bac8;
 	background-color: white;
-
 	animation: ${props => props?.animation} ${props => props?.animationDuration}s ease-in ease-out;
     @media ${screenConfigs.media.mobile} {
 		display: none;

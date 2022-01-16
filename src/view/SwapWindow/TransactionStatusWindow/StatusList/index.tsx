@@ -128,7 +128,7 @@ const StatusList = (props: IStatusListProps) => {
 						? `Send ${selectedSourceAsset?.assetSymbol} from Terra to Axelar via IBC:`
 						: `Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName} here:`
 					}
-					<div style={{margin: `3px 0px 0px 0px`}}>
+					<div style={{margin: `5px 0px 0px 0px`}}>
 						<Tooltip
 							anchorContent={<CopyToClipboard
 								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 10)} </BoldSpan>}
@@ -142,7 +142,7 @@ const StatusList = (props: IStatusListProps) => {
 						/>
 					</div>
 					<div style={{marginTop: `-30px`, zIndex: 10000}}>
-						Optionally, you can do that from here!{" "}
+						Pro-tip: you can do that from here!{" "}
 						{!props.isWalletConnected && <HelperWidget onClick={props.connectToWallet}>
                             Connect to {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"}
                             <StyledSVGImage
