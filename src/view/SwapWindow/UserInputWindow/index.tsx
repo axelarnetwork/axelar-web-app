@@ -83,10 +83,10 @@ const StyledInputFormSection = styled(FlexColumn)`
 		margin-top: 30px;
 	}
 	@media ${screenConfigs.media.tablet} {
-		margin-top: 10px;
+		margin-top: 5px;
 	}
 	@media ${screenConfigs.media.mobile} {
-		margin-top: 10px;
+		margin-top: 5px;
 	}	
 `;
 
@@ -203,33 +203,42 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			<br/>
 			<TransactionInfo/>
 			<StyledInputFormSection>
-				{destChainSelection &&
-                <div
-                    style={{
-						width: `100%`,
-						textAlign: `right`,
-						marginBottom: `0.5em`,
-						fontSize: `0.8em`
-					}}
-                >
-                    <span>(Optional) Autofill from {destChainSelection.module === "axelarnet" ? "Keplr" : "Metamask"} Wallet {" "}</span>
-                    <StyledSVGImage
-                        onClick={(e: ChangeEvent<HTMLInputElement>) => getDestinationAddressFromWallet(e, destChainSelection as ChainInfo)}
-                        height={`1em`}
-                        width={`1em`}
-                        margin={`0px 0.2em 0px 0.2em`}
-                        src={require(`resources/copy-to-clipboard.svg`).default}
-                    />
-                </div>
-				}
 				<InputForm
 					name={"destination-address-input"}
 					value={destAddr || ""}
-					placeholder={"Enter Destination Address (Public Key)"}
+					placeholder={"Enter Destination Address"}
 					type={"text"}
 					handleOnEnterPress={handleOnEnterPress}
 					onChange={(e: any) => setDestAddr(e.target.value)}
 				/>
+				{destChainSelection &&
+                <div
+                    style={{
+						width: `100%`,
+	                    height: `100%`,
+						color: `#898994`,
+						marginTop: `0.5em`,
+	                    textAlign: `right`,
+						fontSize: `0.8em`,
+	                    display: `flex`,
+	                    justifyContent: `flex-end`,
+	                    alignItems: `flex-start`
+					}}
+                >
+                    <span>Autofill Destination Address (optional)</span>
+                    <StyledSVGImage
+                        onClick={(e: ChangeEvent<HTMLInputElement>) => getDestinationAddressFromWallet(e, destChainSelection as ChainInfo)}
+                        height={`1.25em`}
+                        width={`1.25em`}
+                        margin={`0em 0.75em 0em 0.5em`}
+                        src={destChainSelection.module === "axelarnet"
+	                        ? require(`resources/keplr.svg`).default
+	                        : require(`resources/metamask.svg`).default
+                        }
+                    />
+                </div>
+				}
+
 			</StyledInputFormSection>
 		</StyledChainSelectorSection>
 		{showValidationErrors && renderValidationErrors()}
