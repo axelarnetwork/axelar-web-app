@@ -1,5 +1,5 @@
 import styled                                                                            from "styled-components";
-import React, {useEffect}                                                                from "react";
+import React, {useEffect, useState}                                                      from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -8,9 +8,11 @@ import {SelectedChainLogoAndText}                                               
 import {opacityAnimation}                                                                from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                                         from "component/StyleComponents/FlexRow";
 import useResetAllState                                                                  from "hooks/useResetAllState";
+import {MetaMaskWallet}                                                                  from "hooks/wallet/MetaMaskWallet";
+import {KeplrWallet}                                                                     from "hooks/wallet/KeplrWallet";
 import {MessageShownInCartoon}                                                           from "state/ApplicationStatus";
 import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {ChainSelection}                                                                  from "state/ChainSelection";
+import {ChainSelection, SourceAsset}                                                     from "state/ChainSelection";
 import StyledButtonContainer
                                                                                          from "../StyledComponents/StyledButtonContainer";
 import PlainButton
@@ -20,6 +22,7 @@ import Step2InfoForWidget
                                                                                          from "./StatusList/Step2InfoForWidget";
 import Step3InfoForWidget
                                                                                          from "./StatusList/Step3InfoForWidget";
+import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -74,6 +77,32 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated);
 	const [activeStep, setActiveStep] = useRecoilState(ActiveStep);
 	const resetAllstate = useResetAllState();
+	const selectedSourceAsset = useRecoilValue(SourceAsset);
+	const [isWalletConnected, setIsWalletConnected] = useState(false);
+	const [walletBalance, setWalletBalance] = useState(0);
+
+	const connectToWallet = async () => {
+		if (sourceChain?.module === "evm") {
+			let wallet: MetaMaskWallet = new MetaMaskWallet(sourceChain?.chainName.toLowerCase() as string);
+			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
+			setIsWalletConnected(isWalletInstalled);
+			if (!isWalletInstalled)
+				return;
+			await wallet.connectToWallet();
+			const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
+			const balance = await wallet.getBalance(tokenAddress);
+			setWalletBalance(balance);
+		} else {
+			let wallet: KeplrWallet = new KeplrWallet(sourceChain?.chainName.toLowerCase() as "axelar" | "terra");
+			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
+			setIsWalletConnected(isWalletInstalled);
+			if (!isWalletInstalled)
+				return;
+			await wallet.connectToWallet();
+			const balance: number = (await wallet.getBalance(selectedSourceAsset?.common_key as string));
+			setWalletBalance(balance);
+		}
+	}
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -95,13 +124,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setCartoonMessage(<Step2InfoForWidget/>);
+				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>);
 				break;
 			default:
 				setActiveStep(1);
 				break;
 		}
-	}, [dNumConfirms, dReqNumConfirms, depositAddress, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep, walletBalance]);
 
 	const showButton: boolean = activeStep > 2;
 
@@ -119,7 +148,11 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			</StyledChainSelectionIconWidget>
 		</StyledFlexRow>
 		{isRecaptchaAuthenticated
-			? <StatusList activeStep={activeStep}/>
+			? <StatusList
+				activeStep={activeStep}
+				isWalletConnected={isWalletConnected}
+				connectToWallet={connectToWallet}
+			/>
 			: <FlexRow><br/>The transaction was not initiated.
 				Some error occurred, potentially including a failed recaptcha authentication
 			</FlexRow>

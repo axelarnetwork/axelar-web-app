@@ -1,4 +1,4 @@
-import React, {useState}                         from "react";
+import React, {useEffect, useState}              from "react";
 import styled                                    from "styled-components";
 import {AssetInfo}                               from "@axelar-network/axelarjs-sdk";
 import {useRecoilValue}                          from "recoil";
@@ -19,47 +19,26 @@ const TransferButton = styled(StyledButton)`
 	cursor: ${props => props.dim ? "not-allowed" : "pointer"};
 `;
 
-export const DepositFromWallet = () => {
+export const DepositFromWallet = ({
+	                                  isWalletConnected,
+	                                  walletBalance
+                                  }: { isWalletConnected: boolean, walletBalance: number }) => {
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
-	const [isWalletConnected, setIsWalletConnected] = useState(false);
 	const [amountToDeposit, setAmountToDeposit] = useState(null);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [minDepositAmt] = useState(getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0);
 	const [buttonText, setButtonText] = useState(sourceChainSelection?.chainName.toLowerCase() === "terra" ? "Deposit via IBC Transfer" : "Send Deposit");
 	const [sentSuccess, setSentSuccess] = useState(false);
 	const [numConfirmations, setNumConfirmations] = useState(0);
-	const [walletBalance, setWalletBalance] = useState(0);
 	const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true);
 	const [txHash, setTxHash] = useState("");
 
-	const connectToWallet = async () => {
-		if (sourceChainSelection?.module === "evm") {
-			let wallet: MetaMaskWallet = new MetaMaskWallet(sourceChainSelection?.chainName.toLowerCase() as string);
-			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
-			setIsWalletConnected(isWalletInstalled);
-			if (!isWalletInstalled)
-				return;
-			await wallet.connectToWallet();
-			const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
-			const balance = await wallet.getBalance(tokenAddress);
-			setWalletBalance(balance)
-			if (balance < minDepositAmt)
-				setHasEnoughInWalletForMin(false);
-		} else {
-			let wallet: KeplrWallet = new KeplrWallet(sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra");
-			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
-			setIsWalletConnected(isWalletInstalled);
-			if (!isWalletInstalled)
-				return;
-			await wallet.connectToWallet();
-			const balance: number = (await wallet.getBalance(selectedSourceAsset?.common_key as string));
-			setWalletBalance(balance);
-			if (balance < minDepositAmt)
-				setHasEnoughInWalletForMin(false);
-		}
-	}
+	useEffect(() => {
+		setHasEnoughInWalletForMin(walletBalance >= minDepositAmt);
+	}, [minDepositAmt, walletBalance])
+
 	const transferMetamask = async () => {
 		let wallet: MetaMaskWallet = new MetaMaskWallet(sourceChainSelection?.chainName.toLowerCase() as string);
 		await wallet.connectToWallet();
@@ -146,7 +125,7 @@ export const DepositFromWallet = () => {
 				? <div>{(numConfirmations >= (sourceChainSelection?.confirmLevel as number)
 						? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations. Sending to Axelar to confirm.`
 						: `Waiting on (${numConfirmations}/${sourceChainSelection?.confirmLevel}) required confirmations before forwarding to Axelar...`
-					)}</div>
+				)}</div>
 				: `Sending to Axelar to confirm.`
 			}
 		</>
@@ -181,7 +160,6 @@ export const DepositFromWallet = () => {
 				{buttonText}
 			</TransferButton>
 		</div>
-		: <TransferButton
-			onClick={connectToWallet}>Connect {sourceChainSelection?.module === "evm" ? "Metamask" : "Keplr"} Wallet</TransferButton>
+		: null
 	}</div>
 }
