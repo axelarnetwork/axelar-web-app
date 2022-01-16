@@ -105,7 +105,7 @@ export class KeplrWallet implements WalletInterface {
 			amount: ethers.utils.parseUnits(amount, 6).toString()
 		};
 		const fee: StdFee = {
-			gas: "5000000",
+			gas: "150000",
 			amount: [{denom: "uaxl", amount: "30000"}]
 		};
 
