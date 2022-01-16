@@ -10,13 +10,14 @@ import {animateStyles}                                          from "component/
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
 import useRecaptchaAuthenticate                                 from "hooks/auth/useRecaptchaAuthenticate";
-import {ShowRecaptchaV2Retry}                                   from "state/ApplicationStatus";
+import {DisclaimerAgreed, ShowRecaptchaV2Retry}                 from "state/ApplicationStatus";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
+import {TinyDisclaimer}                                         from "../Disclaimer";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -65,13 +66,13 @@ const StyledContainer = styled.div`
     
 	@media ${screenConfigs.media.desktop} {
 		width: 510px;
-	    height: 710px;
+	    height: 810px;
         display: flex;
 	    align-items: flex-start;
 	}
 	@media ${screenConfigs.media.laptop} {
 		width: 400px;
-	    height: 650px;
+	    height: 680px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		width: 350px;
@@ -101,6 +102,7 @@ const SwapWindow = (): ReactElement => {
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isValidDestinationAddr = useRecoilValue(IsValidDestinationAddress);
+	const isDisclaimerAgreed = useRecoilValue(DisclaimerAgreed);
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -121,12 +123,18 @@ const SwapWindow = (): ReactElement => {
 				key={userInputNeeded ? "user-input-window" : "transaction-status-window"}
 				addEndListener={(node, done) => node.addEventListener("transitionend", done, false)}
 				classNames="fade"
-			><StyledContainer>
-				{userInputNeeded
-					? <UserInputWindow handleTransactionSubmission={handleUserSubmit}/>
-					: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
-					                           closeResultsScreen={closeResultsScreen}/>
-				}</StyledContainer></CSSTransition>
+			>
+				<div style={{position: `relative`}}>
+					<StyledContainer>
+						{userInputNeeded
+							? <UserInputWindow handleTransactionSubmission={handleUserSubmit}/>
+							: <TransactionStatusWindow isOpen={showTransactionStatusWindow}
+							                           closeResultsScreen={closeResultsScreen}/>
+						}
+					</StyledContainer>
+					{canLightUp && !isDisclaimerAgreed && <TinyDisclaimer/>}
+				</div>
+			</CSSTransition>
 		</SwitchTransition>
 		<FAQPage/>
 		<div

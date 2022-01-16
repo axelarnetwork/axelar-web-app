@@ -15,6 +15,10 @@ export const DisclaimerAgreed = atom<boolean>({
 	default: false,
 	effects_UNSTABLE: [persistAtom]
 });
+export const ShowLargeDisclaimer = atom<boolean>({
+	key: "ShowLargeDisclaimer",
+	default: false,
+});
 
 export const DismissWalkThrough = atom<boolean>({
 	key: "DismissWalkThrough",

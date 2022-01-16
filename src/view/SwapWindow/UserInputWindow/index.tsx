@@ -1,5 +1,5 @@
 import React, {ChangeEvent, createRef, KeyboardEvent, useCallback, useEffect, useState} from "react";
-import {useRecoilState, useRecoilValue}                                                 from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState}                              from "recoil";
 import styled                                                                           from "styled-components";
 import {
 	AssetInfo, ChainInfo, validateDestinationAddress
@@ -21,6 +21,7 @@ import useResetUserInputs                                                       
 import {MetaMaskWallet}                                                                 from "hooks/wallet/MetaMaskWallet";
 import {KeplrWallet}                                                                    from "hooks/wallet/KeplrWallet";
 import {WalletInterface}                                                                from "hooks/wallet/WalletInterface";
+import {DisclaimerAgreed}                                                               from "state/ApplicationStatus";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset}     from "state/ChainSelection";
 import StyledButtonContainer
                                                                                         from "../StyledComponents/StyledButtonContainer";
@@ -38,6 +39,7 @@ const StyledUserInputWindow = styled.div`
 	
 	@media ${screenConfigs.media.desktop} {
 		width: 100%;
+		margin-top: 50px;
 	    height: 685px;
 	}
 	@media ${screenConfigs.media.laptop} {
@@ -105,6 +107,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const destChainComponentRef = createRef();
 	const [attemptNumber, setAttemptNumber] = useState(1);
 	const [mounted, setMounted] = useState(true);
+	const setDisclaimerAgreed = useSetRecoilState(DisclaimerAgreed);
 
 	useEffect(() => {
 		setMounted(true);
@@ -120,6 +123,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 		if (!(destAddr && isValidDestinationAddress && mounted))
 			return;
+		setDisclaimerAgreed(true);
 		try {
 			setMounted(false);
 			await handleTransactionSubmission(attemptNumber);
@@ -137,7 +141,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 				resetUserInputs();
 		}
 	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
-		resetUserInputs, mounted, setMounted
+		resetUserInputs, mounted, setDisclaimerAgreed, setMounted
 	]);
 
 	const renderValidationErrors = useCallback(() => {
