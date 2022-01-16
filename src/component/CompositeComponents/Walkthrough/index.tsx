@@ -52,7 +52,7 @@ const WalkThrough = () => {
 
 			} else if (index > breakIndex)
 
-				if (!cartoonMessage) setCartoonMessage(<Step2InfoForWidget/>);
+				if (!cartoonMessage) setCartoonMessage(<Step2InfoForWidget isWalletConnected={false} walletBalance={0}/>);
 
 			/*for the "blue" active buttons on TransactionStatusWindow;
 			there are only four steps in our flow process,

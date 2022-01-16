@@ -7,7 +7,7 @@ import CopyToClipboard                            from "component/Widgets/CopyTo
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
 import {SVGImage}                                 from "component/Widgets/SVGImage";
-import {DisclaimerAgreed}                         from "state/ApplicationStatus";
+import {ShowLargeDisclaimer}                      from "state/ApplicationStatus";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -68,7 +68,7 @@ const ContactUsSection = styled(FAQSection)`
 
 const FAQPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
-	const setDisclaimerAgreed = useSetRecoilState(DisclaimerAgreed);
+	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [showFAQ, setShowFAQ] = useState(false);
 
@@ -84,16 +84,14 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-	            <h2>Helpful Links</h2>
-	            <NewLink text={"Frequently Asked Questions (TBD)"} />
-                <NewLink text={"Instructional Video (TBD)"} />
-                <NewLink text={"Medium Instructional Guide (TBD)"} />
-                <NewLink text={"Terms of Use"} onClick={() => setDisclaimerAgreed(false)} />
+                <h2>Helpful Links</h2>
+                <NewLink text={"Frequently Asked Questions (TBD)"}/>
+                <NewLink text={"Instructional Video (TBD)"}/>
+                <NewLink text={"Medium Instructional Guide (TBD)"}/>
+                <NewLink text={"Terms of Use"} onClick={() => setShowLargeDisclaimer(true)}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
-                {/*<br/>*/}
                 <h2>Issues with a live transaction?</h2>
-                {/*<br/>*/}
                 <div style={{marginBottom: `5px`}}>Reach out on Discord with:</div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
@@ -129,13 +127,13 @@ const FAQPage = () => {
 	</StyledHelperComponent>;
 }
 
-const NewLink = ({text, onClick, link}: {text: string, onClick?: any, link?: string}) => {
-	return <FlexRow style={{ justifyContent: `flex-start`, marginBottom: `1em` }}>
+const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
+	return <FlexRow style={{justifyContent: `flex-start`, marginBottom: `1em`}}>
 		{text}
 		{"  "}
 		<SVGImage
 			onClick={onClick}
-			style={{ cursor: `pointer`, marginLeft: `5px` }}
+			style={{cursor: `pointer`, marginLeft: `5px`}}
 			src={require(`resources/link-new-tab.svg`).default}
 			height={`1em`}
 			width={`1em`}

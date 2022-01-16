@@ -1,3 +1,4 @@
+import React                                                            from "react";
 import {ChainInfo}                                                      from "@axelar-network/axelarjs-sdk";
 import styled                                                           from "styled-components";
 import screenConfigs                                                    from "config/screenConfigs";
@@ -8,9 +9,13 @@ import CopyToClipboard                                                  from "co
 import Link                                                             from "component/Widgets/Link";
 import Tooltip                                                          from "component/Widgets/Tooltip";
 import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                                        from "component/StyleComponents/FlexRow";
+import {SVGImage}                                                       from "component/Widgets/SVGImage";
 import {Nullable}                                                       from "interface/Nullable";
 import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {getShortenedWord}                                               from "utils/wordShortener";
+import BigNumber                                                        from "decimal.js";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -19,7 +24,19 @@ const StyledStatusList = styled.div`
 		margin-top: 20px;
 	}
 `;
-
+const StyledSVGImage = styled(SVGImage)`
+	cursor: pointer;
+`;
+const HelperWidget = styled(FlexRow)`
+	box-sizing: border-box;
+	padding: 0.25em;
+	text-align: center;
+	margin-top: .2em;
+	background-color: ${props => props.theme.headerBackgroundColor};
+	border-radius: 50px;
+	color: white;
+	cursor: pointer;
+`;
 const StyledListItem = styled.div`
 	height: 25%;
 	width: 100%;
@@ -85,6 +102,8 @@ const ListItem = (props: IListItemProps) => {
 
 interface IStatusListProps {
 	activeStep: number;
+	isWalletConnected: boolean;
+	connectToWallet: () => void;
 }
 
 const StatusList = (props: IStatusListProps) => {
@@ -94,6 +113,16 @@ const StatusList = (props: IStatusListProps) => {
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
+
+	const sourceAsset = useRecoilValue(SourceAsset);
+	const sourceNumConfirmations = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
+
+	const amountConfirmedAtomicUnits: number = parseFloat((sourceNumConfirmations.amountConfirmedString || "")
+	.replace(/[^\d.]*/g, ''));
+	const amountConfirmedAdjusted: number = amountConfirmedAtomicUnits
+		* BigNumber.pow(10, (-1 * (sourceAsset?.decimals || 1))).toNumber();
+	const afterFees: number = new BigNumber(1).minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
+	.times(amountConfirmedAdjusted).toNumber();
 
 	return <StyledStatusList>
 		<ListItem
@@ -105,12 +134,15 @@ const StatusList = (props: IStatusListProps) => {
 			className={"joyride-status-step-2"}
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
-				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, marginTop: `1.5em`}}>
-					Deposit {selectedSourceAsset?.assetSymbol} on {sourceChain?.chainName} here:
+				? <div style={{overflowWrap: `break-word`, overflow: `hidden`}}>
+					{sourceChain?.chainName.toLowerCase() === "terra"
+						? `Send ${selectedSourceAsset?.assetSymbol} from Terra to Axelar via IBC:`
+						: `Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName} here:`
+					}
 					<div style={{margin: `5px 0px 0px 0px`}}>
 						<Tooltip
 							anchorContent={<CopyToClipboard
-								JSXToShow={<BoldSpan>{depositAddress?.assetAddress} </BoldSpan>}
+								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 10)} </BoldSpan>}
 								height={`12px`}
 								width={`10px`}
 								textToCopy={depositAddress?.assetAddress || ""}
@@ -119,6 +151,21 @@ const StatusList = (props: IStatusListProps) => {
 							tooltipText={"Copy to Clipboard"}
 							tooltipAltText={"Copied to Clipboard!"}
 						/>
+					</div>
+					<div style={{marginTop: `-30px`, zIndex: 10000}}>
+						Pro-tip: you can do that from here!{" "}
+						{!props.isWalletConnected && <HelperWidget onClick={props.connectToWallet}>
+                            Connect to {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"}
+                            <StyledSVGImage
+                                height={`1em`}
+                                width={`1em`}
+                                margin={`0.2em 0.75em 0.2em 0.5em`}
+                                src={sourceChain?.module === "axelarnet"
+									? require(`resources/keplr.svg`).default
+									: require(`resources/metamask.svg`).default
+								}
+                            />
+                        </HelperWidget>}
 					</div>
 				</div>
 				: `Waiting for your deposit into a temporary deposit account.`
@@ -129,10 +176,12 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div>Confirmed. Completing your transfer.</div>
+					<div>Confirmed your deposit of <BoldSpan>{amountConfirmedAdjusted} {sourceAsset?.assetSymbol}</BoldSpan>
+						{", and "}
+						sending <BoldSpan>{afterFees} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName}.</div>
 					<div> You may exit this window if you wish.</div>
 				</div>
-				: `Axelar Network confirming your deposit on ${sourceChain?.chainName}.`
+				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}
 		/>
 		<ListItem
@@ -140,7 +189,7 @@ const StatusList = (props: IStatusListProps) => {
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
 				? ShowTransactionComplete({destNumConfirm, destinationChain})
-				: `Waiting to detect transaction on ${destinationChain?.chainName}`
+				: `Sending transaction to ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>

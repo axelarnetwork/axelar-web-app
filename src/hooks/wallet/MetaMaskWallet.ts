@@ -200,14 +200,14 @@ export class MetaMaskWallet implements WalletInterface {
 
 	}
 
-	public confirmEtherTransaction(txHash: string, confirmations: number, cb: any) {
+	public confirmEtherTransaction(txHash: string, confirmations: number, confirmInterval: number, cb: any) {
 		setTimeout(async () => {
 			const numConfirmations = (await this.provider.getTransaction(txHash)).confirmations;
 			cb({numConfirmations});
 			if (numConfirmations >= confirmations)
 				return;
-			return this.confirmEtherTransaction(txHash, confirmations, cb);
-		}, 15 * 1000);
+			return this.confirmEtherTransaction(txHash, confirmations, confirmInterval, cb);
+		}, confirmInterval * 1000);
 	}
 
 	private getEthersContract(tokenAddress: string) {

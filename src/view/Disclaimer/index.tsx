@@ -1,10 +1,10 @@
-import {useState}                          from "react";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-import styled, {ThemedStyledProps}         from "styled-components";
-import {DisclaimerAgreed}                  from "state/ApplicationStatus";
-import textLines           from "./disclaimerText";
-import {StyledCentered}    from "component/StyleComponents/Centered";
-import {StyledButton}      from "component/StyleComponents/StyledButton";
+import {useState}                              from "react";
+import {useRecoilState}                        from "recoil";
+import styled, {ThemedStyledProps}             from "styled-components";
+import {DisclaimerAgreed, ShowLargeDisclaimer} from "state/ApplicationStatus";
+import textLines                               from "./disclaimerText";
+import {StyledCentered}                        from "component/StyleComponents/Centered";
+import {StyledButton}                          from "component/StyleComponents/StyledButton";
 
 const StyledLargeDisclaimerPage = styled.div`
 	width: 80vw;
@@ -39,6 +39,7 @@ const Text = styled.div`
 export interface IMaskProps extends ThemedStyledProps<any, any> {
 	centered: boolean;
 }
+
 const Mask = styled.div<IMaskProps>`
 	position: absolute;
 	width: 100%;
@@ -48,52 +49,13 @@ const Mask = styled.div<IMaskProps>`
 `;
 
 const Disclaimer = () => {
-	const isDisclaimerAgreed = useRecoilValue(DisclaimerAgreed);
-	const [isSmallView, setIsSmallView] = useState(true);
-
-	return isDisclaimerAgreed
-		? null
-		: isSmallView
-			? <SmallDisclaimer setViewBigger={() => setIsSmallView(false)}/>
-			: <LargeDisclaimer />;
-
-}
-
-const StyledSmallDisclaimer = styled.div`
-	position: absolute;
-	bottom: 5em;
-	left: 2em;
-	z-index: 10000;
-	width: 400px;
-	background: rgba(255,255,255,0.97);
-	box-sizing: border-box;
-	padding: 2em;
-	font-size: 0.9em;
-	box-shadow: 5px 0px 10.0px hsl(0deg 0% 0% / 0.39);
-	border-radius: 10px;
-`;
-const SmallDisclaimer = ({setViewBigger}: {setViewBigger: () => void;}) => {
-	const setDisclaimerAgreed = useSetRecoilState(DisclaimerAgreed);
-	return <Mask>
-		<StyledSmallDisclaimer>
-			<div>
-				Satellite is in Beta. Use at your own risk and with funds you're comfortable using on this site.
-			</div>
-			<br/>
-			<div>
-				<span style={{ cursor: `pointer`, color: `blue` }} onClick={setViewBigger}>Click here{" "}</span>
-				for full disclosure and Terms of Use.
-			</div>
-			<br/>
-			<DisclaimerAgreeButton checked={true} setDisclaimerAgreed={setDisclaimerAgreed} text={"Ok, agreed"} />
-		</StyledSmallDisclaimer>
-	</Mask>;
-}
-
-export const LargeDisclaimer = () => {
-	const setDisclaimerAgreed = useSetRecoilState(DisclaimerAgreed);
-	const [checked, setChecked] = useState(false);
+	const [isDisclaimerAgreed, setDisclaimerAgreed] = useRecoilState(DisclaimerAgreed);
+	const [showLargeDisclaimer, setShowLargeDisclaimer] = useRecoilState(ShowLargeDisclaimer);
+	const [checked, setChecked] = useState(isDisclaimerAgreed);
 	const handleChange = () => setChecked(!checked);
+
+	if (!showLargeDisclaimer)
+		return null;
 
 	return <Mask centered={true}>
 		<StyledLargeDisclaimerPage>
@@ -101,22 +63,61 @@ export const LargeDisclaimer = () => {
 			<TextSection>
 				{textLines.map((text: string) => <Text>{text}</Text>)}
 			</TextSection>
-			<label>
-				<input
-					type="checkbox"
-					checked={checked}
-					onChange={handleChange}
-				/>
+			{!isDisclaimerAgreed && <label>
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={handleChange}
+                />
 				{" "}I understand the risks and agree to the terms.
-			</label>
+            </label>}
 			<br/>
-			<DisclaimerAgreeButton checked={checked} setDisclaimerAgreed={setDisclaimerAgreed} text={"Enter"}/>
+			<DisclaimerAgreeButton
+				checked={checked}
+				setDisclaimerAgreed={() => {
+					setDisclaimerAgreed(true);
+					setShowLargeDisclaimer(false);
+				}}
+				text={!isDisclaimerAgreed ? "Agree & Enter" : "Close"}
+			/>
 
 		</StyledLargeDisclaimerPage>
 	</Mask>;
 }
+const StyledTinyDisclaimer = styled.div`
+	position: absolute;
+	bottom: 0;
+	z-index: 10000;
+	font-size: smaller;
+	background: rgba(255,255,255,0.97);
+	box-sizing: border-box;
+	padding: 0.25em;
+	box-shadow: 2px 0px 5px hsl(0deg 0% 0% / 0.39);
+	border-radius: 10px;
+`;
+export const TinyDisclaimer = () => {
 
-const DisclaimerAgreeButton = ({ checked, setDisclaimerAgreed, text}: { checked: boolean; setDisclaimerAgreed: (agreed: boolean) => void; text: string; }) => (
+	const [showLargeDisclaimer, setShowLargeDisclaimer] = useRecoilState(ShowLargeDisclaimer);
+
+	return showLargeDisclaimer
+		? null
+		: <StyledTinyDisclaimer>
+			Satellite is in Beta. Use at your own risk with funds you're comfortable using.{" "}
+			<span
+				style={{cursor: `pointer`, color: `blue`}}
+				onClick={() => setShowLargeDisclaimer(true)}
+			>
+				Click here{" "}
+			</span>
+			for full Terms of Use, to which you implicitly agree by using this platform.
+		</StyledTinyDisclaimer>;
+}
+
+const DisclaimerAgreeButton = ({
+	                               checked,
+	                               setDisclaimerAgreed,
+	                               text
+                               }: { checked: boolean; setDisclaimerAgreed: (agreed: boolean) => void; text: string; }) => (
 	<StyledButton
 		dim={!checked}
 		disabled={!checked}
