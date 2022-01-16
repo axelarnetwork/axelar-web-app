@@ -16,6 +16,7 @@ import Info                               from "view/Debug";
 import Login                              from "view/Login";
 import App                                from 'view/App';
 import 'react-notifications-component/dist/theme.css';
+import './index.css';
 
 const GlobalStyle = createGlobalStyle`
 
