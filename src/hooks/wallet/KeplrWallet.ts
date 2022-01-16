@@ -120,7 +120,7 @@ export class KeplrWallet implements WalletInterface {
 		const PORT: string = "transfer";
 		const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"];
 		const fee: StdFee = {
-			gas: "5000000",
+			gas: "50000",
 			amount: [{denom: "uluna", amount: "30000"}]
 		};
 		const timeoutHeight: Height = {
