@@ -74,9 +74,13 @@ export const DepositFromWallet = () => {
 		if (results.txHash && results.blockNumber) {
 			setSentSuccess(true);
 			setTxHash(results.txHash);
-			wallet.confirmEtherTransaction(results.txHash, sourceChainSelection?.confirmLevel as number, ({numConfirmations}: any) => {
-				setNumConfirmations(numConfirmations)
-			});
+			const confirmInterval: number = sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 5;
+			wallet.confirmEtherTransaction(
+				results.txHash,
+				sourceChainSelection?.confirmLevel as number,
+				confirmInterval,
+				({numConfirmations}: any) => setNumConfirmations(numConfirmations)
+			);
 		} else if (results.error.length > 0)
 			setButtonText("Something went wrong");
 		console.log("token address on", sourceChainSelection?.chainName, tokenAddress, results);
@@ -103,7 +107,8 @@ export const DepositFromWallet = () => {
 			)
 		}
 		console.log("results from IBC", results);
-		if (results && results.transactionHash && results.height) {
+		const outOfGas: boolean = results?.rawLog?.includes("out of gas");
+		if (results && results.transactionHash && results.height && !outOfGas) {
 			setSentSuccess(true);
 			setTxHash(results.transactionHash);
 		} else
