@@ -15,6 +15,7 @@ import {Nullable}                                                       from "in
 import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {getShortenedWord}                                               from "utils/wordShortener";
+import BigNumber                                                        from "decimal.js";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -113,6 +114,16 @@ const StatusList = (props: IStatusListProps) => {
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 
+	const sourceAsset = useRecoilValue(SourceAsset);
+	const sourceNumConfirmations = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
+
+	const amountConfirmedAtomicUnits: number = parseFloat((sourceNumConfirmations.amountConfirmedString || "")
+	.replace(/[^\d.]*/g, ''));
+	const amountConfirmedAdjusted: number = amountConfirmedAtomicUnits
+		* BigNumber.pow(10, (-1 * (sourceAsset?.decimals || 1))).toNumber();
+	const afterFees: number = new BigNumber(1).minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
+	.times(amountConfirmedAdjusted).toNumber();
+
 	return <StyledStatusList>
 		<ListItem
 			className={"joyride-status-step-1"}
@@ -165,10 +176,12 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div>Confirmed. Completing your transfer.</div>
+					<div>Confirmed your deposit of <BoldSpan>{amountConfirmedAdjusted} {sourceAsset?.assetSymbol}</BoldSpan>
+						{", and "}
+						sending <BoldSpan>{afterFees} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName}.</div>
 					<div> You may exit this window if you wish.</div>
 				</div>
-				: `Axelar Network confirming your deposit on ${sourceChain?.chainName}.`
+				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}
 		/>
 		<ListItem
@@ -176,7 +189,7 @@ const StatusList = (props: IStatusListProps) => {
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
 				? ShowTransactionComplete({destNumConfirm, destinationChain})
-				: `Waiting to detect transaction on ${destinationChain?.chainName}`
+				: `Sending transaction to ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>

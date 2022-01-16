@@ -123,10 +123,10 @@ export const DepositFromWallet = ({
 			</div>
 			{sourceChainSelection?.module === "evm"
 				? <div>{(numConfirmations >= (sourceChainSelection?.confirmLevel as number)
-						? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations. Sending to Axelar to confirm.`
+						? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations.`
 						: `Waiting on (${numConfirmations}/${sourceChainSelection?.confirmLevel}) required confirmations before forwarding to Axelar...`
 				)}</div>
-				: `Sending to Axelar to confirm.`
+				: null
 			}
 		</>
 

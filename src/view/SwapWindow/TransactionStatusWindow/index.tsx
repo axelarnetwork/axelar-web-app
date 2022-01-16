@@ -20,8 +20,6 @@ import PlainButton
 import StatusList                                                                        from "./StatusList";
 import Step2InfoForWidget
                                                                                          from "./StatusList/Step2InfoForWidget";
-import Step3InfoForWidget
-                                                                                         from "./StatusList/Step3InfoForWidget";
 import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
 
 interface ITransactionStatusWindowProps {
@@ -117,11 +115,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		switch (true) {
 			case !!(dNumConfirms && dReqNumConfirms):
 				setActiveStep(4);
-				setCartoonMessage(null);
 				break;
 			case (depositAddress && sNumConfirms && sReqNumConfirms && sNumConfirms >= sReqNumConfirms):
 				setActiveStep(3);
-				setCartoonMessage(<Step3InfoForWidget/>);
+				setCartoonMessage(null);
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
@@ -150,7 +147,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		</StyledFlexRow>
 		{isRecaptchaAuthenticated
 			? <StatusList
-				activeStep={activeStep}
+				activeStep={3}
 				isWalletConnected={isWalletConnected}
 				connectToWallet={connectToWallet}
 			/>
