@@ -20,7 +20,7 @@ const TooltipText = styled.div`
 	color: transparent;
 	background-color: transparent;
 	padding: 0.1em 0.1em;
-	margin: 0.25em 0.25em;
+	// margin: 0.25em 0.25em;
 	border-radius: 4px;
 	width: 100%;
 	${StyledCentered}

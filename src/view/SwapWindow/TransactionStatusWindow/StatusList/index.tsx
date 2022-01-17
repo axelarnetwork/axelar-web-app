@@ -43,14 +43,15 @@ const StyledListItem = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-size: 1em;
 	@media ${screenConfigs.media.desktop} {
-		font-size: 18px;
+		font-size: 1em;
 	}
 	@media ${screenConfigs.media.laptop} {
-		font-size: 16px;
+		font-size: 18px;
 	}
 	@media ${screenConfigs.media.tablet} {
-		font-size: 13px;
+		font-size: 14px;
 	}
 	@media ${screenConfigs.media.mobile} {
 		font-size: 10px;
@@ -152,19 +153,28 @@ const StatusList = (props: IStatusListProps) => {
 							tooltipAltText={"Copied to Clipboard!"}
 						/>
 					</div>
-					<div style={{marginTop: `-30px`, zIndex: 10000}}>
-						Pro-tip: you can do that from here!{" "}
+					<div style={{marginTop: `-20px`, zIndex: 10000}}>
+						OR send via {sourceChain?.module === "axelarnet" ? "the Keplr wallet" : "Metamask"}!{" "}
+						<StyledSVGImage
+							height={`1em`}
+							width={`1em`}
+							margin={`0em 0em -0.1em 0em`}
+							src={sourceChain?.module === "axelarnet"
+								? require(`resources/keplr.svg`).default
+								: require(`resources/metamask.svg`).default
+							}
+						/>
 						{!props.isWalletConnected && <HelperWidget onClick={props.connectToWallet}>
                             Connect to {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"}
-                            <StyledSVGImage
-                                height={`1em`}
-                                width={`1em`}
-                                margin={`0.2em 0.75em 0.2em 0.5em`}
-                                src={sourceChain?.module === "axelarnet"
-									? require(`resources/keplr.svg`).default
-									: require(`resources/metamask.svg`).default
-								}
-                            />
+                            {/*<StyledSVGImage*/}
+                            {/*    height={`1em`}*/}
+                            {/*    width={`1em`}*/}
+                            {/*    margin={`0.2em 0.75em 0.2em 0.5em`}*/}
+                            {/*    src={sourceChain?.module === "axelarnet"*/}
+							{/*		? require(`resources/keplr.svg`).default*/}
+							{/*		: require(`resources/metamask.svg`).default*/}
+							{/*	}*/}
+                            {/*/>*/}
                         </HelperWidget>}
 					</div>
 				</div>
