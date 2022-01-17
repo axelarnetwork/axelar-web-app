@@ -15,12 +15,8 @@ const StyledDiv = styled.div<IStyledDivProps>`
     z-index: 1000;
     width: 20%;
     min-width: 250px;
-    height: auto;
-    margin: 50px 0px 0px 10px;
     box-sizing: border-box;
-    display: flex;
-    justify-content: start;
-    align-items: center;
+    display: inline-block;
     left: 1%;
     color: black;
 	border-radius: 9px;
