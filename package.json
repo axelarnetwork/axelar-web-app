@@ -3,7 +3,7 @@
 	"version": "0.3.28",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "file:../axelarjs-sdk",
+		"@axelar-network/axelarjs-sdk": "0.3.28",
 		"@cosmjs/launchpad": "^0.26.5",
 		"@cosmjs/stargate": "^0.26.5",
 		"@keplr-wallet/cosmos": "0.9.9",
