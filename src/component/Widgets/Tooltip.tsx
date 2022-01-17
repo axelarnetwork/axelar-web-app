@@ -22,7 +22,7 @@ const TooltipText = styled.div`
 	padding: 0.1em 0.1em;
 	// margin: 0.25em 0.25em;
 	border-radius: 4px;
-	width: 100%;
+	width: 50%;
 	${StyledCentered}
 	transform: translateY(-5px);
 	transition: all 0.1s ease-in-out;

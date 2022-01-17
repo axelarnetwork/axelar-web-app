@@ -43,15 +43,15 @@ const StyledListItem = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	font-size: 1em;
+	
 	@media ${screenConfigs.media.desktop} {
-		font-size: 1em;
-	}
-	@media ${screenConfigs.media.laptop} {
 		font-size: 18px;
 	}
+	@media ${screenConfigs.media.laptop} {
+		font-size: 15px;
+	}
 	@media ${screenConfigs.media.tablet} {
-		font-size: 14px;
+		font-size: 12px;
 	}
 	@media ${screenConfigs.media.mobile} {
 		font-size: 10px;
@@ -166,15 +166,6 @@ const StatusList = (props: IStatusListProps) => {
 						/>
 						{!props.isWalletConnected && <HelperWidget onClick={props.connectToWallet}>
                             Connect to {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"}
-                            {/*<StyledSVGImage*/}
-                            {/*    height={`1em`}*/}
-                            {/*    width={`1em`}*/}
-                            {/*    margin={`0.2em 0.75em 0.2em 0.5em`}*/}
-                            {/*    src={sourceChain?.module === "axelarnet"*/}
-							{/*		? require(`resources/keplr.svg`).default*/}
-							{/*		: require(`resources/metamask.svg`).default*/}
-							{/*	}*/}
-                            {/*/>*/}
                         </HelperWidget>}
 					</div>
 				</div>
@@ -186,10 +177,10 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div>Confirmed your deposit of <BoldSpan>{amountConfirmedAdjusted} {sourceAsset?.assetSymbol}</BoldSpan>
-						{", and "}
-						sending <BoldSpan>{afterFees} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName}.</div>
-					<div> You may exit this window if you wish.</div>
+					<div>Confirmed your <BoldSpan>{amountConfirmedAdjusted}{sourceAsset?.assetSymbol}</BoldSpan> deposit and
+						sending <BoldSpan>{afterFees}{sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName}. We
+						will broadcast your transaction within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2}min.
+						You may exit this window if you wish.</div>
 				</div>
 				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}
