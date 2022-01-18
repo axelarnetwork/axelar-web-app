@@ -70,6 +70,7 @@ const StyledFlowOption = styled.div`
 	border: solid 0.6px #b9bac8;
 	box-sizing: border-box;
 	padding: 5px;
+	width: 100%;
 	background-color: white;
 `;
 
@@ -132,6 +133,8 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as ChainInfo;
 		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as ChainInfo;
 		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as ChainInfo;
+		map.Fantom = chainList.find(chainInfo => chainInfo.chainName === "Fantom") as ChainInfo;
+		map.Avalanche = chainList.find(chainInfo => chainInfo.chainName === "Avalanche") as ChainInfo;
 		return map;
 
 	}, [chainList]);

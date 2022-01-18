@@ -20,9 +20,9 @@ const TooltipText = styled.div`
 	color: transparent;
 	background-color: transparent;
 	padding: 0.1em 0.1em;
-	// margin: 0.25em 0.25em;
+	margin: 0.25em 0.25em;
 	border-radius: 4px;
-	width: 50%;
+	width: 100%;
 	${StyledCentered}
 	transform: translateY(-5px);
 	transition: all 0.1s ease-in-out;
@@ -34,6 +34,7 @@ const TooltipContainer = styled.div`
 		visibility: visible;
 		transform: translateY(0px);
 	}
+	width: 60%;
 `;
 
 const SpanText = styled.span`

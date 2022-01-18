@@ -1,33 +1,31 @@
-import React, {ChangeEvent, createRef, KeyboardEvent, useCallback, useEffect, useState} from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState}                              from "recoil";
-import styled                                                                           from "styled-components";
-import {
-	AssetInfo, ChainInfo, validateDestinationAddress
-}                                                                                       from "@axelar-network/axelarjs-sdk";
-import {InputForm}                                                                      from "component/CompositeComponents/InputForm";
+import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState}                          from "recoil";
+import styled                                                                       from "styled-components";
+import {AssetInfo, ChainInfo, validateDestinationAddress}                           from "@axelar-network/axelarjs-sdk";
+import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
-                                                                                        from "component/CompositeComponents/Selectors/ChainSelector";
+                                                                                    from "component/CompositeComponents/Selectors/ChainSelector";
 import SwapChains
-                                                                                        from "component/CompositeComponents/SwapChains";
+                                                                                    from "component/CompositeComponents/SwapChains";
 import TransactionInfo
-                                                                                        from "component/CompositeComponents/TransactionInfo";
-import {FlexColumn}                                                                     from "component/StyleComponents/FlexColumn";
-import {SVGImage}                                                                       from "component/Widgets/SVGImage";
+                                                                                    from "component/CompositeComponents/TransactionInfo";
+import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
+import {SVGImage}                                                                   from "component/Widgets/SVGImage";
 import ValidationErrorWidget
-                                                                                        from "component/Widgets/ValidationErrorWidget";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                        from "config/consts";
-import screenConfigs                                                                    from "config/screenConfigs";
-import useResetUserInputs                                                               from "hooks/useResetUserInputs";
-import {MetaMaskWallet}                                                                 from "hooks/wallet/MetaMaskWallet";
-import {KeplrWallet}                                                                    from "hooks/wallet/KeplrWallet";
-import {WalletInterface}                                                                from "hooks/wallet/WalletInterface";
-import {DisclaimerAgreed}                                                               from "state/ApplicationStatus";
-import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset}     from "state/ChainSelection";
+                                                                                    from "component/Widgets/ValidationErrorWidget";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
+import screenConfigs                                                                from "config/screenConfigs";
+import useResetUserInputs                                                           from "hooks/useResetUserInputs";
+import {MetaMaskWallet}                                                             from "hooks/wallet/MetaMaskWallet";
+import {KeplrWallet}                                                                from "hooks/wallet/KeplrWallet";
+import {WalletInterface}                                                            from "hooks/wallet/WalletInterface";
+import {DisclaimerAgreed}                                                           from "state/ApplicationStatus";
+import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import StyledButtonContainer
-                                                                                        from "../StyledComponents/StyledButtonContainer";
+                                                                                    from "../StyledComponents/StyledButtonContainer";
 import PlainButton
-                                                                                        from "../StyledComponents/PlainButton";
-import TopFlowsSelectorWidget                                                           from "../TopFlowsSelector";
+                                                                                    from "../StyledComponents/PlainButton";
+import TopFlowsSelectorWidget                                                       from "../TopFlowsSelector";
 
 interface IUserInputWindowProps {
 	handleTransactionSubmission: (numAttempt: number) => Promise<string>;
@@ -169,7 +167,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		&& onInitiateTransfer();
 	}
 
-	const getDestinationAddressFromWallet = async (e: ChangeEvent<HTMLInputElement>, destinationChain: ChainInfo) => {
+	const getDestinationAddressFromWallet = async (destinationChain: ChainInfo) => {
 		let wallet: WalletInterface;
 		const isEvm: boolean = (destinationChain.module === "evm");
 		wallet = isEvm
@@ -215,26 +213,29 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
                 <div
                     style={{
 						width: `100%`,
-	                    height: `100%`,
+						height: `100%`,
 						color: `#898994`,
 						marginTop: `0.5em`,
-	                    textAlign: `right`,
+						textAlign: `right`,
 						fontSize: `0.8em`,
-	                    display: `flex`,
-	                    justifyContent: `flex-end`,
-	                    alignItems: `flex-start`
+						display: `flex`,
+						justifyContent: `flex-end`,
+						alignItems: `flex-start`
 					}}
                 >
-                    <span>Autofill Destination Address (optional)</span>
+                    <span style={{cursor: `pointer`}}
+                          onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}>
+	                    Autofill Destination Address (optional)
+                    </span>
                     <StyledSVGImage
-                        onClick={(e: ChangeEvent<HTMLInputElement>) => getDestinationAddressFromWallet(e, destChainSelection as ChainInfo)}
+                        onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}
                         height={`1.25em`}
                         width={`1.25em`}
                         margin={`0em 0.75em 0em 0.5em`}
                         src={destChainSelection.module === "axelarnet"
-	                        ? require(`resources/keplr.svg`).default
-	                        : require(`resources/metamask.svg`).default
-                        }
+							? require(`resources/keplr.svg`).default
+							: require(`resources/metamask.svg`).default
+						}
                     />
                 </div>
 				}
