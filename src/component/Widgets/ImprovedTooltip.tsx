@@ -17,9 +17,9 @@ export const ImprovedTooltip = ({anchorContent, tooltipText, tooltipAltText}: IT
 		setTimeout(() => setClicked(false), 2000);
 	}, [setClicked]);
 
-	return <div style={{cursor: `pointer`}}>
-		<div data-tip={tooltipText}>{cloneElement(anchorContent as JSX.Element, {cbOnClick: updateTextToShow})}</div>
-		<ReactTooltip getContent={() => {
+	return <div >
+		<div style={{cursor: `pointer`, display: `inline-block` }} data-tip={tooltipText}>{cloneElement(anchorContent as JSX.Element, {cbOnClick: updateTextToShow})}</div>
+		<ReactTooltip className={"width-override"} getContent={() => {
 			return (clicked) ? tooltipAltText : tooltipText;
 		}}/>
 	</div>;

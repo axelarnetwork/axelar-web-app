@@ -70,6 +70,7 @@ const StyledFlowOption = styled.div`
 	border: solid 0.6px #b9bac8;
 	box-sizing: border-box;
 	padding: 5px;
+	width: 100%;
 	background-color: white;
 `;
 
