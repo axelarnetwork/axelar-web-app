@@ -3,32 +3,24 @@ export const topFlowOptions = [
 		common_key: "uusd",
 		assetSymbol: "UST",
 		sourceChainName: "Terra",
-		destinationChainName: "Ethereum",
+		destinationChainName: "Avalanche",
 		sourceChainSymbol: "Terra",
-		destinationChainSymbol: "ETH"
+		destinationChainSymbol: "AVAX"
 	},
 	{
 		common_key: "uusd",
 		assetSymbol: "UST",
-		sourceChainName: "Ethereum",
-		destinationChainName: "Terra",
-		sourceChainSymbol: "ETH",
-		destinationChainSymbol: "Terra"
+		sourceChainName: "Terra",
+		destinationChainName: "Fantom",
+		sourceChainSymbol: "Terra",
+		destinationChainSymbol: "FTM"
 	},
 	{
-		common_key: "uaxl",
-		assetSymbol: "AXL",
-		sourceChainName: "Axelar",
-		destinationChainName: "Ethereum",
-		sourceChainSymbol: "AXL",
-		destinationChainSymbol: "ETH"
+		common_key: "uusd",
+		assetSymbol: "UST",
+		sourceChainName: "Avalanche",
+		destinationChainName: "Fantom",
+		sourceChainSymbol: "AVAX",
+		destinationChainSymbol: "FTM"
 	},
-	{
-		common_key: "uaxl",
-		assetSymbol: "AXL",
-		sourceChainName: "Ethereum",
-		destinationChainName: "Axelar",
-		sourceChainSymbol: "ETH",
-		destinationChainSymbol: "AXL"
-	}
 ]

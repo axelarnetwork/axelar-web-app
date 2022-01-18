@@ -169,7 +169,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		&& onInitiateTransfer();
 	}
 
-	const getDestinationAddressFromWallet = async (e: ChangeEvent<HTMLInputElement>, destinationChain: ChainInfo) => {
+	const getDestinationAddressFromWallet = async (destinationChain: ChainInfo) => {
 		let wallet: WalletInterface;
 		const isEvm: boolean = (destinationChain.module === "evm");
 		wallet = isEvm
@@ -225,9 +225,11 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	                    alignItems: `flex-start`
 					}}
                 >
-                    <span>Autofill Destination Address (optional)</span>
+                    <span style={{ cursor: `pointer` }} onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}>
+	                    Autofill Destination Address (optional)
+                    </span>
                     <StyledSVGImage
-                        onClick={(e: ChangeEvent<HTMLInputElement>) => getDestinationAddressFromWallet(e, destChainSelection as ChainInfo)}
+                        onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}
                         height={`1.25em`}
                         width={`1.25em`}
                         margin={`0em 0.75em 0em 0.5em`}

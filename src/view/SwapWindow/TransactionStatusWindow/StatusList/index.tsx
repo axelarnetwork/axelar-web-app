@@ -7,16 +7,15 @@ import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "co
 import downstreamServices                                               from "config/downstreamServices";
 import CopyToClipboard                                                  from "component/Widgets/CopyToClipboard";
 import Link                                                             from "component/Widgets/Link";
-import Tooltip                                                          from "component/Widgets/Tooltip";
 import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                                        from "component/StyleComponents/FlexRow";
+import {ImprovedTooltip}                                                from "component/Widgets/ImprovedTooltip";
 import {SVGImage}                                                       from "component/Widgets/SVGImage";
 import {Nullable}                                                       from "interface/Nullable";
 import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {getShortenedWord}                                               from "utils/wordShortener";
 import BigNumber                                                        from "decimal.js";
-
 const StyledStatusList = styled.div`
     width: 100%;
     height: 65%;
@@ -27,15 +26,16 @@ const StyledStatusList = styled.div`
 const StyledSVGImage = styled(SVGImage)`
 	cursor: pointer;
 `;
-const HelperWidget = styled(FlexRow)`
+const HelperWidget = styled.div`
 	box-sizing: border-box;
-	padding: 0.25em;
+	padding: 0.5em 1em 0.5em 1em;
 	text-align: center;
-	margin-top: .2em;
 	background-color: ${props => props.theme.headerBackgroundColor};
 	border-radius: 50px;
 	color: white;
 	cursor: pointer;
+	font-size: smaller;
+	margin-bottom: 0.5em;
 `;
 const StyledListItem = styled.div`
 	height: 25%;
@@ -125,6 +125,16 @@ const StatusList = (props: IStatusListProps) => {
 	const afterFees: number = new BigNumber(1).minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
 	.times(amountConfirmedAdjusted).toNumber();
 
+	const WalletLogo = () => <StyledSVGImage
+		height={`1em`}
+		width={`1em`}
+		margin={`0em 0em -0.125em 0em`}
+		src={sourceChain?.module === "axelarnet"
+			? require(`resources/keplr.svg`).default
+			: require(`resources/metamask.svg`).default
+		}
+	/>;
+
 	return <StyledStatusList>
 		<ListItem
 			className={"joyride-status-step-1"}
@@ -135,13 +145,13 @@ const StatusList = (props: IStatusListProps) => {
 			className={"joyride-status-step-2"}
 			step={2} activeStep={activeStep}
 			text={activeStep >= 2
-				? <div style={{overflowWrap: `break-word`, overflow: `hidden`}}>
+				? <div style={{overflowWrap: `break-word`, overflow: `hidden`, width: `100%`}}>
 					{sourceChain?.chainName.toLowerCase() === "terra"
 						? `Send ${selectedSourceAsset?.assetSymbol} from Terra to Axelar via IBC:`
 						: `Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName} here:`
 					}
 					<div style={{margin: `5px 0px 0px 0px`}}>
-						<Tooltip
+						<ImprovedTooltip
 							anchorContent={<CopyToClipboard
 								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 10)} </BoldSpan>}
 								height={`12px`}
@@ -151,23 +161,14 @@ const StatusList = (props: IStatusListProps) => {
 							/>}
 							tooltipText={"Copy to Clipboard"}
 							tooltipAltText={"Copied to Clipboard!"}
-						/>
+							/>
 					</div>
-					<div style={{marginTop: `-20px`, zIndex: 10000}}>
-						OR send via {sourceChain?.module === "axelarnet" ? "the Keplr wallet" : "Metamask"}!{" "}
-						<StyledSVGImage
-							height={`1em`}
-							width={`1em`}
-							margin={`0em 0em -0.1em 0em`}
-							src={sourceChain?.module === "axelarnet"
-								? require(`resources/keplr.svg`).default
-								: require(`resources/metamask.svg`).default
-							}
-						/>
-						{!props.isWalletConnected && <HelperWidget onClick={props.connectToWallet}>
-                            Connect to {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"}
-                        </HelperWidget>}
-					</div>
+					<FlexRow style={{ height: `1.5em`, width: `100%`, justifyContent: `space-between` }}>
+						<div>OR send via <WalletLogo />{sourceChain?.module === "evm" ? "etaMask" : "epler"}!{" "}</div>
+						{!props.isWalletConnected
+							? <HelperWidget onClick={props.connectToWallet}>Connect <WalletLogo/></HelperWidget>
+							: null}
+					</FlexRow>
 				</div>
 				: `Waiting for your deposit into a temporary deposit account.`
 			}
@@ -177,9 +178,8 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div>Confirmed your <BoldSpan>{amountConfirmedAdjusted}{sourceAsset?.assetSymbol}</BoldSpan> deposit and
-						sending <BoldSpan>{afterFees}{sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName}. We
-						will broadcast your transaction within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2}min.
+					<div>Confirmed your <BoldSpan>{amountConfirmedAdjusted}{sourceAsset?.assetSymbol}</BoldSpan> deposit. We
+						will broadcast <BoldSpan>{afterFees}{sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2}min.
 						You may exit this window if you wish.</div>
 				</div>
 				: `Confirming your deposit on ${sourceChain?.chainName}.`
