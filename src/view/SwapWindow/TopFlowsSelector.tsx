@@ -97,6 +97,7 @@ const FlowOption = (props: IFlowOptionProps) => {
 	const dimension: string = `1.75em`;
 
 	return <Tooltip
+		width={"60%"}
 		anchorContent={<StyledFlowOption onClick={() => props.onClick(props)}>
 			<FlexRow style={{marginBottom: `10px`}}>
 				<SVGImage width={dimension} height={dimension}

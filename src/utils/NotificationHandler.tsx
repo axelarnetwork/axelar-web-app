@@ -9,7 +9,7 @@ import 'animate.css/animate.min.css';
 const traceIdDiv = (traceId: string | undefined) => {
 	if (!traceId)
 		return null;
-	return <div><br/>For support, reach out on Discord with this <Tooltip
+	return <div><br/>For support, reach out on Discord in the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with this <Tooltip
 		anchorContent={<CopyToClipboard
 			height={`15px`}
 			JSXToShow={<div>traceId: <BoldSpan>{traceId}</BoldSpan></div>}

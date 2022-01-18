@@ -85,14 +85,14 @@ const FAQPage = () => {
             </StyledHeader>
             <FAQSection>
                 <h2>Helpful Links</h2>
-                <NewLink text={"Frequently Asked Questions (TBD)"}/>
+                <NewLink text={"Discord Support Channel"} onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
                 <NewLink text={"Terms of Use"} onClick={() => setShowLargeDisclaimer(true)}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
                 <h2>Issues with a live transaction?</h2>
-                <div style={{marginBottom: `5px`}}>Reach out on Discord with:</div>
+                <div style={{marginBottom: `5px`}}>Reach out on Discord in the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:</div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
@@ -127,17 +127,24 @@ const FAQPage = () => {
 	</StyledHelperComponent>;
 }
 
+const StyledNewLink = styled(FlexRow)`
+	justify-content: flex-start;
+	margin-bottom: 1em;
+	cursor: pointer;
+	&:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: underline;
+	}
+`;
 const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
-	return <FlexRow style={{justifyContent: `flex-start`, marginBottom: `1em`}}>
+	return <StyledNewLink onClick={onClick}>
 		{text}
 		{"  "}
 		<SVGImage
-			onClick={onClick}
-			style={{cursor: `pointer`, marginLeft: `5px`}}
+			style={{marginLeft: `5px`}}
 			src={require(`resources/link-new-tab.svg`).default}
 			height={`1em`}
 			width={`1em`}
 		/>
-	</FlexRow>
+	</StyledNewLink>
 }
 export default FAQPage;
