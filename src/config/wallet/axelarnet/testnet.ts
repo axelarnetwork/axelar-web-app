@@ -16,7 +16,7 @@ const terraChainInfo: ChainInfo = {
 	stakeCurrency: { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
 	bech32Config: Bech32Address.defaultBech32Config("terra"),
 	walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
-	bip44: { coinType: 118 },
+	bip44: { coinType: 330 },
 	currencies: [
 		{ coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
 		{ coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6 }
