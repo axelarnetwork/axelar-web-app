@@ -125,8 +125,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			if (!isWalletInstalled)
 				return;
 			await wallet.connectToWallet();
-			const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
-			const balance = await wallet.getBalance(tokenAddress);
+			const balance = await wallet.getBalance(selectedSourceAsset as AssetInfo);
 			setWalletBalance(balance);
 		} else {
 			let wallet: KeplrWallet = new KeplrWallet(sourceChain?.chainName.toLowerCase() as "axelar" | "terra");
@@ -135,7 +134,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			if (!isWalletInstalled)
 				return;
 			await wallet.connectToWallet();
-			const balance: number = (await wallet.getBalance(selectedSourceAsset?.common_key as string));
+			const balance: number = (await wallet.getBalance(selectedSourceAsset as AssetInfo));
 			setWalletBalance(balance);
 		}
 	}

@@ -43,7 +43,10 @@ export class MetaMaskWallet implements WalletInterface {
 	private chainName: string;
 	private nodeServerUrl: string;
 
-	public constructor(chainName: string) {
+	public constructor(chainName?: string) {
+		console.log("instantiating Metamask");
+		if (!chainName)
+			chainName = "ethereum";
 		this.chainName = chainName;
 		this.nodeServerUrl = getConfigs(process.env.REACT_APP_STAGE as string).resourceUrl;
 		this.provider = new ethers.providers.Web3Provider(window.ethereum, "any"); //2nd param is network type
@@ -56,10 +59,17 @@ export class MetaMaskWallet implements WalletInterface {
 		return this.signer;
 	}
 
-	public isWalletInstalled(): Boolean {
+	public isWalletInstalled(): boolean {
 		const {ethereum} = window;
 		return Boolean(ethereum && ethereum.isMetaMask);
 	};
+
+	public isWalletConnected(chainName?: string): boolean {
+		if (!chainName) chainName = "ethereum";
+		const params: ChainParam = require(`config/wallet/evm/${process.env.REACT_APP_STAGE}.ts`).default[chainName];
+		// console.log("params",params.chainId,Number(params.chainId) === this.getCurrentNetworkId(),this.getCurrentNetworkId());
+		return Number(params.chainId) === this.getCurrentNetworkId();
+	}
 
 	public async connectToWallet() {
 
@@ -98,19 +108,19 @@ export class MetaMaskWallet implements WalletInterface {
 	}
 
 	public getCurrentNetworkId(): Number {
-		return Number(window.ethereum.networkVersion);
+		return Number(window.ethereum?.networkVersion);
 	}
 
-	public async switchChain(chainName: string) {
+	public async switchChain(chainName: string): Promise<boolean> {
 		this.chainName = chainName;
-		const params: ChainParam = require(`config/wallet/evm/${process.env.REACT_APP_STAGE}.ts`).default[this.chainName];
-		if (Number(params.chainId) !== this.getCurrentNetworkId())
+		if (!this.isWalletConnected(chainName))
 			await this.connectToWallet();
+		return true;
 	}
 
-	public async isWalletConnected(): Promise<boolean> {
-		return (await this.provider.send("eth_requestAccounts", []))?.length > 0;
-	}
+	// public async isWalletConnected(): Promise<boolean> {
+	// 	return (await this.provider.send("eth_requestAccounts", []))?.length > 0;
+	// }
 
 	public async getAddress(): Promise<string> {
 		await this.provider.send("eth_requestAccounts", []);
@@ -120,8 +130,9 @@ export class MetaMaskWallet implements WalletInterface {
 		return address;
 	}
 
-	public async getBalance(tokenContractAddress: string): Promise<number> {
+	public async getBalance(assetInfo: AssetInfo): Promise<number> {
 
+		const tokenContractAddress: string = await this.getOrFetchTokenAddress(assetInfo);
 		const signer = await this.getSigner().getAddress()
 		const contract: Contract = this.getEthersContract(tokenContractAddress);
 		const decimals = await contract.decimals();
@@ -213,7 +224,27 @@ export class MetaMaskWallet implements WalletInterface {
 	}
 
 	private getEthersContract(tokenAddress: string) {
+		console.log("token address", tokenAddress);
 		return new ethers.Contract(tokenAddress, erc20Abi, this.signer);
 	}
 
+	public establishAccountChangeListeners(): Promise<boolean> {
+		console.log("MetaMask wallet; NEED TO IMPLEMENT establishAccountChangeListeners");
+		window.addEventListener("click", this.eventListeners)
+		return new Promise((resolve) => resolve(true));
+	}
+
+	public eventListeners() {
+		console.log("i was clicked")
+	}
+
+	public removeAccountChangeListeners(): Promise<boolean> {
+		console.log("MetaMask wallet; NEED TO IMPLEMENT removeAccountChangeListeners");
+		window.removeEventListener("click", this.eventListeners)
+		return new Promise((resolve) => resolve(true));
+	}
+
+	public getCurrentNetwork() {
+		return "";
+	}
 }

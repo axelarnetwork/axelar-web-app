@@ -42,6 +42,7 @@ const ByText = styled.span`
 	align-items: flex-end;
 	padding-bottom: 10px;
 `;
+
 const ConnectWalletButton = styled(FlexRow)`
 	cursor: pointer;
 `;
@@ -69,10 +70,39 @@ const PageHeader = () => {
 			default:
 				return null;
 		}
-		return <div style={{color: (onAddedKeplr !== "error" ? "green" : "red"), fontSize: `smaller`, fontWeight: `bolder`, marginRight: `1em`}}>
+		return <div style={{
+			color: (onAddedKeplr !== "error" ? "green" : "red"),
+			fontSize: `smaller`,
+			fontWeight: `bolder`,
+			marginRight: `1em`
+		}}>
 			{text}
 		</div>
 	}
+// =======
+// const StyledConnectButton = styled(FlexColumn)`
+// 	background-color: navy;
+// 	box-sizing: border-box;
+// 	padding: 0.25em;
+// `;
+//
+// const PageHeader = () => {
+//
+// 	const [isMMWalletConnected, setIsMMWalletConnected] = useRecoilState(IsWalletConnected(METAMASK_WALLET));
+// 	const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useRecoilState(IsWalletConnected(KEPLR_WALLET));
+//
+// 	useEffect(() => {
+// 			setIsMMWalletConnected(getMetamaskWallet().isWalletConnected());
+// 			setIsKeplrWalletConnected(getKeplrWallet().isWalletConnected());
+// 		// console.log("is metamask connected",getMetamaskWallet().isWalletConnected());
+// 		// if (!getMetamaskWallet().isWalletConnected()) {
+// 		// 	console.log("is metamask connected",getMetamaskWallet().isWalletConnected());
+// 		// }
+// 		// if (!getKeplrWallet().isWalletConnected()) {
+// 		// }
+// 	}, [setIsMMWalletConnected, setIsKeplrWalletConnected]);
+//
+// >>>>>>> 87a18ff (chore: wip)
 	return (
 		<StyledPageHeader>
 			<HeaderText>
@@ -80,37 +110,46 @@ const PageHeader = () => {
 				<ByText>Powered by Axelar</ByText>
 			</HeaderText>
 			<FlexRow>
-				{ onAddedResult() }
+				{onAddedResult()}
 				{!hasTerraConnectedToKeplr && <>
-	                <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
-	                    <ConnectWalletButton onClick={async () => {
-	                        const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
-	                        console.log("text",connectWalletResult);
+                    <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
+                        <ConnectWalletButton onClick={async () => {
+							const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
+							console.log("text", connectWalletResult);
 							if (connectWalletResult !== "error") {
 								setHasTerraConnectedToKeplr(true);
 							}
 							setOnAddedKeplr(connectWalletResult);
 						}}>
-	                        <FlexColumn style={{alignItems: `flex-end`}}>
-	                            <div style={{fontWeight: "bolder"}}>Need Terra on Keplr? Add it here!</div>
-	                            <div style={{fontStyle: "italic", fontSize: "0.75em"}}>(Required for UST/Luna transfers from
-	                                Terra)
-	                            </div>
-	                        </FlexColumn>
-	                        <SVGImage
-	                            height={`1.25em`}
-	                            width={`1.25em`}
-	                            margin={`0px 0em 0px 0.75em`}
-	                            src={require(`resources/keplr.svg`).default}
-	                        />
-	                    </ConnectWalletButton>
-	                </div>
-	            </>}
+                            <FlexColumn style={{alignItems: `flex-end`}}>
+                                <div style={{fontWeight: "bolder"}}>Need Terra on Keplr? Add it here!</div>
+                                <div style={{fontStyle: "italic", fontSize: "0.75em"}}>(Required for UST/Luna transfers
+                                    from
+                                    Terra)
+                                </div>
+                            </FlexColumn>
+                            <SVGImage
+                                height={`1.25em`}
+                                width={`1.25em`}
+                                margin={`0px 0em 0px 0.75em`}
+                                src={require(`resources/keplr.svg`).default}
+                            />
+                        </ConnectWalletButton>
+                    </div>
+                </>}
 				{HeaderDivider()}
 				<div style={{color: `green`, fontSize: `smaller`, fontWeight: `bolder`}}>
 					{(process.env.REACT_APP_STAGE || "").toUpperCase()}
 				</div>
 				{HeaderDivider()}
+				{/*=======*/}
+				{/*			<FlexRow style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder`, marginRight: `2em`}}>*/}
+				{/*				{(process.env.REACT_APP_STAGE || "").toUpperCase()}*/}
+				{/*				<StyledConnectButton>*/}
+				{/*					<div>{isMMWalletConnected ? "MM Connected: " : "Connect MM!"}</div>*/}
+				{/*					<div>{isKeplrWalletConnected ? "Keplr Connected" : "Connect Keplr"}</div>*/}
+				{/*				</StyledConnectButton>*/}
+				{/*>>>>>>> 87a18ff (chore: wip)*/}
 			</FlexRow>
 		</StyledPageHeader>
 	);

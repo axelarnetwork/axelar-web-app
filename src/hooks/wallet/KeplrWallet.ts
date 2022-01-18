@@ -1,4 +1,4 @@
-import {WalletInterface}               from "./WalletInterface";
+import {AssetInfo}                     from "@axelar-network/axelarjs-sdk";
 import {SigningStargateClient, StdFee} from "@cosmjs/stargate";
 import {OfflineSigner}                 from "@cosmjs/launchpad";
 import {ethers}                        from "ethers";
@@ -7,6 +7,7 @@ import {ChainInfo}                     from "@keplr-wallet/types";
 import Long                            from "long";
 import {Height}                        from "cosmjs-types/ibc/core/client/v1/client";
 import {KeplrWalletChainConfig}        from "config/wallet/axelarnet/interface";
+import {WalletInterface}               from "./WalletInterface";
 
 declare const window: Window &
 	typeof globalThis & {
@@ -20,14 +21,16 @@ export class KeplrWallet implements WalletInterface {
 	public CHAIN_INFO: ChainInfo;
 	public CONFIG_FOR_CHAIN: KeplrWalletChainConfig;
 
-	public constructor(chainName: "axelar" | "terra") {
+	public constructor(chainName?: "axelar" | "terra") {
+		console.log("instantiating Keplr");
+		if (!chainName) chainName = "axelar";
 		const configs = require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default;
 		const configForChain = configs[chainName];
 		this.CHAIN_ID = configForChain?.chainId;
 		this.RPC_ENDPOINT = configForChain?.rpcEndpoint;
 		this.CHAIN_INFO = configForChain?.chainInfo;
 		this.CONFIG_FOR_CHAIN = configForChain;
-		console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
+		console.log(process.env.REACT_APP_STAGE, this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
 
 		// this.connectToWallet();
 		// window.addEventListener("keplr_keystorechange", () => {
@@ -38,6 +41,13 @@ export class KeplrWallet implements WalletInterface {
 
 	public isWalletInstalled(): boolean {
 		return !!window.keplr;
+	}
+
+	public isWalletConnected(chainName?: string): boolean {
+		if (!chainName) chainName = "axelar";
+		const configs = require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default;
+		const configForChain = configs[chainName];
+		return this.isWalletInstalled() && this.CHAIN_ID === configForChain?.chainId;
 	}
 
 	public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
@@ -79,7 +89,8 @@ export class KeplrWallet implements WalletInterface {
 		return account.address;
 	}
 
-	public async getBalance(denom: string): Promise<number> {
+	public async getBalance(assetInfo: AssetInfo): Promise<number> {
+		const denom: string = assetInfo.common_key as string;
 		const cosmjs = await this.getSigningClient();
 		const balanceResponse: Coin = await cosmjs.getBalance(await this.getAddress(), denom);
 		const balance = ethers.utils.formatUnits(balanceResponse.amount, 6);
@@ -96,9 +107,26 @@ export class KeplrWallet implements WalletInterface {
 		return cosmjs;
 	}
 
-	public async switchChain(chainId: string) {
-		this.CHAIN_ID = chainId;
+	public updateChainConfigs(chainName: string): void {
+		const configs = require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default;
+		const configForChain = configs[chainName];
+		this.CHAIN_ID = configForChain?.chainId;
+		this.RPC_ENDPOINT = configForChain?.rpcEndpoint;
+		this.CHAIN_INFO = configForChain?.chainInfo;
+		this.CONFIG_FOR_CHAIN = configForChain;
+		console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
+	}
+	public async switchChain(chainName: string): Promise<boolean> {
+		this.updateChainConfigs(chainName);
+		// const configs = require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default;
+		// const configForChain = configs[chainName];
+		// this.CHAIN_ID = configForChain?.chainId;
+		// this.RPC_ENDPOINT = configForChain?.rpcEndpoint;
+		// this.CHAIN_INFO = configForChain?.chainInfo;
+		// this.CONFIG_FOR_CHAIN = configForChain;
+		// console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
 		await this.connectToWallet();
+		return true;
 	}
 
 	public async transferTokens(depositAddress: string, amount: string): Promise<any> {
@@ -157,6 +185,20 @@ export class KeplrWallet implements WalletInterface {
 			throw new Error(err)
 		}
 
+	}
+
+	public establishAccountChangeListeners(): Promise<boolean> {
+		console.log("Keplr wallet; NEED TO IMPLEMENT establishAccountChangeListeners");
+		return new Promise((resolve) => resolve(true));
+	}
+
+	public removeAccountChangeListeners(): Promise<boolean> {
+		console.log("Keplr wallet; NEED TO IMPLEMENT removeAccountChangeListeners");
+		return new Promise((resolve) => resolve(true));
+	}
+
+	public getCurrentNetwork() {
+		return this.CHAIN_ID;
 	}
 
 }
