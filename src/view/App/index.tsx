@@ -31,7 +31,6 @@ const App = () => {
 			initiateRecaptcha();
 	}, [isRecaptchaSet, initiateRecaptcha])
 
-	console.log("can light up???", canLightUp);
 	return (
 		<StyledAppContainer>
 			{canLightUp && showDisclaimer && <Disclaimer/>}

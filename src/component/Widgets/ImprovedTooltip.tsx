@@ -12,7 +12,6 @@ export const ImprovedTooltip = ({anchorContent, tooltipText, tooltipAltText}: IT
 	const [clicked, setClicked] = useState(false);
 
 	const updateTextToShow = useCallback(() => {
-		console.log("updating with onclick");
 		setClicked(true)
 		setTimeout(() => setClicked(false), 2000);
 	}, [setClicked]);
