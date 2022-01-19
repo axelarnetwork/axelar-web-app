@@ -85,10 +85,10 @@ const FAQPage = () => {
             </StyledHeader>
             <FAQSection>
                 <h2>Helpful Links</h2>
-                <NewLink text={"Discord Support Channel"}
-                         onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
+                <NewLink text={"Discord Support Channel"} onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
+                <NewLink text={"Mainnet EVM Token Contracts "} onClick={() => window.open('https://github.com/axelarnetwork/validators/blob/main/resources/mainnet-releases.md', '_blank')}/>
                 <NewLink text={"Terms of Use"} onClick={() => setShowDisclaimer(true)}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
