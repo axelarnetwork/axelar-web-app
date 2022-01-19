@@ -12,7 +12,7 @@ import {FlexRow}                                                        from "co
 import {ImprovedTooltip}                                                from "component/Widgets/ImprovedTooltip";
 import {SVGImage}                                                       from "component/Widgets/SVGImage";
 import {Nullable}                                                       from "interface/Nullable";
-import {ChainSelection, SourceAsset}                                    from "state/ChainSelection";
+import {ChainSelection, DestinationAddress, SourceAsset}                from "state/ChainSelection";
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {getShortenedWord}                                               from "utils/wordShortener";
 import BigNumber                                                        from "decimal.js";
@@ -114,6 +114,7 @@ const StatusList = (props: IStatusListProps) => {
 	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
+	const destinationAddress = useRecoilValue(DestinationAddress);
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const sourceNumConfirmations = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
@@ -139,7 +140,7 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
-			text={`Generating a one-time deposit address`}
+			text={`Generating a one-time deposit address for recipient: ${getShortenedWord(destinationAddress as string, 10)}`}
 		/>
 		<ListItem
 			className={"joyride-status-step-2"}
@@ -164,7 +165,7 @@ const StatusList = (props: IStatusListProps) => {
 							/>
 					</div>
 					<FlexRow style={{ height: `1.5em`, width: `100%`, justifyContent: `space-between` }}>
-						<div>OR send via <WalletLogo />{sourceChain?.module === "evm" ? "etaMask" : "epler"}!{" "}</div>
+						<div>OR send via {sourceChain?.module === "evm" ? "MetaMask" : "Kepler"}!{" "}</div>
 						{!props.isWalletConnected
 							? <HelperWidget onClick={props.connectToWallet}>Connect <WalletLogo/></HelperWidget>
 							: null}
@@ -178,9 +179,8 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div>Confirmed your <BoldSpan>{amountConfirmedAdjusted}{sourceAsset?.assetSymbol}</BoldSpan> deposit. We
-						will broadcast <BoldSpan>{afterFees}{sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2}min.
-						You may exit this window if you wish.</div>
+					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit confirmed.</div>
+					<div><BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> broadcasted to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} minutes.</div>
 				</div>
 				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}
