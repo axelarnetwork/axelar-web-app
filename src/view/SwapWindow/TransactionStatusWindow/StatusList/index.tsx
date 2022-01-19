@@ -181,11 +181,11 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit
+					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(2)} {sourceAsset?.assetSymbol}</BoldSpan> deposit
 						confirmed. Sending
 					</div>
 					<div>
-						<BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within
+						<BoldSpan>{+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within
 						the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.
 					</div>
 				</div>
