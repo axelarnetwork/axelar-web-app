@@ -144,7 +144,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
 		<SearchComponent
 			show={showAssetSearchBox}
 			allItems={initialAssetList
-			.filter((asset:  AssetInfo) => process.env.REACT_APP_STAGE === "mainnet" ? asset.fullySupported : true)
+			.filter((asset: AssetInfo) => process.env.REACT_APP_STAGE === "mainnet" ? asset.fullySupported : true)
 			.map((asset: AssetInfo) => {
 				return {
 					title: asset.assetName as string,

@@ -7,7 +7,7 @@ import CopyToClipboard                            from "component/Widgets/CopyTo
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
 import {SVGImage}                                 from "component/Widgets/SVGImage";
-import {ShowLargeDisclaimer}                      from "state/ApplicationStatus";
+import {ShowDisclaimer}                           from "state/ApplicationStatus";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -68,7 +68,7 @@ const ContactUsSection = styled(FAQSection)`
 
 const FAQPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
-	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
+	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [showFAQ, setShowFAQ] = useState(false);
 
@@ -85,14 +85,17 @@ const FAQPage = () => {
             </StyledHeader>
             <FAQSection>
                 <h2>Helpful Links</h2>
-                <NewLink text={"Discord Support Channel"} onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
+                <NewLink text={"Discord Support Channel"}
+                         onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
-                <NewLink text={"Terms of Use"} onClick={() => setShowLargeDisclaimer(true)}/>
+                <NewLink text={"Terms of Use"} onClick={() => setShowDisclaimer(true)}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
                 <h2>Issues with a live transaction?</h2>
-                <div style={{marginBottom: `5px`}}>Reach out on Discord in the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:</div>
+                <div style={{marginBottom: `5px`}}>Reach out on Discord in
+                    the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:
+                </div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>

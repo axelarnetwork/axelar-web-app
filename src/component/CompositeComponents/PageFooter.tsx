@@ -1,5 +1,5 @@
-import styled     from "styled-components";
-import Container  from "../StyleComponents/Container";
+import styled    from "styled-components";
+import Container from "../StyleComponents/Container";
 
 const StyledPageFooter = styled(Container)`
 	position: fixed;
@@ -18,7 +18,8 @@ const StyledPageFooter = styled(Container)`
 
 const PageFooter = () => {
 	return (<StyledPageFooter>
-		<div style={{ marginLeft: `1em`}}><img src={require(`resources/axelar-logo-horizontal-white.svg`)?.default} alt="" /></div>
+		<div style={{marginLeft: `1em`}}><img src={require(`resources/axelar-logo-horizontal-white.svg`)?.default}
+		                                      alt=""/></div>
 		<span>This site is protected by reCAPTCHA, and the Google{" "}
 			<a href="https://policies.google.com/privacy" style={{color: `lightgrey`}} target={"_blank"}
 			   rel="noreferrer">

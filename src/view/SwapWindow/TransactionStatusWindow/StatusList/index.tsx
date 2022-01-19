@@ -16,6 +16,7 @@ import {ChainSelection, DestinationAddress, SourceAsset}                from "st
 import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {getShortenedWord}                                               from "utils/wordShortener";
 import BigNumber                                                        from "decimal.js";
+
 const StyledStatusList = styled.div`
     width: 100%;
     height: 65%;
@@ -140,7 +141,8 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
-			text={<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 10)}</BoldSpan>.</span>}
+			text={
+				<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 10)}</BoldSpan>.</span>}
 		/>
 		<ListItem
 			className={"joyride-status-step-2"}
@@ -162,9 +164,9 @@ const StatusList = (props: IStatusListProps) => {
 							/>}
 							tooltipText={"Copy to Clipboard"}
 							tooltipAltText={"Copied to Clipboard!"}
-							/>
+						/>
 					</div>
-					<FlexRow style={{ height: `1.5em`, width: `100%`, justifyContent: `space-between` }}>
+					<FlexRow style={{height: `1.5em`, width: `100%`, justifyContent: `space-between`}}>
 						<div>OR send via {sourceChain?.module === "evm" ? "MetaMask" : "Kepler"}!{" "}</div>
 						{!props.isWalletConnected
 							? <HelperWidget onClick={props.connectToWallet}>Connect <WalletLogo/></HelperWidget>
@@ -179,8 +181,13 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit confirmed. Sending</div>
-					<div><BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.</div>
+					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit
+						confirmed. Sending
+					</div>
+					<div>
+						<BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within
+						the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.
+					</div>
 				</div>
 				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}

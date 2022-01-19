@@ -44,7 +44,7 @@ const PageHeader = () => {
 				<HeaderImage>Satellite</HeaderImage>
 				<ByText>Powered by Axelar</ByText>
 			</HeaderText>
-			<FlexColumn style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder`, marginRight: `2em`}}>
+			<FlexColumn style={{color: `green`, fontSize: `smaller`, fontWeight: `bolder`, marginRight: `2em`}}>
 				{(process.env.REACT_APP_STAGE || "").toUpperCase()}
 			</FlexColumn>
 		</StyledPageHeader>

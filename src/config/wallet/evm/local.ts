@@ -1,4 +1,4 @@
-import { ethereum, avalanche, fantom, moonbeam, polygon } from "./testnet";
+import {avalanche, ethereum, fantom, moonbeam, polygon} from "./testnet";
 
 const exported = {
 	ethereum,

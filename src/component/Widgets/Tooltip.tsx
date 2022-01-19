@@ -31,6 +31,7 @@ const TooltipText = styled.div`
 export interface ITooltipProps extends ThemedStyledProps<any, any> {
 	margin: string;
 }
+
 const TooltipContainer = styled.div<ITooltipProps>`
 	position: relative;
 	background-color: transparent;

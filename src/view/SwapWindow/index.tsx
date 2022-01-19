@@ -10,14 +10,13 @@ import {animateStyles}                                          from "component/
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
 import useRecaptchaAuthenticate                                 from "hooks/auth/useRecaptchaAuthenticate";
-import {DisclaimerAgreed, ShowRecaptchaV2Retry}                 from "state/ApplicationStatus";
+import {ShowRecaptchaV2Retry}                                   from "state/ApplicationStatus";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
 import TransactionStatusWindow                                  from "./TransactionStatusWindow";
 import FAQPage                                                  from "../FAQPage";
-import {TinyDisclaimer}                                         from "../Disclaimer";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -102,7 +101,6 @@ const SwapWindow = (): ReactElement => {
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isValidDestinationAddr = useRecoilValue(IsValidDestinationAddress);
-	const isDisclaimerAgreed = useRecoilValue(DisclaimerAgreed);
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -132,7 +130,6 @@ const SwapWindow = (): ReactElement => {
 							                           closeResultsScreen={closeResultsScreen}/>
 						}
 					</StyledContainer>
-					{canLightUp && !isDisclaimerAgreed && <TinyDisclaimer/>}
 				</div>
 			</CSSTransition>
 		</SwitchTransition>

@@ -1,5 +1,5 @@
 // import {useRecoilValue}                          from "recoil";
-import styled                                    from "styled-components";
+import styled from "styled-components";
 // import BigNumber                                 from "decimal.js";
 // import BoldSpan                                  from "component/StyleComponents/BoldSpan";
 // import {FlexRow}                                 from "component/StyleComponents/FlexRow";

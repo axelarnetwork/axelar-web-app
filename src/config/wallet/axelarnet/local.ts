@@ -1,4 +1,4 @@
-import { axelar, terra } from "./testnet";
+import {axelar, terra} from "./testnet";
 
 const exported = {
 	axelar,

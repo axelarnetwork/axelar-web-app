@@ -13,21 +13,21 @@ const terraMainnetConfigs: ChainInfo = {
 	rest: TERRA_REST + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
 	chainId: TERRA_CHAIN_ID,
 	chainName: "Terra",
-	stakeCurrency: { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
+	stakeCurrency: {coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
 	bip44: {
 		coinType: 330,
 	},
 	bech32Config: Bech32Address.defaultBech32Config("terra"),
 	currencies: [
-		{ coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna", },
-		{ coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd",},
-		{ coinDenom: "KRT", coinMinimalDenom: "ukrw", coinDecimals: 6, coinGeckoId: "terrakrw",},
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
+		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd",},
+		{coinDenom: "KRT", coinMinimalDenom: "ukrw", coinDecimals: 6, coinGeckoId: "terrakrw",},
 	],
 	feeCurrencies: [
-		{ coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
-		{ coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd", },
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
+		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd",},
 	],
-	gasPriceStep: { low: 0.015, average: 0.015, high: 0.015 },
+	gasPriceStep: {low: 0.015, average: 0.015, high: 0.015},
 	features: ["stargate", "ibc-transfer", "no-legacy-stdTx"]
 }
 
@@ -43,18 +43,18 @@ const axelarChainInfo: ChainInfo = {
 	rest: AXELAR_REST,
 	chainId: AXELAR_CHAIN_ID,
 	chainName: "Axelar",
-	stakeCurrency: { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
+	stakeCurrency: {coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6},
 	bech32Config: Bech32Address.defaultBech32Config("axelar"),
 	bip44: {
 		coinType: 118
 	},
 	currencies: [
-		{ coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 }
+		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
 	],
 	feeCurrencies: [
-		{ coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
+		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
 	],
-	gasPriceStep: { low: 0.05, average: 0.125, high: 0.2 },
+	gasPriceStep: {low: 0.05, average: 0.125, high: 0.2},
 	features: ["stargate", "no-legacy-stdTx", "ibc-transfer"]
 };
 

@@ -13,18 +13,18 @@ const terraChainInfo: ChainInfo = {
 	rest: TERRA_REST + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
 	chainId: TERRA_CHAIN_ID,
 	chainName: "Terra Bombay-12",
-	stakeCurrency: { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
+	stakeCurrency: {coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6},
 	bech32Config: Bech32Address.defaultBech32Config("terra"),
 	walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
-	bip44: { coinType: 330 },
+	bip44: {coinType: 330},
 	currencies: [
-		{ coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
-		{ coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6 }
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6},
+		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6}
 	],
 	feeCurrencies: [
-		{ coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 }
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6}
 	],
-	gasPriceStep: { low: 0.05, average: 0.125, high: 0.2 },
+	gasPriceStep: {low: 0.05, average: 0.125, high: 0.2},
 	features: ["stargate", "no-legacy-stdTx", "ibc-transfer"]
 };
 
@@ -39,18 +39,18 @@ const axelarChainInfo: ChainInfo = {
 	rest: AXELAR_REST,
 	chainId: AXELAR_CHAIN_ID,
 	chainName: "Axelar Lisbon-2",
-	stakeCurrency: { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
+	stakeCurrency: {coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6},
 	bech32Config: Bech32Address.defaultBech32Config("axelar"),
 	bip44: {
 		coinType: 118
 	},
 	currencies: [
-		{ coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 }
+		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
 	],
 	feeCurrencies: [
-		{ coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
+		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
 	],
-	gasPriceStep: { low: 0.05, average: 0.125, high: 0.2 },
+	gasPriceStep: {low: 0.05, average: 0.125, high: 0.2},
 	features: ["stargate", "no-legacy-stdTx", "ibc-transfer"]
 };
 export const axelar: KeplrWalletChainConfig = {

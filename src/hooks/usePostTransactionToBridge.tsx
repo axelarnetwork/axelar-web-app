@@ -5,17 +5,21 @@ This component makes the API call to the SDK
 import {useCallback, useMemo}                              from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {v4 as uuidv4}                                      from 'uuid';
-import { AssetInfo, AssetInfoWithTrace, AssetTransferObject, ChainInfo
-} from "@axelar-network/axelarjs-sdk";
+import {
+	AssetInfo, AssetInfoWithTrace, AssetTransferObject, ChainInfo
+}                                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                         from "api/TransferAssetBridgeFacade";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
-import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
-}                               from "state/TransactionStatus";
-import NotificationHandler      from "utils/NotificationHandler";
-import useRecaptchaAuthenticate from "./auth/useRecaptchaAuthenticate";
+import {
+	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
+}                                                          from "state/TransactionStatus";
+import NotificationHandler                                 from "utils/NotificationHandler";
+import useRecaptchaAuthenticate                            from "./auth/useRecaptchaAuthenticate";
 import {depositConfirmCbMap}                               from "./helper";
-import {ShowRecaptchaV2Retry, ShowTransactionStatusWindow} from "../state/ApplicationStatus";
+import {
+	ShowRecaptchaV2Retry, ShowTransactionStatusWindow
+}                                                          from "../state/ApplicationStatus";
 
 export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
@@ -58,7 +62,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 		recaptchaToken: null,
 		recaptchaVersion: "v3",
 		transactionTraceId: ""
-	}),[destinationAddress, destinationChain, sourceAsset, sourceChain]);
+	}), [destinationAddress, destinationChain, sourceAsset, sourceChain]);
 
 	const postRequest = useCallback(async (traceId: string, recaptchaToken: string, attemptNumber: number, useLegacyRecaptcha: boolean) => {
 		try {
@@ -89,7 +93,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 		}
 	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowRecaptchaV2Retry, setShowTransactionStatusWindow, setSourceNumConfirmations]);
 
-	const handleTransactionSubmission = useCallback( (attemptNumber: number) => {
+	const handleTransactionSubmission = useCallback((attemptNumber: number) => {
 
 		let traceId: string = msg.transactionTraceId || uuidv4();
 		if (attemptNumber === 1) {
@@ -116,7 +120,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 				} catch (e: any) {
 					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
 						from this site - your request didn't even hit our servers`;
-					notificationHandler.notifyError({ statusCode: 403, message: msg });
+					notificationHandler.notifyError({statusCode: 403, message: msg});
 					throw new Error(msg + e);
 				}
 
@@ -127,13 +131,15 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
-					if (!e.traceId) { e.traceId = traceId}
+					if (!e.traceId) {
+						e.traceId = traceId
+					}
 					reject(e);
 					throw new Error(e);
 				}
 			} catch (err: any) {
 				//todo log recpatcha v3 error
-				console.log("recaptcha error from frontend",err);
+				console.log("recaptcha error from frontend", err);
 			}
 
 		})

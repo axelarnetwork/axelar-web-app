@@ -1,5 +1,5 @@
-import styled, {ThemedStyledProps}  from "styled-components";
-import React, {useEffect, useState} from "react";
+import styled, {ThemedStyledProps}                                                       from "styled-components";
+import React, {useEffect, useState}                                                      from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -10,7 +10,7 @@ import {FlexRow}                                                                
 import useResetAllState                                                                  from "hooks/useResetAllState";
 import {MetaMaskWallet}                                                                  from "hooks/wallet/MetaMaskWallet";
 import {KeplrWallet}                                                                     from "hooks/wallet/KeplrWallet";
-import {MessageShownInCartoon}                                                           from "state/ApplicationStatus";
+import {MessageShownInCartoon, ShowDisclaimer, ShowLargeDisclaimer}                      from "state/ApplicationStatus";
 import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection, SourceAsset}                                                     from "state/ChainSelection";
 import StyledButtonContainer
@@ -30,6 +30,7 @@ interface ITransactionStatusWindowProps {
 interface IStyledDivProps extends ThemedStyledProps<any, any> {
 	appear?: any;
 }
+
 const StyledHelperComponent = styled.div<IStyledDivProps>`
     position: absolute;
     z-index: 15;
@@ -50,6 +51,9 @@ const StyledHelperComponent = styled.div<IStyledDivProps>`
         margin-top: 0.75em;
         font-size: 1.1em;
         top: 0px;
+	}
+    @media ${screenConfigs.media.laptop} {
+        margin-top: 0.5em;
 	}
 `;
 
@@ -105,6 +109,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [isWalletConnected, setIsWalletConnected] = useState(false);
 	const [walletBalance, setWalletBalance] = useState(0);
+	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
+	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
+
+	useEffect(() => {
+		setShowDisclaimer(false);
+		setShowLargeDisclaimer(true);
+	}, [setShowDisclaimer, setShowLargeDisclaimer])
 
 	const connectToWallet = async () => {
 		if (sourceChain?.module === "evm") {
@@ -148,7 +159,8 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>);
+				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected}
+				                                      walletBalance={walletBalance}/>);
 				break;
 			default:
 				setActiveStep(1);

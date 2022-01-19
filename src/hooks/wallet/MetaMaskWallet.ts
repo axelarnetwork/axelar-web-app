@@ -114,7 +114,7 @@ export class MetaMaskWallet implements WalletInterface {
 		await this.provider.send("eth_requestAccounts", []);
 		this.signer = await this.provider.getSigner();
 		const address = await this.signer.getAddress();
-		console.log("address",address);
+		console.log("address", address);
 		return address;
 	}
 

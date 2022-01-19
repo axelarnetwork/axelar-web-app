@@ -96,7 +96,7 @@ const routesWithCSSTransition = <BrowserRouter>
 </BrowserRouter>;
 
 const theme = {
-	headerBackgroundColor: `rgba(0,0,0,0.82)`
+	headerBackgroundColor: `rgba(0, 0, 0, 0.82)`
 };
 
 ReactDOM.render(
