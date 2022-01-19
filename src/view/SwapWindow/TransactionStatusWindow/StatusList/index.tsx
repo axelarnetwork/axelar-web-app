@@ -140,7 +140,7 @@ const StatusList = (props: IStatusListProps) => {
 		<ListItem
 			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
-			text={`Generating a one-time deposit address for recipient: ${getShortenedWord(destinationAddress as string, 10)}`}
+			text={<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 10)}</BoldSpan>.</span>}
 		/>
 		<ListItem
 			className={"joyride-status-step-2"}
@@ -179,8 +179,8 @@ const StatusList = (props: IStatusListProps) => {
 			step={3} activeStep={activeStep}
 			text={activeStep >= 3
 				? <div>
-					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit confirmed.</div>
-					<div><BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> broadcasted to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} minutes.</div>
+					<div><BoldSpan>{+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> deposit confirmed. Sending</div>
+					<div><BoldSpan>{+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.</div>
 				</div>
 				: `Confirming your deposit on ${sourceChain?.chainName}.`
 			}

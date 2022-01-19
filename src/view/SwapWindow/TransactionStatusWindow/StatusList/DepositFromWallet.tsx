@@ -54,7 +54,7 @@ export const DepositFromWallet = ({
 		if (results.txHash && results.blockNumber) {
 			setSentSuccess(true);
 			setTxHash(results.txHash);
-			const confirmInterval: number = sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 5;
+			const confirmInterval: number = sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2;
 			wallet.confirmEtherTransaction(
 				results.txHash,
 				sourceChainSelection?.confirmLevel as number,
