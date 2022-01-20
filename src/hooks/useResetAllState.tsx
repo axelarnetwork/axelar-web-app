@@ -1,7 +1,9 @@
 import {useResetRecoilState}                   from "recoil";
 import {ActiveStep, TransactionTraceId}        from "state/TransactionStatus";
 import useResetUserInputs                                           from "./useResetUserInputs";
-import {MessageShownInCartoon, ShowDisclaimer, ShowLargeDisclaimer} from "../state/ApplicationStatus";
+import {
+	MessageShownInCartoon, ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer
+} from "../state/ApplicationStatus";
 
 const useResetAllState = () => {
 	const resetTransactionTraceId = useResetRecoilState(TransactionTraceId);
@@ -10,7 +12,7 @@ const useResetAllState = () => {
 	const resetUserInputs = useResetUserInputs();
 	const resetDisclaimerToggle = useResetRecoilState(ShowDisclaimer);
 	const resetShowLargeDisclaimerToggle = useResetRecoilState(ShowLargeDisclaimer);
-
+	const resetShowFAQDisclaimer = useResetRecoilState(ShowDisclaimerFromFAQ);
 	return () => {
 		resetUserInputs();
 		resetCartoonMessage();
@@ -18,6 +20,7 @@ const useResetAllState = () => {
 		resetActiveSteps();
 		resetDisclaimerToggle();
 		resetShowLargeDisclaimerToggle();
+		resetShowFAQDisclaimer();
 	}
 }
 

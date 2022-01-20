@@ -6,11 +6,11 @@ import PageFooter                                               from "component/
 import WalkThrough                                              from "component/CompositeComponents/Walkthrough";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/consts";
 import useLoadRecaptcha                                         from "hooks/auth/useLoadRecaptcha";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ}                  from "state/ApplicationStatus";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import {StyledAppContainer}                                     from "view/App/styles/StyledAppContainer";
 import SwapWindow                                               from "view/SwapWindow";
 import Disclaimer                                               from "../Disclaimer";
-import {ShowDisclaimer}                                         from "../../state/ApplicationStatus";
 
 const App = () => {
 
@@ -20,6 +20,7 @@ const App = () => {
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const isValidDestinationAddr = useRecoilValue(IsValidDestinationAddress);
 	const showDisclaimer = useRecoilValue(ShowDisclaimer);
+	const showDisclaimerForFAQ = useRecoilValue(ShowDisclaimerFromFAQ);
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -33,7 +34,7 @@ const App = () => {
 
 	return (
 		<StyledAppContainer>
-			{canLightUp && showDisclaimer && <Disclaimer/>}
+			{(showDisclaimerForFAQ || canLightUp) && showDisclaimer && <Disclaimer/>}
 			<WalkThrough/>
 			<InfoWidget/>
 			<PageHeader/>

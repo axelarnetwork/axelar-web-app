@@ -18,6 +18,10 @@ export const ShowLargeDisclaimer = atom<boolean>({
 	key: "ShowLargeDisclaimer",
 	default: false,
 });
+export const ShowDisclaimerFromFAQ = atom<boolean>({
+	key: "ShowDisclaimerFromFAQ",
+	default: false,
+});
 
 export const DismissWalkThrough = atom<boolean>({
 	key: "DismissWalkThrough",

@@ -6,8 +6,8 @@ import Tooltip                                    from "component/Widgets/Toolti
 import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
 import BoldSpan                                   from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                  from "component/StyleComponents/FlexRow";
-import {SVGImage}                                 from "component/Widgets/SVGImage";
-import {ShowDisclaimer}                           from "state/ApplicationStatus";
+import {SVGImage}                                                   from "component/Widgets/SVGImage";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -69,6 +69,8 @@ const ContactUsSection = styled(FAQSection)`
 const FAQPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
+	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
+	const setShowDisclaimerFromFAQ = useSetRecoilState(ShowDisclaimerFromFAQ);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [showFAQ, setShowFAQ] = useState(false);
 
@@ -89,7 +91,12 @@ const FAQPage = () => {
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
                 <NewLink text={"Mainnet EVM Token Contracts "} onClick={() => window.open('https://github.com/axelarnetwork/validators/blob/main/resources/mainnet-releases.md', '_blank')}/>
-                <NewLink text={"Terms of Use"} onClick={() => setShowDisclaimer(true)}/>
+                <NewLink text={"Terms of Use"} onClick={() => {
+	                setShowDisclaimer(true);
+	                setShowLargeDisclaimer(true);
+	                setShowDisclaimerFromFAQ(true);
+
+                }}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
                 <h2>Issues with a live transaction?</h2>
