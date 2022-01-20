@@ -1,25 +1,10 @@
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import styled, {ThemedStyledProps}                         from "styled-components";
+import styled                                              from "styled-components";
 import {ShowDisclaimer, ShowLargeDisclaimer}               from "state/ApplicationStatus";
 import textLines                                           from "./disclaimerText";
-import {StyledCentered}                                    from "component/StyleComponents/Centered";
 import {StyledButton}                                      from "component/StyleComponents/StyledButton";
-
-const StyledLargeDisclaimerPage = styled.div`
-	width: 80vw;
-	height: 80vh;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	background: rgba(255,255,255,0.97);
-	box-sizing: border-box;
-	padding: 3em;
-	font-size: small;
-	overflow-y: scroll;
-	box-shadow: 3.5px 7.0px 7.0px hsl(0deg 0% 0% / 0.39);
-	border-radius: 10px;
-	z-index: 10000;
-`;
+import {StyledLargePopupPage}                              from "component/StyleComponents/StyledLargePopupPage";
+import {Mask}                                              from "component/Widgets/Mask";
 
 const TextSection = styled.div`
 	width: 100%;
@@ -36,17 +21,6 @@ const Text = styled.div`
 	margin-top: 1em;
 `;
 
-export interface IMaskProps extends ThemedStyledProps<any, any> {
-	centered: boolean;
-}
-
-const Mask = styled.div<IMaskProps>`
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	${props => props.centered ? `${StyledCentered}` : null}
-`;
-
 const Disclaimer = () => {
 	const showLargeDisclaimer = useRecoilValue(ShowLargeDisclaimer);
 
@@ -54,14 +28,17 @@ const Disclaimer = () => {
 		? <LargeDisclaimer/>
 		: <TinyDisclaimer/>
 }
-const LargeDisclaimer = () => {
+interface LargeDisclaimerProps {
+	onClose?: () => void;
+}
+export const LargeDisclaimer = ({ onClose}: LargeDisclaimerProps) => {
 	const [showLargeDisclaimer, setShowLargeDisclaimer] = useRecoilState(ShowLargeDisclaimer);
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 
 	if (!showLargeDisclaimer)
 		return null;
 
-	return <Mask centered={true}><StyledLargeDisclaimerPage>
+	return <Mask centered={true}><StyledLargePopupPage>
 		<h1>Terms of Use</h1>
 		<TextSection>
 			{textLines.map((text: string, key: number) => <Text key={`disclaimer-${key}`}>{text}</Text>)}
@@ -70,11 +47,12 @@ const LargeDisclaimer = () => {
 		<DisclaimerAgreeButton setDisclaimerAgreed={() => {
 			setShowLargeDisclaimer(false);
 			setShowDisclaimer(false);
+			onClose && onClose();
 		}}
-		                       text={"Close"}
+            text={"Close"}
 		/>
 
-	</StyledLargeDisclaimerPage></Mask>;
+	</StyledLargePopupPage></Mask>;
 }
 const StyledTinyDisclaimer = styled.div`
 	position: absolute;

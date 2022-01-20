@@ -13,7 +13,7 @@ import {HideGrecaptchaBadge}              from "component/StyleComponents/HideGr
 import screenConfigs                      from "config/screenConfigs";
 import backgroundImage                    from "resources/bg-image.svg";
 import Info                               from "view/Debug";
-import Login                              from "view/Login";
+import Landing                            from "view/Landing";
 import App                                from 'view/App';
 import 'react-notifications-component/dist/theme.css';
 import './index.css';
@@ -85,7 +85,7 @@ const routes = (props: any) => <TransitionGroup>
 		<Switch>
 			<ProtectedRoute exact path="/" component={App}/>
 			<ProtectedRoute exact path="/app" component={App}/>
-			<Route exact path="/login" component={Login}/>
+			<Route exact path="/landing" component={Landing}/>
 			<ProtectedRoute exact path="/debug" component={Info}/>
 		</Switch>
 	</CSSTransition>

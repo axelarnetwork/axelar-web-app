@@ -1,13 +1,13 @@
-import React, {useRef}  from "react";
-import {useRecoilState} from "recoil";
-import {Redirect}       from "react-router-dom";
-import styled           from "styled-components";
-import {slamKeyframe}   from "component/StyleComponents/animations/slamKeyframe";
-import {StyledButton}   from "component/StyleComponents/StyledButton";
-import usePasswordInput from "hooks/usePasswordInput";
-import backgroundImage  from "resources/globe.svg";
-import {IsLoggedIn}     from "state/ApplicationStatus";
-import disintegrate     from "./animation";
+import React, {useRef, useState} from "react";
+import {useRecoilState}          from "recoil";
+import {Redirect}                from "react-router-dom";
+import styled                    from "styled-components";
+import {slamKeyframe}            from "component/StyleComponents/animations/slamKeyframe";
+import {StyledButton}            from "component/StyleComponents/StyledButton";
+import usePasswordInput          from "hooks/usePasswordInput";
+import backgroundImage           from "resources/globe.svg";
+import {IsLoggedIn}              from "state/ApplicationStatus";
+import disintegrate              from "./animation";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -46,10 +46,12 @@ const SlaminDiv = styled(StyledImage)`
     margin-left: 20px;
 `;
 
-const Login = () => {
+const Landing = () => {
 
 	const imageRef = useRef(null);
 	const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
+	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
+
 	const onClick = () => {
 		if (!(userPassword === process.env.REACT_APP_LOGIN_PASSWORD))
 			return;
@@ -58,18 +60,31 @@ const Login = () => {
 	}
 	const [userPassword, passwordComponent] = usePasswordInput({handleOnEnterPress: onClick});
 
-
-	return <>{isLoggedIn
-		? <Redirect to={"/"}/>
-		: <StyledLoginPage>
-			<LeftStyledLoginSection>
-				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
-				<br/>
+	const leftSection = () => {
+		console.log("under maintenance", typeof underMaintenance);
+		return underMaintenance === "true"
+			? <>
+				<h1>We'll be right back!</h1>
+				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
+					The network is currently under maintenance. Back online shortly.
+				</div>
+			</>
+			: <>
 				{React.cloneElement(passwordComponent, {handleOnEnterPress: onClick})}
 				<br/>
 				<div style={{width: `50%`}}>
 					<StyledButton onClick={onClick}>Enter</StyledButton>
 				</div>
+			</>
+	}
+
+	return <>{(isLoggedIn && (underMaintenance !== "true"))
+		? <Redirect to={"/"}/>
+		: <StyledLoginPage>
+			<LeftStyledLoginSection>
+				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
+				<br/>
+				{leftSection()}
 			</LeftStyledLoginSection>
 			<StyledLoginSection>
 				<StyledImage ref={imageRef} src={backgroundImage}/>
@@ -78,4 +93,4 @@ const Login = () => {
 	}</>;
 }
 
-export default Login;
+export default Landing;
