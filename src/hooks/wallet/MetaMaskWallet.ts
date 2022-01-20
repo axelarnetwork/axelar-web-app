@@ -75,6 +75,7 @@ export class MetaMaskWallet implements WalletInterface {
 					params: [{chainId: params.chainId}],
 				});
 			} catch (switchError: any) {
+				console.warn("error adding chain, so trying wallet_addEthereumChain",params);
 				if (switchError.code === 4902) { // This error code indicates that the chain has not been added to MetaMask.
 					try {
 						await window.ethereum.request({
@@ -83,6 +84,7 @@ export class MetaMaskWallet implements WalletInterface {
 						});
 					} catch (addError) {
 						// handle "add" error
+						console.warn("error adding chain to metamask",addError);
 					}
 				}
 				// handle other "switch" errors
