@@ -1,13 +1,13 @@
 import React, {useRef, useState} from "react";
 import {useRecoilState}          from "recoil";
-import {Redirect}       from "react-router-dom";
-import styled           from "styled-components";
-import {slamKeyframe}   from "component/StyleComponents/animations/slamKeyframe";
-import {StyledButton}   from "component/StyleComponents/StyledButton";
-import usePasswordInput from "hooks/usePasswordInput";
-import backgroundImage  from "resources/globe.svg";
-import {IsLoggedIn}     from "state/ApplicationStatus";
-import disintegrate     from "./animation";
+import {Redirect}                from "react-router-dom";
+import styled                    from "styled-components";
+import {slamKeyframe}            from "component/StyleComponents/animations/slamKeyframe";
+import {StyledButton}            from "component/StyleComponents/StyledButton";
+import usePasswordInput          from "hooks/usePasswordInput";
+import backgroundImage           from "resources/globe.svg";
+import {IsLoggedIn}              from "state/ApplicationStatus";
+import disintegrate              from "./animation";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -65,7 +65,7 @@ const Landing = () => {
 		return underMaintenance === "true"
 			? <>
 				<h1>We'll be right back!</h1>
-				<div style={{ fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
+				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
 					The network is currently under maintenance. Back online shortly.
 				</div>
 			</>
@@ -78,13 +78,13 @@ const Landing = () => {
 			</>
 	}
 
-	return <>{ (isLoggedIn && (underMaintenance !== "true"))
+	return <>{(isLoggedIn && (underMaintenance !== "true"))
 		? <Redirect to={"/"}/>
 		: <StyledLoginPage>
 			<LeftStyledLoginSection>
-			<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
-			<br/>
-			{leftSection()}
+				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
+				<br/>
+				{leftSection()}
 			</LeftStyledLoginSection>
 			<StyledLoginSection>
 				<StyledImage ref={imageRef} src={backgroundImage}/>

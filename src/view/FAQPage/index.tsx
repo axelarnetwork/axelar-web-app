@@ -1,11 +1,11 @@
-import {useState}                                 from "react";
-import {useRecoilValue, useSetRecoilState}        from "recoil";
-import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
-import styled                                     from "styled-components";
-import Tooltip                                    from "component/Widgets/Tooltip";
-import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
-import BoldSpan                                   from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                  from "component/StyleComponents/FlexRow";
+import {useState}                                                   from "react";
+import {useRecoilValue, useSetRecoilState}                          from "recoil";
+import {SourceDepositAddress, TransactionTraceId}                   from "state/TransactionStatus";
+import styled                                                       from "styled-components";
+import Tooltip                                                      from "component/Widgets/Tooltip";
+import CopyToClipboard                                              from "component/Widgets/CopyToClipboard";
+import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
 import {SVGImage}                                                   from "component/Widgets/SVGImage";
 import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
 
@@ -87,16 +87,18 @@ const FAQPage = () => {
             </StyledHeader>
             <FAQSection>
                 <h2>Helpful Links</h2>
-                <NewLink text={"Discord Support Channel"} onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
+                <NewLink text={"Discord Support Channel"}
+                         onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
-                <NewLink text={"Mainnet EVM Token Contracts "} onClick={() => window.open('https://github.com/axelarnetwork/validators/blob/main/resources/mainnet-releases.md', '_blank')}/>
+                <NewLink text={"Mainnet EVM Token Contracts "}
+                         onClick={() => window.open('https://github.com/axelarnetwork/validators/blob/main/resources/mainnet-releases.md', '_blank')}/>
                 <NewLink text={"Terms of Use"} onClick={() => {
-	                setShowDisclaimer(true);
-	                setShowLargeDisclaimer(true);
-	                setShowDisclaimerFromFAQ(true);
+					setShowDisclaimer(true);
+					setShowLargeDisclaimer(true);
+					setShowDisclaimerFromFAQ(true);
 
-                }}/>
+				}}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
                 <h2>Issues with a live transaction?</h2>

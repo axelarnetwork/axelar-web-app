@@ -12,9 +12,9 @@ import {PageOpacityAnimation}             from "component/StyleComponents/animat
 import {HideGrecaptchaBadge}              from "component/StyleComponents/HideGrecaptchaBadge";
 import screenConfigs                      from "config/screenConfigs";
 import backgroundImage                    from "resources/bg-image.svg";
-import Info    from "view/Debug";
-import Landing from "view/Landing";
-import App     from 'view/App';
+import Info                               from "view/Debug";
+import Landing                            from "view/Landing";
+import App                                from 'view/App';
 import 'react-notifications-component/dist/theme.css';
 import './index.css';
 
