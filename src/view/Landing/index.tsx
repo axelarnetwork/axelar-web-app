@@ -63,21 +63,27 @@ const Landing = () => {
 	const leftSection = () => {
 		console.log("under maintenance", typeof underMaintenance);
 		return underMaintenance === "true"
-			? <h1>We'll be right back!</h1>
+			? <>
+				<h1>We'll be right back!</h1>
+				<div style={{ fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
+					The network is currently under maintenance. Back online shortly.
+				</div>
+			</>
 			: <>
-				<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
-				<br/>
 				{React.cloneElement(passwordComponent, {handleOnEnterPress: onClick})}
 				<br/>
 				<div style={{width: `50%`}}>
 					<StyledButton onClick={onClick}>Enter</StyledButton>
-				</div></>
+				</div>
+			</>
 	}
 
 	return <>{ (isLoggedIn && (underMaintenance !== "true"))
 		? <Redirect to={"/"}/>
 		: <StyledLoginPage>
 			<LeftStyledLoginSection>
+			<SlaminDiv src={require("resources/axelar-logo-horizontal-white.svg").default}/>
+			<br/>
 			{leftSection()}
 			</LeftStyledLoginSection>
 			<StyledLoginSection>

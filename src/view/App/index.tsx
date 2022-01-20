@@ -1,5 +1,5 @@
-import {useEffect}                                              from "react";
-import {useRecoilValue}                                         from "recoil";
+import {useEffect, useState} from "react";
+import {useRecoilValue}      from "recoil";
 import InfoWidget                                               from "component/CompositeComponents/InfoWidget";
 import PageHeader                                               from "component/CompositeComponents/PageHeader";
 import PageFooter                                               from "component/CompositeComponents/PageFooter";
@@ -11,6 +11,7 @@ import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/Chai
 import {StyledAppContainer}                                     from "view/App/styles/StyledAppContainer";
 import SwapWindow                                               from "view/SwapWindow";
 import Disclaimer                                               from "../Disclaimer";
+import {Redirect}                                               from "react-router-dom";
 
 const App = () => {
 
@@ -21,6 +22,7 @@ const App = () => {
 	const isValidDestinationAddr = useRecoilValue(IsValidDestinationAddress);
 	const showDisclaimer = useRecoilValue(ShowDisclaimer);
 	const showDisclaimerForFAQ = useRecoilValue(ShowDisclaimerFromFAQ);
+	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -30,7 +32,10 @@ const App = () => {
 	useEffect(() => {
 		if (!isRecaptchaSet)
 			initiateRecaptcha();
-	}, [isRecaptchaSet, initiateRecaptcha])
+	}, [isRecaptchaSet, initiateRecaptcha]);
+
+	if (underMaintenance === "true")
+		return <Redirect to={"/landing"} />;
 
 	return (
 		<StyledAppContainer>
