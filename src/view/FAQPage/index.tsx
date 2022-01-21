@@ -7,7 +7,9 @@ import CopyToClipboard                                              from "compon
 import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
 import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
 import {SVGImage}                                                   from "component/Widgets/SVGImage";
+import configs                                                      from "config/downstreamServices";
 import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
+import {toProperCase}                                               from "utils/toProperCase";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -91,8 +93,8 @@ const FAQPage = () => {
                          onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <NewLink text={"Instructional Video (TBD)"}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
-                <NewLink text={"Mainnet EVM Token Contracts "}
-                         onClick={() => window.open('https://github.com/axelarnetwork/validators/blob/main/resources/mainnet-releases.md', '_blank')}/>
+                <NewLink text={`${toProperCase(process.env.REACT_APP_STAGE as string)} Token Contracts`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
                 <NewLink text={"Terms of Use"} onClick={() => {
 					setShowDisclaimer(true);
 					setShowLargeDisclaimer(true);

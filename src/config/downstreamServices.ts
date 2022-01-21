@@ -9,6 +9,7 @@ interface IConfig {
 	RECAPTCHA_V3_SITE_KEY: string;
 	RECAPTCHA_V2_SITE_KEY: string;
 	blockExplorers: { [environment: string]: { [chain: string]: { name: string; url: string; } } }
+	tokenContracts: { [environment: string]: string }
 }
 
 const blockExplorers = {
@@ -36,11 +37,19 @@ const blockExplorers = {
 blockExplorers.testnet = blockExplorers.devnet;
 blockExplorers.local = blockExplorers.devnet;
 
+const tokenContracts = {
+	local: "https://docs.axelar.dev/#/resources/testnet-releases",
+	devnet: "https://docs.axelar.dev/#/resources/testnet-releases",
+	testnet: "https://docs.axelar.dev/#/resources/testnet-releases",
+	mainnet: "https://github.com/axelarnetwork/axelarate-community/blob/main/resources/mainnet-releases.md"
+}
+
 const configs: IConfig = {
 	GITHUB_LINK,
 	RECAPTCHA_V3_SITE_KEY: RECAPTCHA_V3_SITE_KEY,
 	RECAPTCHA_V2_SITE_KEY: RECAPTCHA_V2_SITE_KEY,
-	blockExplorers
+	blockExplorers,
+	tokenContracts
 }
 
 export default configs;
