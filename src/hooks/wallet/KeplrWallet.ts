@@ -40,27 +40,33 @@ export class KeplrWallet implements WalletInterface {
 		return !!window.keplr;
 	}
 
-	public async connectToWallet(): Promise<any> {
+	public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
+
+		let text: "added" | "exists" | "error" | null = "error";
 
 		if (!this.isWalletInstalled()) {
 			this.installWallet();
-			return;
+			return null;
 		}
 
 		try {
 			await window.keplr.enable(this.CHAIN_ID);
+			text = "exists";
 		} catch (e) {
 			console.log("KeplrWallet connectToWallet - unable to connect to wallet natively, so trying experimental chain", e, this.CHAIN_INFO, this.CHAIN_ID);
 			try {
 				await window.keplr.experimentalSuggestChain(this.CHAIN_INFO);
 				await window.keplr.enable(this.CHAIN_ID);
+				text = "added";
 			} catch (e2: any) {
 				console.log("and yet there is a problem in trying to do that too", e2);
+				return text;
 			}
 		}
 		const _signer = await window.keplr.getOfflineSigner(this.CHAIN_ID);
 		const [account] = await _signer.getAccounts();
 		console.log(account);
+		return text;
 	}
 
 	public installWallet(): void {

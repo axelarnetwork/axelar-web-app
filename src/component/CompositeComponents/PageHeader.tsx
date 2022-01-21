@@ -1,13 +1,12 @@
-import {useRecoilState}           from "recoil";
-import React                      from "react";
-import styled                     from "styled-components";
-import {KeplrWallet}              from "hooks/wallet/KeplrWallet";
-import {HasTerraConnectedToKeplr} from "state/Wallet";
-import Container                  from "../StyleComponents/Container";
-import {FlexColumn}               from "../StyleComponents/FlexColumn";
-import {FlexRow}                  from "../StyleComponents/FlexRow";
-import {SVGImage}                 from "../Widgets/SVGImage";
-
+import {useRecoilState}             from "recoil";
+import React, {useEffect, useState} from "react";
+import styled                       from "styled-components";
+import {KeplrWallet}                from "hooks/wallet/KeplrWallet";
+import {HasTerraConnectedToKeplr}   from "state/Wallet";
+import Container                    from "../StyleComponents/Container";
+import {FlexColumn}                 from "../StyleComponents/FlexColumn";
+import {FlexRow}                    from "../StyleComponents/FlexRow";
+import {SVGImage}                   from "../Widgets/SVGImage";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
@@ -49,35 +48,64 @@ const ConnectWalletButton = styled(FlexRow)`
 const PageHeader = () => {
 
 	const [hasTerraConnectedToKeplr, setHasTerraConnectedToKeplr] = useRecoilState(HasTerraConnectedToKeplr);
+	const [onAddedKeplr, setOnAddedKeplr] = useState<"added" | "exists" | "error" | null>(null);
 
+	useEffect(() => {
+		if (onAddedKeplr) setTimeout(() => setOnAddedKeplr(null), 5000);
+	}, [onAddedKeplr, setOnAddedKeplr]);
+
+	const onAddedResult = () => {
+		let text = "";
+		switch (onAddedKeplr) {
+			case "added":
+				text = "Successfully added Terra to your Keplr wallet!";
+				break;
+			case "exists":
+				text = "You already had Terra in your Keplr wallet!";
+				break;
+			case "error":
+				text = "Something went wrong. Try again?  ";
+				break;
+			default:
+				return null;
+		}
+		return <div style={{color: (onAddedKeplr !== "error" ? "green" : "red"), fontSize: `smaller`, fontWeight: `bolder`, marginRight: `1em`}}>
+			{text}
+		</div>
+	}
 	return (
 		<StyledPageHeader>
 			<HeaderText>
 				<HeaderImage>Satellite</HeaderImage>
 				<ByText>Powered by Axelar</ByText>
 			</HeaderText>
-			<FlexRow> {!hasTerraConnectedToKeplr &&
-            <>
-                <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
-                    <ConnectWalletButton onClick={async () => {
-						await (new KeplrWallet("terra").connectToWallet());
-						setHasTerraConnectedToKeplr(true);
-					}}>
-                        <FlexColumn style={{alignItems: `flex-end`}}>
-                            <div style={{fontWeight: "bolder"}}>Need Terra on Keplr? Add it here!</div>
-                            <div style={{fontStyle: "italic", fontSize: "0.75em"}}>(Required for UST/Luna transfers from
-                                Terra)
-                            </div>
-                        </FlexColumn>
-                        <SVGImage
-                            height={`1.25em`}
-                            width={`1.25em`}
-                            margin={`0px 0em 0px 0.75em`}
-                            src={require(`resources/keplr.svg`).default}
-                        />
-                    </ConnectWalletButton>
-                </div>
-            </>}
+			<FlexRow>
+				{ onAddedResult() }
+				{!hasTerraConnectedToKeplr && <>
+	                <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
+	                    <ConnectWalletButton onClick={async () => {
+	                        const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
+	                        console.log("text",connectWalletResult);
+							if (connectWalletResult !== "error") {
+								setHasTerraConnectedToKeplr(true);
+							}
+							setOnAddedKeplr(connectWalletResult);
+						}}>
+	                        <FlexColumn style={{alignItems: `flex-end`}}>
+	                            <div style={{fontWeight: "bolder"}}>Need Terra on Keplr? Add it here!</div>
+	                            <div style={{fontStyle: "italic", fontSize: "0.75em"}}>(Required for UST/Luna transfers from
+	                                Terra)
+	                            </div>
+	                        </FlexColumn>
+	                        <SVGImage
+	                            height={`1.25em`}
+	                            width={`1.25em`}
+	                            margin={`0px 0em 0px 0.75em`}
+	                            src={require(`resources/keplr.svg`).default}
+	                        />
+	                    </ConnectWalletButton>
+	                </div>
+	            </>}
 				{HeaderDivider()}
 				<div style={{color: `green`, fontSize: `smaller`, fontWeight: `bolder`}}>
 					{(process.env.REACT_APP_STAGE || "").toUpperCase()}
