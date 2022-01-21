@@ -3,8 +3,8 @@ import {Bech32Address}          from "@keplr-wallet/cosmos";
 import {KeplrWalletChainConfig} from "./interface";
 
 const TERRA_CHAIN_ID: string = "bombay-12";
-const TERRA_RPC: string = `https://axelar-cors-redirect.herokuapp.com/https://bombay-12--rpc--full.datahub.figment.io`;
-const TERRA_REST = `https://axelar-cors-redirect.herokuapp.com/https://bombay-12--lcd--full.datahub.figment.io`;
+const TERRA_RPC: string = `https://cors-redirect-test.herokuapp.com/https://bombay-12--rpc--full.datahub.figment.io`;
+const TERRA_REST = `https://cors-redirect-test.herokuapp.com/https://bombay-12--lcd--full.datahub.figment.io`;
 const TERRA_CHANNEL_MAP = {
 	"axelar": "channel-55"
 }
