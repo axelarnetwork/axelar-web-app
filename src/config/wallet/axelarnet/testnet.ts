@@ -45,7 +45,8 @@ const axelarChainInfo: ChainInfo = {
 		coinType: 118
 	},
 	currencies: [
-		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
+		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6},
+		{coinDenom: "UST", coinMinimalDenom: "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F", coinDecimals: 6}
 	],
 	feeCurrencies: [
 		{coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6}
