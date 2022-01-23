@@ -3,8 +3,8 @@ import {ChainInfo}              from "@keplr-wallet/types";
 import {KeplrWalletChainConfig} from "./interface";
 
 const TERRA_CHAIN_ID: string = "columbus-5";
-const TERRA_RPC: string = `https://axelar-cors-redirect.herokuapp.com/https://columbus-5--rpc--full.datahub.figment.io`;
-const TERRA_REST = `https://axelar-cors-redirect.herokuapp.com/https://columbus-5--lcd--full.datahub.figment.io`;
+const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string;
+const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string;
 const TERRA_CHANNEL_MAP = {
 	"axelar": "channel-19"
 }
