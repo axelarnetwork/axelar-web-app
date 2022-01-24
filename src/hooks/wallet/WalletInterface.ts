@@ -6,7 +6,7 @@ export interface WalletInterface {
 	installWallet(): void;
 
 	isWalletConnected(chainName?: string): boolean;
-	connectToWallet(): void;
+	connectToWallet(): Promise<"added" | "exists" | "error" | null>;
 
 	getAddress(): Promise<string>;
 

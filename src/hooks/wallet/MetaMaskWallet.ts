@@ -71,11 +71,24 @@ export class MetaMaskWallet implements WalletInterface {
 		return Number(params.chainId) === this.getCurrentNetworkId();
 	}
 
-	public async connectToWallet() {
+	public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
+		try {
+			await this.provider.send("eth_requestAccounts", []);
+			return "added";
+		} catch (err: any) {
+			console.log("connecting error",err);
+			return "error";
+		}
+	}
+
+	public async connectToChain(): Promise<"added" | "exists" | "error" | null> {
+
+		let text: "added" | "exists" | "error" | null = "error";
 
 		if (!this.isWalletInstalled()) {
 			console.log("need to install wallet");
 			this.installWallet();
+			return null;
 		} else {
 			const params: ChainParam = require(`config/wallet/evm/${process.env.REACT_APP_STAGE}.ts`).default[this.chainName];
 
@@ -84,6 +97,7 @@ export class MetaMaskWallet implements WalletInterface {
 					method: 'wallet_switchEthereumChain',
 					params: [{chainId: params.chainId}],
 				});
+				text = "exists";
 			} catch (switchError: any) {
 				console.warn("error adding chain, so trying wallet_addEthereumChain",params);
 				if (switchError.code === 4902) { // This error code indicates that the chain has not been added to MetaMask.
@@ -92,14 +106,17 @@ export class MetaMaskWallet implements WalletInterface {
 							method: 'wallet_addEthereumChain',
 							params: [params],
 						});
+						text = "added";
 					} catch (addError) {
 						// handle "add" error
 						console.warn("error adding chain to metamask",addError);
+						return text;
 					}
 				}
 				// handle other "switch" errors
 			}
 			await this.getAddress();
+			return text;
 		}
 	}
 
@@ -114,7 +131,7 @@ export class MetaMaskWallet implements WalletInterface {
 	public async switchChain(chainName: string): Promise<boolean> {
 		this.chainName = chainName;
 		if (!this.isWalletConnected(chainName))
-			await this.connectToWallet();
+			await this.connectToChain();
 		return true;
 	}
 

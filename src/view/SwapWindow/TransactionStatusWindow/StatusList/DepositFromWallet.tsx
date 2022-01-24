@@ -3,17 +3,18 @@ import styled                                    from "styled-components";
 import {AssetInfo}                               from "@axelar-network/axelarjs-sdk";
 import {useRecoilValue}                          from "recoil";
 import downstreamServices                        from "config/downstreamServices";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
-import {InputForm}                               from "component/CompositeComponents/InputForm";
-import {StyledButton}                            from "component/StyleComponents/StyledButton";
-import {FlexRow}                                 from "component/StyleComponents/FlexRow";
-import Link                                      from "component/Widgets/Link";
-import {KeplrWallet}                             from "hooks/wallet/KeplrWallet";
-import {MetamaskTransferEvent, MetaMaskWallet}   from "hooks/wallet/MetaMaskWallet";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}  from "config/consts";
+import {InputForm}                                from "component/CompositeComponents/InputForm";
+import {StyledButton}                             from "component/StyleComponents/StyledButton";
+import {FlexRow}                                  from "component/StyleComponents/FlexRow";
+import Link                                       from "component/Widgets/Link";
+import {KeplrWallet}                              from "hooks/wallet/KeplrWallet";
+import {MetamaskTransferEvent, MetaMaskWallet}    from "hooks/wallet/MetaMaskWallet";
 import {ChainSelection, SourceAsset}              from "state/ChainSelection";
 import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
 import {getMinDepositAmount}                      from "utils/getMinDepositAmount";
-import {SendLogsToServer}                        from "../../../../api/SendLogsToServer";
+import {SendLogsToServer}                         from "../../../../api/SendLogsToServer";
+import {getKeplrWallet}                           from "../../../App";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -64,8 +65,10 @@ export const DepositFromWallet = ({
 	}
 	const transferKeplr = async () => {
 		const sourceChainName: "axelar" | "terra" = sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra";
-		let wallet: KeplrWallet = new KeplrWallet(sourceChainName);
-		await wallet.connectToWallet();
+
+		let wallet: KeplrWallet = getKeplrWallet();
+		await wallet.switchChain(sourceChainName);
+
 		setButtonText("Sending...");
 
 		let results;

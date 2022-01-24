@@ -1,12 +1,13 @@
-import {useRecoilState}             from "recoil";
-import React, {useEffect, useState} from "react";
-import styled                       from "styled-components";
-import {KeplrWallet}                from "hooks/wallet/KeplrWallet";
-import {HasTerraConnectedToKeplr}   from "state/Wallet";
-import Container                    from "../StyleComponents/Container";
-import {FlexColumn}                 from "../StyleComponents/FlexColumn";
-import {FlexRow}                    from "../StyleComponents/FlexRow";
-import {SVGImage}                   from "../Widgets/SVGImage";
+import {useRecoilState}                                                                     from "recoil";
+import React, {useEffect, useState}                                                         from "react";
+import styled                                                                               from "styled-components";
+import {SVGImage}                                                                           from "component/Widgets/SVGImage";
+import {HasAlreadyConnectedWallet, HasTerraConnectedToKeplr, KEPLR_WALLET, METAMASK_WALLET} from "state/Wallet";
+import {getKeplrWallet, getMetamaskWallet}                                                  from "view/App";
+import Container
+                                                                                            from "../StyleComponents/Container";
+import {FlexColumn}                                                                         from "../StyleComponents/FlexColumn";
+import {FlexRow}                                                                            from "../StyleComponents/FlexRow";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
@@ -50,6 +51,8 @@ const PageHeader = () => {
 
 	const [hasTerraConnectedToKeplr, setHasTerraConnectedToKeplr] = useRecoilState(HasTerraConnectedToKeplr);
 	const [onAddedKeplr, setOnAddedKeplr] = useState<"added" | "exists" | "error" | null>(null);
+	const [hasAlreadyConnectedMetamask, setHasAlreadyConnectedMetamask] = useRecoilState(HasAlreadyConnectedWallet(METAMASK_WALLET));
+	const [hasAlreadyConnectedKeplr, setHasAlreadyConnectedKeplr] = useRecoilState(HasAlreadyConnectedWallet(KEPLR_WALLET));
 
 	useEffect(() => {
 		if (onAddedKeplr) setTimeout(() => setOnAddedKeplr(null), 5000);
@@ -79,30 +82,7 @@ const PageHeader = () => {
 			{text}
 		</div>
 	}
-// =======
-// const StyledConnectButton = styled(FlexColumn)`
-// 	background-color: navy;
-// 	box-sizing: border-box;
-// 	padding: 0.25em;
-// `;
-//
-// const PageHeader = () => {
-//
-// 	const [isMMWalletConnected, setIsMMWalletConnected] = useRecoilState(IsWalletConnected(METAMASK_WALLET));
-// 	const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useRecoilState(IsWalletConnected(KEPLR_WALLET));
-//
-// 	useEffect(() => {
-// 			setIsMMWalletConnected(getMetamaskWallet().isWalletConnected());
-// 			setIsKeplrWalletConnected(getKeplrWallet().isWalletConnected());
-// 		// console.log("is metamask connected",getMetamaskWallet().isWalletConnected());
-// 		// if (!getMetamaskWallet().isWalletConnected()) {
-// 		// 	console.log("is metamask connected",getMetamaskWallet().isWalletConnected());
-// 		// }
-// 		// if (!getKeplrWallet().isWalletConnected()) {
-// 		// }
-// 	}, [setIsMMWalletConnected, setIsKeplrWalletConnected]);
-//
-// >>>>>>> 87a18ff (chore: wip)
+
 	return (
 		<StyledPageHeader>
 			<HeaderText>
@@ -111,10 +91,50 @@ const PageHeader = () => {
 			</HeaderText>
 			<FlexRow>
 				{onAddedResult()}
+
+				{/*!hasAlreadyConnectedMetamask*/ true && <>
+                    <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
+                        <ConnectWalletButton onClick={async () => {
+							const connectWalletResult = await getMetamaskWallet().connectToWallet();
+							console.log("text", connectWalletResult);
+							if (connectWalletResult !== "error") {
+								setHasAlreadyConnectedMetamask(true);
+							}
+						}}>
+                            <SVGImage
+                                height={`1.25em`}
+                                width={`1.25em`}
+                                margin={`0px 0em 0px 0.75em`}
+                                src={require(`resources/metamask.svg`).default}
+                            />
+                        </ConnectWalletButton>
+                    </div>
+                </>}
+				{/*!hasAlreadyConnectedKeplr*/ true && <>
+                    <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
+                        <ConnectWalletButton onClick={async () => {
+							// const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
+							const connectWalletResult = await getKeplrWallet().connectToWallet();
+							console.log("text", connectWalletResult);
+							if (connectWalletResult !== "error") {
+								setHasAlreadyConnectedKeplr(true);
+							}
+							setOnAddedKeplr(connectWalletResult);
+						}}>
+                            <SVGImage
+                                height={`1.25em`}
+                                width={`1.25em`}
+                                margin={`0px 0em 0px 0.75em`}
+                                src={require(`resources/keplr.svg`).default}
+                            />
+                        </ConnectWalletButton>
+                    </div>
+                </>}
+				{HeaderDivider()}
 				{!hasTerraConnectedToKeplr && <>
                     <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
                         <ConnectWalletButton onClick={async () => {
-							const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
+							const connectWalletResult = await getKeplrWallet().connectToWallet();
 							console.log("text", connectWalletResult);
 							if (connectWalletResult !== "error") {
 								setHasTerraConnectedToKeplr(true);
@@ -142,14 +162,6 @@ const PageHeader = () => {
 					{(process.env.REACT_APP_STAGE || "").toUpperCase()}
 				</div>
 				{HeaderDivider()}
-				{/*=======*/}
-				{/*			<FlexRow style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder`, marginRight: `2em`}}>*/}
-				{/*				{(process.env.REACT_APP_STAGE || "").toUpperCase()}*/}
-				{/*				<StyledConnectButton>*/}
-				{/*					<div>{isMMWalletConnected ? "MM Connected: " : "Connect MM!"}</div>*/}
-				{/*					<div>{isKeplrWalletConnected ? "Keplr Connected" : "Connect Keplr"}</div>*/}
-				{/*				</StyledConnectButton>*/}
-				{/*>>>>>>> 87a18ff (chore: wip)*/}
 			</FlexRow>
 		</StyledPageHeader>
 	);
