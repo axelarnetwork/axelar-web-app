@@ -1,20 +1,20 @@
-name: ctt-personal-mainnet-shadow
-on:
-  push:
-    branches:
-      - mainnet-shadow
-  pull_request_target:
-  workflow_dispatch:
-jobs:
-  ctt-personal-mainnet-shadow:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: amondnet/vercel-action@v20
-        id: ctt-personal-mainnet-shadow
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.CTT_PERSONAL_VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.CTT_PERSONAL_MAINNET_SHADOW_VERCEL_PROJECT_ID }}
-          alias-domains: |
-            ctt-personal-mainnet-shadow.vercel.app
+#name: ctt-personal-mainnet-shadow
+#on:
+#  push:
+#    branches:
+#      - mainnet-shadow
+#  pull_request_target:
+#  workflow_dispatch:
+#jobs:
+#  ctt-personal-mainnet-shadow:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: amondnet/vercel-action@v20
+#        id: ctt-personal-mainnet-shadow
+#        with:
+#          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#          vercel-org-id: ${{ secrets.CTT_PERSONAL_VERCEL_ORG_ID }}
+#          vercel-project-id: ${{ secrets.CTT_PERSONAL_MAINNET_SHADOW_VERCEL_PROJECT_ID }}
+#          alias-domains: |
+#            ctt-personal-mainnet-shadow.vercel.app
