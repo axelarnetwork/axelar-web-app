@@ -10,9 +10,10 @@ import {FlexRow}                                 from "component/StyleComponents
 import Link                                      from "component/Widgets/Link";
 import {KeplrWallet}                             from "hooks/wallet/KeplrWallet";
 import {MetamaskTransferEvent, MetaMaskWallet}   from "hooks/wallet/MetaMaskWallet";
-import {ChainSelection, SourceAsset}             from "state/ChainSelection";
-import {SourceDepositAddress}                    from "state/TransactionStatus";
-import {getMinDepositAmount}                     from "utils/getMinDepositAmount";
+import {ChainSelection, SourceAsset}              from "state/ChainSelection";
+import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
+import {getMinDepositAmount}                      from "utils/getMinDepositAmount";
+import {SendLogsToServer}                        from "../../../../api/SendLogsToServer";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -35,6 +36,7 @@ export const DepositFromWallet = ({
 	const [numConfirmations, setNumConfirmations] = useState(0);
 	const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true);
 	const [txHash, setTxHash] = useState("");
+	const transactionTraceId = useRecoilValue(TransactionTraceId);
 
 	useEffect(() => {
 		setHasEnoughInWalletForMin(walletBalance >= minDepositAmt);
@@ -46,11 +48,65 @@ export const DepositFromWallet = ({
 		await wallet.switchChain(sourceChainSelection?.chainName.toLowerCase() as string);
 		const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
 		setButtonText("Sending...");
-		const results: MetamaskTransferEvent = await wallet.transferTokens(
-			depositAddress?.assetAddress as string,
-			(amountToDeposit || 0).toString(),
-			selectedSourceAsset as AssetInfo
-		);
+		let results: MetamaskTransferEvent;
+		try {
+			results= await wallet.transferTokens(
+				depositAddress?.assetAddress as string,
+				(amountToDeposit || 0).toString(),
+				selectedSourceAsset as AssetInfo
+			);
+		} catch (error: any) {
+			results = error;
+		}
+		handleMetamaskTxResult(wallet, results);
+
+		console.log("token address on", sourceChainSelection?.chainName, tokenAddress, results);
+	}
+	const transferKeplr = async () => {
+		const sourceChainName: "axelar" | "terra" = sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra";
+		let wallet: KeplrWallet = new KeplrWallet(sourceChainName);
+		await wallet.connectToWallet();
+		setButtonText("Sending...");
+
+		let results;
+		try {
+			if (sourceChainName === "axelar") {
+				results = await wallet.transferTokens(
+					depositAddress?.assetAddress as string,
+					(amountToDeposit || 0).toString()
+				);
+			} else {
+				results = await wallet.ibcTransferFromTerra(
+					depositAddress?.assetAddress as string,
+					{
+						amount: ((amountToDeposit || 0) * 1000000).toString(),
+						denom: selectedSourceAsset?.common_key?.toString() as string
+					}
+				)
+			}
+		} catch (error: any) {
+			results = error;
+		}
+		handleKeplrTxResult(results);
+
+	}
+
+	const handleKeplrTxResult = (results: any) => {
+		const outOfGas: boolean = results?.rawLog?.includes("out of gas");
+		if (results && results.transactionHash && results.height && !outOfGas) {
+			setSentSuccess(true);
+			setTxHash(results.transactionHash);
+				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + results, transactionTraceId);
+		} else {
+			setButtonText("Something went wrong, try again?");
+			const msg = "user failed to send tx: " + results;
+			console.log("message",msg);
+			SendLogsToServer.error("DEPOSIT_CONFIRMATION", msg, transactionTraceId);
+		}
+
+	}
+
+	const handleMetamaskTxResult = (wallet: MetaMaskWallet, results: any) => {
 		if (results.txHash && results.blockNumber) {
 			setSentSuccess(true);
 			setTxHash(results.txHash);
@@ -61,38 +117,11 @@ export const DepositFromWallet = ({
 				confirmInterval,
 				({numConfirmations}: any) => setNumConfirmations(numConfirmations)
 			);
-		} else if (results.error.length > 0)
+				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
+		} else if (results.error.length > 0) {
 			setButtonText("Something went wrong");
-		console.log("token address on", sourceChainSelection?.chainName, tokenAddress, results);
-	}
-	const transferKeplr = async () => {
-		const sourceChainName: "axelar" | "terra" = sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra";
-		let wallet: KeplrWallet = new KeplrWallet(sourceChainName);
-		await wallet.connectToWallet();
-		setButtonText("Sending...");
-
-		let results;
-		if (sourceChainName === "axelar") {
-			results = await wallet.transferTokens(
-				depositAddress?.assetAddress as string,
-				(amountToDeposit || 0).toString()
-			);
-		} else {
-			results = await wallet.ibcTransferFromTerra(
-				depositAddress?.assetAddress as string,
-				{
-					amount: ((amountToDeposit || 0) * 1000000).toString(),
-					denom: selectedSourceAsset?.common_key?.toString() as string
-				}
-			)
+			SendLogsToServer.error("DEPOSIT_CONFIRMATION", "user failed to send tx: " + JSON.stringify(results), transactionTraceId);
 		}
-		console.log("results from IBC", results);
-		const outOfGas: boolean = results?.rawLog?.includes("out of gas");
-		if (results && results.transactionHash && results.height && !outOfGas) {
-			setSentSuccess(true);
-			setTxHash(results.transactionHash);
-		} else
-			setButtonText("Something went wrong, try again?");
 
 	}
 
