@@ -1,6 +1,6 @@
 # Overview
 
-Bridge web app to facilitate cross-chain communication on Axelar Network
+Bridge web app to facilitate cross-chain communication on Axelar Network.
 
 ## Available Scripts
 
