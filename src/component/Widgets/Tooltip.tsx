@@ -1,4 +1,4 @@
-import styled                                from "styled-components";
+import styled, {ThemedStyledProps}           from "styled-components";
 import {cloneElement, useCallback, useState} from "react";
 import {StyledCentered}                      from "../StyleComponents/Centered";
 
@@ -27,13 +27,19 @@ const TooltipText = styled.div`
 	transform: translateY(-5px);
 	transition: all 0.1s ease-in-out;
 `;
-const TooltipContainer = styled.div`
+
+export interface ITooltipProps extends ThemedStyledProps<any, any> {
+	margin: string;
+}
+
+const TooltipContainer = styled.div<ITooltipProps>`
 	position: relative;
 	background-color: transparent;
 	& ${AnchorText}:hover + ${TooltipText} {
 		visibility: visible;
 		transform: translateY(0px);
 	}
+	width: ${props => props.width ? props.width : `100%`};
 `;
 
 const SpanText = styled.span`
@@ -47,9 +53,10 @@ interface ITooltip {
 	anchorContent: JSX.Element | string;
 	tooltipText: string;
 	tooltipAltText: string;
+	width?: string;
 }
 
-const Tooltip = ({anchorContent, tooltipText, tooltipAltText}: ITooltip) => {
+const Tooltip = ({anchorContent, tooltipText, tooltipAltText, width}: ITooltip) => {
 
 	const [textToShow, setTextToShow] = useState(tooltipText);
 
@@ -58,7 +65,7 @@ const Tooltip = ({anchorContent, tooltipText, tooltipAltText}: ITooltip) => {
 		setTimeout(() => setTextToShow(tooltipText), 2000);
 	}, [setTextToShow, tooltipText, tooltipAltText]);
 
-	return <TooltipContainer>
+	return <TooltipContainer width={width}>
 		<AnchorText>
 			{cloneElement(anchorContent as JSX.Element, {cbOnClick: updateTextToShow})}
 		</AnchorText>

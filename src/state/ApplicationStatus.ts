@@ -10,10 +10,17 @@ export const IsLoggedIn = atom<boolean>({
 	effects_UNSTABLE: [persistAtom]
 });
 
-export const DisclaimerAgreed = atom<boolean>({
-	key: "DisclaimerAgreed",
+export const ShowDisclaimer = atom<boolean>({
+	key: "ShowDisclaimer",
+	default: true,
+});
+export const ShowLargeDisclaimer = atom<boolean>({
+	key: "ShowLargeDisclaimer",
 	default: false,
-	effects_UNSTABLE: [persistAtom]
+});
+export const ShowDisclaimerFromFAQ = atom<boolean>({
+	key: "ShowDisclaimerFromFAQ",
+	default: false,
 });
 
 export const DismissWalkThrough = atom<boolean>({

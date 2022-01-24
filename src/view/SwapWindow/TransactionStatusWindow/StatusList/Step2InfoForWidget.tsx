@@ -6,6 +6,7 @@ import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 import {SourceDepositAddress}                    from "state/TransactionStatus";
 import {getShortenedWord}                        from "utils/wordShortener";
 import {getMinDepositAmount}                     from "utils/getMinDepositAmount";
+import {DepositFromWallet}                       from "./DepositFromWallet";
 
 export const StyledHeader = styled.div`
 	position: relative;
@@ -13,13 +14,16 @@ export const StyledHeader = styled.div`
     background-color: ${props => props.theme.headerBackgroundColor};
     border-radius: 9px 9px 0px 0px;
     color: white;
-    font-size: .8em;
+    font-size: 1em;
     text-align: center;
     box-sizing: border-box;
     padding: 0.25em;
 `;
 
-const Step2InfoForWidget = () => {
+const Step2InfoForWidget = ({
+	                            isWalletConnected,
+	                            walletBalance
+                            }: { isWalletConnected: boolean, walletBalance: number }) => {
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
@@ -37,19 +41,21 @@ const Step2InfoForWidget = () => {
 	>
 		<StyledHeader>
 			<br/>
-			<div><BoldSpan>Helpful Deposit Notes</BoldSpan></div>
+			<div><BoldSpan>Deposit Notes</BoldSpan></div>
 			<br/>
 		</StyledHeader>
 		<br/>
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
+		{isWalletConnected && generateLine("(Optional) Send deposit here!", <DepositFromWallet
+			isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>)}
 		<br/>
 	</div>
 
 }
 
-const generateLine = (header: string, text: string) => {
+const generateLine = (header: string, text: string | JSX.Element) => {
 	return <div style={{padding: `0.75em`, fontSize: `0.8em`}}>
 		<BoldSpan>{header}</BoldSpan>
 		<div>{text}</div>

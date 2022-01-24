@@ -1,21 +1,22 @@
-import React                            from 'react';
+import React                              from 'react';
 import ReactDOM                           from 'react-dom';
 import {createGlobalStyle, ThemeProvider} from "styled-components";
 import ReactNotification                  from 'react-notifications-component';
-import {BrowserRouter, Route, Switch}   from "react-router-dom";
-import {CSSTransition, TransitionGroup} from "react-transition-group";
-import {RecoilRoot}                     from "recoil";
-import {RecoilLogger}                   from 'recoil-devtools-logger';
-import {TransferAssetBridgeFacade}      from "api/TransferAssetBridgeFacade";
-import ProtectedRoute                   from "component/CompositeComponents/ProtectedRoute";
-import {PageOpacityAnimation}           from "component/StyleComponents/animations/PageOpacityAnimation";
-import {HideGrecaptchaBadge}            from "component/StyleComponents/HideGrecaptchaBadge";
-import screenConfigs                    from "config/screenConfigs";
-import backgroundImage                  from "resources/bg-image.svg";
-import Info                             from "view/Debug";
-import Login                            from "view/Login";
-import App                              from 'view/App';
+import {BrowserRouter, Route, Switch}     from "react-router-dom";
+import {CSSTransition, TransitionGroup}   from "react-transition-group";
+import {RecoilRoot}                       from "recoil";
+import {RecoilLogger}                     from 'recoil-devtools-logger';
+import {TransferAssetBridgeFacade}        from "api/TransferAssetBridgeFacade";
+import ProtectedRoute                     from "component/CompositeComponents/ProtectedRoute";
+import {PageOpacityAnimation}             from "component/StyleComponents/animations/PageOpacityAnimation";
+import {HideGrecaptchaBadge}              from "component/StyleComponents/HideGrecaptchaBadge";
+import screenConfigs                      from "config/screenConfigs";
+import backgroundImage                    from "resources/bg-image.svg";
+import Info                               from "view/Debug";
+import Landing                            from "view/Landing";
+import App                                from 'view/App';
 import 'react-notifications-component/dist/theme.css';
+import './index.css';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -84,7 +85,7 @@ const routes = (props: any) => <TransitionGroup>
 		<Switch>
 			<ProtectedRoute exact path="/" component={App}/>
 			<ProtectedRoute exact path="/app" component={App}/>
-			<Route exact path="/login" component={Login}/>
+			<Route exact path="/landing" component={Landing}/>
 			<ProtectedRoute exact path="/debug" component={Info}/>
 		</Switch>
 	</CSSTransition>
@@ -94,14 +95,13 @@ const routesWithCSSTransition = <BrowserRouter>
 	<Route path="/" component={routes}/>
 </BrowserRouter>;
 
-
 const theme = {
-	headerBackgroundColor: `rgba(0,0,0,0.82)`
+	headerBackgroundColor: `rgba(0, 0, 0, 0.82)`
 };
 
 ReactDOM.render(
 	<RecoilRoot>
-		<ThemeProvider theme={theme} >
+		<ThemeProvider theme={theme}>
 			<ReactNotification/>
 			{process.env.REACT_APP_STAGE !== "mainnet" && <RecoilLogger/>}
 			{routesWithCSSTransition}

@@ -1,7 +1,7 @@
 import React, {useMemo, useState}                from "react";
 import {useRecoilValue, useSetRecoilState}       from "recoil";
 import styled, {ThemedStyledProps}               from "styled-components";
-import {AssetInfo, ChainInfo}                  from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo}                    from "@axelar-network/axelarjs-sdk";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import screenConfigs                             from "config/screenConfigs";
 import {topFlowOptions}                          from "config/topFlowOptions";
@@ -70,6 +70,7 @@ const StyledFlowOption = styled.div`
 	border: solid 0.6px #b9bac8;
 	box-sizing: border-box;
 	padding: 5px;
+	width: 100%;
 	background-color: white;
 `;
 
@@ -96,6 +97,7 @@ const FlowOption = (props: IFlowOptionProps) => {
 	const dimension: string = `1.75em`;
 
 	return <Tooltip
+		width={"60%"}
 		anchorContent={<StyledFlowOption onClick={() => props.onClick(props)}>
 			<FlexRow style={{marginBottom: `10px`}}>
 				<SVGImage width={dimension} height={dimension}
@@ -132,6 +134,8 @@ const TopFlowsSelector = ({closeAllSearchWindows}: { closeAllSearchWindows: () =
 		map.Terra = chainList.find(chainInfo => chainInfo.chainName === "Terra") as ChainInfo;
 		map.Ethereum = chainList.find(chainInfo => chainInfo.chainName === "Ethereum") as ChainInfo;
 		map.Axelar = chainList.find(chainInfo => chainInfo.chainName === "Axelar") as ChainInfo;
+		map.Fantom = chainList.find(chainInfo => chainInfo.chainName === "Fantom") as ChainInfo;
+		map.Avalanche = chainList.find(chainInfo => chainInfo.chainName === "Avalanche") as ChainInfo;
 		return map;
 
 	}, [chainList]);

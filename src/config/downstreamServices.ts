@@ -9,6 +9,7 @@ interface IConfig {
 	RECAPTCHA_V3_SITE_KEY: string;
 	RECAPTCHA_V2_SITE_KEY: string;
 	blockExplorers: { [environment: string]: { [chain: string]: { name: string; url: string; } } }
+	tokenContracts: { [environment: string]: string }
 }
 
 const blockExplorers = {
@@ -17,7 +18,9 @@ const blockExplorers = {
 		moonbeam: {name: "Moonscan", url: "https://moonbase.moonscan.io/tx/"},
 		avalanche: {name: "Snowtrace", url: "https://testnet.snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://mumbai.polygonscan.com/tx/"},
-		fantom: {name: "FTMScan", url: "https://testnet.ftmscan.com/tx/"}
+		fantom: {name: "FTMScan", url: "https://testnet.ftmscan.com/tx/"},
+		terra: {name: "Terra's testnet block explorer", url: "https://finder.terra.money/testnet/tx/"},
+		axelar: {name: "Coinhippo's testnet block explorer", url: "https://axelar-testnet.coinhippo.io/tx/"},
 	},
 	testnet: {},
 	local: {},
@@ -26,17 +29,27 @@ const blockExplorers = {
 		moonbeam: {name: "Moonscan", url: "https://moonriver.moonscan.io/tx/"},
 		avalanche: {name: "Snowtrace", url: "https://snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://polygonscan.com/tx/"},
-		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"}
+		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"},
+		terra: {name: "Terra's block explorer", url: "https://finder.terra.money/mainnet/tx/"},
+		axelar: {name: "Coinhippo's block explorer", url: "https://axelar.coinhippo.io/tx/"},
 	}
 }
 blockExplorers.testnet = blockExplorers.devnet;
 blockExplorers.local = blockExplorers.devnet;
 
+const tokenContracts = {
+	local: "https://docs.axelar.dev/#/resources/testnet-releases",
+	devnet: "https://docs.axelar.dev/#/resources/testnet-releases",
+	testnet: "https://docs.axelar.dev/#/resources/testnet-releases",
+	mainnet: "https://github.com/axelarnetwork/axelarate-community/blob/main/resources/mainnet-releases.md"
+}
+
 const configs: IConfig = {
 	GITHUB_LINK,
 	RECAPTCHA_V3_SITE_KEY: RECAPTCHA_V3_SITE_KEY,
 	RECAPTCHA_V2_SITE_KEY: RECAPTCHA_V2_SITE_KEY,
-	blockExplorers
+	blockExplorers,
+	tokenContracts
 }
 
 export default configs;

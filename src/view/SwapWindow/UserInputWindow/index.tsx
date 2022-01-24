@@ -1,7 +1,7 @@
 import React, {createRef, KeyboardEvent, useCallback, useEffect, useState}          from "react";
-import {useRecoilState, useRecoilValue}                          from "recoil";
+import {useRecoilState, useRecoilValue}                                             from "recoil";
 import styled                                                                       from "styled-components";
-import {AssetInfo, validateDestinationAddress}                                      from "@axelar-network/axelarjs-sdk";
+import {AssetInfo, ChainInfo, validateDestinationAddress}                           from "@axelar-network/axelarjs-sdk";
 import {InputForm}                                                                  from "component/CompositeComponents/InputForm";
 import ChainSelector
                                                                                     from "component/CompositeComponents/Selectors/ChainSelector";
@@ -10,11 +10,15 @@ import SwapChains
 import TransactionInfo
                                                                                     from "component/CompositeComponents/TransactionInfo";
 import {FlexColumn}                                                                 from "component/StyleComponents/FlexColumn";
+import {SVGImage}                                                                   from "component/Widgets/SVGImage";
 import ValidationErrorWidget
-	                                                                                from "component/Widgets/ValidationErrorWidget";
+                                                                                    from "component/Widgets/ValidationErrorWidget";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                    from "config/consts";
 import screenConfigs                                                                from "config/screenConfigs";
 import useResetUserInputs                                                           from "hooks/useResetUserInputs";
+import {MetaMaskWallet}                                                             from "hooks/wallet/MetaMaskWallet";
+import {KeplrWallet}                                                                from "hooks/wallet/KeplrWallet";
+import {WalletInterface}                                                            from "hooks/wallet/WalletInterface";
 import {ChainSelection, DestinationAddress, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import StyledButtonContainer
                                                                                     from "../StyledComponents/StyledButtonContainer";
@@ -32,6 +36,7 @@ const StyledUserInputWindow = styled.div`
 	
 	@media ${screenConfigs.media.desktop} {
 		width: 100%;
+		margin-top: 50px;
 	    height: 685px;
 	}
 	@media ${screenConfigs.media.laptop} {
@@ -75,11 +80,15 @@ const StyledInputFormSection = styled(FlexColumn)`
 		margin-top: 30px;
 	}
 	@media ${screenConfigs.media.tablet} {
-		margin-top: 10px;
+		margin-top: 5px;
 	}
 	@media ${screenConfigs.media.mobile} {
-		margin-top: 10px;
+		margin-top: 5px;
 	}	
+`;
+
+const StyledSVGImage = styled(SVGImage)`
+	cursor: pointer;
 `;
 
 const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) => {
@@ -126,7 +135,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			} else
 				resetUserInputs();
 		}
-	}, [attemptNumber,destAddr, isValidDestinationAddress, handleTransactionSubmission,
+	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
 		resetUserInputs, mounted, setMounted
 	]);
 
@@ -155,6 +164,20 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		&& onInitiateTransfer();
 	}
 
+	const getDestinationAddressFromWallet = async (destinationChain: ChainInfo) => {
+		let wallet: WalletInterface;
+		const isEvm: boolean = (destinationChain.module === "evm");
+		wallet = isEvm
+			? new MetaMaskWallet(destinationChain.chainName.toLowerCase())
+			: new KeplrWallet(destinationChain.chainName.toLowerCase() === "terra"
+				? "terra"
+				: "axelar"
+			);
+		if (!wallet.isWalletInstalled() || !isEvm)
+			await wallet.connectToWallet();
+		wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress());
+	}
+
 	/*closeAllSearchWindows is a method inside ChainSelector children called
 	to programmatically close the asset search windows, i.e. when TopFlowsSelectorWidget is made */
 	const closeAllSearchWindows = () => {
@@ -178,11 +201,42 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 				<InputForm
 					name={"destination-address-input"}
 					value={destAddr || ""}
-					placeholder={"Enter Destination Address (Public Key)"}
+					placeholder={"Enter Destination Address"}
 					type={"text"}
 					handleOnEnterPress={handleOnEnterPress}
 					onChange={(e: any) => setDestAddr(e.target.value)}
 				/>
+				{destChainSelection &&
+                <div
+                    style={{
+						width: `100%`,
+						height: `100%`,
+						color: `#898994`,
+						marginTop: `0.5em`,
+						textAlign: `right`,
+						fontSize: `0.8em`,
+						display: `flex`,
+						justifyContent: `flex-end`,
+						alignItems: `flex-start`
+					}}
+                >
+                    <span style={{cursor: `pointer`}}
+                          onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}>
+	                    Autofill Destination Address (optional)
+                    </span>
+                    <StyledSVGImage
+                        onClick={() => getDestinationAddressFromWallet(destChainSelection as ChainInfo)}
+                        height={`1.25em`}
+                        width={`1.25em`}
+                        margin={`0em 0.75em 0em 0.5em`}
+                        src={destChainSelection.module === "axelarnet"
+							? require(`resources/keplr.svg`).default
+							: require(`resources/metamask.svg`).default
+						}
+                    />
+                </div>
+				}
+
 			</StyledInputFormSection>
 		</StyledChainSelectorSection>
 		{showValidationErrors && renderValidationErrors()}

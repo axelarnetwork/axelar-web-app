@@ -29,8 +29,10 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
     @media ${screenConfigs.media.laptop} {
 	}
 	@media ${screenConfigs.media.tablet} {
+		margin-top: -5px;
 	}
 	@media ${screenConfigs.media.mobile} {
+		margin-top: -5px;
 	}
 `;
 

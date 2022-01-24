@@ -1,12 +1,15 @@
-import {useRecoilValue}                           from "recoil";
-import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
-import styled                                     from "styled-components";
-import Tooltip                                    from "component/Widgets/Tooltip";
-import CopyToClipboard                            from "component/Widgets/CopyToClipboard";
-import BoldSpan                                   from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                  from "component/StyleComponents/FlexRow";
-import {useState}                                 from "react";
-import QAs, {IQA}                                 from "./QA";
+import {useState}                                                   from "react";
+import {useRecoilValue, useSetRecoilState}                          from "recoil";
+import {SourceDepositAddress, TransactionTraceId}                   from "state/TransactionStatus";
+import styled                                                       from "styled-components";
+import Tooltip                                                      from "component/Widgets/Tooltip";
+import CopyToClipboard                                              from "component/Widgets/CopyToClipboard";
+import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
+import {SVGImage}                                                   from "component/Widgets/SVGImage";
+import configs                                                      from "config/downstreamServices";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
+import {toProperCase}                                               from "utils/toProperCase";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -18,7 +21,7 @@ const StyledHelperComponent = styled.div`
     align-items: flex-end;
     width: 30%;
     min-width: 275px;
-    max-width: 300px;
+    max-width: 500px;
 `;
 
 const HelperWidget = styled.div`
@@ -40,7 +43,7 @@ const StyledFAQPopup = styled.div`
 	overflow-wrap: break-word;
     background-color: white;
     width: 100%;
-    font-size: 12px;
+    font-size: 0.8em;
 `;
 
 export const StyledHeader = styled.div`
@@ -67,13 +70,16 @@ const ContactUsSection = styled(FAQSection)`
 
 const FAQPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
+	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
+	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
+	const setShowDisclaimerFromFAQ = useSetRecoilState(ShowDisclaimerFromFAQ);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const [showFAQ, setShowFAQ] = useState(false);
 
 	return <StyledHelperComponent>
 		{showFAQ && <StyledFAQPopup>
             <StyledHeader>
-                <span>FAQ & Support</span>
+                <span>Support</span>
                 <div
                     style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
                     onClick={() => setShowFAQ(false)}
@@ -82,24 +88,30 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-				{QAs.map((qa: IQA, i: number) => {
-					return <div key={`qa-${i}`}>
-						<div><BoldSpan>{qa.question}</BoldSpan></div>
-						<div>{qa.answer}</div>
-						<br/>
-					</div>
-				})}
+                <h2>Helpful Links</h2>
+                <NewLink text={"Discord Support Channel"}
+                         onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
+                <NewLink text={"Instructional Video (TBD)"}/>
+                <NewLink text={"Medium Instructional Guide (TBD)"}/>
+                <NewLink text={`${toProperCase(process.env.REACT_APP_STAGE as string)} Token Contracts`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
+                <NewLink text={"Terms of Use"} onClick={() => {
+					setShowDisclaimer(true);
+					setShowLargeDisclaimer(true);
+					setShowDisclaimerFromFAQ(true);
+
+				}}/>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
-                <br/>
-                <div><BoldSpan>Having issues with a live transaction?</BoldSpan></div>
-                <br/>
-                <div style={{marginBottom: `5px`}}>Reach out to us on Discord, referencing</div>
+                <h2>Issues with a live transaction?</h2>
+                <div style={{marginBottom: `5px`}}>Reach out on Discord in
+                    the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:
+                </div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
 							<div>
-								<div><BoldSpan>Trace ID:</BoldSpan></div>
+								<div><BoldSpan>Trace ID</BoldSpan></div>
 								{transactionTraceId}
 							</div>
 							<div>{depositAddress
@@ -129,4 +141,24 @@ const FAQPage = () => {
 	</StyledHelperComponent>;
 }
 
+const StyledNewLink = styled(FlexRow)`
+	justify-content: flex-start;
+	margin-bottom: 1em;
+	cursor: pointer;
+	&:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: underline;
+	}
+`;
+const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
+	return <StyledNewLink onClick={onClick}>
+		{text}
+		{"  "}
+		<SVGImage
+			style={{marginLeft: `5px`}}
+			src={require(`resources/link-new-tab.svg`).default}
+			height={`1em`}
+			width={`1em`}
+		/>
+	</StyledNewLink>
+}
 export default FAQPage;
