@@ -123,7 +123,7 @@ export const DepositFromWallet = ({
 
 		let stringifiedResults = results?.toString().toLowerCase()
 		if (results?.message)
-			stringifiedResults += results.message.toString();
+			stringifiedResults += results.message.toString().toLowerCase();
 
 		const userDenied: boolean = stringifiedResults.includes("user denied");
 		const gasTooLow: boolean = stringifiedResults.includes("intrinsic gas too low") || stringifiedResults.includes("out of gas");
@@ -142,7 +142,7 @@ export const DepositFromWallet = ({
 				({numConfirmations}: any) => setNumConfirmations(numConfirmations)
 			);
 				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
-		} else if (results?.error?.length > 0) {
+		} else if (results?.error?.length > 0 || hasAnyErrors) {
 			setButtonText("Something went wrong, try again?");
 			SendLogsToServer.error("DEPOSIT_CONFIRMATION", "user failed to send tx: " + JSON.stringify(results), transactionTraceId);
 		}
