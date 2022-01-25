@@ -92,8 +92,21 @@ export const DepositFromWallet = ({
 	}
 
 	const handleKeplrTxResult = (results: any) => {
-		const outOfGas: boolean = results?.rawLog?.includes("out of gas");
-		if (results && results.transactionHash && results.height && !outOfGas) {
+		// this is the case where you get immediate feedback in the results
+		let stringifiedResults: string = results?.toString()?.toLowerCase() || "";
+
+		// this is the case where the request is sent to the network and raw logs are returned, so we also want to check this for any of the below issues
+		if (results?.rawLog) {
+			stringifiedResults += results.rawLog.toString();
+		}
+		const outOfGas: boolean = stringifiedResults.includes("out of gas");
+		const accountSequenceMismatch: boolean = stringifiedResults.includes("account sequence mismatch");
+		const inSufficientFunds: boolean = stringifiedResults.includes("insufficient funds");
+		const requestRejected: boolean = stringifiedResults.includes("request rejected");
+
+		const hasAnyErrors = outOfGas || accountSequenceMismatch || inSufficientFunds || requestRejected;
+
+		if (results && results.transactionHash && results.height && !hasAnyErrors) {
 			setSentSuccess(true);
 			setTxHash(results.transactionHash);
 				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + results, transactionTraceId);
@@ -107,7 +120,18 @@ export const DepositFromWallet = ({
 	}
 
 	const handleMetamaskTxResult = (wallet: MetaMaskWallet, results: any) => {
-		if (results.txHash && results.blockNumber) {
+
+		let stringifiedResults = results?.toString().toLowerCase()
+		if (results?.message)
+			stringifiedResults += results.message.toString();
+
+		const userDenied: boolean = stringifiedResults.includes("user denied");
+		const gasTooLow: boolean = stringifiedResults.includes("intrinsic gas too low") || stringifiedResults.includes("out of gas");
+		const insufficientFunds: boolean = stringifiedResults.includes("insufficient funds");
+		const transactionFailed: boolean = stringifiedResults.includes("transaction failed");
+		const hasAnyErrors: boolean = userDenied || transactionFailed || gasTooLow || insufficientFunds;
+
+		if (results.txHash && results.blockNumber && !hasAnyErrors) {
 			setSentSuccess(true);
 			setTxHash(results.txHash);
 			const confirmInterval: number = sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2;
@@ -118,8 +142,8 @@ export const DepositFromWallet = ({
 				({numConfirmations}: any) => setNumConfirmations(numConfirmations)
 			);
 				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
-		} else if (results.error.length > 0) {
-			setButtonText("Something went wrong");
+		} else if (results?.error?.length > 0) {
+			setButtonText("Something went wrong, try again?");
 			SendLogsToServer.error("DEPOSIT_CONFIRMATION", "user failed to send tx: " + JSON.stringify(results), transactionTraceId);
 		}
 
