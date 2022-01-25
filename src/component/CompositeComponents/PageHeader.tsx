@@ -119,7 +119,7 @@ const PageHeader = () => {
 							if (connectWalletResult !== "error") {
 								setHasAlreadyConnectedKeplr(true);
 							}
-							setOnAddedKeplr(connectWalletResult);
+							// setOnAddedKeplr(connectWalletResult);
 						}}>
                             <SVGImage
                                 height={`1.25em`}
@@ -134,7 +134,7 @@ const PageHeader = () => {
 				{!hasTerraConnectedToKeplr && <>
                     <div style={{color: `grey`, fontSize: `0.8em`, fontWeight: ``, marginRight: `0em`}}>
                         <ConnectWalletButton onClick={async () => {
-							const connectWalletResult = await getKeplrWallet().connectToWallet();
+							const connectWalletResult = await getKeplrWallet().switchChain("terra");
 							console.log("text", connectWalletResult);
 							if (connectWalletResult !== "error") {
 								setHasTerraConnectedToKeplr(true);

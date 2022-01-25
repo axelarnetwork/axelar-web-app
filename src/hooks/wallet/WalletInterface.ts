@@ -1,5 +1,10 @@
 import {AssetInfo} from "@axelar-network/axelarjs-sdk";
 
+export interface TxResult {
+	isTxSuccess: boolean;
+	txHash: string;
+	feedback: string;
+}
 export interface WalletInterface {
 
 	isWalletInstalled(): boolean;
@@ -14,13 +19,17 @@ export interface WalletInterface {
 
 	getSigner(): any;
 
-	switchChain(chain?: string): Promise<boolean>;
+	switchChain(chain?: string): Promise<boolean> | Promise<"added" | "exists" | "error" | null>;
 
 	transferTokens(receiver: string, amount: string, asset: string | AssetInfo): void;
 
-	establishAccountChangeListeners(): Promise<boolean>;
+	handleTransferRequest(...args: any[]): Promise<any>;
 
-	removeAccountChangeListeners(): Promise<boolean>;
+	handleTransferResult(...args: any[]): any;
+
+	establishAccountChangeListeners(listener: () => void): Promise<boolean>;
+
+	removeAccountChangeListeners(listener: () => void): Promise<boolean>;
 
 	getCurrentNetwork(): string;
 

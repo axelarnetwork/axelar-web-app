@@ -1,12 +1,13 @@
-import {useRecoilValue}                          from "recoil";
-import styled                                    from "styled-components";
-import BoldSpan                                  from "component/StyleComponents/BoldSpan";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
-import {ChainSelection, SourceAsset}             from "state/ChainSelection";
-import {SourceDepositAddress}                    from "state/TransactionStatus";
-import {getShortenedWord}                        from "utils/wordShortener";
-import {getMinDepositAmount}                     from "utils/getMinDepositAmount";
-import {DepositFromWallet}                       from "./DepositFromWallet";
+import {useRecoilValue}                                           from "recoil";
+import styled                                                     from "styled-components";
+import BoldSpan                                                   from "component/StyleComponents/BoldSpan";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                  from "config/consts";
+import {ChainSelection, SourceAsset}                              from "state/ChainSelection";
+import {SourceDepositAddress}                                     from "state/TransactionStatus";
+import {getShortenedWord}                                         from "utils/wordShortener";
+import {getMinDepositAmount}                                      from "utils/getMinDepositAmount";
+import {DepositFromWallet}                                        from "./DepositFromWallet";
+import {HasAlreadyConnectedWallet, KEPLR_WALLET, METAMASK_WALLET} from "../../../../state/Wallet";
 
 export const StyledHeader = styled.div`
 	position: relative;
@@ -21,14 +22,15 @@ export const StyledHeader = styled.div`
 `;
 
 const Step2InfoForWidget = ({
-	                            isWalletConnected,
 	                            walletBalance
-                            }: { isWalletConnected: boolean, walletBalance: number }) => {
+                            }: { walletBalance: number }) => {
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const hasAlreadyConnectedMetamask = useRecoilValue(HasAlreadyConnectedWallet(METAMASK_WALLET));
+	const hasAlreadyConnectedKeplr = useRecoilValue(HasAlreadyConnectedWallet(KEPLR_WALLET));
 
 	if (!sourceAsset || !depositAddress || !sourceChain || !destChain)
 		return null;
@@ -48,8 +50,7 @@ const Step2InfoForWidget = ({
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
-		{isWalletConnected && generateLine("(Optional) Send deposit here!", <DepositFromWallet
-			isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>)}
+		{(sourceChain.module === "evm" ? hasAlreadyConnectedMetamask : hasAlreadyConnectedKeplr) && generateLine("(Optional) Send deposit here!", <DepositFromWallet />)}
 		<br/>
 	</div>
 

@@ -158,8 +158,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 			case !!depositAddress:
 				setActiveStep(2);
-				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected}
-				                                      walletBalance={walletBalance}/>);
+				setCartoonMessage(<Step2InfoForWidget walletBalance={walletBalance}/>);
 				break;
 			default:
 				setActiveStep(1);

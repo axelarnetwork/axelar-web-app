@@ -8,6 +8,7 @@ import Long                            from "long";
 import {Height}                        from "cosmjs-types/ibc/core/client/v1/client";
 import {KeplrWalletChainConfig}        from "config/wallet/axelarnet/interface";
 import {WalletInterface}               from "./WalletInterface";
+import {getKeplrFromWindow}            from "@keplr-wallet/stores";
 
 declare const window: Window &
 	typeof globalThis & {
@@ -51,6 +52,15 @@ export class KeplrWallet implements WalletInterface {
 	}
 
 	public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
+		if (!this.isWalletInstalled()) {
+			this.installWallet();
+			return null;
+		}
+		await getKeplrFromWindow();
+		return "added";
+
+	}
+	public async connectToChain(): Promise<"added" | "exists" | "error" | null> {
 
 		let text: "added" | "exists" | "error" | null = "error";
 
@@ -80,7 +90,10 @@ export class KeplrWallet implements WalletInterface {
 	}
 
 	public installWallet(): void {
-		alert("TODO: need to install wallet first");
+		const confirm = window.confirm("Install wallet first here?");
+		if (confirm) {
+			window.open('https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap?hl=en', '_blank')
+		}
 	}
 
 	public async getAddress(): Promise<string> {
@@ -116,7 +129,7 @@ export class KeplrWallet implements WalletInterface {
 		this.CONFIG_FOR_CHAIN = configForChain;
 		console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
 	}
-	public async switchChain(chainName: string): Promise<boolean> {
+	public async switchChain(chainName: string): Promise<"added" | "exists" | "error" | null> {
 		this.updateChainConfigs(chainName);
 		// const configs = require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default;
 		// const configForChain = configs[chainName];
@@ -125,8 +138,7 @@ export class KeplrWallet implements WalletInterface {
 		// this.CHAIN_INFO = configForChain?.chainInfo;
 		// this.CONFIG_FOR_CHAIN = configForChain;
 		// console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
-		await this.connectToWallet();
-		return true;
+		return await this.connectToChain();
 	}
 
 	public async transferTokens(depositAddress: string, amount: string): Promise<any> {
@@ -199,6 +211,15 @@ export class KeplrWallet implements WalletInterface {
 
 	public getCurrentNetwork() {
 		return this.CHAIN_ID;
+	}
+
+	public handleTransferRequest() {
+		return new Promise((resolve) => resolve(true));
+		// throw new Error("todo need to implement");
+	}
+
+	public handleTransferResult() {
+		// throw new Error("todo need to implement");
 	}
 
 }

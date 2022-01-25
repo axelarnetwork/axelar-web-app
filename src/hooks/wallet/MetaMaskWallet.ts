@@ -1,10 +1,11 @@
-import {AssetInfo, EthersJsTokenMap, getConfigs} from "@axelar-network/axelarjs-sdk";
-import axios                                     from "axios";
-import {BigNumber, Contract, ethers}             from "ethers";
-import MetaMaskOnboarding                        from '@metamask/onboarding';
-import {erc20Abi}                                from "config/wallet/evm/erc20Abi";
-import {ChainParam}                              from "config/wallet/evm/testnet";
-import {WalletInterface}                         from "./WalletInterface";
+import {AssetInfo, ChainInfo, EthersJsTokenMap, getConfigs} from "@axelar-network/axelarjs-sdk";
+import axios                                                from "axios";
+import {BigNumber, Contract, ethers}                        from "ethers";
+import MetaMaskOnboarding                                   from '@metamask/onboarding';
+import {erc20Abi}                                           from "config/wallet/evm/erc20Abi";
+import {ChainParam}                                         from "config/wallet/evm/testnet";
+import {TxResult, WalletInterface}                          from "./WalletInterface";
+import {SendLogsToServer}                                   from "../../api/SendLogsToServer";
 
 declare const window: Window &
 	typeof globalThis & {
@@ -24,17 +25,12 @@ export interface MetamaskTransferEvent {
 	blockNumber: string;
 }
 
-export async function createFeeTxOption(signer: ethers.providers.JsonRpcSigner): Promise<TxOption> {
-	const feeData = await signer.getFeeData();
-	const txOptions: TxOption = {};
-	if (feeData.maxFeePerGas) {
-		txOptions.maxFeePerGas = feeData.maxFeePerGas.mul(12).div(10);
-	} else {
-		txOptions.gasPrice = feeData?.gasPrice?.mul(2);
-	}
-	return txOptions;
-}
-
+/*
+*
+TODO: this is a good article on listening to eth balances
+https://medium.com/@clashofcoins/how-to-fetch-eth-balance-in-react-with-hooks-89e48ed6e842
+*
+* */
 export class MetaMaskWallet implements WalletInterface {
 
 	private provider: ethers.providers.Web3Provider;
@@ -130,8 +126,8 @@ export class MetaMaskWallet implements WalletInterface {
 
 	public async switchChain(chainName: string): Promise<boolean> {
 		this.chainName = chainName;
-		if (!this.isWalletConnected(chainName))
-			await this.connectToChain();
+		// if (!this.isWalletConnected(chainName))
+		await this.connectToChain();
 		return true;
 	}
 
@@ -245,23 +241,93 @@ export class MetaMaskWallet implements WalletInterface {
 		return new ethers.Contract(tokenAddress, erc20Abi, this.signer);
 	}
 
-	public establishAccountChangeListeners(): Promise<boolean> {
+	public establishAccountChangeListeners(listener: () => void): Promise<boolean> {
 		console.log("MetaMask wallet; NEED TO IMPLEMENT establishAccountChangeListeners");
-		window.addEventListener("click", this.eventListeners)
+
+		/*update balance on fetch*/
+		this.provider.on("block",console.log);
+		/*update account on change*/
+
+		/*delete this*/
+		window.addEventListener("click", listener)
 		return new Promise((resolve) => resolve(true));
 	}
 
-	public eventListeners() {
+	public eventListeners(currentAsset?: AssetInfo | null) {
 		console.log("i was clicked")
+
+		if (currentAsset)
+			return this.getBalance(currentAsset);
 	}
 
-	public removeAccountChangeListeners(): Promise<boolean> {
+	public removeAccountChangeListeners(listener: () => void): Promise<boolean> {
 		console.log("MetaMask wallet; NEED TO IMPLEMENT removeAccountChangeListeners");
-		window.removeEventListener("click", this.eventListeners)
+
+		/*update balance on fetch*/
+		this.provider.off("block",listener);
+
+		/*update account on change*/
+
+		/*delete this*/
+		window.removeEventListener("click", listener)
 		return new Promise((resolve) => resolve(true));
 	}
 
 	public getCurrentNetwork() {
 		return "";
 	}
+
+	public async handleTransferRequest(sourceChainSelection: ChainInfo, depositAddressInfo: AssetInfo, amountToDeposit: string, selectedSourceAsset: AssetInfo, statusCb: () => void, transactionTraceId: string): Promise<TxResult> {
+		const chainName = sourceChainSelection.chainName.toLowerCase() as string;
+		await this.switchChain(chainName);
+		const tokenAddress = await this.getOrFetchTokenAddress(selectedSourceAsset);
+		let results: MetamaskTransferEvent;
+		try {
+			results= await this.transferTokens(
+				depositAddressInfo?.assetAddress as string,
+				(amountToDeposit || 0).toString(),
+				selectedSourceAsset as AssetInfo
+			);
+		} catch (error: any) {
+			results = error;
+		}
+		console.log("token address on", sourceChainSelection?.chainName, tokenAddress, results);
+		return this.handleTransferResult(sourceChainSelection, results, statusCb, transactionTraceId);
+	}
+
+	public handleTransferResult(sourceChainSelection: ChainInfo, results: any, statusCb: () => void, transactionTraceId: string): TxResult {
+		const txResult: TxResult = {
+			isTxSuccess: false,
+			txHash: "",
+			feedback: ""
+		}
+		if (results.txHash && results.blockNumber) {
+			txResult.isTxSuccess = true;
+			txResult.txHash = results.txHash;
+			const confirmInterval: number = sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2;
+			this.confirmEtherTransaction(
+				results.txHash,
+				sourceChainSelection?.confirmLevel as number,
+				confirmInterval,
+				statusCb
+			);
+			SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
+		} else if (results.error.length > 0) {
+			txResult.feedback = "Something went wrong";
+			SendLogsToServer.error("DEPOSIT_CONFIRMATION", "user failed to send tx: " + JSON.stringify(results), transactionTraceId);
+		}
+		return txResult;
+
+	}
+}
+
+export async function createFeeTxOption(signer: ethers.providers.JsonRpcSigner): Promise<TxOption> {
+	const feeData = await signer.getFeeData();
+	const txOptions: TxOption = {};
+	if (feeData.maxFeePerGas) {
+		txOptions.maxFeePerGas = feeData.maxFeePerGas.mul(12).div(10);
+	} else {
+		txOptions.gasPrice = feeData?.gasPrice?.mul(2);
+	}
+	return txOptions;
 }

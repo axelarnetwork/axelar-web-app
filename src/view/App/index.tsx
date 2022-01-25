@@ -1,20 +1,21 @@
-import {useEffect, useState}                                    from "react";
-import {useRecoilValue}                                         from "recoil";
-import {AssetInfo}                                              from "@axelar-network/axelarjs-sdk";
-import InfoWidget                                               from "component/CompositeComponents/InfoWidget";
-import PageHeader                                               from "component/CompositeComponents/PageHeader";
-import PageFooter                                               from "component/CompositeComponents/PageFooter";
-import WalkThrough                                              from "component/CompositeComponents/Walkthrough";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/consts";
-import useLoadRecaptcha                                         from "hooks/auth/useLoadRecaptcha";
-import {ShowDisclaimer, ShowDisclaimerFromFAQ}                  from "state/ApplicationStatus";
-import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
-import {StyledAppContainer}                                     from "view/App/styles/StyledAppContainer";
-import SwapWindow                                               from "view/SwapWindow";
-import Disclaimer                                               from "../Disclaimer";
-import {Redirect}                                               from "react-router-dom";
-import {MetaMaskWallet}                                         from "hooks/wallet/MetaMaskWallet";
-import {KeplrWallet}                                            from "hooks/wallet/KeplrWallet";
+import {useEffect, useState}                                      from "react";
+import {useRecoilValue}                                           from "recoil";
+import {AssetInfo}                                                from "@axelar-network/axelarjs-sdk";
+import InfoWidget                                                 from "component/CompositeComponents/InfoWidget";
+import PageHeader                                                 from "component/CompositeComponents/PageHeader";
+import PageFooter                                                 from "component/CompositeComponents/PageFooter";
+import WalkThrough                                                from "component/CompositeComponents/Walkthrough";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                  from "config/consts";
+import useLoadRecaptcha                                           from "hooks/auth/useLoadRecaptcha";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ}                    from "state/ApplicationStatus";
+import {ChainSelection, IsValidDestinationAddress, SourceAsset}   from "state/ChainSelection";
+import {HasAlreadyConnectedWallet, KEPLR_WALLET, METAMASK_WALLET} from "state/Wallet";
+import {StyledAppContainer}                                       from "view/App/styles/StyledAppContainer";
+import SwapWindow                                                 from "view/SwapWindow";
+import Disclaimer                                                 from "../Disclaimer";
+import {Redirect}                                                 from "react-router-dom";
+import {MetaMaskWallet}                                           from "hooks/wallet/MetaMaskWallet";
+import {KeplrWallet}                                              from "hooks/wallet/KeplrWallet";
 
 let metamaskWallet: MetaMaskWallet;
 let keplrWallet: KeplrWallet;
@@ -41,29 +42,35 @@ const App = () => {
 	const showDisclaimer = useRecoilValue(ShowDisclaimer);
 	const showDisclaimerForFAQ = useRecoilValue(ShowDisclaimerFromFAQ);
 	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
+	const hasAlreadyConnectedMetamask = useRecoilValue(HasAlreadyConnectedWallet(METAMASK_WALLET));
+	const hasAlreadyConnectedKeplr = useRecoilValue(HasAlreadyConnectedWallet(KEPLR_WALLET));
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
 		&& selectedSourceAsset
 		&& isValidDestinationAddr;
 
-	const [areWalletsSet, setAreWalletsSet] = useState(false);
 
 	useEffect(() => {
 		if (!isRecaptchaSet)
 			initiateRecaptcha();
 	}, [isRecaptchaSet, initiateRecaptcha]);
 
-	useEffect(() => {
-
-		!areWalletsSet && Promise.all([getMetamaskWallet().establishAccountChangeListeners(), getKeplrWallet().establishAccountChangeListeners()])
-		.then((result) => result.every(() => true) && setAreWalletsSet(true));
-
-		return () => {
-			areWalletsSet && Promise.all([getMetamaskWallet().removeAccountChangeListeners(),])
-			.then((result) => console.log("did wallets destroy", result))
-		}
-	}, [areWalletsSet])
+	// useEffect(() => {
+	// 	const listener = () => getMetamaskWallet().eventListeners(selectedSourceAsset);
+	// 	hasAlreadyConnectedMetamask && getMetamaskWallet().establishAccountChangeListeners(listener)
+	// 	return () => {
+	// 		hasAlreadyConnectedMetamask && getMetamaskWallet().removeAccountChangeListeners(listener)
+	// 		.then((result) => console.log("did metamask wallet destroy", result));
+	// 	}
+	// }, [hasAlreadyConnectedMetamask, selectedSourceAsset]);
+	// useEffect(() => {
+	// 	hasAlreadyConnectedKeplr && getKeplrWallet().establishAccountChangeListeners()
+	// 	return () => {
+	// 		hasAlreadyConnectedKeplr && getKeplrWallet().removeAccountChangeListeners()
+	// 		.then((result) => console.log("did keplr wallet destroy", result));
+	// 	}
+	// }, [hasAlreadyConnectedKeplr]);
 
 	if (underMaintenance === "true")
 		return <Redirect to={"/landing"}/>;

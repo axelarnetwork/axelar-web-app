@@ -7,6 +7,7 @@
 		"@cosmjs/launchpad": "^0.26.5",
 		"@cosmjs/stargate": "^0.26.5",
 		"@keplr-wallet/cosmos": "0.9.9",
+		"@keplr-wallet/stores": "^0.9.11",
 		"@keplr-wallet/types": "0.9.9",
 		"@metamask/onboarding": "^1.0.1",
 		"@types/react-google-recaptcha": "^2.1.2",
