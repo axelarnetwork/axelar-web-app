@@ -36,7 +36,15 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 	const {authenticateWithRecaptchaV3, authenticateWithRecaptchaV2} = useRecaptchaAuthenticate(recaptchaV2Ref);
 	const notificationHandler = NotificationHandler();
 
-	const sCb: (status: any, setConfirms: any) => void = useCallback((status: any, setConfirms: any): void => {
+	const sCb: (status: any, setConfirms: any, traceId: string) => void = useCallback((status: any, setConfirms: any, traceId: string): void => {
+		if (status?.timedOut) {
+			notificationHandler.notifyError({
+				statusCode: 408,
+				message: "Timed out waiting for your deposit... we waited two hours!",
+				traceId
+			});
+			return;
+		}
 		const confirms: IConfirmationStatus = {
 			numberConfirmations: depositConfirmCbMap[sourceChain?.chainSymbol.toLowerCase() as string]
 				? depositConfirmCbMap[sourceChain?.chainSymbol.toLowerCase() as string](status)
@@ -46,7 +54,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 			amountConfirmedString: status?.Attributes?.amount
 		};
 		setConfirms(confirms);
-	}, [sourceChain]);
+	}, [sourceChain, notificationHandler]);
 
 	const failCb = (data: any): void => console.log(data);
 
@@ -72,8 +80,8 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
 			const res: AssetInfoWithTrace = await TransferAssetBridgeFacade.transferAssets(
 				msg,
-				{successCb: (data: any) => sCb(data, setSourceNumConfirmations), failCb},
-				{successCb: (data: any) => sCb(data, setDestinationNumConfirmations), failCb});
+				{successCb: (data: any) => sCb(data, setSourceNumConfirmations, traceId), failCb},
+				{successCb: (data: any) => sCb(data, setDestinationNumConfirmations, traceId), failCb});
 			setDepositAddress(res.assetInfo);
 			return res;
 		} catch (e: any) {
@@ -119,7 +127,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					recaptchaToken = await recaptchaAuthenticator();
 				} catch (e: any) {
 					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
-						from this site - your request didn't even hit our servers`;
+                  from this site - your request didn't even hit our servers`;
 					notificationHandler.notifyError({statusCode: 403, message: msg});
 					throw new Error(msg + e);
 				}

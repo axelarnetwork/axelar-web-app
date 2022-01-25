@@ -7,6 +7,7 @@ import {ChainInfo}                     from "@keplr-wallet/types";
 import Long                            from "long";
 import {Height}                        from "cosmjs-types/ibc/core/client/v1/client";
 import {KeplrWalletChainConfig}        from "config/wallet/axelarnet/interface";
+import {getShortenedWord}              from "utils/wordShortener";
 
 declare const window: Window &
 	typeof globalThis & {
@@ -27,13 +28,6 @@ export class KeplrWallet implements WalletInterface {
 		this.RPC_ENDPOINT = configForChain?.rpcEndpoint;
 		this.CHAIN_INFO = configForChain?.chainInfo;
 		this.CONFIG_FOR_CHAIN = configForChain;
-		console.log(this.CHAIN_ID, this.RPC_ENDPOINT, this.CHAIN_INFO, chainName, configForChain);
-
-		// this.connectToWallet();
-		// window.addEventListener("keplr_keystorechange", () => {
-		// 	console.log("account changed!");
-		// 	this.connectToWallet();
-		// });
 	}
 
 	public isWalletInstalled(): boolean {
@@ -53,7 +47,7 @@ export class KeplrWallet implements WalletInterface {
 			await window.keplr.enable(this.CHAIN_ID);
 			text = "exists";
 		} catch (e) {
-			console.log("KeplrWallet connectToWallet - unable to connect to wallet natively, so trying experimental chain", e, this.CHAIN_INFO, this.CHAIN_ID);
+			console.log("KeplrWallet connectToWallet - unable to connect to wallet natively, so trying experimental chain", e, this.CHAIN_ID, getShortenedWord(this.CHAIN_INFO.rpc, 20));
 			try {
 				await window.keplr.experimentalSuggestChain(this.CHAIN_INFO);
 				await window.keplr.enable(this.CHAIN_ID);

@@ -6,7 +6,7 @@ const {persistAtom} = recoilPersist();
 
 export const IsLoggedIn = atom<boolean>({
 	key: "IsLoggedIn",
-	default: false,
+	default: true,
 	effects_UNSTABLE: [persistAtom]
 });
 
