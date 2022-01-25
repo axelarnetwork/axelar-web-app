@@ -2,6 +2,7 @@ export const getNotificationMessage: (messageCode: number, fullMessageObj: any) 
 
 	const errorsMap: { [statusCode: number]: string } = {
 		503: `Unexpected error occurred, try again later.`,
+		408: fullMessageObj.message + " Refresh this page and try again.", //handle user input timeout for things like deposit
 		403: fullMessageObj.message + "; Refresh this page and try again.", //handle recaptcha error
 		400: fullMessageObj.message + "; Check your inputs and try again.", //handle bad request error
 		429: fullMessageObj.message + "; Try again in a few minutes.", //handle rate limit error
