@@ -88,13 +88,19 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-                <h2>Helpful Links</h2>
+                <h3>Axelar Info</h3>
+                <NewLink text={`Token Contracts & Channel IDs (${toProperCase(process.env.REACT_APP_STAGE as string)})`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
+                <NewLink text={`Minimum Transfer Amounts`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=minimum-transfer-amounts", '_blank')}/>
+                <NewLink text={`Transaction Fees`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=transaction-fees", '_blank')}/>
+	            <h3>Support Links</h3>
                 <NewLink text={"Discord Support Channel"}
                          onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
-                <NewLink text={"Instructional Video (TBD)"}/>
+                <NewLink text={"Instructional Video"}
+                         onClick={() => window.open('https://www.youtube.com/watch?v=VsfCJl1A9QI', '_blank')}/>
                 <NewLink text={"Medium Instructional Guide (TBD)"}/>
-                <NewLink text={`${toProperCase(process.env.REACT_APP_STAGE as string)} Token Contracts`}
-                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
                 <NewLink text={"Terms of Use"} onClick={() => {
 					setShowDisclaimer(true);
 					setShowLargeDisclaimer(true);
@@ -141,9 +147,12 @@ const FAQPage = () => {
 	</StyledHelperComponent>;
 }
 
-const StyledNewLink = styled(FlexRow)`
+const StyledText = styled(FlexRow)`
 	justify-content: flex-start;
 	margin-bottom: 1em;
+`;
+
+const StyledNewLink = styled(StyledText)`
 	cursor: pointer;
 	&:focus, &:hover, &:visited, &:link, &:active {
         text-decoration: underline;
