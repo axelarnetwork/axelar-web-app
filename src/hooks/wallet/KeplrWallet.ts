@@ -115,7 +115,12 @@ export class KeplrWallet implements WalletInterface {
 			amount: [{denom: "uaxl", amount: "30000"}]
 		};
 
-		const result = await cosmjs.sendTokens(senderAddress, depositAddress, [sendCoin], fee)
+		let result;
+		try {
+			result = await cosmjs.sendTokens(senderAddress, depositAddress, [sendCoin], fee)
+		} catch (error: any) {
+			throw new Error(error);
+		}
 
 		console.log("results", result);
 	}
@@ -147,8 +152,9 @@ export class KeplrWallet implements WalletInterface {
 				fee);
 			console.log(res);
 			return res;
-		} catch (err) {
+		} catch (err: any) {
 			console.log("unsuccessful IBC transfer", err);
+			throw new Error(err)
 		}
 
 	}
