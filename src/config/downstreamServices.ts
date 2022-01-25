@@ -41,7 +41,7 @@ const tokenContracts = {
 	local: "https://docs.axelar.dev/#/resources/testnet-releases",
 	devnet: "https://docs.axelar.dev/#/resources/testnet-releases",
 	testnet: "https://docs.axelar.dev/#/resources/testnet-releases",
-	mainnet: "https://github.com/axelarnetwork/axelarate-community/blob/main/resources/mainnet-releases.md"
+	mainnet: "https://docs.axelar.dev/#/resources/mainnet-releases"
 }
 
 const configs: IConfig = {

@@ -66,7 +66,7 @@ const Landing = () => {
 			? <>
 				<h1>We'll be right back!</h1>
 				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
-					The network is currently under maintenance. Back online shortly.
+					Satellite needs a minor tune-up. Back online shortly.
 				</div>
 			</>
 			: <>
