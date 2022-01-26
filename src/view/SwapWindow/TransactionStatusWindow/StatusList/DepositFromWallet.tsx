@@ -1,19 +1,20 @@
-import React, {useEffect, useState}              from "react";
-import styled                                    from "styled-components";
-import {AssetInfo}                               from "@axelar-network/axelarjs-sdk";
-import {useRecoilValue}                          from "recoil";
-import downstreamServices                        from "config/downstreamServices";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
-import {InputForm}                               from "component/CompositeComponents/InputForm";
-import {StyledButton}                            from "component/StyleComponents/StyledButton";
-import {FlexRow}                                 from "component/StyleComponents/FlexRow";
-import Link                                      from "component/Widgets/Link";
-import {KeplrWallet}                             from "hooks/wallet/KeplrWallet";
-import {MetamaskTransferEvent, MetaMaskWallet}   from "hooks/wallet/MetaMaskWallet";
+import React, {useEffect, useState}               from "react";
+import styled                                     from "styled-components";
+import {AssetInfo}                                from "@axelar-network/axelarjs-sdk";
+import {useRecoilValue}                           from "recoil";
+import {SendLogsToServer}                         from "api/SendLogsToServer";
+import downstreamServices                         from "config/downstreamServices";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}  from "config/consts";
+import {InputForm}                                from "component/CompositeComponents/InputForm";
+import {StyledButton}                             from "component/StyleComponents/StyledButton";
+import {FlexRow}                                  from "component/StyleComponents/FlexRow";
+import Link                                       from "component/Widgets/Link";
+import {KeplrWallet}                              from "hooks/wallet/KeplrWallet";
+import {MetamaskTransferEvent, MetaMaskWallet}    from "hooks/wallet/MetaMaskWallet";
 import {ChainSelection, SourceAsset}              from "state/ChainSelection";
 import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
 import {getMinDepositAmount}                      from "utils/getMinDepositAmount";
-import {SendLogsToServer}                        from "../../../../api/SendLogsToServer";
+import {isDecimal}                                from "utils/isDecimal";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -50,7 +51,7 @@ export const DepositFromWallet = ({
 		setButtonText("Sending...");
 		let results: MetamaskTransferEvent;
 		try {
-			results= await wallet.transferTokens(
+			results = await wallet.transferTokens(
 				depositAddress?.assetAddress as string,
 				(amountToDeposit || 0).toString(),
 				selectedSourceAsset as AssetInfo
@@ -109,11 +110,11 @@ export const DepositFromWallet = ({
 		if (results && results.transactionHash && results.height && !hasAnyErrors) {
 			setSentSuccess(true);
 			setTxHash(results.transactionHash);
-				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + results, transactionTraceId);
+			SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + results, transactionTraceId);
 		} else {
 			setButtonText("Something went wrong, try again?");
 			const msg = "user failed to send tx: " + results;
-			console.log("message",msg);
+			console.log("message", msg);
 			SendLogsToServer.error("DEPOSIT_CONFIRMATION", msg, transactionTraceId);
 		}
 
@@ -141,7 +142,7 @@ export const DepositFromWallet = ({
 				confirmInterval,
 				({numConfirmations}: any) => setNumConfirmations(numConfirmations)
 			);
-				SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
+			SendLogsToServer.info("DEPOSIT_CONFIRMATION", "deposit made within app: " + JSON.stringify(results), transactionTraceId);
 		} else if (results?.error?.length > 0 || hasAnyErrors) {
 			setButtonText("Something went wrong, try again?");
 			SendLogsToServer.error("DEPOSIT_CONFIRMATION", "user failed to send tx: " + JSON.stringify(results), transactionTraceId);
@@ -188,7 +189,8 @@ export const DepositFromWallet = ({
 	const disableTransferButton: boolean = !amountToDeposit
 		|| (amountToDeposit < minDepositAmt)
 		|| !hasEnoughInWalletForMin
-		|| (amountToDeposit > walletBalance);
+		|| (amountToDeposit > walletBalance)
+		|| (!isDecimal(amountToDeposit as string));
 
 	return <div style={{width: `95%`}}><br/>{isWalletConnected
 		? <div>

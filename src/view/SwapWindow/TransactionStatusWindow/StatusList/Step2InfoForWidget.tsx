@@ -48,6 +48,12 @@ const Step2InfoForWidget = ({
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
+		{sourceChain.module === "evm" && sourceAsset.common_key === "uusd" &&
+			generateLine("Note on Your UST Deposit",
+				<div>If you are making your deposit outside of Satellite, please ensure you send Axelar UST (and not any other UST) to the deposit address. Otherwise funds may get lost.<br/><br/>
+					Go to the <BoldSpan>"Token Contracts & Channel IDs"</BoldSpan> page under <BoldSpan>"Getting Started"</BoldSpan> for more information.</div>,
+				{ color: `red`, fontWeight: `500`}
+			)}
 		{isWalletConnected && generateLine("(Optional) Send deposit here!", <DepositFromWallet
 			isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>)}
 		<br/>
@@ -55,8 +61,11 @@ const Step2InfoForWidget = ({
 
 }
 
-const generateLine = (header: string, text: string | JSX.Element) => {
-	return <div style={{padding: `0.75em`, fontSize: `0.8em`}}>
+const generateLine = (header: string, text: string | JSX.Element, addlStyles?: {[key: string]: string}) => {
+	let style = {padding: `0.75em`, fontSize: `0.8em`};
+	if (addlStyles)
+		style = {...style, ...addlStyles}
+	return <div style={style}>
 		<BoldSpan>{header}</BoldSpan>
 		<div>{text}</div>
 	</div>;
