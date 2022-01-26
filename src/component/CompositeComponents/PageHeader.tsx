@@ -86,7 +86,7 @@ const PageHeader = () => {
 	                    <ConnectWalletButton onClick={async () => {
 	                        const connectWalletResult = await (new KeplrWallet("terra").connectToWallet());
 	                        console.log("text",connectWalletResult);
-							if (connectWalletResult !== "error") {
+							if (connectWalletResult !== "error" && connectWalletResult !== null) {
 								setHasTerraConnectedToKeplr(true);
 							}
 							setOnAddedKeplr(connectWalletResult);

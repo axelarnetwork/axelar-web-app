@@ -64,7 +64,10 @@ export class KeplrWallet implements WalletInterface {
 	}
 
 	public installWallet(): void {
-		alert("TODO: need to install wallet first");
+		const confirm = window.confirm("Click OK to be brought to the Chrome Store to download the Keplr Wallet. Please (1) set up an Keplr account and (2) refresh this Satellite page before trying this again.");
+		if (confirm) {
+			window.open('https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap?hl=en', '_blank')
+		}
 	}
 
 	public async getAddress(): Promise<string> {

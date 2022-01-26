@@ -1,5 +1,4 @@
-import {useState}                                                   from "react";
-import {useRecoilValue, useSetRecoilState}                          from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState}          from "recoil";
 import {SourceDepositAddress, TransactionTraceId}                   from "state/TransactionStatus";
 import styled                                                       from "styled-components";
 import Tooltip                                                      from "component/Widgets/Tooltip";
@@ -9,12 +8,13 @@ import {FlexRow}                                                    from "compon
 import {SVGImage}                                                   from "component/Widgets/SVGImage";
 import configs                                                      from "config/downstreamServices";
 import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
+import {ShowFAQWidget, ShowGettingStartedWidget}                    from "state/FAQWidget";
 import {toProperCase}                                               from "utils/toProperCase";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
     z-index: 15;
-    bottom: 60px;
+    bottom: 70px;
     right: 10px;
     display: flex;
     flex-direction: column;
@@ -22,16 +22,6 @@ const StyledHelperComponent = styled.div`
     width: 30%;
     min-width: 275px;
     max-width: 500px;
-`;
-
-const HelperWidget = styled.div`
-	box-sizing: border-box;
-	padding: 0.5em 0.75em 0.5em 0.75em;
-	margin: 0.5em;
-	background-color: ${props => props.theme.headerBackgroundColor};
-	border-radius: 50px;
-	color: white;
-	cursor: pointer;
 `;
 
 const StyledFAQPopup = styled.div`
@@ -43,7 +33,7 @@ const StyledFAQPopup = styled.div`
 	overflow-wrap: break-word;
     background-color: white;
     width: 100%;
-    font-size: 0.8em;
+    font-size: 0.9em;
 `;
 
 export const StyledHeader = styled.div`
@@ -56,6 +46,7 @@ export const StyledHeader = styled.div`
     font-size: large;
     box-sizing: border-box;
     padding: 0.25em;
+    margin-bottom: 1em;
 `;
 
 const FAQSection = styled.div`
@@ -74,9 +65,48 @@ const FAQPage = () => {
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const setShowDisclaimerFromFAQ = useSetRecoilState(ShowDisclaimerFromFAQ);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
-	const [showFAQ, setShowFAQ] = useState(false);
+	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQWidget);
+	const [showGettingStarted, setShowGettingStarted] = useRecoilState(ShowGettingStartedWidget);
 
 	return <StyledHelperComponent>
+		{showGettingStarted && <StyledFAQPopup>
+            <StyledHeader>
+                <span>Getting Started</span>
+                <div
+                    style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
+                    onClick={() => setShowGettingStarted(false)}
+                >
+                    <img src={require(`resources/close-icon.svg`).default} alt={""}/>
+                </div>
+            </StyledHeader>
+            <FAQSection>
+                <NewLink text={"Instructional Video"}
+                         onClick={() => window.open('https://www.youtube.com/watch?v=VsfCJl1A9QI', '_blank')}/>
+                <DescriptorText>One of our devs records himself walking through a transaction from start to
+                    finish.</DescriptorText>
+                <NewLink text={"Medium Instructional Guide"}
+                         onClick={() => window.open("https://socialaxl.medium.com/f6480c7ff20c", '_blank')}/>
+                <DescriptorText>A step-by-step Medium post with screenshots at each step of the way through a
+                    transaction.</DescriptorText>
+                <NewLink text={`Token Contracts & Channel IDs (${toProperCase(process.env.REACT_APP_STAGE as string)})`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
+                <DescriptorText>An IMPORTANT document with the token contract addresses for all assets across EVM
+                    chains. Also includes our channel ID on Terra. </DescriptorText>
+                <NewLink text={`Minimum Transfer Amounts`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=minimum-transfer-amounts", '_blank')}/>
+                <DescriptorText>Minimum amounts depend on the selected destination chain. This document lists all of
+                    them in a table. </DescriptorText>
+                <NewLink text={`Transaction Fees`}
+                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=transaction-fees", '_blank')}/>
+                <DescriptorText>Note regarding relevant processing fees for any transaction that flows through the
+                    network. </DescriptorText>
+                <NewLink text={`Axelar Website`}
+                         onClick={() => window.open("https://axelar.network", '_blank')}/>
+                <DescriptorText>
+                    <div>A little more about us.</div>
+                </DescriptorText>
+            </FAQSection>
+        </StyledFAQPopup>}
 		{showFAQ && <StyledFAQPopup>
             <StyledHeader>
                 <span>Support</span>
@@ -88,28 +118,24 @@ const FAQPage = () => {
                 </div>
             </StyledHeader>
             <FAQSection>
-                <h3>Axelar Info</h3>
-                <NewLink text={`Token Contracts & Channel IDs (${toProperCase(process.env.REACT_APP_STAGE as string)})`}
-                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}/>
-                <NewLink text={`Minimum Transfer Amounts`}
-                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=minimum-transfer-amounts", '_blank')}/>
-                <NewLink text={`Transaction Fees`}
-                         onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string] + "?id=transaction-fees", '_blank')}/>
-	            <h3>Support Links</h3>
                 <NewLink text={"Discord Support Channel"}
                          onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
-                <NewLink text={"Instructional Video"}
-                         onClick={() => window.open('https://www.youtube.com/watch?v=VsfCJl1A9QI', '_blank')}/>
-                <NewLink text={"Medium Instructional Guide (TBD)"}/>
+                <DescriptorText>
+                    <div>Join our community and get Satellite support directly in
+                        the <BoldSpan>#satellite-bridge-support</BoldSpan> channel.
+                    </div>
+                </DescriptorText>
                 <NewLink text={"Terms of Use"} onClick={() => {
 					setShowDisclaimer(true);
 					setShowLargeDisclaimer(true);
 					setShowDisclaimerFromFAQ(true);
-
 				}}/>
+                <DescriptorText>
+                    <div>Before using Satellite, you should be comfortable with our Terms of Use.</div>
+                </DescriptorText>
             </FAQSection>
 			{transactionTraceId && <ContactUsSection>
-                <h2>Issues with a live transaction?</h2>
+                <h3>Issues with a live transaction?</h3>
                 <div style={{marginBottom: `5px`}}>Reach out on Discord in
                     the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:
                 </div>
@@ -138,27 +164,29 @@ const FAQPage = () => {
                 />
             </ContactUsSection>}
         </StyledFAQPopup>}
-		<HelperWidget className={"joyride-faq"} onClick={() => setShowFAQ(!showFAQ)}>
-			<FlexRow>
-				<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
-				<div style={{marginLeft: `10px`}}>Support</div>
-			</FlexRow>
-		</HelperWidget>
+
 	</StyledHelperComponent>;
 }
 
 const StyledText = styled(FlexRow)`
 	justify-content: flex-start;
+	margin-bottom: 0.25em;
+`;
+const DescriptorText = styled(StyledText)`
+	font-style: italic;
 	margin-bottom: 1em;
+	color: #898994;
+	font-size: 0.9em;
 `;
 
 const StyledNewLink = styled(StyledText)`
 	cursor: pointer;
+	font-weight: bold;
 	&:focus, &:hover, &:visited, &:link, &:active {
         text-decoration: underline;
 	}
 `;
-const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
+export const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
 	return <StyledNewLink onClick={onClick}>
 		{text}
 		{"  "}

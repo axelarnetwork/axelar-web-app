@@ -142,7 +142,7 @@ const StatusList = (props: IStatusListProps) => {
 			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
 			text={
-				<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 10)}</BoldSpan>.</span>}
+				<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 5)}</BoldSpan>.</span>}
 		/>
 		<ListItem
 			className={"joyride-status-step-2"}
@@ -156,7 +156,7 @@ const StatusList = (props: IStatusListProps) => {
 					<div style={{margin: `5px 0px 0px 0px`}}>
 						<ImprovedTooltip
 							anchorContent={<CopyToClipboard
-								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 10)} </BoldSpan>}
+								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 4)} </BoldSpan>}
 								height={`12px`}
 								width={`10px`}
 								textToCopy={depositAddress?.assetAddress || ""}

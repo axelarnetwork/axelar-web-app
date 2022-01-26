@@ -1,6 +1,8 @@
 import {useRecoilValue}                          from "recoil";
 import styled                                    from "styled-components";
 import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {PopoutLink}                              from "component/Widgets/PopoutLink";
+import configs                                   from "config/downstreamServices";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 import {SourceDepositAddress}                    from "state/TransactionStatus";
@@ -45,6 +47,17 @@ const Step2InfoForWidget = ({
 			<br/>
 		</StyledHeader>
 		<br/>
+		{sourceChain.module === "evm" &&
+			generateLine(`Note on Your ${sourceAsset.assetSymbol} Deposit`,
+				<div>Double check that you’re sending Axelar {sourceAsset.assetSymbol} from {sourceChain.chainName}. Verify the right contract address
+					<PopoutLink
+						text={" here"}
+						onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}
+					/>
+				</div>,
+				{ color: `red`, fontWeight: `500`}
+			)
+		}
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
@@ -55,8 +68,11 @@ const Step2InfoForWidget = ({
 
 }
 
-const generateLine = (header: string, text: string | JSX.Element) => {
-	return <div style={{padding: `0.75em`, fontSize: `0.8em`}}>
+const generateLine = (header: string, text: string | JSX.Element, addlStyles?: {[key: string]: string}) => {
+	let style = {padding: `0.75em`, fontSize: `0.8em`};
+	if (addlStyles)
+		style = {...style, ...addlStyles}
+	return <div style={style}>
 		<BoldSpan>{header}</BoldSpan>
 		<div>{text}</div>
 	</div>;
