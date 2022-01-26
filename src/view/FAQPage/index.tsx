@@ -84,7 +84,8 @@ const FAQPage = () => {
                          onClick={() => window.open('https://www.youtube.com/watch?v=VsfCJl1A9QI', '_blank')}/>
                 <DescriptorText>One of our devs records himself walking through a transaction from start to
                     finish.</DescriptorText>
-                <NewLink text={"Medium Instructional Guide (TBD)"}/>
+                <NewLink text={"Medium Instructional Guide"}
+                         onClick={() => window.open("https://socialaxl.medium.com/f6480c7ff20c", '_blank')}/>
                 <DescriptorText>A step-by-step Medium post with screenshots at each step of the way through a
                     transaction.</DescriptorText>
                 <NewLink text={`Token Contracts & Channel IDs (${toProperCase(process.env.REACT_APP_STAGE as string)})`}
