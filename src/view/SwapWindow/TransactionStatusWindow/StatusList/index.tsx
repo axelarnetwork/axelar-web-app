@@ -156,7 +156,7 @@ const StatusList = (props: IStatusListProps) => {
 					<div style={{margin: `5px 0px 0px 0px`}}>
 						<ImprovedTooltip
 							anchorContent={<CopyToClipboard
-								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 10)} </BoldSpan>}
+								JSXToShow={<BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 4)} </BoldSpan>}
 								height={`12px`}
 								width={`10px`}
 								textToCopy={depositAddress?.assetAddress || ""}
