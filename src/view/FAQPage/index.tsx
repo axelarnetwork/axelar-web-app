@@ -185,7 +185,7 @@ const StyledNewLink = styled(StyledText)`
         text-decoration: underline;
 	}
 `;
-const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
+export const NewLink = ({text, onClick, link}: { text: string, onClick?: any, link?: string }) => {
 	return <StyledNewLink onClick={onClick}>
 		{text}
 		{"  "}

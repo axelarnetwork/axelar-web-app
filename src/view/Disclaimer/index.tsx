@@ -5,9 +5,6 @@ import textLines                                           from "./disclaimerTex
 import {StyledButton}                                      from "component/StyleComponents/StyledButton";
 import {StyledLargePopupPage}                              from "component/StyleComponents/StyledLargePopupPage";
 import {Mask}                                              from "component/Widgets/Mask";
-import BoldSpan                                            from "component/StyleComponents/BoldSpan";
-import {SOURCE_TOKEN_KEY}                                  from "config/consts";
-import {ChainSelection, SourceAsset}                       from "state/ChainSelection";
 
 const TextSection = styled.div`
 	width: 100%;
@@ -74,33 +71,18 @@ export const TinyDisclaimer = () => {
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const showDisclaimer = useRecoilValue(ShowDisclaimer);
 
-	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const selectedSourceAsset = useRecoilValue(SourceAsset);
-
 	if (!showDisclaimer)
 		return null;
 
 	return <StyledTinyDisclaimer>
-		<div><BoldSpan>Before proceeding...</BoldSpan></div>
-		<br/>
-		<div>
-			Satellite is in Beta. Use at your own risk with funds you're comfortable using.{" "}
-			<span
-				style={{cursor: `pointer`, color: `blue`}}
-				onClick={() => setShowLargeDisclaimer(true)}
-			>
+		Satellite is in Beta. Use at your own risk with funds you're comfortable using.{" "}
+		<span
+			style={{cursor: `pointer`, color: `blue`}}
+			onClick={() => setShowLargeDisclaimer(true)}
+		>
 				Click here{" "}
 			</span>
-			for full Terms of Use.
-		</div>
-		{sourceChainSelection?.module === "evm" && selectedSourceAsset?.common_key === "uusd" && <>
-			<br/>
-			<div style={{ color: `red`, fontSize: `0.8em`}}><BoldSpan>
-				Important! The next screen will prompt you to send Axelar UST (and not any other UST) to a deposit address.
-				<br/><br/>
-				Please ensure you send Axelar UST to the {sourceChainSelection.chainName} deposit address, else funds will be lost.
-			</BoldSpan></div>
-		</>}
+		for full Terms of Use.
 	</StyledTinyDisclaimer>;
 }
 

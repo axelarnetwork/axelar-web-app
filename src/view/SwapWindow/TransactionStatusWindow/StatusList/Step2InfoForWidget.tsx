@@ -1,6 +1,8 @@
 import {useRecoilValue}                          from "recoil";
 import styled                                    from "styled-components";
 import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {PopoutLink}                              from "component/Widgets/PopoutLink";
+import configs                                   from "config/downstreamServices";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
 import {ChainSelection, SourceAsset}             from "state/ChainSelection";
 import {SourceDepositAddress}                    from "state/TransactionStatus";
@@ -45,15 +47,20 @@ const Step2InfoForWidget = ({
 			<br/>
 		</StyledHeader>
 		<br/>
+		{sourceChain.module === "evm" &&
+			generateLine(`Note on Your ${sourceAsset.assetSymbol} Deposit`,
+				<div>Double check that you’re sending Axelar {sourceAsset.assetSymbol} from {sourceChain.chainName}. Verify the right contract address
+					<PopoutLink
+						text={" here"}
+						onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}
+					/>
+				</div>,
+				{ color: `red`, fontWeight: `500`}
+			)
+		}
 		{generateLine("Transfer Fee", `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`)}
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
-		{sourceChain.module === "evm" && sourceAsset.common_key === "uusd" &&
-			generateLine("Note on Your UST Deposit",
-				<div>If you are making your deposit outside of Satellite, please ensure you send Axelar UST (and not any other UST) to the deposit address. Otherwise funds may get lost.<br/><br/>
-					Go to the <BoldSpan>"Token Contracts & Channel IDs"</BoldSpan> page under <BoldSpan>"Getting Started"</BoldSpan> for more information.</div>,
-				{ color: `red`, fontWeight: `500`}
-			)}
 		{isWalletConnected && generateLine("(Optional) Send deposit here!", <DepositFromWallet
 			isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>)}
 		<br/>
