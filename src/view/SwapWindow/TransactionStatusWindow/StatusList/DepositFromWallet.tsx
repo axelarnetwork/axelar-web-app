@@ -14,7 +14,7 @@ import {MetamaskTransferEvent, MetaMaskWallet}    from "hooks/wallet/MetaMaskWal
 import {ChainSelection, SourceAsset}              from "state/ChainSelection";
 import {SourceDepositAddress, TransactionTraceId} from "state/TransactionStatus";
 import {getMinDepositAmount}                      from "utils/getMinDepositAmount";
-import {isDecimal}                                from "utils/isDecimal";
+import {isValidDecimal}                           from "utils/isValidDecimal";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -190,7 +190,7 @@ export const DepositFromWallet = ({
 		|| (amountToDeposit < minDepositAmt)
 		|| !hasEnoughInWalletForMin
 		|| (amountToDeposit > walletBalance)
-		|| (!isDecimal(amountToDeposit as string));
+		|| (!isValidDecimal(amountToDeposit as string));
 
 	return <div style={{width: `95%`}}><br/>{isWalletConnected
 		? <div>
