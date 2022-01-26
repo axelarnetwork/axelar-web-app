@@ -142,7 +142,7 @@ const StatusList = (props: IStatusListProps) => {
 			className={"joyride-status-step-1"}
 			step={1} activeStep={activeStep}
 			text={
-				<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 10)}</BoldSpan>.</span>}
+				<span>Generating a one-time deposit address for recipient: <BoldSpan>{getShortenedWord(destinationAddress as string, 5)}</BoldSpan>.</span>}
 		/>
 		<ListItem
 			className={"joyride-status-step-2"}
