@@ -81,7 +81,9 @@ const SupportPage = () => {
                     <img src={require(`resources/close-icon.svg`).default} alt={""}/>
                 </div>
             </StyledHeader>
-			<QASection />
+			<div style={{ width: `100%`, height: `100%`, boxSizing: `border-box`, padding: `1em`, marginTop: `-1em`}}>
+                <QASection />
+			</div>
         </StyledPopup>}
 		{showGettingStarted && <StyledPopup>
             <StyledHeader>
