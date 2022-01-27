@@ -7,6 +7,7 @@ import Container                    from "../StyleComponents/Container";
 import {FlexColumn}                 from "../StyleComponents/FlexColumn";
 import {FlexRow}                    from "../StyleComponents/FlexRow";
 import {SVGImage}                   from "../Widgets/SVGImage";
+import BoldSpan                     from "../StyleComponents/BoldSpan";
 
 const StyledPageHeader = styled(Container)`
 	position: fixed;
@@ -77,7 +78,7 @@ const PageHeader = () => {
 		<StyledPageHeader>
 			<HeaderText>
 				<HeaderImage>Satellite</HeaderImage>
-				<ByText>Powered by Axelar</ByText>
+				<ByText><BoldSpan style={{ marginRight: `0.5em`}}>(BETA)</BoldSpan>Powered by Axelar</ByText>
 			</HeaderText>
 			<FlexRow>
 				{ onAddedResult() }
