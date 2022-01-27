@@ -66,7 +66,7 @@ const Landing = () => {
 			? <>
 				<h1>We'll be right back!</h1>
 				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
-					Satellite needs a minor tune-up. Back online shortly.
+					Satellite is getting a minor improvement. Back online shortly!
 				</div>
 			</>
 			: <>

@@ -1,7 +1,7 @@
 import {useRecoilState}                          from "recoil";
-import styled                                    from "styled-components";
-import {ShowFAQWidget, ShowGettingStartedWidget} from "state/FAQWidget";
-import Container                                 from "../StyleComponents/Container";
+import styled                                                 from "styled-components";
+import {ShowSupportWidget, ShowGettingStartedWidget, ShowFAQ} from "state/FAQWidget";
+import Container                                              from "../StyleComponents/Container";
 import {FlexRow}                                 from "../StyleComponents/FlexRow";
 
 const StyledPageFooter = styled(Container)`
@@ -49,8 +49,9 @@ const LinkText = styled.a`
 `;
 
 const PageFooter = () => {
-	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQWidget);
 	const [showGettingStarted, setShowGettingStarted] = useRecoilState(ShowGettingStartedWidget);
+	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQ);
+	const [showSupport, setShowSupport] = useRecoilState(ShowSupportWidget);
 
 	return (<StyledPageFooter>
 		<div style={{marginLeft: `1em`, cursor: `pointer`, width: `25%`}}
@@ -69,21 +70,33 @@ const PageFooter = () => {
 			</LinkText>
 			{" "}apply.
 		</div>
-		<FlexRow style={{width: `25%`, fontSize: `0.9em`, minWidth: `300px`, justifyContent: `flex-end`}}>
-			<HelperWidget className={"joyride-faq"} onClick={() => {
+		<FlexRow style={{width: `30%`, fontSize: `0.9em`, minWidth: `425px`, justifyContent: `flex-end`}}>
+			<HelperWidget onClick={() => {
 				setShowFAQ(false);
+				setShowSupport(false);
 				setShowGettingStarted(!showGettingStarted);
 			}}>
-				<FlexRow style={{marginLeft: `0em`}}>
+				<FlexRow>
 					<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
 					<div style={{marginLeft: `0.5em`}}>Getting Started</div>
 				</FlexRow>
 			</HelperWidget>
-			<HelperWidget className={"joyride-faq"} onClick={() => {
+			<HelperWidget onClick={() => {
+				setShowSupport(false);
 				setShowGettingStarted(false);
 				setShowFAQ(!showFAQ);
 			}}>
-				<FlexRow style={{marginLeft: `0em`}}>
+				<FlexRow>
+					<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
+					<div style={{marginLeft: `0.5em`}}>FAQ</div>
+				</FlexRow>
+			</HelperWidget>
+			<HelperWidget onClick={() => {
+				setShowFAQ(false);
+				setShowGettingStarted(false);
+				setShowSupport(!showSupport);
+			}}>
+				<FlexRow>
 					<img src={require(`resources/active-eye-orange.svg`).default} alt={""}/>
 					<div style={{marginLeft: `0.5em`}}>Support</div>
 				</FlexRow>

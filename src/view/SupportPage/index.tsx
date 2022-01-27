@@ -1,15 +1,19 @@
-import {useRecoilState, useRecoilValue, useSetRecoilState}          from "recoil";
-import {SourceDepositAddress, TransactionTraceId}                   from "state/TransactionStatus";
-import styled                                                       from "styled-components";
-import Tooltip                                                      from "component/Widgets/Tooltip";
-import CopyToClipboard                                              from "component/Widgets/CopyToClipboard";
-import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
-import {SVGImage}                                                   from "component/Widgets/SVGImage";
-import configs                                                      from "config/downstreamServices";
-import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
-import {ShowFAQWidget, ShowGettingStartedWidget}                    from "state/FAQWidget";
-import {toProperCase}                                               from "utils/toProperCase";
+import {useRecoilState, useRecoilValue, useSetRecoilState}               from "recoil";
+import {SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
+import styled                                                            from "styled-components";
+import Tooltip                                                           from "component/Widgets/Tooltip";
+import CopyToClipboard                                                   from "component/Widgets/CopyToClipboard";
+import BoldSpan                                                          from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                                         from "component/StyleComponents/FlexRow";
+import {SVGImage}                                                        from "component/Widgets/SVGImage";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                         from "config/consts";
+import configs                                                           from "config/downstreamServices";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer}      from "state/ApplicationStatus";
+import {ChainSelection, DestinationAddress}                              from "state/ChainSelection";
+import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget}            from "state/FAQWidget";
+import {toProperCase}                                                    from "utils/toProperCase";
+import {getShortenedWord}                                                from "utils/wordShortener";
+import {QASection}                                                       from "./QA";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -24,7 +28,7 @@ const StyledHelperComponent = styled.div`
     max-width: 500px;
 `;
 
-const StyledFAQPopup = styled.div`
+const StyledPopup = styled.div`
 	background-color: rgb(255,255,255,0.9);
 	color: ${props => props.theme.headerBackgroundColor};
 	box-sizing: border-box;
@@ -49,27 +53,46 @@ export const StyledHeader = styled.div`
     margin-bottom: 1em;
 `;
 
-const FAQSection = styled.div`
+const SupportSection = styled.div`
     box-sizing: border-box;
     padding: 0.75em;
 `;
 
-const ContactUsSection = styled(FAQSection)`
+const ContactUsSection = styled(SupportSection)`
 	background-color: #bab9c8;
 	padding-bottom: 0.1em;
 `;
 
-const FAQPage = () => {
+const SupportPage = () => {
 	const transactionTraceId = useRecoilValue(TransactionTraceId);
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const setShowDisclaimerFromFAQ = useSetRecoilState(ShowDisclaimerFromFAQ);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
-	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQWidget);
+	const [showSupport, setShowSupport] = useRecoilState(ShowSupportWidget);
 	const [showGettingStarted, setShowGettingStarted] = useRecoilState(ShowGettingStartedWidget);
+	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQ);
+	const destAddr = useRecoilValue(DestinationAddress);
+	const srcChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const srcChainDepositTxHash = useRecoilValue(SrcChainDepositTxHash);
 
 	return <StyledHelperComponent>
-		{showGettingStarted && <StyledFAQPopup>
+		{showFAQ && <StyledPopup>
+            <StyledHeader>
+                <span>Frequently Asked Questions</span>
+                <div
+                    style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
+                    onClick={() => setShowFAQ(false)}
+                >
+                    <img src={require(`resources/close-icon.svg`).default} alt={""}/>
+                </div>
+            </StyledHeader>
+            <div style={{width: `100%`, height: `100%`, boxSizing: `border-box`, padding: `1em`, marginTop: `-1em`}}>
+                <QASection/>
+            </div>
+        </StyledPopup>}
+		{showGettingStarted && <StyledPopup>
             <StyledHeader>
                 <span>Getting Started</span>
                 <div
@@ -79,7 +102,7 @@ const FAQPage = () => {
                     <img src={require(`resources/close-icon.svg`).default} alt={""}/>
                 </div>
             </StyledHeader>
-            <FAQSection>
+            <SupportSection>
                 <NewLink text={"Instructional Video"}
                          onClick={() => window.open('https://www.youtube.com/watch?v=VsfCJl1A9QI', '_blank')}/>
                 <DescriptorText>One of our devs records himself walking through a transaction from start to
@@ -105,19 +128,19 @@ const FAQPage = () => {
                 <DescriptorText>
                     <div>A little more about us.</div>
                 </DescriptorText>
-            </FAQSection>
-        </StyledFAQPopup>}
-		{showFAQ && <StyledFAQPopup>
+            </SupportSection>
+        </StyledPopup>}
+		{showSupport && <StyledPopup>
             <StyledHeader>
                 <span>Support</span>
                 <div
                     style={{position: `absolute`, right: 8, top: 5, cursor: `pointer`}}
-                    onClick={() => setShowFAQ(false)}
+                    onClick={() => setShowSupport(false)}
                 >
                     <img src={require(`resources/close-icon.svg`).default} alt={""}/>
                 </div>
             </StyledHeader>
-            <FAQSection>
+            <SupportSection>
                 <NewLink text={"Discord Support Channel"}
                          onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <DescriptorText>
@@ -133,37 +156,42 @@ const FAQPage = () => {
                 <DescriptorText>
                     <div>Before using Satellite, you should be comfortable with our Terms of Use.</div>
                 </DescriptorText>
-            </FAQSection>
+            </SupportSection>
 			{transactionTraceId && <ContactUsSection>
                 <h3>Issues with a live transaction?</h3>
-                <div style={{marginBottom: `5px`}}>Reach out on Discord in
-                    the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:
+                <div style={{marginBottom: `5px`}}>Go to the <BoldSpan>#satellite-bridge-support</BoldSpan> Discord
+                    channel with:
                 </div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
-							<div>
-								<div><BoldSpan>Trace ID</BoldSpan></div>
-								{transactionTraceId}
-							</div>
-							<div>{depositAddress
-								? <div style={{marginTop: `10px`}}>
-									<div><BoldSpan>Deposit Address:</BoldSpan></div>
-									{depositAddress?.assetAddress}
-								</div>
-								: null}
-							</div>
+							<div><BoldSpan>Trace ID: </BoldSpan>{getShortenedWord(transactionTraceId, 5)}</div>
+							{depositAddress && <div><BoldSpan>Deposit
+                                Address: </BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 5)}</div>}
+							{destAddr && <div><BoldSpan>Dest Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
+							{srcChain && <div><BoldSpan>Src Chain: </BoldSpan>{srcChain.chainName}</div>}
+							{destChain && <div><BoldSpan>Dest Chain: </BoldSpan>{destChain.chainName}</div>}
+							{srcChainDepositTxHash && <div><BoldSpan>Src Chain Deposit
+                                TxHash: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
+
 						</>}
 						height={`12px`}
 						width={`10px`}
-						textToCopy={JSON.stringify({transactionTraceId: transactionTraceId, ...(depositAddress)})}
+						textToCopy={JSON.stringify({
+							traceId: transactionTraceId,
+							...(depositAddress),
+							...(destAddr && {destAddress: destAddr}),
+							...(srcChain && {srcChain: srcChain.chainName}),
+							...(destChain && {destChain: destChain.chainName}),
+							...(srcChainDepositTxHash && {srcChainDepositTxHash})
+						})}
 						showImage={false}
 					/>}
-                    tooltipText={(transactionTraceId && depositAddress ? "Copy both to Clipboard" : "Copy to Clipboard")}
+                    tooltipText={(transactionTraceId && depositAddress ? "Copy Data to Clipboard" : "Copy to Clipboard")}
                     tooltipAltText={"Copied to Clipboard!"}
                 />
             </ContactUsSection>}
-        </StyledFAQPopup>}
+        </StyledPopup>}
 
 	</StyledHelperComponent>;
 }
@@ -198,4 +226,4 @@ export const NewLink = ({text, onClick, link}: { text: string, onClick?: any, li
 		/>
 	</StyledNewLink>
 }
-export default FAQPage;
+export default SupportPage;

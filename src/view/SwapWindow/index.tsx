@@ -15,8 +15,8 @@ import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/Chai
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
 import UserInputWindow                                          from "./UserInputWindow";
-import TransactionStatusWindow                                  from "./TransactionStatusWindow";
-import FAQPage                                                  from "../FAQPage";
+import TransactionStatusWindow from "./TransactionStatusWindow";
+import SupportPage             from "../SupportPage";
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
 	showContents?: boolean;
@@ -133,7 +133,7 @@ const SwapWindow = (): ReactElement => {
 				</div>
 			</CSSTransition>
 		</SwitchTransition>
-		<FAQPage/>
+		<SupportPage/>
 		<div
 			style={{
 				zIndex: 10000, position: `absolute`, right: `25%`, bottom: `70px`,

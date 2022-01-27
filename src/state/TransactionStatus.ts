@@ -22,6 +22,11 @@ export const TransactionTraceId = atom<string>({
 	default: "",
 });
 
+export const SrcChainDepositTxHash = atom<string | null>({
+	key: "SrcChainDepositTxHash",
+	default: null,
+});
+
 /*
 TODO: NumberConfirmations is (potentially) deprecated
 It had been used to follow the number of confirmations
