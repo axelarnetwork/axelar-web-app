@@ -60,7 +60,7 @@ export const moonbeam: ChainParam = {
 }
 
 export const polygon: ChainParam = {
-	chainId: '0x',
+	chainId: '0x89',
 	chainName: 'Polygon Mainnet',
 	nativeCurrency: {
 		name: 'MATIC',
