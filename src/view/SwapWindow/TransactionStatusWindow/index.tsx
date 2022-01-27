@@ -209,10 +209,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		};
 		if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed) {
 			const message: any = <div>
-				Verify that you send the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
-				to the deposit address on {sourceChain.chainName}; anything else may result in loss of funds.
+				Be sure to send only the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
+				to the deposit address on {sourceChain.chainName}. Any other tokens sent to this address will be lost.
 				<br/><br/>
-				The right contract address can be verified{" "}
+				The correct ERC20 contract address for the Axelar version of {selectedSourceAsset?.assetSymbol} can be verified{" "}
 				<PopoutLink
 					text={"here"}
 					onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}
