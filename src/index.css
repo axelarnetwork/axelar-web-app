@@ -2,3 +2,7 @@
     font-family: 'EthnocentricRg-Regular';
     src: url('ethnocentricRg.ttf');
 }
+
+.confirm-box {
+    left: 35% !important;
+}

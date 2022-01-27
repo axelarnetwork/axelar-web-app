@@ -1,5 +1,7 @@
+import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
 import styled, {ThemedStyledProps}                                                       from "styled-components";
 import React, {useEffect, useState}                                                      from "react";
+import {confirm}                                                                         from "react-confirm-box";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -7,6 +9,12 @@ import {StyledChainSelectionIconWidget}                                         
 import {SelectedChainLogoAndText}                                                        from "component/CompositeComponents/Selectors/ChainSelector/SelectedChainLogoAndText";
 import {opacityAnimation}                                                                from "component/StyleComponents/animations/OpacityAnimation";
 import {FlexRow}                                                                         from "component/StyleComponents/FlexRow";
+import configs
+                                                                                         from "config/downstreamServices";
+import {StyledButton}                                                                    from "component/StyleComponents/StyledButton";
+import BoldSpan
+                                                                                         from "component/StyleComponents/BoldSpan";
+import {PopoutLink}                                                                      from "component/Widgets/PopoutLink";
 import useResetAllState                                                                  from "hooks/useResetAllState";
 import {MetaMaskWallet}                                                                  from "hooks/wallet/MetaMaskWallet";
 import {KeplrWallet}                                                                     from "hooks/wallet/KeplrWallet";
@@ -20,7 +28,6 @@ import PlainButton
 import StatusList                                                                        from "./StatusList";
 import Step2InfoForWidget
                                                                                          from "./StatusList/Step2InfoForWidget";
-import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -95,6 +102,19 @@ const StyledFlexRow = styled(FlexRow)`
 	background-color: #fefefe;
 `;
 
+const StyledDialogBox = styled.div`
+	height: 50%;
+	width: 50%;
+	min-width: 400px;
+	background-color: white;
+	padding: 2em;
+	box-sizing: border-box;
+	border-radius: 10px;
+	font-size: 0.9em;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
+	border: solid 1px #b9bac8;
+`;
+
 const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatusWindowProps) => {
 
 	const sourceConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
@@ -111,6 +131,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const [walletBalance, setWalletBalance] = useState(0);
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
+	const [userConfirmed, setUserconfirmed] = useState(false);
 
 	useEffect(() => {
 		setShowDisclaimer(false);
@@ -167,6 +188,47 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 		}
 	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep, walletBalance]);
+
+
+	useEffect(() => {
+		const options = {
+			render: (message: string, onConfirm: () => void, onCancel: () => void) => {
+				return (
+					<StyledDialogBox>
+						<div>{message}</div>
+						<br/>
+						<FlexRow>
+							<StyledButton style={{margin: `0.5em`, backgroundColor: `grey`}} onClick={onCancel}> Go
+								back </StyledButton>
+							<br/>
+							<StyledButton style={{margin: `0.5em`}} onClick={onConfirm}> Confirm </StyledButton>
+						</FlexRow>
+					</StyledDialogBox>
+				);
+			}
+		};
+		if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed) {
+			const message: any = <div>
+				Be sure to send only the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
+				to the deposit address on {sourceChain.chainName}. Any other tokens sent to this address will be lost.
+				<br/><br/>
+				The correct ERC20 contract address for the Axelar version of {selectedSourceAsset?.assetSymbol} can be verified{" "}
+				<PopoutLink
+					text={"here"}
+					onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}
+				/>
+			</div>;
+			confirm(message, options as any)
+			.then(positiveAffirmation => {
+				if (positiveAffirmation) {
+					setUserconfirmed(true)
+				} else {
+					resetAllstate();
+					closeResultsScreen();
+				}
+			})
+		}
+	}, [resetAllstate, selectedSourceAsset, sourceChain, userConfirmed, closeResultsScreen, activeStep])
 
 	const showButton: boolean = activeStep > 2;
 
