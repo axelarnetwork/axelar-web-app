@@ -201,7 +201,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 							<StyledButton style={{margin: `0.5em`, backgroundColor: `grey`}} onClick={onCancel}> Go
 								back </StyledButton>
 							<br/>
-							<StyledButton style={{margin: `0.5em`}} onClick={onConfirm}> I understand </StyledButton>
+							<StyledButton style={{margin: `0.5em`}} onClick={onConfirm}> Confirm </StyledButton>
 						</FlexRow>
 					</StyledDialogBox>
 				);
@@ -209,7 +209,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		};
 		if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed) {
 			const message: any = <div>
-				I should only send the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
+				Verify that you send the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
 				to the deposit address on {sourceChain.chainName}; anything else may result in loss of funds.
 				<br/><br/>
 				The right contract address can be verified{" "}
