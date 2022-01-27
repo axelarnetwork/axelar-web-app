@@ -1,16 +1,19 @@
-import {useRecoilState, useRecoilValue, useSetRecoilState}          from "recoil";
-import {SourceDepositAddress, TransactionTraceId}                   from "state/TransactionStatus";
-import styled                                                       from "styled-components";
-import Tooltip                                                      from "component/Widgets/Tooltip";
-import CopyToClipboard                                              from "component/Widgets/CopyToClipboard";
-import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
-import {SVGImage}                                                   from "component/Widgets/SVGImage";
-import configs                                                      from "config/downstreamServices";
-import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
-import {ShowSupportWidget, ShowGettingStartedWidget, ShowFAQ}       from "state/FAQWidget";
-import {toProperCase}                                               from "utils/toProperCase";
-import {QASection}                                                  from "./QA";
+import {useRecoilState, useRecoilValue, useSetRecoilState}               from "recoil";
+import {SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
+import styled                                                            from "styled-components";
+import Tooltip                                                           from "component/Widgets/Tooltip";
+import CopyToClipboard                                                   from "component/Widgets/CopyToClipboard";
+import BoldSpan                                                          from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                                         from "component/StyleComponents/FlexRow";
+import {SVGImage}                                                        from "component/Widgets/SVGImage";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                         from "config/consts";
+import configs                                                           from "config/downstreamServices";
+import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer}      from "state/ApplicationStatus";
+import {ChainSelection, DestinationAddress}                              from "state/ChainSelection";
+import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget}            from "state/FAQWidget";
+import {toProperCase}                                                    from "utils/toProperCase";
+import {getShortenedWord}                                                from "utils/wordShortener";
+import {QASection}                                                       from "./QA";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -69,6 +72,10 @@ const SupportPage = () => {
 	const [showSupport, setShowSupport] = useRecoilState(ShowSupportWidget);
 	const [showGettingStarted, setShowGettingStarted] = useRecoilState(ShowGettingStartedWidget);
 	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQ);
+	const destAddr = useRecoilValue(DestinationAddress);
+	const srcChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
+	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
+	const srcChainDepositTxHash = useRecoilValue(SrcChainDepositTxHash);
 
 	return <StyledHelperComponent>
 		{showFAQ && <StyledPopup>
@@ -81,9 +88,9 @@ const SupportPage = () => {
                     <img src={require(`resources/close-icon.svg`).default} alt={""}/>
                 </div>
             </StyledHeader>
-			<div style={{ width: `100%`, height: `100%`, boxSizing: `border-box`, padding: `1em`, marginTop: `-1em`}}>
-                <QASection />
-			</div>
+            <div style={{width: `100%`, height: `100%`, boxSizing: `border-box`, padding: `1em`, marginTop: `-1em`}}>
+                <QASection/>
+            </div>
         </StyledPopup>}
 		{showGettingStarted && <StyledPopup>
             <StyledHeader>
@@ -152,30 +159,35 @@ const SupportPage = () => {
             </SupportSection>
 			{transactionTraceId && <ContactUsSection>
                 <h3>Issues with a live transaction?</h3>
-                <div style={{marginBottom: `5px`}}>Reach out on Discord in
-                    the <BoldSpan>#satellite-bridge-support</BoldSpan> channel with:
+                <div style={{marginBottom: `5px`}}>Go to the <BoldSpan>#satellite-bridge-support</BoldSpan> Discord
+                    channel with:
                 </div>
                 <Tooltip
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
-							<div>
-								<div><BoldSpan>Trace ID</BoldSpan></div>
-								{transactionTraceId}
-							</div>
-							<div>{depositAddress
-								? <div style={{marginTop: `10px`}}>
-									<div><BoldSpan>Deposit Address:</BoldSpan></div>
-									{depositAddress?.assetAddress}
-								</div>
-								: null}
-							</div>
+							<div><BoldSpan>Trace ID: </BoldSpan>{getShortenedWord(transactionTraceId, 5)}</div>
+							{depositAddress && <div><BoldSpan>Deposit
+                                Address: </BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 5)}</div>}
+							{destAddr && <div><BoldSpan>Dest Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
+							{srcChain && <div><BoldSpan>Src Chain: </BoldSpan>{srcChain.chainName}</div>}
+							{destChain && <div><BoldSpan>Dest Chain: </BoldSpan>{destChain.chainName}</div>}
+							{srcChainDepositTxHash && <div><BoldSpan>Src Chain Deposit
+                                TxHash: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
+
 						</>}
 						height={`12px`}
 						width={`10px`}
-						textToCopy={JSON.stringify({transactionTraceId: transactionTraceId, ...(depositAddress)})}
+						textToCopy={JSON.stringify({
+							traceId: transactionTraceId,
+							...(depositAddress),
+							...(destAddr && {destAddress: destAddr}),
+							...(srcChain && {srcChain: srcChain.chainName}),
+							...(destChain && {destChain: destChain.chainName}),
+							...(srcChainDepositTxHash && {srcChainDepositTxHash})
+						})}
 						showImage={false}
 					/>}
-                    tooltipText={(transactionTraceId && depositAddress ? "Copy both to Clipboard" : "Copy to Clipboard")}
+                    tooltipText={(transactionTraceId && depositAddress ? "Copy Data to Clipboard" : "Copy to Clipboard")}
                     tooltipAltText={"Copied to Clipboard!"}
                 />
             </ContactUsSection>}
