@@ -6,7 +6,7 @@ export const getNotificationMessage: (messageCode: number, fullMessageObj: any) 
 		403: fullMessageObj.message + "; Refresh this page and try again.", //handle recaptcha error
 		400: fullMessageObj.message + "; Check your inputs and try again.", //handle bad request error
 		429: fullMessageObj.message + "; Try again in a few minutes.", //handle rate limit error
-		504: fullMessageObj.message + "; Apologies; try again in a few minutes.", //handle gateway timeout error
+		504: "Your request timed out. Please try again in a few moments.", //handle gateway timeout error
 	};
 
 	const messageMap: { [statusCode: number]: string } = {

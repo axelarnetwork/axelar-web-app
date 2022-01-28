@@ -167,7 +167,7 @@ const StatusList = (props: IStatusListProps) => {
 						/>
 					</div>
 					<FlexRow style={{height: `1.5em`, width: `100%`, justifyContent: `space-between`}}>
-						<div>OR send via {sourceChain?.module === "evm" ? "MetaMask" : "Kepler"}!{" "}</div>
+						<div>OR send via {sourceChain?.module === "evm" ? "MetaMask" : "Keplr"}!{" "}</div>
 						{!props.isWalletConnected
 							? <HelperWidget onClick={props.connectToWallet}>Connect <WalletLogo/></HelperWidget>
 							: null}

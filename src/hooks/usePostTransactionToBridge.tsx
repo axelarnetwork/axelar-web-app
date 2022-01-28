@@ -9,17 +9,18 @@ import {
 	AssetInfo, AssetInfoWithTrace, AssetTransferObject, ChainInfo
 }                                                          from "@axelar-network/axelarjs-sdk";
 import {TransferAssetBridgeFacade}                         from "api/TransferAssetBridgeFacade";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
-import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}         from "config/consts";
+import {ChainSelection, DestinationAddress, SourceAsset} from "state/ChainSelection";
 import {
 	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
-}                                                          from "state/TransactionStatus";
-import NotificationHandler                                 from "utils/NotificationHandler";
-import useRecaptchaAuthenticate                            from "./auth/useRecaptchaAuthenticate";
-import {depositConfirmCbMap}                               from "./helper";
+}                                                        from "state/TransactionStatus";
+import NotificationHandler                               from "utils/NotificationHandler";
+import useRecaptchaAuthenticate                          from "./auth/useRecaptchaAuthenticate";
+import {depositConfirmCbMap}                             from "./helper";
 import {
 	ShowRecaptchaV2Retry, ShowTransactionStatusWindow
-}                                                          from "../state/ApplicationStatus";
+}                                                        from "../state/ApplicationStatus";
+import {SendLogsToServer}                                from "../api/SendLogsToServer";
 
 export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
@@ -36,8 +37,8 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 	const {authenticateWithRecaptchaV3, authenticateWithRecaptchaV2} = useRecaptchaAuthenticate(recaptchaV2Ref);
 	const notificationHandler = NotificationHandler();
 
-	const sCb: (status: any, setConfirms: any, traceId: string) => void = useCallback((status: any, setConfirms: any, traceId: string): void => {
-		if (status?.timedOut) {
+	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
+		if (source && status?.timedOut) {
 			notificationHandler.notifyError({
 				statusCode: 408,
 				message: "Timed out waiting for your deposit... we waited two hours!",
@@ -80,8 +81,8 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 
 			const res: AssetInfoWithTrace = await TransferAssetBridgeFacade.transferAssets(
 				msg,
-				{successCb: (data: any) => sCb(data, setSourceNumConfirmations, traceId), failCb},
-				{successCb: (data: any) => sCb(data, setDestinationNumConfirmations, traceId), failCb});
+				{successCb: (data: any) => sCb(data, setSourceNumConfirmations, traceId, true), failCb},
+				{successCb: (data: any) => sCb(data, setDestinationNumConfirmations, traceId, false), failCb});
 			setDepositAddress(res.assetInfo);
 			return res;
 		} catch (e: any) {
@@ -93,13 +94,20 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 				});
 				setShowRecaptchaV2Retry(true);
 			} else {
-				setShowTransactionStatusWindow(false);
 				e.traceId = traceId;
-				notificationHandler.notifyError(e);
+				SendLogsToServer.error("usePostTransactionToBridge_postRequest_1", msg + JSON.stringify(e), traceId);
+				console.log("usePostTransactionToBridge_postRequest_1",e);
+				if (e.statusCode === 504 || e.message === "AxelarJS-SDK uncaught post error") {
+					e.statusCode = 504;
+					notificationHandler.notifyInfo(e)
+				}
+				else {
+					notificationHandler.notifyError(e);
+				}
 			}
 			throw e;
 		}
-	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowRecaptchaV2Retry, setShowTransactionStatusWindow, setSourceNumConfirmations]);
+	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setShowRecaptchaV2Retry, setSourceNumConfirmations]);
 
 	const handleTransactionSubmission = useCallback((attemptNumber: number) => {
 
@@ -129,7 +137,9 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					const msg: string = `Oops: Failed Recaptcha (${useLegacyRecaptcha ? "V2" : "V3"}) authentication\
                   from this site - your request didn't even hit our servers`;
 					notificationHandler.notifyError({statusCode: 403, message: msg});
-					throw new Error(msg + e);
+					SendLogsToServer.error("usePostTransactionToBridge_FRONTEND_ERROR_1", msg + JSON.stringify(e), traceId);
+					console.log("usePostTransactionToBridge_FRONTEND_ERROR_1: " + JSON.stringify(e))
+					throw new Error(msg + e?.toString());
 				}
 
 				try {
@@ -139,6 +149,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 					resolve(res);
 				} catch (e: any) {
 					setShowTransactionStatusWindow(false);
+					SendLogsToServer.error("usePostTransactionToBridge_FRONTEND_ERROR_2", JSON.stringify(e), traceId);
 					if (!e.traceId) {
 						e.traceId = traceId
 					}
@@ -147,7 +158,7 @@ export default function usePostTransactionToBridge(recaptchaV2Ref: any) {
 				}
 			} catch (err: any) {
 				//todo log recpatcha v3 error
-				console.log("recaptcha error from frontend", err);
+				console.log("usePostTransactionToBridge_FRONTEND_ERROR_3: ", JSON.stringify(err));
 			}
 
 		})

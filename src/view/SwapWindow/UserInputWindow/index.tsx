@@ -25,6 +25,7 @@ import StyledButtonContainer
 import PlainButton
                                                                                     from "../StyledComponents/PlainButton";
 import TopFlowsSelectorWidget                                                       from "../TopFlowsSelector";
+import {SendLogsToServer}                                                           from "../../../api/SendLogsToServer";
 
 interface IUserInputWindowProps {
 	handleTransactionSubmission: (numAttempt: number) => Promise<string>;
@@ -124,7 +125,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			await handleTransactionSubmission(attemptNumber);
 			return;
 		} catch (e: any) {
-			if (e?.statusCode === 403 && attemptNumber === 1) {
+			if ( (e?.statusCode === 403 && attemptNumber === 1) || e?.statusCode === 504) {
 
 				//updating values here but the second attempt will
 				//actually be invoked from the parent component `SwapWindow`
@@ -134,6 +135,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 			} else
 				resetUserInputs();
+			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
 	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
 		resetUserInputs, mounted, setMounted
