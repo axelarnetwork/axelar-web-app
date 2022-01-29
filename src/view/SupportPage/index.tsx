@@ -145,7 +145,7 @@ const SupportPage = () => {
                          onClick={() => window.open('https://discord.com/invite/aRZ3Ra6f7D', '_blank')}/>
                 <DescriptorText>
                     <div>Join our community and get Satellite support directly in
-                        the <BoldSpan>#satellite-bridge-support</BoldSpan> channel.
+                        the <BoldSpan>#satellite-ticketing-support</BoldSpan> channel.
                     </div>
                 </DescriptorText>
                 <NewLink text={"Terms of Use"} onClick={() => {
@@ -159,7 +159,7 @@ const SupportPage = () => {
             </SupportSection>
 			{transactionTraceId && <ContactUsSection>
                 <h3>Issues with a live transaction?</h3>
-                <div style={{marginBottom: `5px`}}>Go to the <BoldSpan>#satellite-bridge-support</BoldSpan> Discord
+                <div style={{marginBottom: `5px`}}>Go to the <BoldSpan>#satellite-ticketing-support</BoldSpan> Discord
                     channel with:
                 </div>
                 <Tooltip
