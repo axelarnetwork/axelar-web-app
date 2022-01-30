@@ -55,6 +55,11 @@ export const IsRecaptchaAuthenticated = atom<boolean>({
 	default: true,
 });
 
+export const IsBlockchainAuthenticated = atom<boolean>({
+	key: "IsBlockchainAuthenticated",
+	default: true,
+});
+
 export const ActiveStep = atom<number>({
 	key: "ActiveStep",
 	default: 0,

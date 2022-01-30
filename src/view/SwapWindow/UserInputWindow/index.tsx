@@ -28,7 +28,7 @@ import TopFlowsSelectorWidget                                                   
 import {SendLogsToServer}                                                           from "../../../api/SendLogsToServer";
 
 interface IUserInputWindowProps {
-	handleTransactionSubmission: (numAttempt: number) => Promise<string>;
+	handleTransactionSubmission: () => Promise<string>;
 }
 
 const StyledUserInputWindow = styled.div`
@@ -103,11 +103,8 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
 	const srcChainComponentRef = createRef();
 	const destChainComponentRef = createRef();
-	const [attemptNumber, setAttemptNumber] = useState(1);
-	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
-		setMounted(true);
 		const destToken: AssetInfo = {
 			assetAddress: destAddr as string,
 			assetSymbol: destChainSelection?.chainSymbol
@@ -118,28 +115,15 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 	const onInitiateTransfer = useCallback(async () => {
 
-		if (!(destAddr && isValidDestinationAddress && mounted))
+		if (!(destAddr && isValidDestinationAddress))
 			return;
 		try {
-			setMounted(false);
-			await handleTransactionSubmission(attemptNumber);
-			return;
+			await handleTransactionSubmission();
 		} catch (e: any) {
-			if ( (e?.statusCode === 403 && attemptNumber === 1) || e?.statusCode === 504) {
-
-				//updating values here but the second attempt will
-				//actually be invoked from the parent component `SwapWindow`
-				//in the `onChange` callback of the recaptcha window after the
-				//challenge is completed
-				setAttemptNumber(2);
-
-			} else
-				resetUserInputs();
+			resetUserInputs();
 			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
-	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
-		resetUserInputs, mounted, setMounted
-	]);
+	}, [destAddr, isValidDestinationAddress, handleTransactionSubmission, resetUserInputs]);
 
 	const renderValidationErrors = useCallback(() => {
 		if (!sourceChainSelection)

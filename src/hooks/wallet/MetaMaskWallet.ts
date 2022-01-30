@@ -56,6 +56,14 @@ export class MetaMaskWallet implements WalletInterface {
 		return this.signer;
 	}
 
+	public async signMessage(message: string) {
+		const signature = await this.getSigner().signMessage(message);
+		const address = await this.getAddress();
+		// const verification = ethers.utils.verifyMessage(message, signature);
+		// console.log("signature and verification",signature, verification, address === verification);
+		return {address, signature};
+	}
+
 	public isWalletInstalled(): Boolean {
 		const {ethereum} = window;
 		return Boolean(ethereum && ethereum.isMetaMask);
