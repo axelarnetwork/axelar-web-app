@@ -125,16 +125,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			await handleTransactionSubmission(attemptNumber);
 			return;
 		} catch (e: any) {
-			if ( (e?.statusCode === 403 && attemptNumber === 1) || e?.statusCode === 504) {
-
-				//updating values here but the second attempt will
-				//actually be invoked from the parent component `SwapWindow`
-				//in the `onChange` callback of the recaptcha window after the
-				//challenge is completed
-				setAttemptNumber(2);
-
-			} else
-				resetUserInputs();
+			resetUserInputs();
 			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
 	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
