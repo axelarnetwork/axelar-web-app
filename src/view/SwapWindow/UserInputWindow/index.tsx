@@ -103,10 +103,8 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
 	const srcChainComponentRef = createRef();
 	const destChainComponentRef = createRef();
-	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
-		setMounted(true);
 		const destToken: AssetInfo = {
 			assetAddress: destAddr as string,
 			assetSymbol: destChainSelection?.chainSymbol
@@ -117,19 +115,15 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 
 	const onInitiateTransfer = useCallback(async () => {
 
-		if (!(destAddr && isValidDestinationAddress && mounted))
+		if (!(destAddr && isValidDestinationAddress))
 			return;
 		try {
-			setMounted(false);
 			await handleTransactionSubmission();
-			return;
 		} catch (e: any) {
 			resetUserInputs();
 			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
-	}, [destAddr, isValidDestinationAddress, handleTransactionSubmission,
-		resetUserInputs, mounted, setMounted
-	]);
+	}, [destAddr, isValidDestinationAddress, handleTransactionSubmission, resetUserInputs]);
 
 	const renderValidationErrors = useCallback(() => {
 		if (!sourceChainSelection)

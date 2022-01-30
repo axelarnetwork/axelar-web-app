@@ -34,7 +34,8 @@ const usePersonalSignAuthenticate = () => {
 				resolve({
 					publicAddress: res.address,
 					signature: res.signature,
-					otc: codeRes?.data?.otc
+					otc: codeRes?.data?.otc,
+					isBlockchainAuthenticated: true
 				});
 			} catch (e: any) {
 				setIsBlockchainAuthenticated(false);

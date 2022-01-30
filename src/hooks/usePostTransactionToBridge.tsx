@@ -114,10 +114,28 @@ export default function usePostTransactionToBridge() {
 				return;
 			}
 
+			let isBlockchainAuthenticated, signature, otc, publicAddress;
+
+			try {
+				const {authenticateWithMetamask} = personalSignAuthenticate;
+				const res = await authenticateWithMetamask();
+				signature = res.signature;
+				otc = res.otc;
+				publicAddress = res.publicAddress;
+				isBlockchainAuthenticated = res.isBlockchainAuthenticated;
+			} catch (e: any) {
+				setShowTransactionStatusWindow(false);
+				SendLogsToServer.error("usePostTransactionToBridge_FRONTEND_ERROR_1", JSON.stringify(e), traceId);
+				reject(e);
+			}
+
+			if (!isBlockchainAuthenticated) {
+				reject("You did not sign");
+				return;
+			}
+
 			try {
 				setShowTransactionStatusWindow(true);
-				const {authenticateWithMetamask} = personalSignAuthenticate;
-				const { signature, otc, publicAddress } = await authenticateWithMetamask();
 				const res = await postRequest(traceId, signature, otc, publicAddress);
 				resolve(res);
 			} catch (e: any) {
