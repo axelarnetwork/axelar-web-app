@@ -31,7 +31,7 @@ const MessageContent = (message: string, traceId: string) => {
 const getMessageType = (error: any): JSX.Element => {
 	console.log("erorrrrr",error);
 
-	return MessageContent(getNotificationMessage(error.statusCode, error), [504,403].includes(error.statusCode) ? null : error.traceId);
+	return MessageContent(getNotificationMessage(error.statusCode, error), [504,403,429].includes(error.statusCode) ? null : error.traceId);
 
 }
 
