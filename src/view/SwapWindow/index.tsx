@@ -99,8 +99,8 @@ const SwapWindow = (): ReactElement => {
 		&& selectedSourceAsset
 		&& isValidDestinationAddr;
 
-	const handleUserSubmit = async (attemptNumber: number) => {
-		return await handleTransactionSubmission(attemptNumber);
+	const handleUserSubmit = async () => {
+		return await handleTransactionSubmission();
 	}
 
 	return <StyledSwapWindow>

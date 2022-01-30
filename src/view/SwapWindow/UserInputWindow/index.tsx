@@ -28,7 +28,7 @@ import TopFlowsSelectorWidget                                                   
 import {SendLogsToServer}                                                           from "../../../api/SendLogsToServer";
 
 interface IUserInputWindowProps {
-	handleTransactionSubmission: (numAttempt: number) => Promise<string>;
+	handleTransactionSubmission: () => Promise<string>;
 }
 
 const StyledUserInputWindow = styled.div`
@@ -103,7 +103,6 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
 	const srcChainComponentRef = createRef();
 	const destChainComponentRef = createRef();
-	const [attemptNumber, setAttemptNumber] = useState(1);
 	const [mounted, setMounted] = useState(true);
 
 	useEffect(() => {
@@ -122,13 +121,13 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			return;
 		try {
 			setMounted(false);
-			await handleTransactionSubmission(attemptNumber);
+			await handleTransactionSubmission();
 			return;
 		} catch (e: any) {
 			resetUserInputs();
 			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
-	}, [attemptNumber, destAddr, isValidDestinationAddress, handleTransactionSubmission,
+	}, [destAddr, isValidDestinationAddress, handleTransactionSubmission,
 		resetUserInputs, mounted, setMounted
 	]);
 

@@ -73,7 +73,7 @@ export default function usePostTransactionToBridge() {
 		transactionTraceId: ""
 	}), [destinationAddress, destinationChain, sourceAsset, sourceChain]);
 
-	const postRequest = useCallback(async (traceId: string, signature: string, otc: string, publicAddr: string, attemptNumber: number) => {
+	const postRequest = useCallback(async (traceId: string, signature: string, otc: string, publicAddr: string) => {
 		try {
 
 			msg.signature = signature;
@@ -96,17 +96,15 @@ export default function usePostTransactionToBridge() {
 			} else {
 				notificationHandler.notifyError(e);
 			}
-			throw e;
+			setShowTransactionStatusWindow(false);
 		}
-	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setSourceNumConfirmations]);
+	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setSourceNumConfirmations, setShowTransactionStatusWindow]);
 
-	const handleTransactionSubmission = useCallback((attemptNumber: number) => {
+	const handleTransactionSubmission = useCallback(() => {
 
 		let traceId: string = msg.transactionTraceId || uuidv4();
-		if (attemptNumber === 1) {
-			setTransactionTraceId(traceId);
-			msg.transactionTraceId = traceId;
-		}
+		setTransactionTraceId(traceId);
+		msg.transactionTraceId = traceId;
 		console.log("transaction trace id to use", msg.transactionTraceId);
 
 		return new Promise(async (resolve, reject) => {
@@ -120,7 +118,7 @@ export default function usePostTransactionToBridge() {
 				setShowTransactionStatusWindow(true);
 				const {authenticateWithMetamask} = personalSignAuthenticate;
 				const { signature, otc, publicAddress } = await authenticateWithMetamask();
-				const res = await postRequest(traceId, signature, otc, publicAddress, attemptNumber);
+				const res = await postRequest(traceId, signature, otc, publicAddress);
 				resolve(res);
 			} catch (e: any) {
 				setShowTransactionStatusWindow(false);
@@ -140,7 +138,7 @@ export default function usePostTransactionToBridge() {
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);
 
 	return [showTransactionStatusWindow as boolean,
-		handleTransactionSubmission as (attemptNumber: number) => Promise<string>,
+		handleTransactionSubmission as () => Promise<string>,
 		closeResultsScreen as () => void
 	] as const;
 }

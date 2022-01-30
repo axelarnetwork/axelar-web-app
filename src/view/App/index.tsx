@@ -12,7 +12,6 @@ import {StyledAppContainer}                                     from "view/App/s
 import SwapWindow                                               from "view/SwapWindow";
 import Disclaimer                                               from "../Disclaimer";
 import {Redirect}                                               from "react-router-dom";
-import usePersonalSignAuthenticate                              from "../../hooks/auth/usePersonalSignAuthenticate";
 
 const App = () => {
 
@@ -24,7 +23,6 @@ const App = () => {
 	const showDisclaimer = useRecoilValue(ShowDisclaimer);
 	const showDisclaimerForFAQ = useRecoilValue(ShowDisclaimerFromFAQ);
 	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
-	const personalSignAuth = usePersonalSignAuthenticate();
 
 	const canLightUp = sourceChainSelection && destChainSelection
 		&& sourceChainSelection.chainName !== destChainSelection.chainName
@@ -39,11 +37,6 @@ const App = () => {
 	if (underMaintenance === "true")
 		return <Redirect to={"/landing"} />;
 
-	const onSign = async () => {
-		const res = await personalSignAuth.authenticateWithMetamask();
-		console.log("signature",res);
-	}
-
 	return (
 		<StyledAppContainer>
 			{(showDisclaimerForFAQ || canLightUp) && showDisclaimer && <Disclaimer/>}
@@ -54,7 +47,6 @@ const App = () => {
 				? <SwapWindow/>
 				: null
 			}
-			<div onClick={onSign} style={{ zIndex: 1000000}}>Hello</div>
 			<PageFooter/>
 		</StyledAppContainer>
 	);
