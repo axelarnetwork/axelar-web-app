@@ -73,7 +73,7 @@ export const QASection = () => {
 const CombinedAccordianItem = ({heading, body}: { heading: string, body: JSX.Element | string}) => {
 	return <AccordionItem>
 		<AccordionItemHeading><AccordionItemButton>{heading}</AccordionItemButton></AccordionItemHeading>
-		<AccordionItemPanel><p>{body}</p></AccordionItemPanel>
+		<AccordionItemPanel><span>{body}</span></AccordionItemPanel>
 	</AccordionItem>
 }
 

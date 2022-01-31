@@ -20,10 +20,8 @@ export const StyledHeader = styled.div`
     padding: 0.25em;
 `;
 
-const Step2InfoForWidget = ({
-	                            isWalletConnected,
-	                            walletBalance
-                            }: { isWalletConnected: boolean, walletBalance: number }) => {
+const Step2InfoForWidget = ({isWalletConnected, walletBalance, reloadBalance }:
+	                            { isWalletConnected: boolean, walletBalance: number, reloadBalance: () => void }) => {
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const depositAddress = useRecoilValue(SourceDepositAddress);
@@ -49,7 +47,7 @@ const Step2InfoForWidget = ({
 		{minDepositAmt && generateLine("Minimum Transfer Amount", `Send at least ${minDepositAmt} ${sourceAsset?.assetSymbol || "XX"} to the deposit address ("${getShortenedWord(depositAddress?.assetAddress)}")`)}
 		{generateLine("Deposit Confirmation Wait Time", `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`)}
 		{isWalletConnected && generateLine("(Optional) Send deposit here!", <DepositFromWallet
-			isWalletConnected={isWalletConnected} walletBalance={walletBalance}/>)}
+			isWalletConnected={isWalletConnected} walletBalance={walletBalance} reloadBalance={reloadBalance}/>)}
 		<br/>
 	</div>
 

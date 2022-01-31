@@ -14,10 +14,10 @@ interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
 export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProps>`
 	position: relative;
 	width: 99%;
-	padding: 0.5em;
+	padding: 0.25em;
 	box-sizing: border-box;
 	height: auto;
-	font-size: 0.75em;
+	font-size: 0.7em;
 	border-radius: 5px;
 	border: solid 1px #e2e1e2;
 	opacity: ${props => props.showContents ? `1` : `0`};
@@ -29,10 +29,10 @@ export const StyledTransferFeeDivider = styled.div<IStyledTransferFeeDividerProp
     @media ${screenConfigs.media.laptop} {
 	}
 	@media ${screenConfigs.media.tablet} {
-		margin-top: -5px;
+		margin-top: -10px;
 	}
 	@media ${screenConfigs.media.mobile} {
-		margin-top: -5px;
+		margin-top: -10px;
 	}
 `;
 
