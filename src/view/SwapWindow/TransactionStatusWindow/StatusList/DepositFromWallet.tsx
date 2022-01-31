@@ -9,13 +9,17 @@ import {InputForm}                                                       from "c
 import {StyledButton}                                                    from "component/StyleComponents/StyledButton";
 import {FlexRow}                                                         from "component/StyleComponents/FlexRow";
 import Link                                                              from "component/Widgets/Link";
-import {SVGImage}                                                        from "component/Widgets/SVGImage";
 import {KeplrWallet}                                                     from "hooks/wallet/KeplrWallet";
 import {MetamaskTransferEvent, MetaMaskWallet}                           from "hooks/wallet/MetaMaskWallet";
 import {ChainSelection, SourceAsset}                                     from "state/ChainSelection";
 import {SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
 import {getMinDepositAmount}                                             from "utils/getMinDepositAmount";
 import {isValidDecimal}                                                  from "utils/isValidDecimal";
+import LoadingWidget
+                                                                         from "component/Widgets/LoadingWidget";
+import {getShortenedWord}                                                from "utils/wordShortener";
+import BoldSpan
+                                                                         from "component/StyleComponents/BoldSpan";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -23,8 +27,13 @@ const TransferButton = styled(StyledButton)`
 	font-size: small;
 `;
 
-export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalance }:
-	                                  { isWalletConnected: boolean, walletBalance: number, reloadBalance: () => void }) => {
+interface DepositFromWalletProps {
+	isWalletConnected: boolean;
+	walletBalance: number;
+	reloadBalance: () => void;
+	walletAddress: string;
+}
+export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalance, walletAddress }: DepositFromWalletProps) => {
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
@@ -190,6 +199,26 @@ export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalan
 		|| (amountToDeposit > walletBalance)
 		|| (!isValidDecimal(amountToDeposit as string));
 
+	const getDisabledText = (disableTransferButton: boolean) => {
+
+		if (!disableTransferButton)
+			return <span><br/><br/></span>
+
+		let text = "";
+
+		if (!hasEnoughInWalletForMin || (amountToDeposit && amountToDeposit > walletBalance))
+			text = "Not enough funds in this account";
+		else if (!amountToDeposit)
+			return <span><br/><br/></span>
+		else if (amountToDeposit < minDepositAmt)
+			text = "Amount is below the minimum!";
+		else if (!isValidDecimal(amountToDeposit as string))
+			text = "Too many decimal points"
+
+		return <div>{text}<br/><br/></div>
+
+	}
+
 	return <div style={{width: `95%`}}><br/>{isWalletConnected
 		? <div>
 			<FlexRow>
@@ -204,17 +233,14 @@ export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalan
 			</FlexRow>
 			<br/>
 			<div>
-				Balance: {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}
-				<span>
-					<SVGImage
-						onClick={reloadBalance}
-						src={require(`resources/refresh.svg`).default}
-						width={`0.9em`} height={`0.9em`} style={{ cursor: `pointer`, marginLeft: `0.5em`}} />
-				</span>
+				{walletAddress?.length > 0 && <><BoldSpan>Connected Wallet:</BoldSpan> {getShortenedWord(walletAddress,4)}</>}
+				<div>
+					<BoldSpan>Balance:</BoldSpan> {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}
+					<LoadingWidget cb={reloadBalance} />
+				</div>
 			</div>
-
-			{!hasEnoughInWalletForMin && <div>Not enough money in this account</div>}
-			<br/><br/>
+			<br/>
+			{ getDisabledText(disableTransferButton) }
 			<TransferButton
 				dim={disableTransferButton}
 				disabled={disableTransferButton}
@@ -226,3 +252,4 @@ export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalan
 		: null
 	}</div>
 }
+

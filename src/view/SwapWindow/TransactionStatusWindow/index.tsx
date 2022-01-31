@@ -130,6 +130,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [isWalletConnected, setIsWalletConnected] = useState(false);
 	const [walletBalance, setWalletBalance] = useState(0);
+	const [walletAddress, setWalletAddress] = useState("");
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const [userConfirmed, setUserconfirmed] = useState(false);
@@ -152,6 +153,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
 			const balance = await wallet.getBalance(tokenAddress);
 			setWalletBalance(balance);
+			setWalletAddress(await wallet.getAddress());
 		} else {
 			let wallet: KeplrWallet = new KeplrWallet(sourceChain?.chainName.toLowerCase() as "axelar" | "terra");
 			setWalletToUse(wallet);
@@ -162,13 +164,13 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			await wallet.connectToWallet();
 			const balance: number = (await wallet.getBalance(selectedSourceAsset?.common_key as string));
 			setWalletBalance(balance);
+			setWalletAddress(await wallet.getAddress());
 		}
 	}
 
 	const updateBalance = useCallback(async () => {
 		if (!walletToUse)
 			return;
-		console.log("update balance");
 		if (sourceChain?.module === "evm") {
 			const tokenAddress: string = await (walletToUse as MetaMaskWallet).getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
 			const balance = await walletToUse.getBalance(tokenAddress);
@@ -177,6 +179,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			const balance: number = (await walletToUse.getBalance(selectedSourceAsset?.common_key as string));
 			setWalletBalance(balance);
 		}
+		setWalletAddress(await walletToUse.getAddress());
 	},[walletToUse, selectedSourceAsset, sourceChain?.module])
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
@@ -199,13 +202,17 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			case !!depositAddress:
 				setActiveStep(2);
 				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected}
-				                                      walletBalance={walletBalance} reloadBalance={updateBalance}/>);
+				                                      walletBalance={walletBalance}
+				                                      reloadBalance={updateBalance}
+				                                      walletAddress={walletAddress}
+				/>);
 				break;
 			default:
 				setActiveStep(1);
 				break;
 		}
-	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep, walletBalance, updateBalance]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms,
+		setCartoonMessage, setActiveStep, walletBalance, updateBalance, walletAddress]);
 
 
 	useEffect(() => {
