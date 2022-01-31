@@ -1,8 +1,8 @@
-import {useRecoilState}                          from "recoil";
+import {useRecoilState}                                       from "recoil";
 import styled                                                 from "styled-components";
-import {ShowSupportWidget, ShowGettingStartedWidget, ShowFAQ} from "state/FAQWidget";
+import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget} from "state/FAQWidget";
 import Container                                              from "../StyleComponents/Container";
-import {FlexRow}                                 from "../StyleComponents/FlexRow";
+import {FlexRow}                                              from "../StyleComponents/FlexRow";
 
 const StyledPageFooter = styled(Container)`
 	position: fixed;
@@ -41,13 +41,6 @@ const HelperWidget = styled.div`
     }
 `;
 
-const LinkText = styled.a`
-	color: blue;
-	${StyledPageFooter}:hover & {
-        color: lightgrey;
-    }
-`;
-
 const PageFooter = () => {
 	const [showGettingStarted, setShowGettingStarted] = useRecoilState(ShowGettingStartedWidget);
 	const [showFAQ, setShowFAQ] = useRecoilState(ShowFAQ);
@@ -57,18 +50,6 @@ const PageFooter = () => {
 		<div style={{marginLeft: `1em`, cursor: `pointer`, width: `25%`}}
 		     onClick={() => window.open("https://axelar.network", '_blank')}>
 			<img src={require(`resources/axelar-logo-horizontal-white.svg`)?.default} alt=""/>
-		</div>
-		<div style={{fontSize: `0.6em`, width: `50%`, textAlign: "center"}}>This site is protected by reCAPTCHA, and the
-			Google{" "}
-			<LinkText href="https://policies.google.com/privacy" target={"_blank"}
-			          rel="noreferrer">
-				Privacy Policy
-			</LinkText>
-			{" "}and{" "}
-			<LinkText href="https://policies.google.com/terms" target={"_blank"} rel="noreferrer">
-				Terms of Service
-			</LinkText>
-			{" "}apply.
 		</div>
 		<FlexRow style={{width: `30%`, fontSize: `0.9em`, minWidth: `425px`, justifyContent: `flex-end`}}>
 			<HelperWidget onClick={() => {

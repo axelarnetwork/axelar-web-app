@@ -76,15 +76,19 @@ const StyledInputFormSection = styled(FlexColumn)`
 	
 	@media ${screenConfigs.media.desktop} {
 		margin-top: 50px;
+		margin-bottom: 25px;
 	}
 	@media ${screenConfigs.media.laptop} {
 		margin-top: 30px;
+		margin-bottom: 20px;
 	}
 	@media ${screenConfigs.media.tablet} {
 		margin-top: 5px;
+		margin-bottom: 0px;
 	}
 	@media ${screenConfigs.media.mobile} {
 		margin-top: 5px;
+		margin-bottom: 0px;
 	}	
 `;
 
@@ -101,6 +105,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 	const [isValidDestinationAddress, setIsValidDestinationAddress] = useRecoilState(IsValidDestinationAddress);
 	const resetUserInputs = useResetUserInputs();
 	const [showValidationErrors, setShowValidationErrors] = useState(false);
+	const [showAuthTooltip, setShowAuthTooltip] = useState(false);
 	const srcChainComponentRef = createRef();
 	const destChainComponentRef = createRef();
 
@@ -230,13 +235,20 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 			<PlainButton
 				dim={!enableSubmitBtn}
 				onClick={() => enableSubmitBtn && onInitiateTransfer()}
-				onMouseEnter={() => !enableSubmitBtn && setShowValidationErrors(true)}
-				onMouseLeave={() => setShowValidationErrors(false)}
+				onMouseEnter={() => {
+					if (!enableSubmitBtn) setShowValidationErrors(true);
+					if (enableSubmitBtn) setShowAuthTooltip(true);
+				}
+				}
+				onMouseLeave={() => {
+					setShowValidationErrors(false);
+					setShowAuthTooltip(false);
+				}}
 			>
-				Initiate Asset Transfer
+				Authenticate & Transfer
 			</PlainButton>
 		</StyledButtonContainer>
-
+		{showAuthTooltip && <span style={{ fontSize: `0.7em`, color: `grey`}}>We'll ask you to verify a one-time code in a Metamask popup. </span>}
 	</StyledUserInputWindow>;
 }
 
