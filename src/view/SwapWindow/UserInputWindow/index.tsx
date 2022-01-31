@@ -25,7 +25,7 @@ import StyledButtonContainer
 import PlainButton
                                                                                     from "../StyledComponents/PlainButton";
 import TopFlowsSelectorWidget                                                       from "../TopFlowsSelector";
-import {SendLogsToServer}                                                           from "../../../api/SendLogsToServer";
+import {SendLogsToServer}                                                           from "api/SendLogsToServer";
 
 interface IUserInputWindowProps {
 	handleTransactionSubmission: () => Promise<string>;
@@ -248,7 +248,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 				Authenticate & Transfer
 			</PlainButton>
 		</StyledButtonContainer>
-		{showAuthTooltip && <span style={{ fontSize: `0.7em`, color: `grey`}}>We'll ask you to verify a one-time code in a Metamask popup. </span>}
+		{showAuthTooltip && <span style={{ fontSize: `0.7em`, color: `grey`}}>We'll first ask you to verify a one-time code with Metamask. </span>}
 	</StyledUserInputWindow>;
 }
 

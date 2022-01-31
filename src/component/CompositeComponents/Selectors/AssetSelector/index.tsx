@@ -27,8 +27,9 @@ const AssetSelector = () => {
 };
 
 const wrapAssetName = (assetName: string): ReactElement => {
+
 	const splitName = assetName?.split(" ") || [];
-	console.log("split name",splitName);
+
 	return <>{(splitName.length > 1)
 		? <FlexRow style={{ justifyContent: `flex-start`}}>
 			<span>{splitName[0]}{" "}</span>

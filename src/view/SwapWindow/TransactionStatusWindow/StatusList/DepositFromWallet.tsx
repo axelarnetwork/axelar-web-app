@@ -9,6 +9,7 @@ import {InputForm}                                                       from "c
 import {StyledButton}                                                    from "component/StyleComponents/StyledButton";
 import {FlexRow}                                                         from "component/StyleComponents/FlexRow";
 import Link                                                              from "component/Widgets/Link";
+import {SVGImage}                                                        from "component/Widgets/SVGImage";
 import {KeplrWallet}                                                     from "hooks/wallet/KeplrWallet";
 import {MetamaskTransferEvent, MetaMaskWallet}                           from "hooks/wallet/MetaMaskWallet";
 import {ChainSelection, SourceAsset}                                     from "state/ChainSelection";
@@ -22,10 +23,8 @@ const TransferButton = styled(StyledButton)`
 	font-size: small;
 `;
 
-export const DepositFromWallet = ({
-	                                  isWalletConnected,
-	                                  walletBalance
-                                  }: { isWalletConnected: boolean, walletBalance: number }) => {
+export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalance }:
+	                                  { isWalletConnected: boolean, walletBalance: number, reloadBalance: () => void }) => {
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
@@ -185,7 +184,6 @@ export const DepositFromWallet = ({
 			}
 		</>
 
-
 	const disableTransferButton: boolean = !amountToDeposit
 		|| (amountToDeposit < minDepositAmt)
 		|| !hasEnoughInWalletForMin
@@ -205,7 +203,16 @@ export const DepositFromWallet = ({
 				<div style={{marginLeft: `0.5em`}}>{selectedSourceAsset?.assetSymbol}</div>
 			</FlexRow>
 			<br/>
-			<div>Balance: {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}</div>
+			<div>
+				Balance: {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}
+				<span>
+					<SVGImage
+						onClick={reloadBalance}
+						src={require(`resources/refresh.svg`).default}
+						width={`0.9em`} height={`0.9em`} style={{ cursor: `pointer`, marginLeft: `0.5em`}} />
+				</span>
+			</div>
+
 			{!hasEnoughInWalletForMin && <div>Not enough money in this account</div>}
 			<br/><br/>
 			<TransferButton
