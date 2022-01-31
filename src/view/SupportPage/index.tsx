@@ -1,21 +1,29 @@
-import {useRecoilState, useRecoilValue, useSetRecoilState}                           from "recoil";
-import {ActiveStep, SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
-import styled                                                                        from "styled-components";
-import Tooltip                                                           from "component/Widgets/Tooltip";
-import CopyToClipboard                                                   from "component/Widgets/CopyToClipboard";
-import BoldSpan                                                     from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                                    from "component/StyleComponents/FlexRow";
-import {SVGImage}                                                   from "component/Widgets/SVGImage";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                    from "config/consts";
-import configs                                                      from "config/downstreamServices";
-import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer} from "state/ApplicationStatus";
-import {ChainSelection, DestinationAddress}                         from "state/ChainSelection";
-import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget}       from "state/FAQWidget";
-import {toProperCase}                                               from "utils/toProperCase";
-import {getShortenedWord}                                           from "utils/wordShortener";
-import {QASection}                                                  from "./QA";
-import {AssetInfo, ChainInfo}                                       from "@axelar-network/axelarjs-sdk";
-import {Nullable}                                                   from "../../interface/Nullable";
+import {useRecoilState, useRecoilValue, useSetRecoilState}    from "recoil";
+import {
+	ActiveStep, SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId
+}                                                             from "state/TransactionStatus";
+import styled                                                 from "styled-components";
+import Tooltip                                                from "component/Widgets/Tooltip";
+import CopyToClipboard                                        from "component/Widgets/CopyToClipboard";
+import BoldSpan                                               from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                              from "component/StyleComponents/FlexRow";
+import {SVGImage}                                             from "component/Widgets/SVGImage";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}              from "config/consts";
+import configs                                                from "config/downstreamServices";
+import {Nullable}                                             from "interface/Nullable";
+import {
+	ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer
+}                                                             from "state/ApplicationStatus";
+import {
+	ChainSelection, DestinationAddress
+}                                                             from "state/ChainSelection";
+import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget} from "state/FAQWidget";
+import {toProperCase}                                         from "utils/toProperCase";
+import {getShortenedWord}                                     from "utils/wordShortener";
+import {QASection}                                            from "./QA";
+import {
+	AssetInfo, ChainInfo
+}                                                             from "@axelar-network/axelarjs-sdk";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -79,6 +87,7 @@ const SupportPage = () => {
 	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const srcChainDepositTxHash = useRecoilValue(SrcChainDepositTxHash);
 	const [activeStep] = useRecoilState(ActiveStep);
+	// const setShowTransactionHistory = useSetRecoilState(ShowTransactionHistoryPage);
 
 	return <StyledHelperComponent>
 		{showFAQ && <StyledPopup>
@@ -151,6 +160,11 @@ const SupportPage = () => {
                         the <BoldSpan>#satellite-ticketing-support</BoldSpan> channel.
                     </div>
                 </DescriptorText>
+                {/*<NewLink text={"Transaction History"} onClick={() => setShowTransactionHistory(true)}/>*/}
+                {/*<DescriptorText>*/}
+                {/*    <div>Your transaction history.*/}
+                {/*    </div>*/}
+                {/*</DescriptorText>*/}
                 <NewLink text={"Terms of Use"} onClick={() => {
 					setShowDisclaimer(true);
 					setShowLargeDisclaimer(true);
@@ -169,11 +183,14 @@ const SupportPage = () => {
                     anchorContent={<CopyToClipboard
 						JSXToShow={<>
 							<div><BoldSpan>Trace ID: </BoldSpan>{getShortenedWord(transactionTraceId, 5)}</div>
-							{depositAddress && <div><BoldSpan>Deposit Address: </BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 5)}</div>}
-							{destAddr && <div><BoldSpan>Destination Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
+							{depositAddress && <div><BoldSpan>Deposit
+                                Address: </BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 5)}</div>}
+							{destAddr &&
+                            <div><BoldSpan>Destination Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
 							{srcChain && <div><BoldSpan>Source Chain: </BoldSpan>{srcChain.chainName}</div>}
 							{destChain && <div><BoldSpan>Destination Chain: </BoldSpan>{destChain.chainName}</div>}
-							{srcChainDepositTxHash && <div><BoldSpan>Deposit TxHash on {srcChain?.chainName}: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
+							{srcChainDepositTxHash && <div><BoldSpan>Deposit TxHash
+                                on {srcChain?.chainName}: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
 							{activeStep > 0 && <div><BoldSpan>Stuck on Step: </BoldSpan>{activeStep}</div>}
 
 						</>}
