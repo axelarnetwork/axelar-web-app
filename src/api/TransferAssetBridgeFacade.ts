@@ -1,7 +1,6 @@
 import {
 	AssetInfoWithTrace, AssetTransferObject, CallbackStatus, TransferAssetBridge
 }                         from "@axelar-network/axelarjs-sdk";
-import {SendLogsToServer} from "./SendLogsToServer";
 
 export class TransferAssetBridgeFacade {
 
@@ -19,7 +18,7 @@ export class TransferAssetBridgeFacade {
 			return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(message, sourceCbs, destCbs, false);
 		} catch (e: any) {
 			sourceCbs?.failCb();
-			SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
+			// SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
 			throw e;
 		}
 	}

@@ -19,9 +19,17 @@ import {depositConfirmCbMap}                               from "./helper";
 import {
 	ShowTransactionStatusWindow
 }                                                          from "../state/ApplicationStatus";
-import {SendLogsToServer}                                  from "../api/SendLogsToServer";
 import usePersonalSignAuthenticate                         from "./auth/usePersonalSignAuthenticate";
 
+class CustomError {
+	private statusCode: number;
+	private message: string;
+
+	constructor(statusCode: number, message: string) {
+		this.statusCode = statusCode;
+		this.message = message;
+	}
+}
 export default function usePostTransactionToBridge() {
 
 	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useRecoilState(ShowTransactionStatusWindow);
@@ -38,7 +46,7 @@ export default function usePostTransactionToBridge() {
 
 	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
 		if (source && status?.timedOut) {
-			notificationHandler.notifyError({
+			notificationHandler.notifyInfo({
 				statusCode: 408,
 				message: "Timed out waiting for your deposit... If you feel you made your deposit before this and see this message, please reach out.",
 				traceId
@@ -88,7 +96,6 @@ export default function usePostTransactionToBridge() {
 			return res;
 		} catch (e: any) {
 			e.traceId = traceId;
-			SendLogsToServer.error("usePostTransactionToBridge_postRequest_1", msg + JSON.stringify(e), traceId);
 			console.log("usePostTransactionToBridge_postRequest_1", e);
 			if (e.statusCode === 504 || e.message === "AxelarJS-SDK uncaught post error") {
 				e.statusCode = 504;
@@ -125,8 +132,9 @@ export default function usePostTransactionToBridge() {
 				isBlockchainAuthenticated = res.isBlockchainAuthenticated;
 			} catch (e: any) {
 				setShowTransactionStatusWindow(false);
-				SendLogsToServer.error("usePostTransactionToBridge_FRONTEND_ERROR_1", JSON.stringify(e), traceId);
-				reject(e);
+				const error = new CustomError(403.1, "Any errors from here are most likely Cloudflare block, which the UI will interpret as 403.1 errors")
+				notificationHandler.notifyError(error)
+				reject(error);
 			}
 
 			if (!isBlockchainAuthenticated) {
@@ -139,8 +147,8 @@ export default function usePostTransactionToBridge() {
 				const res = await postRequest(traceId, signature, otc, publicAddress);
 				resolve(res);
 			} catch (e: any) {
+				/*note: all notifications for postRequest failures are caught directly in that method*/
 				setShowTransactionStatusWindow(false);
-				SendLogsToServer.error("usePostTransactionToBridge_FRONTEND_ERROR_2", JSON.stringify(e), traceId);
 				if (!e.traceId) {
 					e.traceId = traceId
 				}
@@ -150,7 +158,7 @@ export default function usePostTransactionToBridge() {
 
 		})
 	}, [sourceChain, destinationChain, destinationAddress, setShowTransactionStatusWindow, setTransactionTraceId,
-		sourceAsset, msg, postRequest, personalSignAuthenticate
+		sourceAsset, msg, postRequest, personalSignAuthenticate, notificationHandler
 	]);
 
 	const closeResultsScreen = () => setShowTransactionStatusWindow(false);

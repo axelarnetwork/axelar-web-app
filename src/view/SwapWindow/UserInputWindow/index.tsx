@@ -125,7 +125,8 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 		try {
 			await handleTransactionSubmission();
 		} catch (e: any) {
-			resetUserInputs();
+			if (![403.1].includes(e.statusCode))
+				resetUserInputs();
 			SendLogsToServer.error("UserInputWindow_onInitiateTransfer",JSON.stringify(e),"NO_UUID");
 		}
 	}, [destAddr, isValidDestinationAddress, handleTransactionSubmission, resetUserInputs]);
