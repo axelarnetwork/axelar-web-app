@@ -4,8 +4,8 @@ import {Nullable}      from "../interface/Nullable";
 
 const {persistAtom} = recoilPersist();
 
-export const IsLoggedIn = atom<boolean>({
-	key: "IsLoggedIn",
+export const IsLoggedInWithBetaPassword = atom<boolean>({
+	key: "IsLoggedInWithBetaPassword",
 	default: false,
 	effects_UNSTABLE: [persistAtom]
 });
