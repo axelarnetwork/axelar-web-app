@@ -1,21 +1,25 @@
-import React                                                            from "react";
-import {ChainInfo}                                                      from "@axelar-network/axelarjs-sdk";
-import styled                                                           from "styled-components";
-import screenConfigs                                                    from "config/screenConfigs";
-import {useRecoilValue}                                                 from "recoil";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts";
-import downstreamServices                                               from "config/downstreamServices";
-import CopyToClipboard                                                  from "component/Widgets/CopyToClipboard";
-import Link                                                             from "component/Widgets/Link";
-import BoldSpan                                                         from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                                        from "component/StyleComponents/FlexRow";
-import {ImprovedTooltip}                                                from "component/Widgets/ImprovedTooltip";
-import {SVGImage}                                                       from "component/Widgets/SVGImage";
-import {Nullable}                                                       from "interface/Nullable";
-import {ChainSelection, DestinationAddress, SourceAsset}                from "state/ChainSelection";
-import {IConfirmationStatus, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
-import {getShortenedWord}                                               from "utils/wordShortener";
-import BigNumber                                                        from "decimal.js";
+import React                                     from "react";
+import {ChainInfo}                               from "@axelar-network/axelarjs-sdk";
+import styled                                    from "styled-components";
+import screenConfigs                             from "config/screenConfigs";
+import {useRecoilValue}                          from "recoil";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY} from "config/consts";
+import downstreamServices                        from "config/downstreamServices";
+import CopyToClipboard                           from "component/Widgets/CopyToClipboard";
+import Link                                      from "component/Widgets/Link";
+import BoldSpan                                  from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                 from "component/StyleComponents/FlexRow";
+import {ImprovedTooltip}                         from "component/Widgets/ImprovedTooltip";
+import {SVGImage}                                from "component/Widgets/SVGImage";
+import {Nullable}                                from "interface/Nullable";
+import {
+	ChainSelection, DestinationAddress, SourceAsset
+}                                                from "state/ChainSelection";
+import {
+	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, SrcChainDepositTxHash
+}                                                from "state/TransactionStatus";
+import {getShortenedWord}                        from "utils/wordShortener";
+import BigNumber                                 from "decimal.js";
 
 const StyledStatusList = styled.div`
     width: 100%;
@@ -116,6 +120,7 @@ const StatusList = (props: IStatusListProps) => {
 	const depositAddress = useRecoilValue(SourceDepositAddress);
 	const destNumConfirm: IConfirmationStatus = useRecoilValue(NumberConfirmations(DESTINATION_TOKEN_KEY));
 	const destinationAddress = useRecoilValue(DestinationAddress);
+	const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash);
 
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const sourceNumConfirmations = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY));
@@ -166,12 +171,16 @@ const StatusList = (props: IStatusListProps) => {
 							tooltipAltText={"Copied to Clipboard!"}
 						/>
 					</div>
-					<FlexRow style={{height: `1.5em`, width: `100%`, justifyContent: `space-between`}}>
-						<div>Or deposit from here!</div>
-						{!props.isWalletConnected
-							? <HelperWidget onClick={props.connectToWallet}>Connect {sourceChain?.module === "evm" ? "Metamask" : "Keplr"}{" "}<WalletLogo/></HelperWidget>
-							: null}
-					</FlexRow>
+					{activeStep >= 3 && srcChainDepositHash
+						? linkToExplorer(sourceChain as ChainInfo, srcChainDepositHash)
+						: <FlexRow style={{height: `1.5em`, width: `100%`, justifyContent: `space-between`}}>
+							<div>OR deposit from here!</div>
+							{!props.isWalletConnected
+								? <HelperWidget
+									onClick={props.connectToWallet}>Connect {sourceChain?.module === "evm" ? "Metamask" : "Keplr"}{" "}<WalletLogo/></HelperWidget>
+								: null}
+						</FlexRow>
+					}
 				</div>
 				: `Waiting for your deposit into a temporary deposit account.`
 			}
@@ -189,7 +198,7 @@ const StatusList = (props: IStatusListProps) => {
 						the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.
 					</div>
 				</div>
-				: `Confirming your deposit on ${sourceChain?.chainName}.`
+				: `Detecting your deposit on ${sourceChain?.chainName}.`
 			}
 		/>
 		<ListItem
@@ -197,7 +206,7 @@ const StatusList = (props: IStatusListProps) => {
 			step={4} activeStep={activeStep}
 			text={activeStep >= 4
 				? ShowTransactionComplete({destNumConfirm, destinationChain})
-				: `Sending transaction to ${destinationChain?.chainName}`
+				: `Detecting your transfer on ${destinationChain?.chainName}`
 			}
 		/>
 	</StyledStatusList>
@@ -219,6 +228,17 @@ const ShowTransactionComplete = ({
 			{" "} on {blockExplorer.name}!
 		</div>
 		: "Transfer Completed!";
+}
+
+const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
+	const blockExplorer: { name: string, url: string } = downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string]
+		&& downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][sourceChainSelection?.chainName?.toLowerCase() as string];
+
+	return txHash && blockExplorer
+		? <div style={{marginTop: `0.35em`}}>
+			<Link href={`${blockExplorer.url}${txHash}`}>Deposit Confirmation</Link>
+		</div>
+		: null;
 }
 
 export default StatusList;

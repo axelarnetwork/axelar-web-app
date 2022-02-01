@@ -40,7 +40,7 @@ export default function usePostTransactionToBridge() {
 		if (source && status?.timedOut) {
 			notificationHandler.notifyError({
 				statusCode: 408,
-				message: "Timed out waiting for your deposit... Timed out waiting for your deposit... If you feel you made your deposit before this and see this message, please reach out. Otherwise, refresh and try again",
+				message: "Timed out waiting for your deposit... If you feel you made your deposit before this and see this message, please reach out.",
 				traceId
 			});
 			return;

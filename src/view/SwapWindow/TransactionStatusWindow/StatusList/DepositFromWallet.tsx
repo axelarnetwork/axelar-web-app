@@ -181,7 +181,7 @@ export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalan
 	if (sentSuccess)
 		return <><br/>
 			<div>
-				{`Deposit detected! `}
+				{`Deposit transaction found! `}
 				<LinkToExplorer/>
 			</div>
 			{sourceChainSelection?.module === "evm"
