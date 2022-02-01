@@ -245,7 +245,7 @@ const UserInputWindow = ({handleTransactionSubmission}: IUserInputWindowProps) =
 					setShowAuthTooltip(false);
 				}}
 			>
-				Authenticate & Transfer
+				Connect Wallet & Transfer
 			</PlainButton>
 		</StyledButtonContainer>
 		{showAuthTooltip && <span style={{ fontSize: `0.7em`, color: `grey`}}>We'll first ask you to verify a one-time code with Metamask. </span>}
