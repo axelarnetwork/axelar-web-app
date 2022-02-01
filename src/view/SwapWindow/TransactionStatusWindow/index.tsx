@@ -1,7 +1,7 @@
 import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
-import styled, {ThemedStyledProps}                                                       from "styled-components";
-import React, {useEffect, useState}                                                      from "react";
-import {confirm}                                                                         from "react-confirm-box";
+import styled, {ThemedStyledProps}               from "styled-components";
+import React, {useCallback, useEffect, useState} from "react";
+import {confirm}                                 from "react-confirm-box";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -28,6 +28,7 @@ import PlainButton
 import StatusList                                                                        from "./StatusList";
 import Step2InfoForWidget
                                                                                          from "./StatusList/Step2InfoForWidget";
+import {WalletInterface}                                                                 from "../../../hooks/wallet/WalletInterface";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -129,9 +130,11 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
 	const [isWalletConnected, setIsWalletConnected] = useState(false);
 	const [walletBalance, setWalletBalance] = useState(0);
+	const [walletAddress, setWalletAddress] = useState("");
 	const setShowDisclaimer = useSetRecoilState(ShowDisclaimer);
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const [userConfirmed, setUserconfirmed] = useState(false);
+	const [walletToUse, setWalletToUse] = useState<WalletInterface | null>();
 
 	useEffect(() => {
 		setShowDisclaimer(false);
@@ -141,6 +144,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const connectToWallet = async () => {
 		if (sourceChain?.module === "evm") {
 			let wallet: MetaMaskWallet = new MetaMaskWallet(sourceChain?.chainName.toLowerCase() as string);
+			setWalletToUse(wallet);
 			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
 			setIsWalletConnected(isWalletInstalled);
 			if (!isWalletInstalled)
@@ -149,8 +153,10 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			const tokenAddress: string = await wallet.getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
 			const balance = await wallet.getBalance(tokenAddress);
 			setWalletBalance(balance);
+			setWalletAddress(await wallet.getAddress());
 		} else {
 			let wallet: KeplrWallet = new KeplrWallet(sourceChain?.chainName.toLowerCase() as "axelar" | "terra");
+			setWalletToUse(wallet);
 			const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean;
 			setIsWalletConnected(isWalletInstalled);
 			if (!isWalletInstalled)
@@ -158,8 +164,23 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			await wallet.connectToWallet();
 			const balance: number = (await wallet.getBalance(selectedSourceAsset?.common_key as string));
 			setWalletBalance(balance);
+			setWalletAddress(await wallet.getAddress());
 		}
 	}
+
+	const updateBalance = useCallback(async () => {
+		if (!walletToUse)
+			return;
+		if (sourceChain?.module === "evm") {
+			const tokenAddress: string = await (walletToUse as MetaMaskWallet).getOrFetchTokenAddress(selectedSourceAsset as AssetInfo);
+			const balance = await walletToUse.getBalance(tokenAddress);
+			setWalletBalance(balance);
+		} else {
+			const balance: number = (await walletToUse.getBalance(selectedSourceAsset?.common_key as string));
+			setWalletBalance(balance);
+		}
+		setWalletAddress(await walletToUse.getAddress());
+	},[walletToUse, selectedSourceAsset, sourceChain?.module])
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -181,13 +202,17 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			case !!depositAddress:
 				setActiveStep(2);
 				setCartoonMessage(<Step2InfoForWidget isWalletConnected={isWalletConnected}
-				                                      walletBalance={walletBalance}/>);
+				                                      walletBalance={walletBalance}
+				                                      reloadBalance={updateBalance}
+				                                      walletAddress={walletAddress}
+				/>);
 				break;
 			default:
 				setActiveStep(1);
 				break;
 		}
-	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms, setCartoonMessage, setActiveStep, walletBalance]);
+	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms,
+		setCartoonMessage, setActiveStep, walletBalance, updateBalance, walletAddress]);
 
 
 	useEffect(() => {

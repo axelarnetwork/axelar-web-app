@@ -15,6 +15,11 @@ import {ChainSelection, SourceAsset}                                     from "s
 import {SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
 import {getMinDepositAmount}                                             from "utils/getMinDepositAmount";
 import {isValidDecimal}                                                  from "utils/isValidDecimal";
+import LoadingWidget
+                                                                         from "component/Widgets/LoadingWidget";
+import {getShortenedWord}                                                from "utils/wordShortener";
+import BoldSpan
+                                                                         from "component/StyleComponents/BoldSpan";
 
 const TransferButton = styled(StyledButton)`
 	color: ${props => props.dim ? "#565656" : "white"};
@@ -22,10 +27,13 @@ const TransferButton = styled(StyledButton)`
 	font-size: small;
 `;
 
-export const DepositFromWallet = ({
-	                                  isWalletConnected,
-	                                  walletBalance
-                                  }: { isWalletConnected: boolean, walletBalance: number }) => {
+interface DepositFromWalletProps {
+	isWalletConnected: boolean;
+	walletBalance: number;
+	reloadBalance: () => void;
+	walletAddress: string;
+}
+export const DepositFromWallet = ({isWalletConnected, walletBalance, reloadBalance, walletAddress }: DepositFromWalletProps) => {
 	const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChainSelection = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const selectedSourceAsset = useRecoilValue(SourceAsset);
@@ -173,7 +181,7 @@ export const DepositFromWallet = ({
 	if (sentSuccess)
 		return <><br/>
 			<div>
-				{`Deposit detected! `}
+				{`Deposit transaction found! `}
 				<LinkToExplorer/>
 			</div>
 			{sourceChainSelection?.module === "evm"
@@ -185,12 +193,31 @@ export const DepositFromWallet = ({
 			}
 		</>
 
-
 	const disableTransferButton: boolean = !amountToDeposit
 		|| (amountToDeposit < minDepositAmt)
 		|| !hasEnoughInWalletForMin
 		|| (amountToDeposit > walletBalance)
 		|| (!isValidDecimal(amountToDeposit as string));
+
+	const getDisabledText = (disableTransferButton: boolean) => {
+
+		if (!disableTransferButton)
+			return <span><br/><br/></span>
+
+		let text = "";
+
+		if (!hasEnoughInWalletForMin || (amountToDeposit && amountToDeposit > walletBalance))
+			text = "Not enough funds in this account";
+		else if (!amountToDeposit)
+			return <span><br/><br/></span>
+		else if (amountToDeposit < minDepositAmt)
+			text = "Amount is below the minimum!";
+		else if (!isValidDecimal(amountToDeposit as string))
+			text = "Too many decimal points"
+
+		return <div>{text}<br/><br/></div>
+
+	}
 
 	return <div style={{width: `95%`}}><br/>{isWalletConnected
 		? <div>
@@ -205,9 +232,15 @@ export const DepositFromWallet = ({
 				<div style={{marginLeft: `0.5em`}}>{selectedSourceAsset?.assetSymbol}</div>
 			</FlexRow>
 			<br/>
-			<div>Balance: {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}</div>
-			{!hasEnoughInWalletForMin && <div>Not enough money in this account</div>}
-			<br/><br/>
+			<div>
+				{walletAddress?.length > 0 && <><BoldSpan>Connected Wallet:</BoldSpan> {getShortenedWord(walletAddress,4)}</>}
+				<div>
+					<BoldSpan>Balance:</BoldSpan> {walletBalance}{" "}{selectedSourceAsset?.assetSymbol}
+					<LoadingWidget cb={reloadBalance} />
+				</div>
+			</div>
+			<br/>
+			{ getDisabledText(disableTransferButton) }
 			<TransferButton
 				dim={disableTransferButton}
 				disabled={disableTransferButton}
@@ -219,3 +252,4 @@ export const DepositFromWallet = ({
 		: null
 	}</div>
 }
+

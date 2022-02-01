@@ -1,16 +1,12 @@
-import React, {ReactElement, useRef}                            from "react";
-import ReCAPTCHA                                                from "react-google-recaptcha";
+import React, {ReactElement}                            from "react";
 import {CSSTransition, SwitchTransition}                        from "react-transition-group";
 import {useRecoilValue}                                         from "recoil";
 import styled, {ThemedStyledProps}                              from "styled-components";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                from "config/consts";
-import downstreamServices                                       from "config/downstreamServices";
 import screenConfigs                                            from "config/screenConfigs";
 import {animateStyles}                                          from "component/StyleComponents/animations/SwitchToggleAnimation";
 import {StyledCentered}                                         from "component/StyleComponents/Centered";
 import usePostTransactionToBridge                               from "hooks/usePostTransactionToBridge";
-import useRecaptchaAuthenticate                                 from "hooks/auth/useRecaptchaAuthenticate";
-import {ShowRecaptchaV2Retry}                                   from "state/ApplicationStatus";
 import {ChainSelection, IsValidDestinationAddress, SourceAsset} from "state/ChainSelection";
 import inactiveBox                                              from "resources/inactive-box.svg";
 import activeBox                                                from "resources/active-box.svg";
@@ -85,15 +81,11 @@ const StyledContainer = styled.div`
 
 const SwapWindow = (): ReactElement => {
 
-	const recaptchaV2Ref = useRef(null);
-	useRecaptchaAuthenticate(recaptchaV2Ref);
-	const showRecaptchaV2Retry = useRecoilValue(ShowRecaptchaV2Retry);
-
 	const [
 		showTransactionStatusWindow,
 		handleTransactionSubmission,
 		closeResultsScreen
-	] = usePostTransactionToBridge(recaptchaV2Ref);
+	] = usePostTransactionToBridge();
 
 	const userInputNeeded = !showTransactionStatusWindow;
 
@@ -107,8 +99,8 @@ const SwapWindow = (): ReactElement => {
 		&& selectedSourceAsset
 		&& isValidDestinationAddr;
 
-	const handleUserSubmit = async (attemptNumber: number) => {
-		return await handleTransactionSubmission(attemptNumber);
+	const handleUserSubmit = async () => {
+		return await handleTransactionSubmission();
 	}
 
 	return <StyledSwapWindow>
@@ -134,19 +126,6 @@ const SwapWindow = (): ReactElement => {
 			</CSSTransition>
 		</SwitchTransition>
 		<SupportPage/>
-		<div
-			style={{
-				zIndex: 10000, position: `absolute`, right: `25%`, bottom: `70px`,
-				visibility: showRecaptchaV2Retry ? "inherit" : "hidden",
-				boxShadow: `5px 5px 5px 5px #eab000`
-			}}>
-			<ReCAPTCHA
-				ref={recaptchaV2Ref}
-				sitekey={downstreamServices.RECAPTCHA_V2_SITE_KEY}
-				size={"compact"}
-				onChange={() => handleUserSubmit(2)}
-			/>
-		</div>
 	</StyledSwapWindow>;
 
 }

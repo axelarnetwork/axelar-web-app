@@ -12,7 +12,7 @@ export const StyledBaseSelector = styled.div`
 
 interface IBaseSelectorProps {
 	image: ReactElement;
-	label: string;
+	label: string | ReactElement;
 }
 
 export const BaseSelector = (props: IBaseSelectorProps) => {

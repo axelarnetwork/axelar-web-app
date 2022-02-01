@@ -1,19 +1,29 @@
-import {useRecoilState, useRecoilValue, useSetRecoilState}               from "recoil";
-import {SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId} from "state/TransactionStatus";
-import styled                                                            from "styled-components";
-import Tooltip                                                           from "component/Widgets/Tooltip";
-import CopyToClipboard                                                   from "component/Widgets/CopyToClipboard";
-import BoldSpan                                                          from "component/StyleComponents/BoldSpan";
-import {FlexRow}                                                         from "component/StyleComponents/FlexRow";
-import {SVGImage}                                                        from "component/Widgets/SVGImage";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                         from "config/consts";
-import configs                                                           from "config/downstreamServices";
-import {ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer}      from "state/ApplicationStatus";
-import {ChainSelection, DestinationAddress}                              from "state/ChainSelection";
-import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget}            from "state/FAQWidget";
-import {toProperCase}                                                    from "utils/toProperCase";
-import {getShortenedWord}                                                from "utils/wordShortener";
-import {QASection}                                                       from "./QA";
+import {useRecoilState, useRecoilValue, useSetRecoilState}    from "recoil";
+import {
+	ActiveStep, SourceDepositAddress, SrcChainDepositTxHash, TransactionTraceId
+}                                                             from "state/TransactionStatus";
+import styled                                                 from "styled-components";
+import Tooltip                                                from "component/Widgets/Tooltip";
+import CopyToClipboard                                        from "component/Widgets/CopyToClipboard";
+import BoldSpan                                               from "component/StyleComponents/BoldSpan";
+import {FlexRow}                                              from "component/StyleComponents/FlexRow";
+import {SVGImage}                                             from "component/Widgets/SVGImage";
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}              from "config/consts";
+import configs                                                from "config/downstreamServices";
+import {Nullable}                                             from "interface/Nullable";
+import {
+	ShowDisclaimer, ShowDisclaimerFromFAQ, ShowLargeDisclaimer
+}                                                             from "state/ApplicationStatus";
+import {
+	ChainSelection, DestinationAddress
+}                                                             from "state/ChainSelection";
+import {ShowFAQ, ShowGettingStartedWidget, ShowSupportWidget} from "state/FAQWidget";
+import {toProperCase}                                         from "utils/toProperCase";
+import {getShortenedWord}                                     from "utils/wordShortener";
+import {QASection}                                            from "./QA";
+import {
+	AssetInfo, ChainInfo
+}                                                             from "@axelar-network/axelarjs-sdk";
 
 const StyledHelperComponent = styled.div`
     position: absolute;
@@ -76,6 +86,8 @@ const SupportPage = () => {
 	const srcChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
 	const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
 	const srcChainDepositTxHash = useRecoilValue(SrcChainDepositTxHash);
+	const [activeStep] = useRecoilState(ActiveStep);
+	// const setShowTransactionHistory = useSetRecoilState(ShowTransactionHistoryPage);
 
 	return <StyledHelperComponent>
 		{showFAQ && <StyledPopup>
@@ -148,6 +160,11 @@ const SupportPage = () => {
                         the <BoldSpan>#satellite-ticketing-support</BoldSpan> channel.
                     </div>
                 </DescriptorText>
+                {/*<NewLink text={"Transaction History"} onClick={() => setShowTransactionHistory(true)}/>*/}
+                {/*<DescriptorText>*/}
+                {/*    <div>Your transaction history.*/}
+                {/*    </div>*/}
+                {/*</DescriptorText>*/}
                 <NewLink text={"Terms of Use"} onClick={() => {
 					setShowDisclaimer(true);
 					setShowLargeDisclaimer(true);
@@ -168,23 +185,18 @@ const SupportPage = () => {
 							<div><BoldSpan>Trace ID: </BoldSpan>{getShortenedWord(transactionTraceId, 5)}</div>
 							{depositAddress && <div><BoldSpan>Deposit
                                 Address: </BoldSpan>{getShortenedWord(depositAddress?.assetAddress, 5)}</div>}
-							{destAddr && <div><BoldSpan>Dest Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
-							{srcChain && <div><BoldSpan>Src Chain: </BoldSpan>{srcChain.chainName}</div>}
-							{destChain && <div><BoldSpan>Dest Chain: </BoldSpan>{destChain.chainName}</div>}
-							{srcChainDepositTxHash && <div><BoldSpan>Src Chain Deposit
-                                TxHash: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
+							{destAddr &&
+                            <div><BoldSpan>Destination Address: </BoldSpan>{getShortenedWord(destAddr, 5)}</div>}
+							{srcChain && <div><BoldSpan>Source Chain: </BoldSpan>{srcChain.chainName}</div>}
+							{destChain && <div><BoldSpan>Destination Chain: </BoldSpan>{destChain.chainName}</div>}
+							{srcChainDepositTxHash && <div><BoldSpan>Deposit TxHash
+                                on {srcChain?.chainName}: </BoldSpan>{getShortenedWord(srcChainDepositTxHash, 5)}</div>}
+							{activeStep > 0 && <div><BoldSpan>Stuck on Step: </BoldSpan>{activeStep}</div>}
 
 						</>}
 						height={`12px`}
 						width={`10px`}
-						textToCopy={JSON.stringify({
-							traceId: transactionTraceId,
-							...(depositAddress),
-							...(destAddr && {destAddress: destAddr}),
-							...(srcChain && {srcChain: srcChain.chainName}),
-							...(destChain && {destChain: destChain.chainName}),
-							...(srcChainDepositTxHash && {srcChainDepositTxHash})
-						})}
+						textToCopy={getTextToCopy(transactionTraceId, depositAddress, srcChain, destChain, srcChainDepositTxHash, activeStep)}
 						showImage={false}
 					/>}
                     tooltipText={(transactionTraceId && depositAddress ? "Copy Data to Clipboard" : "Copy to Clipboard")}
@@ -196,6 +208,16 @@ const SupportPage = () => {
 	</StyledHelperComponent>;
 }
 
+const getTextToCopy = (transactionTraceId: string, depositAddress: Nullable<AssetInfo>, srcChain: Nullable<ChainInfo>, destChain: Nullable<ChainInfo>, srcChainDepositTxHash: string | null, activeStep: number) => {
+	return `* Trace ID: ${transactionTraceId}
+${depositAddress ? `* Deposit Address: ${depositAddress.assetAddress}\n` : ""}\
+${depositAddress ? `* Asset: ${depositAddress.assetSymbol}\n` : ""}\
+${srcChain ? `* Source Chain: ${srcChain.chainName}\n` : ""}\
+${destChain ? `* Destination Chain: ${destChain.chainName}\n` : ""}\
+${srcChainDepositTxHash ? `* Deposit TxHash on ${srcChain?.chainName}: ${srcChainDepositTxHash}\n` : ""}\
+${activeStep > 0 ? `* Stuck on Step: ${activeStep}\n` : ""}\
+`
+}
 const StyledText = styled(FlexRow)`
 	justify-content: flex-start;
 	margin-bottom: 0.25em;

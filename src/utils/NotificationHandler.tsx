@@ -29,13 +29,9 @@ const MessageContent = (message: string, traceId: string) => {
 	</div>
 }
 const getMessageType = (error: any): JSX.Element => {
+	console.log("erorrrrr",error);
 
-	const unexpectedErrorMsg: string = getNotificationMessage(503, error);
-
-	if (error.uncaught)
-		return MessageContent(unexpectedErrorMsg, error.traceId);
-
-	return MessageContent(getNotificationMessage(error.statusCode, error), error.traceId);
+	return MessageContent(getNotificationMessage(error.statusCode, error), [504,403,429].includes(error.statusCode) ? null : error.traceId);
 
 }
 
@@ -83,8 +79,29 @@ const NotificationHandler = () => {
 		});
 	}
 
+	const notifyInfo = (message: any) => {
+
+		const notification = getMessageType(message);
+
+		store.addNotification({
+			message: notification,
+			type: "default",
+			insert: "top",
+			container: "top-right",
+			animationIn: ["animate__animated", "animate__fadeIn"],
+			animationOut: ["animate__animated", "animate__fadeOut"],
+			dismiss: {
+				showIcon: true,
+				touch: true,
+				duration: 15000,
+				click: false
+			}
+		});
+	}
+
 	return {
 		notifyError,
+		notifyInfo,
 		notifyMessage
 	} as const;
 }

@@ -6,7 +6,7 @@ const {persistAtom} = recoilPersist();
 
 export const IsLoggedIn = atom<boolean>({
 	key: "IsLoggedIn",
-	default: true,
+	default: false,
 	effects_UNSTABLE: [persistAtom]
 });
 
@@ -16,6 +16,10 @@ export const ShowDisclaimer = atom<boolean>({
 });
 export const ShowLargeDisclaimer = atom<boolean>({
 	key: "ShowLargeDisclaimer",
+	default: false,
+});
+export const ShowTransactionHistoryPage = atom<boolean>({
+	key: "ShowTransactionHistoryPage",
 	default: false,
 });
 export const ShowDisclaimerFromFAQ = atom<boolean>({
@@ -43,9 +47,3 @@ export const ShowTransactionStatusWindow = atom<boolean>({
 	key: "ShowTransactionStatusWindow",
 	default: false,
 });
-
-export const ShowRecaptchaV2Retry = atom<boolean>({
-	key: "ShowRecaptchaV2Retry",
-	default: false,
-});
-

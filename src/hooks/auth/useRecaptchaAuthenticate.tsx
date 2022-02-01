@@ -2,6 +2,7 @@ import {RefObject, useCallback, useEffect, useState} from "react";
 import downstreamServices                            from "config/downstreamServices";
 import {useRecoilState}                              from "recoil";
 import {IsRecaptchaAuthenticated}                    from "state/TransactionStatus";
+import {SendLogsToServer}                            from "../../api/SendLogsToServer";
 
 declare const grecaptcha: any;
 
@@ -27,6 +28,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 					resolve(token);
 				} catch (e: any) {
 					setIsRecaptchaAuthenticated(false);
+					SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
 					reject(e);
 				}
 			});
@@ -43,6 +45,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 				resolve(token);
 			} catch (e: any) {
 				setIsRecaptchaAuthenticated(false);
+				SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_2", JSON.stringify(e), "NO_UUID");
 			}
 		});
 	}, [recaptchaV2Ref, setIsRecaptchaAuthenticated]);

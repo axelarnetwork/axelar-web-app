@@ -8,6 +8,7 @@ import Long                            from "long";
 import {Height}                        from "cosmjs-types/ibc/core/client/v1/client";
 import {KeplrWalletChainConfig}        from "config/wallet/axelarnet/interface";
 import {getShortenedWord}              from "utils/wordShortener";
+import {SendLogsToServer}              from "../../api/SendLogsToServer";
 
 declare const window: Window &
 	typeof globalThis & {
@@ -54,6 +55,7 @@ export class KeplrWallet implements WalletInterface {
 				text = "added";
 			} catch (e2: any) {
 				console.log("and yet there is a problem in trying to do that too", e2);
+				SendLogsToServer.error("KeplrWallet_connectToWallet", JSON.stringify(e2), "NO_UUID");
 				return text;
 			}
 		}
