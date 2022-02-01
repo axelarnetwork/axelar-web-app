@@ -5,9 +5,9 @@ import styled                    from "styled-components";
 import {slamKeyframe}            from "component/StyleComponents/animations/slamKeyframe";
 import {StyledButton}            from "component/StyleComponents/StyledButton";
 import usePasswordInput          from "hooks/usePasswordInput";
-import backgroundImage           from "resources/globe.svg";
-import {IsLoggedIn}              from "state/ApplicationStatus";
-import disintegrate              from "./animation";
+import backgroundImage              from "resources/globe.svg";
+import {IsLoggedInWithBetaPassword} from "state/ApplicationStatus";
+import disintegrate                 from "./animation";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -49,7 +49,7 @@ const SlaminDiv = styled(StyledImage)`
 const Landing = () => {
 
 	const imageRef = useRef(null);
-	const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedIn);
+	const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedInWithBetaPassword);
 	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
 
 	const onClick = () => {
@@ -61,7 +61,6 @@ const Landing = () => {
 	const [userPassword, passwordComponent] = usePasswordInput({handleOnEnterPress: onClick});
 
 	const leftSection = () => {
-		console.log("under maintenance", typeof underMaintenance);
 		return underMaintenance === "true"
 			? <>
 				<h1>We'll be right back!</h1>

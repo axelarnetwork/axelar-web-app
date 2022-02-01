@@ -1,11 +1,11 @@
 import React             from "react";
 import {Redirect, Route} from "react-router-dom";
-import {useRecoilValue}  from "recoil";
-import {IsLoggedIn}      from "state/ApplicationStatus";
+import {useRecoilValue}             from "recoil";
+import {IsLoggedInWithBetaPassword} from "state/ApplicationStatus";
 
 // @ts-ignore
 function ProtectedRoute({component: Component, ...restOfProps}) {
-	const isAuthenticated = useRecoilValue(IsLoggedIn);
+	const isAuthenticated = useRecoilValue(IsLoggedInWithBetaPassword);
 
 	return (
 		<Route
