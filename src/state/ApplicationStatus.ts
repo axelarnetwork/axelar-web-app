@@ -6,7 +6,7 @@ const {persistAtom} = recoilPersist();
 
 export const IsLoggedInWithBetaPassword = atom<boolean>({
 	key: "IsLoggedInWithBetaPassword",
-	default: false,
+	default: true,
 	effects_UNSTABLE: [persistAtom]
 });
 
