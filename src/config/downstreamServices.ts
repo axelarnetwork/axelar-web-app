@@ -26,7 +26,7 @@ const blockExplorers = {
 	local: {},
 	mainnet: {
 		ethereum: {name: "Etherscan", url: "https://etherscan.io/tx/"},
-		moonbeam: {name: "Moonscan", url: "https://moonriver.moonscan.io/tx/"},
+		moonbeam: {name: "Moonscan", url: "https://moonbeam.moonscan.io/tx/"},
 		avalanche: {name: "Snowtrace", url: "https://snowtrace.io/tx/"},
 		polygon: {name: "Polygonscan", url: "https://polygonscan.com/tx/"},
 		fantom: {name: "FTMScan", url: "https://ftmscan.com/tx/"},
