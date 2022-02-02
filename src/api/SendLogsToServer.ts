@@ -12,6 +12,7 @@ export class SendLogsToServer {
 
 	private static NODE_SERVER_URL: string = getConfigs(process.env.REACT_APP_STAGE as string)?.resourceUrl;
 	private static LOGGING_ENDPOINT: string = SendLogsToServer.NODE_SERVER_URL + '/logMessageController';
+	private static queuedLogs: []
 
 	private static async baseSend(messageType: messageType, topic: string, message: string, traceId: string) {
 

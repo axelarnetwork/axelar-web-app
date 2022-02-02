@@ -28,7 +28,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 					resolve(token);
 				} catch (e: any) {
 					setIsRecaptchaAuthenticated(false);
-					SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
+					// SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
 					reject(e);
 				}
 			});
@@ -45,7 +45,7 @@ const useRecaptchaAuthenticate = (inputRef?: RefObject<any>) => {
 				resolve(token);
 			} catch (e: any) {
 				setIsRecaptchaAuthenticated(false);
-				SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_2", JSON.stringify(e), "NO_UUID");
+				// SendLogsToServer.error("authenticateWithRecaptchaV3_FRONTEND_ERROR_2", JSON.stringify(e), "NO_UUID");
 			}
 		});
 	}, [recaptchaV2Ref, setIsRecaptchaAuthenticated]);

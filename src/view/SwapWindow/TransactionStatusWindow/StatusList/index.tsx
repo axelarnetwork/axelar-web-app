@@ -195,7 +195,7 @@ const StatusList = (props: IStatusListProps) => {
 					</div>
 					<div>
 						<BoldSpan>{+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}</BoldSpan> to {destinationChain?.chainName} within
-						the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 2} min.
+						the next ~{destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 3} min.
 					</div>
 				</div>
 				: `Detecting your deposit on ${sourceChain?.chainName}.`

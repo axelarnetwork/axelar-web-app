@@ -1,8 +1,7 @@
-import axios                   from "axios";
-import {useCallback, useState} from "react";
-import {useRecoilState}        from "recoil";
+import axios                       from "axios";
+import {useCallback, useState}     from "react";
+import {useRecoilState}            from "recoil";
 import {IsBlockchainAuthenticated} from "state/TransactionStatus";
-import {SendLogsToServer}          from "api/SendLogsToServer";
 import {MetaMaskWallet}            from "hooks/wallet/MetaMaskWallet";
 import {getConfigs}                from "@axelar-network/axelarjs-sdk";
 
@@ -24,10 +23,8 @@ const usePersonalSignAuthenticate = () => {
 				const address = await mmWallet.getAddress();
 				setPublicAddress(address);
 				const codeRes = await axios.get(OTC_ENDPOINT + `?publicAddress=${address}`);
-				console.log("one time code", codeRes?.data);
 				setOtc(codeRes?.data?.otc);
 				const res = await mmWallet.signMessage(codeRes?.data.validationMsg);
-				console.log("signature", res);
 				setPublicAddress(res.address);
 				setSignature(res.signature);
 				setIsBlockchainAuthenticated(true);
@@ -39,7 +36,7 @@ const usePersonalSignAuthenticate = () => {
 				});
 			} catch (e: any) {
 				setIsBlockchainAuthenticated(false);
-				SendLogsToServer.error("authenticateWithMetamask_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
+				// SendLogsToServer.error("authenticateWithMetamask_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
 				reject(e);
 			}
 		});
