@@ -57,7 +57,7 @@ const QAs: IQA[] = [
 					/>
 					. Try searching your transaction in the destination chain’s explorer based on your destination address.</li>
 			</ul>
-			If you still can’t find it, copy the Trace ID & the destination address & your transaction on the source chain and post in <BoldSpan>#satellite-ticketing-support</BoldSpan> channel on Discord.
+			If you still can’t find it, copy the Trace ID & the destination address & your transaction on the source chain and post in <BoldSpan>#satellite-open-support-ticket</BoldSpan> channel on Discord.
 		</div>
 	}
 ];
