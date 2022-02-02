@@ -132,6 +132,8 @@ export default function usePostTransactionToBridge() {
 				isBlockchainAuthenticated = res.isBlockchainAuthenticated;
 			} catch (e: any) {
 				setShowTransactionStatusWindow(false);
+				if (e?.code === 4001) // case of user hitting cancel on metamask signature request
+					return;
 				const error = new CustomError(403.1, "Any errors from here are most likely Cloudflare block, which the UI will interpret as 403.1 errors")
 				notificationHandler.notifyError(error)
 				reject(error);
