@@ -196,7 +196,7 @@ const SupportPage = () => {
 						</>}
 						height={`12px`}
 						width={`10px`}
-						textToCopy={getTextToCopy(transactionTraceId, depositAddress, srcChain, destChain, srcChainDepositTxHash, activeStep)}
+						textToCopy={getTextToCopy(transactionTraceId, depositAddress, srcChain, destChain, srcChainDepositTxHash, activeStep, destAddr || "")}
 						showImage={false}
 					/>}
                     tooltipText={(transactionTraceId && depositAddress ? "Copy Data to Clipboard" : "Copy to Clipboard")}
@@ -208,9 +208,10 @@ const SupportPage = () => {
 	</StyledHelperComponent>;
 }
 
-const getTextToCopy = (transactionTraceId: string, depositAddress: Nullable<AssetInfo>, srcChain: Nullable<ChainInfo>, destChain: Nullable<ChainInfo>, srcChainDepositTxHash: string | null, activeStep: number) => {
+const getTextToCopy = (transactionTraceId: string, depositAddress: Nullable<AssetInfo>, srcChain: Nullable<ChainInfo>, destChain: Nullable<ChainInfo>, srcChainDepositTxHash: string | null, activeStep: number, destAddr: string) => {
 	return `* Trace ID: ${transactionTraceId}
 ${depositAddress ? `* Deposit Address: ${depositAddress.assetAddress}\n` : ""}\
+${destAddr ? `* Destination Address: ${destAddr}\n` : ""}\
 ${depositAddress ? `* Asset: ${depositAddress.assetSymbol}\n` : ""}\
 ${srcChain ? `* Source Chain: ${srcChain.chainName}\n` : ""}\
 ${destChain ? `* Destination Chain: ${destChain.chainName}\n` : ""}\
