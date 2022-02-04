@@ -9,8 +9,8 @@ const TERRA_CHANNEL_MAP = {
 	"axelar": "channel-19"
 }
 const terraMainnetConfigs: ChainInfo = {
-	rpc: TERRA_RPC + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
-	rest: TERRA_REST + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
+	rpc: TERRA_RPC,
+	rest: TERRA_REST,
 	chainId: TERRA_CHAIN_ID,
 	chainName: "Terra",
 	stakeCurrency: {coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
