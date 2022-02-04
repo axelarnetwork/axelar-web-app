@@ -1,7 +1,7 @@
 import {AssetInfo}                                                                       from "@axelar-network/axelarjs-sdk";
-import styled, {ThemedStyledProps}               from "styled-components";
-import React, {useCallback, useEffect, useState} from "react";
-import {confirm}                                 from "react-confirm-box";
+import styled, {ThemedStyledProps}                                                       from "styled-components";
+import React, {useCallback, useEffect, useState}                                         from "react";
+import {confirm}                                                                         from "react-confirm-box";
 import {useRecoilState, useRecoilValue, useSetRecoilState}                               from "recoil";
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                                         from "config/consts";
 import screenConfigs                                                                     from "config/screenConfigs";
@@ -18,6 +18,7 @@ import {PopoutLink}                                                             
 import useResetAllState                                                                  from "hooks/useResetAllState";
 import {MetaMaskWallet}                                                                  from "hooks/wallet/MetaMaskWallet";
 import {KeplrWallet}                                                                     from "hooks/wallet/KeplrWallet";
+import {WalletInterface}                                                                 from "hooks/wallet/WalletInterface";
 import {MessageShownInCartoon, ShowDisclaimer, ShowLargeDisclaimer}                      from "state/ApplicationStatus";
 import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
 import {ChainSelection, SourceAsset}                                                     from "state/ChainSelection";
@@ -28,7 +29,6 @@ import PlainButton
 import StatusList                                                                        from "./StatusList";
 import Step2InfoForWidget
                                                                                          from "./StatusList/Step2InfoForWidget";
-import {WalletInterface}                                                                 from "../../../hooks/wallet/WalletInterface";
 
 interface ITransactionStatusWindowProps {
 	isOpen: boolean;
@@ -180,7 +180,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 			setWalletBalance(balance);
 		}
 		setWalletAddress(await walletToUse.getAddress());
-	},[walletToUse, selectedSourceAsset, sourceChain?.module])
+	}, [walletToUse, selectedSourceAsset, sourceChain?.module])
 
 	const {numberConfirmations: sNumConfirms, numberRequiredConfirmations: sReqNumConfirms} = sourceConfirmStatus;
 	const {
@@ -234,10 +234,12 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		};
 		if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed) {
 			const message: any = <div>
-				Be sure to send only the {<BoldSpan>Axelar version of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
+				Be sure to send only the {<BoldSpan>Axelar version
+				of {selectedSourceAsset?.assetSymbol}</BoldSpan>}{" "}
 				to the deposit address on {sourceChain.chainName}. Any other tokens sent to this address will be lost.
 				<br/><br/>
-				The correct ERC20 contract address for the Axelar version of {selectedSourceAsset?.assetSymbol} can be verified{" "}
+				The correct ERC20 contract address for the Axelar version of {selectedSourceAsset?.assetSymbol} can be
+				verified{" "}
 				<PopoutLink
 					text={"here"}
 					onClick={() => window.open(configs.tokenContracts[process.env.REACT_APP_STAGE as string], '_blank')}
