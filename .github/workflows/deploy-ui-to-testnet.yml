@@ -1,6 +1,12 @@
 name: deploy-ui-to-testnet
 on:
   workflow_dispatch:
+    inputs:
+      maintenance:
+        type: boolean
+        description: Deploy in maintenance mode?
+        required: true
+        default: false
 jobs:
   deploy-ui-to-testnet:
     runs-on: ubuntu-latest
@@ -13,7 +19,9 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_BRIDGET_TESTNET_PROJECT_ID }}
-          vercel-args: '--prod'
+          vercel-args: "--prod --build-env REACT_APP_UNDER_MAINTENANCE=${{github.event.inputs.maintenance}}"
           alias-domains: |
             bridge.testnet.axelar.dev
             axelar-satellite-testnet.vercel.app
+        env:
+          REACT_APP_UNDER_MAINTENANCE: ${{github.event.inputs.maintenance}}
