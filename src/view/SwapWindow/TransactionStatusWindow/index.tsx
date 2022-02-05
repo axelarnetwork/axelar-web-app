@@ -20,7 +20,9 @@ import {MetaMaskWallet}                                                         
 import {KeplrWallet}                                                                     from "hooks/wallet/KeplrWallet";
 import {WalletInterface}                                                                 from "hooks/wallet/WalletInterface";
 import {MessageShownInCartoon, ShowDisclaimer, ShowLargeDisclaimer}                      from "state/ApplicationStatus";
-import {ActiveStep, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress} from "state/TransactionStatus";
+import {
+	ActiveStep, DidWaitingForDepositTimeout, IsRecaptchaAuthenticated, NumberConfirmations, SourceDepositAddress
+} from "state/TransactionStatus";
 import {ChainSelection, SourceAsset}                                                     from "state/ChainSelection";
 import StyledButtonContainer
                                                                                          from "../StyledComponents/StyledButtonContainer";
@@ -135,6 +137,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 	const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer);
 	const [userConfirmed, setUserconfirmed] = useState(false);
 	const [walletToUse, setWalletToUse] = useState<WalletInterface | null>();
+	const didWaitingForDepositTimeout = useRecoilValue(DidWaitingForDepositTimeout);
 
 	useEffect(() => {
 		setShowDisclaimer(false);
@@ -192,6 +195,9 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 		//todo: need to improve this, the 'right' way of doing something like this is here: https://bugfender.com/blog/react-hooks-common-mistakes/
 		console.log("render transaction status screen");
 		switch (true) {
+			case (didWaitingForDepositTimeout):
+				setCartoonMessage(null);
+				break;
 			case !!(dNumConfirms && dReqNumConfirms):
 				setActiveStep(4);
 				break;
@@ -212,7 +218,7 @@ const TransactionStatusWindow = ({isOpen, closeResultsScreen}: ITransactionStatu
 				break;
 		}
 	}, [dNumConfirms, dReqNumConfirms, depositAddress, isWalletConnected, sNumConfirms, sReqNumConfirms,
-		setCartoonMessage, setActiveStep, walletBalance, updateBalance, walletAddress]);
+		setCartoonMessage, setActiveStep, walletBalance, updateBalance, walletAddress, didWaitingForDepositTimeout]);
 
 
 	useEffect(() => {

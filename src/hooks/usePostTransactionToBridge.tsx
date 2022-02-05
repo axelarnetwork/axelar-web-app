@@ -12,8 +12,9 @@ import {TransferAssetBridgeFacade}                         from "api/TransferAss
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
 import {
+	DidWaitingForDepositTimeout,
 	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
-}                                                          from "state/TransactionStatus";
+} from "state/TransactionStatus";
 import NotificationHandler                                 from "utils/NotificationHandler";
 import {depositConfirmCbMap}                               from "./helper";
 import {
@@ -43,14 +44,17 @@ export default function usePostTransactionToBridge() {
 	const sourceAsset = useRecoilValue(SourceAsset);
 	const notificationHandler = NotificationHandler();
 	const personalSignAuthenticate = usePersonalSignAuthenticate();
+	const setDidWaitingForDepositTimeout = useSetRecoilState(DidWaitingForDepositTimeout);
 
 	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
 		if (source && status?.timedOut) {
-			notificationHandler.notifyInfo({
+			const msg = {
 				statusCode: 408,
-				message: "Timed out waiting for your deposit... If you feel you made your deposit before this and see this message, please reach out.",
+				message: "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
 				traceId
-			});
+			}
+			notificationHandler.notifyInfo(msg, 0);
+			setDidWaitingForDepositTimeout(true);
 			return;
 		}
 		const confirms: IConfirmationStatus = {
@@ -62,7 +66,7 @@ export default function usePostTransactionToBridge() {
 			amountConfirmedString: status?.Attributes?.amount
 		};
 		setConfirms(confirms);
-	}, [sourceChain, notificationHandler]);
+	}, [sourceChain, notificationHandler, setDidWaitingForDepositTimeout]);
 
 	const failCb = (data: any): void => console.log(data);
 

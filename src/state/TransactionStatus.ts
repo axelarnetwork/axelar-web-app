@@ -64,3 +64,8 @@ export const ActiveStep = atom<number>({
 	key: "ActiveStep",
 	default: 0,
 });
+
+export const DidWaitingForDepositTimeout = atom<boolean>({
+	key: "DidWaitingForDepositTimeout",
+	default: false,
+});

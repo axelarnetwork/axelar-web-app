@@ -79,7 +79,7 @@ const NotificationHandler = () => {
 		});
 	}
 
-	const notifyInfo = (message: any) => {
+	const notifyInfo = (message: any, timeout = 15000) => {
 
 		const notification = getMessageType(message);
 
@@ -93,7 +93,7 @@ const NotificationHandler = () => {
 			dismiss: {
 				showIcon: true,
 				touch: true,
-				duration: 15000,
+				duration: timeout,
 				click: false
 			}
 		});
