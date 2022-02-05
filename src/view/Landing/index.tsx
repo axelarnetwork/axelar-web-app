@@ -1,13 +1,14 @@
-import React, {useRef, useState} from "react";
-import {useRecoilState}          from "recoil";
-import {Redirect}                from "react-router-dom";
-import styled                    from "styled-components";
-import {slamKeyframe}            from "component/StyleComponents/animations/slamKeyframe";
-import {StyledButton}            from "component/StyleComponents/StyledButton";
-import usePasswordInput          from "hooks/usePasswordInput";
+import React, {useRef, useState}    from "react";
+import {useRecoilState}             from "recoil";
+import {Redirect}                   from "react-router-dom";
+import styled                       from "styled-components";
+import {slamKeyframe}               from "component/StyleComponents/animations/slamKeyframe";
+import {StyledButton}               from "component/StyleComponents/StyledButton";
+import usePasswordInput             from "hooks/usePasswordInput";
 import backgroundImage              from "resources/globe.svg";
 import {IsLoggedInWithBetaPassword} from "state/ApplicationStatus";
 import disintegrate                 from "./animation";
+import {ethers}                     from "ethers";
 
 const StyledLoginPage = styled.div`
 	width: 100vw;
@@ -53,7 +54,7 @@ const Landing = () => {
 	const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE);
 
 	const onClick = () => {
-		if (!(userPassword === process.env.REACT_APP_LOGIN_PASSWORD))
+		if (!(ethers.utils.sha256(ethers.utils.toUtf8Bytes(userPassword)) === process.env.REACT_APP_LOGIN_PASSWORD))
 			return;
 		disintegrate(imageRef.current)
 		.then(() => setTimeout(() => setIsLoggedIn(true), 1000));
