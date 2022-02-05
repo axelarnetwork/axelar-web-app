@@ -103,9 +103,11 @@ export default function usePostTransactionToBridge() {
 		} catch (e: any) {
 			e.traceId = traceId;
 			console.log("usePostTransactionToBridge_postRequest_1", e);
-			if (e.statusCode === 504 || e.message === "AxelarJS-SDK uncaught post error") {
-				e.statusCode = 504;
+			if (e.statusCode === 504) {
 				notificationHandler.notifyInfo(e)
+			} else if (e.message === "AxelarJS-SDK uncaught post error") {
+				e.statusCode = 429;
+				notificationHandler.notifyInfo(e);
 			} else {
 				notificationHandler.notifyError(e);
 			}
