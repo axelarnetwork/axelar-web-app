@@ -9,8 +9,8 @@ const TERRA_CHANNEL_MAP = {
 	"axelar": "channel-55"
 }
 const terraChainInfo: ChainInfo = {
-	rpc: TERRA_RPC + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
-	rest: TERRA_REST + `/apikey/${process.env.REACT_APP_FIGMENT_API_KEY}`,
+	rpc: TERRA_RPC,
+	rest: TERRA_REST,
 	chainId: TERRA_CHAIN_ID,
 	chainName: "Terra Bombay-12",
 	stakeCurrency: {coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6},
@@ -22,7 +22,8 @@ const terraChainInfo: ChainInfo = {
 		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6}
 	],
 	feeCurrencies: [
-		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6}
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
+		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd",},
 	],
 	gasPriceStep: {low: 0.05, average: 0.125, high: 0.2},
 	features: ["stargate", "no-legacy-stdTx", "ibc-transfer"]
