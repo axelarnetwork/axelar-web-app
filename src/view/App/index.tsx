@@ -72,7 +72,7 @@ const App = () => {
 	}, [isRecaptchaSet, initiateRecaptcha]);
 
 	useEffect(() => {
-		if (!hasAcknowledgedTerra) {
+		if (!hasAcknowledgedTerra && underMaintenance === 'false') {
 			const message: any = <FlexColumn>
 				<h2>Important note</h2>
 				<div><BoldSpan>We changed the configs to our Terra wallet integration in Keplr.</BoldSpan></div>
@@ -89,7 +89,7 @@ const App = () => {
 			</FlexColumn>;
 			confirm(message, options as any).then(acknowledged => setHasAcknowledgedTerra(true))
 		}
-	}, [hasAcknowledgedTerra, setHasAcknowledgedTerra])
+	}, [hasAcknowledgedTerra, setHasAcknowledgedTerra, underMaintenance])
 
 	if (underMaintenance === "true")
 		return <Redirect to={"/landing"}/>;
