@@ -12,6 +12,7 @@ import {TransferAssetBridgeFacade}                         from "api/TransferAss
 import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
 import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
 import {
+	ActiveStep,
 	DidWaitingForDepositTimeout,
 	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
 } from "state/TransactionStatus";
@@ -45,9 +46,10 @@ export default function usePostTransactionToBridge() {
 	const notificationHandler = NotificationHandler();
 	const personalSignAuthenticate = usePersonalSignAuthenticate();
 	const setDidWaitingForDepositTimeout = useSetRecoilState(DidWaitingForDepositTimeout);
+	const activeStep = useRecoilValue(ActiveStep);
 
 	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
-		if (source && status?.timedOut) {
+		if (source && status?.timedOut && activeStep <=2) { //only show this message if we got a timeout before the rest of the flow has transpired
 			const msg = {
 				statusCode: 408,
 				message: "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
@@ -66,7 +68,7 @@ export default function usePostTransactionToBridge() {
 			amountConfirmedString: status?.Attributes?.amount
 		};
 		setConfirms(confirms);
-	}, [sourceChain, notificationHandler, setDidWaitingForDepositTimeout]);
+	}, [activeStep, sourceChain, notificationHandler, setDidWaitingForDepositTimeout]);
 
 	const failCb = (data: any): void => console.log(data);
 
