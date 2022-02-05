@@ -22,7 +22,8 @@ const terraChainInfo: ChainInfo = {
 		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6}
 	],
 	feeCurrencies: [
-		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6}
+		{coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6, coinGeckoId: "terra-luna",},
+		{coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6, coinGeckoId: "terrausd",},
 	],
 	gasPriceStep: {low: 0.05, average: 0.125, high: 0.2},
 	features: ["stargate", "no-legacy-stdTx", "ibc-transfer"]
