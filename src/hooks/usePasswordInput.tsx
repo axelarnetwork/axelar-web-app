@@ -21,7 +21,7 @@ const usePasswordInput = ({handleOnEnterPress}: { handleOnEnterPress: () => void
 		(<div style={{width: `50%`, position: `relative`}}>
 			<InputForm
 				name={"usePasswordInput"}
-				placeholder={"Early Access Password"}
+				placeholder={"Admin Password"}
 				value={password}
 				type={(passwordShown ? "text" : "password") as any}
 				onChange={(e: any) => setPassword(e.target.value)}
