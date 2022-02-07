@@ -61,23 +61,21 @@ const Landing = () => {
 	}
 	const [userPassword, passwordComponent] = usePasswordInput({handleOnEnterPress: onClick});
 
+	const maintenanceLanguage = () => {
+		return <>
+			<h1>We'll be right back</h1>
+			<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
+				<div>Satellite is under maintenance.</div>
+				<div>Back online shortly!</div>
+			</div>
+		</>;
+	}
+
 	const leftSection = () => {
 		return underMaintenance === "true"
-			? <>
-				<h1>We'll be right back</h1>
-				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
-					<div>Satellite is under maintenance.</div>
-					<div>Back online shortly!</div>
-				</div>
-			</>
+			? maintenanceLanguage()
 			: <>
-				<>
-					<h1>We'll be right back</h1>
-					<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
-						<div>Satellite is under maintenance.</div>
-						<div>Back online shortly!</div>
-					</div>
-				</>
+				{maintenanceLanguage()}
 				<br/>
 				{React.cloneElement(passwordComponent, {handleOnEnterPress: onClick})}
 				<br/>
