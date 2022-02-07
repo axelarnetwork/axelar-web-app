@@ -13,6 +13,6 @@ export const getMinDepositAmount = (sourceAsset: Nullable<AssetInfo>, destinatio
 	if (!minDepAmtOnDestChain)
 		return null;
 
-	return roundUp((new BigNumber(minDepAmtOnDestChain)).times(1.0015).toNumber());
+	return roundUp((new BigNumber(minDepAmtOnDestChain)).toNumber());
 }
 
