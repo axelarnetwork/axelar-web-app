@@ -64,12 +64,21 @@ const Landing = () => {
 	const leftSection = () => {
 		return underMaintenance === "true"
 			? <>
-				<h1>We'll be right back!</h1>
+				<h1>We'll be right back</h1>
 				<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
-					Satellite is getting a minor improvement. Back online shortly!
+					<div>Satellite is under maintenance.</div>
+					<div>Back online shortly!</div>
 				</div>
 			</>
 			: <>
+				<>
+					<h1>We'll be right back</h1>
+					<div style={{fontSize: `1.25em`, width: `75%`, textAlign: "center"}}>
+						<div>Satellite is under maintenance.</div>
+						<div>Back online shortly!</div>
+					</div>
+				</>
+				<br/>
 				{React.cloneElement(passwordComponent, {handleOnEnterPress: onClick})}
 				<br/>
 				<div style={{width: `50%`}}>
