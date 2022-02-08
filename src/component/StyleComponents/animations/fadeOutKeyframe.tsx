@@ -1,4 +1,4 @@
-import {keyframes} from "styled-components";
+import { keyframes } from "styled-components"
 
 export const fadeOutKeyframe = keyframes`
 	from {
@@ -7,4 +7,4 @@ export const fadeOutKeyframe = keyframes`
 	to {
 		opacity: 0;
 	}
-`;
+`

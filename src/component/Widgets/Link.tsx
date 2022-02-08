@@ -1,23 +1,19 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 interface ILinkProps {
-	children: any;
-	href?: string;
-	className?: string;
+  children: any
+  href?: string
+  className?: string
 }
 
-const Link = ({children, href, className}: ILinkProps) => (
-	<a
-		href={href}
-		target={"_blank"}
-		rel="noreferrer"
-	>
-		{children}
-	</a>
-);
+const Link = ({ children, href, className }: ILinkProps) => (
+  <a href={href} target={"_blank"} rel="noreferrer">
+    {children}
+  </a>
+)
 
 const StyledLink = styled(Link)`
-	cursor: pointer;
-`;
+  cursor: pointer;
+`
 
-export default StyledLink;
+export default StyledLink

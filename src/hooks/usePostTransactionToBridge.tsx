@@ -2,180 +2,264 @@
 This component makes the API call to the SDK
 * */
 
-import {useCallback, useMemo}                              from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {v4 as uuidv4}                                      from 'uuid';
+import { useCallback, useMemo } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { v4 as uuidv4 } from "uuid"
 import {
-	AssetInfo, AssetInfoWithTrace, AssetTransferObject, ChainInfo
-}                                                          from "@axelar-network/axelarjs-sdk";
-import {TransferAssetBridgeFacade}                         from "api/TransferAssetBridgeFacade";
-import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}           from "config/consts";
-import {ChainSelection, DestinationAddress, SourceAsset}   from "state/ChainSelection";
+  AssetInfo,
+  AssetInfoWithTrace,
+  AssetTransferObject,
+  ChainInfo,
+} from "@axelar-network/axelarjs-sdk"
+import { TransferAssetBridgeFacade } from "api/TransferAssetBridgeFacade"
+import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import {
-	ActiveStep,
-	DidWaitingForDepositTimeout,
-	IConfirmationStatus, NumberConfirmations, SourceDepositAddress, TransactionTraceId
-} from "state/TransactionStatus";
-import NotificationHandler                                 from "utils/NotificationHandler";
-import {depositConfirmCbMap}                               from "./helper";
+  ChainSelection,
+  DestinationAddress,
+  SourceAsset,
+} from "state/ChainSelection"
 import {
-	ShowTransactionStatusWindow
-}                                                          from "../state/ApplicationStatus";
-import usePersonalSignAuthenticate                         from "./auth/usePersonalSignAuthenticate";
+  ActiveStep,
+  DidWaitingForDepositTimeout,
+  IConfirmationStatus,
+  NumberConfirmations,
+  SourceDepositAddress,
+  TransactionTraceId,
+} from "state/TransactionStatus"
+import NotificationHandler from "utils/NotificationHandler"
+import { depositConfirmCbMap } from "./helper"
+import { ShowTransactionStatusWindow } from "../state/ApplicationStatus"
+import usePersonalSignAuthenticate from "./auth/usePersonalSignAuthenticate"
 
 class CustomError {
-	private statusCode: number;
-	private message: string;
+  private statusCode: number
+  private message: string
 
-	constructor(statusCode: number, message: string) {
-		this.statusCode = statusCode;
-		this.message = message;
-	}
+  constructor(statusCode: number, message: string) {
+    this.statusCode = statusCode
+    this.message = message
+  }
 }
 export default function usePostTransactionToBridge() {
+  const [showTransactionStatusWindow, setShowTransactionStatusWindow] =
+    useRecoilState(ShowTransactionStatusWindow)
+  const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
+  const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
+  const destinationAddress = useRecoilValue(DestinationAddress)
+  const setDepositAddress = useSetRecoilState(SourceDepositAddress)
+  const setSourceNumConfirmations = useSetRecoilState(
+    NumberConfirmations(SOURCE_TOKEN_KEY)
+  )
+  const setDestinationNumConfirmations = useSetRecoilState(
+    NumberConfirmations(DESTINATION_TOKEN_KEY)
+  )
+  const setTransactionTraceId = useSetRecoilState(TransactionTraceId)
+  const sourceAsset = useRecoilValue(SourceAsset)
+  const notificationHandler = NotificationHandler()
+  const personalSignAuthenticate = usePersonalSignAuthenticate()
+  const setDidWaitingForDepositTimeout = useSetRecoilState(
+    DidWaitingForDepositTimeout
+  )
+  const activeStep = useRecoilValue(ActiveStep)
 
-	const [showTransactionStatusWindow, setShowTransactionStatusWindow] = useRecoilState(ShowTransactionStatusWindow);
-	const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY));
-	const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY));
-	const destinationAddress = useRecoilValue(DestinationAddress);
-	const setDepositAddress = useSetRecoilState(SourceDepositAddress);
-	const setSourceNumConfirmations = useSetRecoilState(NumberConfirmations(SOURCE_TOKEN_KEY));
-	const setDestinationNumConfirmations = useSetRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY));
-	const setTransactionTraceId = useSetRecoilState(TransactionTraceId);
-	const sourceAsset = useRecoilValue(SourceAsset);
-	const notificationHandler = NotificationHandler();
-	const personalSignAuthenticate = usePersonalSignAuthenticate();
-	const setDidWaitingForDepositTimeout = useSetRecoilState(DidWaitingForDepositTimeout);
-	const activeStep = useRecoilValue(ActiveStep);
+  const sCb: (
+    status: any,
+    setConfirms: any,
+    traceId: string,
+    source: boolean
+  ) => void = useCallback(
+    (status: any, setConfirms: any, traceId: string, source: boolean): void => {
+      //only show this message if we got a timeout before the rest of the flow has transpired and still on the tx status window
+      if (
+        source &&
+        status?.timedOut &&
+        activeStep <= 2 &&
+        showTransactionStatusWindow
+      ) {
+        const msg = {
+          statusCode: 408,
+          message:
+            "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
+          traceId,
+        }
+        notificationHandler.notifyInfo(msg, 0)
+        setDidWaitingForDepositTimeout(true)
+        return
+      }
+      const confirms: IConfirmationStatus = {
+        numberConfirmations: depositConfirmCbMap[
+          sourceChain?.chainSymbol.toLowerCase() as string
+        ]
+          ? depositConfirmCbMap[
+              sourceChain?.chainSymbol.toLowerCase() as string
+            ](status)
+          : 1,
+        numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
+        transactionHash: status?.transactionHash,
+        amountConfirmedString: status?.Attributes?.amount,
+      }
+      setConfirms(confirms)
+    },
+    [
+      activeStep,
+      sourceChain,
+      notificationHandler,
+      setDidWaitingForDepositTimeout,
+      showTransactionStatusWindow,
+    ]
+  )
 
-	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
-		//only show this message if we got a timeout before the rest of the flow has transpired and still on the tx status window
-		if (source && status?.timedOut && activeStep <=2 && showTransactionStatusWindow) {
-			const msg = {
-				statusCode: 408,
-				message: "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
-				traceId
-			}
-			notificationHandler.notifyInfo(msg, 0);
-			setDidWaitingForDepositTimeout(true);
-			return;
-		}
-		const confirms: IConfirmationStatus = {
-			numberConfirmations: depositConfirmCbMap[sourceChain?.chainSymbol.toLowerCase() as string]
-				? depositConfirmCbMap[sourceChain?.chainSymbol.toLowerCase() as string](status)
-				: 1,
-			numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
-			transactionHash: status?.transactionHash,
-			amountConfirmedString: status?.Attributes?.amount
-		};
-		setConfirms(confirms);
-	}, [activeStep, sourceChain, notificationHandler, setDidWaitingForDepositTimeout, showTransactionStatusWindow]);
+  const failCb = (data: any): void => console.log(data)
 
-	const failCb = (data: any): void => console.log(data);
+  const msg: AssetTransferObject = useMemo(
+    () => ({
+      sourceChainInfo: { ...sourceChain, assets: undefined } as ChainInfo,
+      selectedSourceAsset: sourceAsset as AssetInfo,
+      destinationChainInfo: {
+        ...destinationChain,
+        assets: undefined,
+      } as ChainInfo,
+      selectedDestinationAsset: {
+        assetAddress: destinationAddress,
+        assetSymbol: sourceAsset?.assetSymbol, // the destination asset will be the wrapped asset of the source token
+        common_key: sourceAsset?.common_key,
+      } as AssetInfo,
+      signature: "",
+      otc: "",
+      publicAddr: "",
+      transactionTraceId: "",
+    }),
+    [destinationAddress, destinationChain, sourceAsset, sourceChain]
+  )
 
-	const msg: AssetTransferObject = useMemo(() => ({
-		sourceChainInfo: {...sourceChain, assets: undefined} as ChainInfo,
-		selectedSourceAsset: sourceAsset as AssetInfo,
-		destinationChainInfo: {...destinationChain, assets: undefined} as ChainInfo,
-		selectedDestinationAsset: {
-			assetAddress: destinationAddress,
-			assetSymbol: sourceAsset?.assetSymbol, // the destination asset will be the wrapped asset of the source token
-			common_key: sourceAsset?.common_key
-		} as AssetInfo,
-		signature: "",
-		otc: "",
-		publicAddr: "",
-		transactionTraceId: ""
-	}), [destinationAddress, destinationChain, sourceAsset, sourceChain]);
+  const postRequest = useCallback(
+    async (
+      traceId: string,
+      signature: string,
+      otc: string,
+      publicAddr: string
+    ) => {
+      try {
+        msg.signature = signature
+        msg.otc = otc
+        msg.publicAddr = publicAddr
 
-	const postRequest = useCallback(async (traceId: string, signature: string, otc: string, publicAddr: string) => {
-		try {
+        const res: AssetInfoWithTrace =
+          await TransferAssetBridgeFacade.transferAssets(
+            msg,
+            {
+              successCb: (data: any) =>
+                sCb(data, setSourceNumConfirmations, traceId, true),
+              failCb,
+            },
+            {
+              successCb: (data: any) =>
+                sCb(data, setDestinationNumConfirmations, traceId, false),
+              failCb,
+            }
+          )
+        setDepositAddress(res.assetInfo)
+        return res
+      } catch (e: any) {
+        e.traceId = traceId
+        console.log("usePostTransactionToBridge_postRequest_1", e)
+        if (e.statusCode === 504) {
+          notificationHandler.notifyInfo(e)
+        } else if (e.message === "AxelarJS-SDK uncaught post error") {
+          e.statusCode = 429
+          notificationHandler.notifyInfo(e)
+        } else {
+          notificationHandler.notifyError(e)
+        }
+        setShowTransactionStatusWindow(false)
+      }
+    },
+    [
+      notificationHandler,
+      msg,
+      sCb,
+      setDepositAddress,
+      setDestinationNumConfirmations,
+      setSourceNumConfirmations,
+      setShowTransactionStatusWindow,
+    ]
+  )
 
-			msg.signature = signature;
-			msg.otc = otc;
-			msg.publicAddr = publicAddr;
+  const handleTransactionSubmission = useCallback(() => {
+    let traceId: string = msg.transactionTraceId || uuidv4()
+    setTransactionTraceId(traceId)
+    msg.transactionTraceId = traceId
+    console.log("transaction trace id to use", msg.transactionTraceId)
 
-			const res: AssetInfoWithTrace = await TransferAssetBridgeFacade.transferAssets(
-				msg,
-				{successCb: (data: any) => sCb(data, setSourceNumConfirmations, traceId, true), failCb},
-				{successCb: (data: any) => sCb(data, setDestinationNumConfirmations, traceId, false), failCb});
-			setDepositAddress(res.assetInfo);
-			return res;
-		} catch (e: any) {
-			e.traceId = traceId;
-			console.log("usePostTransactionToBridge_postRequest_1", e);
-			if (e.statusCode === 504) {
-				notificationHandler.notifyInfo(e)
-			} else if (e.message === "AxelarJS-SDK uncaught post error") {
-				e.statusCode = 429;
-				notificationHandler.notifyInfo(e);
-			} else {
-				notificationHandler.notifyError(e);
-			}
-			setShowTransactionStatusWindow(false);
-		}
-	}, [notificationHandler, msg, sCb, setDepositAddress, setDestinationNumConfirmations, setSourceNumConfirmations, setShowTransactionStatusWindow]);
+    return new Promise(async (resolve, reject) => {
+      if (
+        !(
+          sourceChain?.chainSymbol &&
+          destinationChain?.chainSymbol &&
+          destinationAddress &&
+          sourceAsset
+        )
+      ) {
+        reject("no input params")
+        return
+      }
 
-	const handleTransactionSubmission = useCallback(() => {
+      let isBlockchainAuthenticated, signature, otc, publicAddress
 
-		let traceId: string = msg.transactionTraceId || uuidv4();
-		setTransactionTraceId(traceId);
-		msg.transactionTraceId = traceId;
-		console.log("transaction trace id to use", msg.transactionTraceId);
+      try {
+        const { authenticateWithMetamask } = personalSignAuthenticate
+        const res = await authenticateWithMetamask()
+        signature = res.signature
+        otc = res.otc
+        publicAddress = res.publicAddress
+        isBlockchainAuthenticated = res.isBlockchainAuthenticated
+      } catch (e: any) {
+        setShowTransactionStatusWindow(false)
+        if (e?.code === 4001)
+          // case of user hitting cancel on metamask signature request
+          return
+        const error = new CustomError(403.1, "Network error from servers")
+        notificationHandler.notifyInfo(error)
+        reject(error)
+      }
 
-		return new Promise(async (resolve, reject) => {
+      if (!isBlockchainAuthenticated) {
+        reject("You did not sign")
+        return
+      }
 
-			if (!(sourceChain?.chainSymbol && destinationChain?.chainSymbol && destinationAddress && sourceAsset)) {
-				reject("no input params");
-				return;
-			}
+      try {
+        setShowTransactionStatusWindow(true)
+        const res = await postRequest(traceId, signature, otc, publicAddress)
+        resolve(res)
+      } catch (e: any) {
+        /*note: all notifications for postRequest failures are caught directly in that method*/
+        setShowTransactionStatusWindow(false)
+        if (!e.traceId) {
+          e.traceId = traceId
+        }
+        reject(e)
+        throw new Error(e)
+      }
+    })
+  }, [
+    sourceChain,
+    destinationChain,
+    destinationAddress,
+    setShowTransactionStatusWindow,
+    setTransactionTraceId,
+    sourceAsset,
+    msg,
+    postRequest,
+    personalSignAuthenticate,
+    notificationHandler,
+  ])
 
-			let isBlockchainAuthenticated, signature, otc, publicAddress;
+  const closeResultsScreen = () => setShowTransactionStatusWindow(false)
 
-			try {
-				const {authenticateWithMetamask} = personalSignAuthenticate;
-				const res = await authenticateWithMetamask();
-				signature = res.signature;
-				otc = res.otc;
-				publicAddress = res.publicAddress;
-				isBlockchainAuthenticated = res.isBlockchainAuthenticated;
-			} catch (e: any) {
-				setShowTransactionStatusWindow(false);
-				if (e?.code === 4001) // case of user hitting cancel on metamask signature request
-					return;
-				const error = new CustomError(403.1, "Network error from servers")
-				notificationHandler.notifyInfo(error)
-				reject(error);
-			}
-
-			if (!isBlockchainAuthenticated) {
-				reject("You did not sign");
-				return;
-			}
-
-			try {
-				setShowTransactionStatusWindow(true);
-				const res = await postRequest(traceId, signature, otc, publicAddress);
-				resolve(res);
-			} catch (e: any) {
-				/*note: all notifications for postRequest failures are caught directly in that method*/
-				setShowTransactionStatusWindow(false);
-				if (!e.traceId) {
-					e.traceId = traceId
-				}
-				reject(e);
-				throw new Error(e);
-			}
-
-		})
-	}, [sourceChain, destinationChain, destinationAddress, setShowTransactionStatusWindow, setTransactionTraceId,
-		sourceAsset, msg, postRequest, personalSignAuthenticate, notificationHandler
-	]);
-
-	const closeResultsScreen = () => setShowTransactionStatusWindow(false);
-
-	return [showTransactionStatusWindow as boolean,
-		handleTransactionSubmission as () => Promise<string>,
-		closeResultsScreen as () => void
-	] as const;
+  return [
+    showTransactionStatusWindow as boolean,
+    handleTransactionSubmission as () => Promise<string>,
+    closeResultsScreen as () => void,
+  ] as const
 }

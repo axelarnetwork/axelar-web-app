@@ -1,4 +1,4 @@
-import {keyframes} from "styled-components";
+import { keyframes } from "styled-components"
 
 export const slamKeyframe = keyframes`
     0% {
@@ -14,4 +14,4 @@ export const slamKeyframe = keyframes`
         transform: scale(1, 1);
         opacity: 1;
     }
-`;
+`

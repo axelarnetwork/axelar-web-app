@@ -1,9 +1,7 @@
-import {css} from "styled-components";
+import { css } from "styled-components"
 
 export const HideGrecaptchaBadge = css`
-	
-	.grecaptcha-badge {
-	    visibility: hidden;
-	}
-
-`;
+  .grecaptcha-badge {
+    visibility: hidden;
+  }
+`
