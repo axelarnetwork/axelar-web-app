@@ -112,3 +112,6 @@ dist
 
 #package-lock.json
 .vercel
+
+build
+.env.*
