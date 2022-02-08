@@ -49,7 +49,8 @@ export default function usePostTransactionToBridge() {
 	const activeStep = useRecoilValue(ActiveStep);
 
 	const sCb: (status: any, setConfirms: any, traceId: string, source: boolean) => void = useCallback((status: any, setConfirms: any, traceId: string, source: boolean): void => {
-		if (source && status?.timedOut && activeStep <=2) { //only show this message if we got a timeout before the rest of the flow has transpired
+		//only show this message if we got a timeout before the rest of the flow has transpired and still on the tx status window
+		if (source && status?.timedOut && activeStep <=2 && showTransactionStatusWindow) {
 			const msg = {
 				statusCode: 408,
 				message: "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
@@ -68,7 +69,7 @@ export default function usePostTransactionToBridge() {
 			amountConfirmedString: status?.Attributes?.amount
 		};
 		setConfirms(confirms);
-	}, [activeStep, sourceChain, notificationHandler, setDidWaitingForDepositTimeout]);
+	}, [activeStep, sourceChain, notificationHandler, setDidWaitingForDepositTimeout, showTransactionStatusWindow]);
 
 	const failCb = (data: any): void => console.log(data);
 
