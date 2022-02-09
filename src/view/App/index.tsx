@@ -105,7 +105,7 @@ const App = () => {
                 height={`1em`}
                 width={`1em`}
                 margin={`0em 0em -0.125em 0em`}
-                src={require(`resources/keplr.svg`).default}
+                src={require(`assets/svg/keplr.svg`).default}
               />{" "}
               button on the top right of this page.
             </BoldSpan>

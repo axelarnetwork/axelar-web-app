@@ -6,7 +6,7 @@ import { FlexColumn } from "component/StyleComponents/FlexColumn"
 import Tooltip from "component/Widgets/Tooltip"
 import CopyToClipboard from "component/Widgets/CopyToClipboard"
 import { DESTINATION_TOKEN_KEY } from "config/consts"
-import completedLogo from "resources/transaction_status_logos/axelar-logo.svg"
+import completedLogo from "assets/svg/transaction_status_logos/axelar-logo.svg"
 import {
   ChainSelection,
   DestinationAddress,

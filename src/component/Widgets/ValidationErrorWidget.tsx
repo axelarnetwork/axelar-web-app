@@ -51,14 +51,14 @@ const ValidationErrorWidget = ({ text }: { text: string }) => {
   return (
     <StyledValidationErrorWidget>
       <StyledImage
-        src={require(`resources/error-dot.svg`).default}
+        src={require(`assets/svg/error-dot.svg`).default}
         alt={""}
         marginSm={`-6px`}
         marginLg={`-20px`}
       />
       {text}
       <StyledImage
-        src={require(`resources/error-dot.svg`).default}
+        src={require(`assets/svg/error-dot.svg`).default}
         alt={""}
         marginSm={`-6px`}
         marginLg={`-20px`}

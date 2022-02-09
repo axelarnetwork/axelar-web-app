@@ -72,7 +72,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
     (supportedChain: ChainInfo) => ({
       title: supportedChain.chainName,
       active: false,
-      icon: require(`resources/logos/${supportedChain?.chainSymbol}.svg`)
+      icon: require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)
         ?.default,
       disabled: false,
       onClick: () => {
@@ -109,8 +109,8 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
           onClick={onClick}
           src={
             require(showChainSelectorSearchBox
-              ? `resources/drop-up-arrow.svg`
-              : `resources/drop-down-arrow.svg`)?.default
+              ? `assets/svg/drop-up-arrow.svg`
+              : `assets/svg/drop-down-arrow.svg`)?.default
           }
           height={"0.75em"}
           width={"0.75em"}
@@ -139,8 +139,8 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
           onClick={onClick}
           src={
             require(showAssetSearchBox
-              ? `resources/drop-up-arrow.svg`
-              : `resources/drop-down-arrow.svg`)?.default
+              ? `assets/svg/drop-up-arrow.svg`
+              : `assets/svg/drop-down-arrow.svg`)?.default
           }
           height={"0.75em"}
           width={"0.75em"}
@@ -180,7 +180,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
               title: asset.assetName as string,
               symbol: asset.assetSymbol as string,
               active: false,
-              icon: require(`resources/tokenAssets/${asset?.common_key}.svg`)
+              icon: require(`assets/svg/tokenAssets/${asset?.common_key}.svg`)
                 ?.default,
               disabled: false,
               onClick: () => {

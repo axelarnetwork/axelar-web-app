@@ -45,7 +45,7 @@ const Step3InfoForWidget = () => {
   // 		<br/>
   // 	</StyledHeader>
   // 	<br/>
-  // 	<FlexRow><SVGImage src={require(`resources/tokenAssets/${sourceAsset?.common_key}.svg`).default} height={"20%"} width={"20%"}/></FlexRow>
+  // 	<FlexRow><SVGImage src={require(`assets/svg/tokenAssets/${sourceAsset?.common_key}.svg`).default} height={"20%"} width={"20%"}/></FlexRow>
   // 	<br/>
   // 	<div style={{padding: `0.75em`, fontSize: `0.9em`}}>
   // 		<div>Your <BoldSpan>{amountConfirmedAdjusted} {sourceAsset?.assetSymbol}</BoldSpan> deposit was received!</div>

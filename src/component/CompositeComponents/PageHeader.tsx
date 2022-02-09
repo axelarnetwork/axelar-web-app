@@ -126,7 +126,7 @@ const PageHeader = () => {
                 height={`1.25em`}
                 width={`1.25em`}
                 margin={`0px 0em 0px 0.75em`}
-                src={require(`resources/keplr.svg`).default}
+                src={require(`assets/svg/keplr.svg`).default}
               />
             </ConnectWalletButton>
           </div>

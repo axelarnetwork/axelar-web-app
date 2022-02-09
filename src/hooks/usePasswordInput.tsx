@@ -39,7 +39,7 @@ const usePasswordInput = ({
         }}
       >
         <SVGImage
-          src={require(`resources/show-password.svg`)?.default}
+          src={require(`assets/svg/show-password.svg`)?.default}
           height={"30px"}
           width={"30px"}
           onClick={togglePassword}

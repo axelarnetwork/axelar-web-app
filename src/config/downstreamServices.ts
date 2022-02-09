@@ -52,10 +52,10 @@ blockExplorers.testnet = blockExplorers.devnet
 blockExplorers.local = blockExplorers.devnet
 
 const tokenContracts = {
-  local: "https://docs.axelar.dev/#/resources/testnet-releases",
-  devnet: "https://docs.axelar.dev/#/resources/testnet-releases",
-  testnet: "https://docs.axelar.dev/#/resources/testnet-releases",
-  mainnet: "https://docs.axelar.dev/#/resources/mainnet-releases",
+  local: "https://docs.axelar.dev/#/assets/svg/testnet-releases",
+  devnet: "https://docs.axelar.dev/#/assets/svg/testnet-releases",
+  testnet: "https://docs.axelar.dev/#/assets/svg/testnet-releases",
+  mainnet: "https://docs.axelar.dev/#/assets/svg/mainnet-releases",
 }
 
 const configs: IConfig = {

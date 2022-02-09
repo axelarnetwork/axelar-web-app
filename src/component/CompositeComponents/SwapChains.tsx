@@ -60,7 +60,7 @@ const SwapChains = () => {
           onClick={swapChains}
           width={`1.5em`}
           height={`1.5em`}
-          src={require(`resources/switch-icon.svg`).default}
+          src={require(`assets/svg/switch-icon.svg`).default}
         />
       )}
     </StyledSwapChains>

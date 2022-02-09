@@ -356,14 +356,14 @@ const TransactionStatusWindow = ({
         </StyledChainSelectionIconWidget>
         <img
           src={
-            require(`resources/transaction_status_logos/transferring-icon.svg`)
+            require(`assets/svg/transaction_status_logos/transferring-icon.svg`)
               ?.default
           }
           alt={""}
         />
         <img
           src={
-            require(`resources/transaction_status_logos/transferring-icon.svg`)
+            require(`assets/svg/transaction_status_logos/transferring-icon.svg`)
               ?.default
           }
           alt={""}

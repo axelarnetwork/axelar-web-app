@@ -105,7 +105,7 @@ const ListItem = (props: IListItemProps) => {
       >
         <StyledImage
           data={
-            require(`resources/transaction_status_logos/step-${step}-${suffix}.svg`)
+            require(`assets/svg/transaction_status_logos/step-${step}-${suffix}.svg`)
               ?.default
           }
         />
@@ -166,8 +166,8 @@ const StatusList = (props: IStatusListProps) => {
       margin={`0em 0em -0.125em 0em`}
       src={
         sourceChain?.module === "axelarnet"
-          ? require(`resources/keplr.svg`).default
-          : require(`resources/metamask.svg`).default
+          ? require(`assets/svg/keplr.svg`).default
+          : require(`assets/svg/metamask.svg`).default
       }
     />
   )

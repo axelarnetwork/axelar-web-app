@@ -12,9 +12,9 @@ const AssetSelector = () => {
 
   try {
     image =
-      require(`resources/tokenAssets/${selectedToken?.common_key}.svg`)?.default
+      require(`assets/svg/tokenAssets/${selectedToken?.common_key}.svg`)?.default
   } catch (e) {
-    image = require(`resources/select-asset-eyes.svg`)?.default
+    image = require(`assets/svg/select-asset-eyes.svg`)?.default
   }
 
   return (

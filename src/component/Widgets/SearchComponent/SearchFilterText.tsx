@@ -88,7 +88,7 @@ const SearchFilterText = (props: IAssetSearchComponentProps) => {
             height={"0.75em"}
             width={"0.75em"}
             margin={"0.25em 0px 0px 0.5em"}
-            src={require(`resources/search.svg`)?.default}
+            src={require(`assets/svg/search.svg`)?.default}
           />
           <StyledSearchInputBox
             name="filter-asset-input"

@@ -287,8 +287,8 @@ const UserInputWindow = ({
                 margin={`0em 0.75em 0em 0.5em`}
                 src={
                   destChainSelection.module === "axelarnet"
-                    ? require(`resources/keplr.svg`).default
-                    : require(`resources/metamask.svg`).default
+                    ? require(`assets/svg/keplr.svg`).default
+                    : require(`assets/svg/metamask.svg`).default
                 }
               />
             </div>

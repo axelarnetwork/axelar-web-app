@@ -59,7 +59,7 @@ const PageFooter = () => {
         onClick={() => window.open("https://axelar.network", "_blank")}
       >
         <img
-          src={require(`resources/axelar-logo-horizontal-white.svg`)?.default}
+          src={require(`assets/svg/axelar-logo-horizontal-white.svg`)?.default}
           alt=""
         />
       </div>
@@ -80,7 +80,7 @@ const PageFooter = () => {
         >
           <FlexRow>
             <img
-              src={require(`resources/active-eye-orange.svg`).default}
+              src={require(`assets/svg/active-eye-orange.svg`).default}
               alt={""}
             />
             <div style={{ marginLeft: `0.5em` }}>Getting Started</div>
@@ -95,7 +95,7 @@ const PageFooter = () => {
         >
           <FlexRow>
             <img
-              src={require(`resources/active-eye-orange.svg`).default}
+              src={require(`assets/svg/active-eye-orange.svg`).default}
               alt={""}
             />
             <div style={{ marginLeft: `0.5em` }}>FAQ</div>
@@ -110,7 +110,7 @@ const PageFooter = () => {
         >
           <FlexRow>
             <img
-              src={require(`resources/active-eye-orange.svg`).default}
+              src={require(`assets/svg/active-eye-orange.svg`).default}
               alt={""}
             />
             <div style={{ marginLeft: `0.5em` }}>Support</div>

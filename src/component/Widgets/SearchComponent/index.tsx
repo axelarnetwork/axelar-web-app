@@ -150,7 +150,7 @@ const SearchOption = (props: ISearchOption) => {
   try {
     imageSrc = icon
   } catch (e) {
-    imageSrc = require(`resources/select-chain-icon-black.svg`)?.default
+    imageSrc = require(`assets/svg/select-chain-icon-black.svg`)?.default
   }
   return (
     <StyledSearchItem

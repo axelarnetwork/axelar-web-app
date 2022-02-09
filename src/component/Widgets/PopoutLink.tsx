@@ -26,7 +26,7 @@ export const PopoutLink = ({
       {text}
       {"  "}
       <SVGImage
-        src={require(`resources/link-new-tab.svg`).default}
+        src={require(`assets/svg/link-new-tab.svg`).default}
         height={`0.8em`}
         width={`0.8em`}
       />

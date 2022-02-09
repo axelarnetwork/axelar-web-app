@@ -109,7 +109,7 @@ const FlowOption = (props: IFlowOptionProps) => {
               width={dimension}
               height={dimension}
               src={
-                require(`resources/tokenAssets/${assetCommonKey}.svg`).default
+                require(`assets/svg/tokenAssets/${assetCommonKey}.svg`).default
               }
             />
             <BoldSpan style={{ marginLeft: `10px` }}>{assetSymbol}</BoldSpan>
@@ -118,12 +118,12 @@ const FlowOption = (props: IFlowOptionProps) => {
             <SVGImage
               width={dimension}
               height={dimension}
-              src={require(`resources/logos/${sourceChainSymbol}.svg`).default}
+              src={require(`assets/svg/logos/${sourceChainSymbol}.svg`).default}
             />
             <div style={{ margin: `0px 10px 0px 10px` }}>
               <img
                 src={
-                  require(`resources/transaction_status_logos/transferring-icon.svg`)
+                  require(`assets/svg/transaction_status_logos/transferring-icon.svg`)
                     ?.default
                 }
                 alt={""}
@@ -133,7 +133,8 @@ const FlowOption = (props: IFlowOptionProps) => {
               width={dimension}
               height={dimension}
               src={
-                require(`resources/logos/${destinationChainSymbol}.svg`).default
+                require(`assets/svg/logos/${destinationChainSymbol}.svg`)
+                  .default
               }
             />
           </FlowOptionChainContainer>
@@ -201,7 +202,7 @@ const TopFlowsSelector = ({
     >
       <TopFlowsToggle onClick={() => setShowFlows(!showFlows)}>
         <img
-          src={require(`resources/active-eye-blue.svg`).default}
+          src={require(`assets/svg/active-eye-blue.svg`).default}
           alt={""}
           width={`12px`}
           height={`12px`}

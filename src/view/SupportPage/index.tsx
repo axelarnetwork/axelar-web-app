@@ -111,7 +111,10 @@ const SupportPage = () => {
               }}
               onClick={() => setShowFAQ(false)}
             >
-              <img src={require(`resources/close-icon.svg`).default} alt={""} />
+              <img
+                src={require(`assets/svg/close-icon.svg`).default}
+                alt={""}
+              />
             </div>
           </StyledHeader>
           <div
@@ -140,7 +143,10 @@ const SupportPage = () => {
               }}
               onClick={() => setShowGettingStarted(false)}
             >
-              <img src={require(`resources/close-icon.svg`).default} alt={""} />
+              <img
+                src={require(`assets/svg/close-icon.svg`).default}
+                alt={""}
+              />
             </div>
           </StyledHeader>
           <SupportSection>
@@ -238,7 +244,10 @@ const SupportPage = () => {
               }}
               onClick={() => setShowSupport(false)}
             >
-              <img src={require(`resources/close-icon.svg`).default} alt={""} />
+              <img
+                src={require(`assets/svg/close-icon.svg`).default}
+                alt={""}
+              />
             </div>
           </StyledHeader>
           <SupportSection>
@@ -419,7 +428,7 @@ export const NewLink = ({
       {"  "}
       <SVGImage
         style={{ marginLeft: `5px` }}
-        src={require(`resources/link-new-tab.svg`).default}
+        src={require(`assets/svg/link-new-tab.svg`).default}
         height={`1em`}
         width={`1em`}
       />

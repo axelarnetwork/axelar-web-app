@@ -5,7 +5,7 @@ import styled from "styled-components"
 import { slamKeyframe } from "component/StyleComponents/animations/slamKeyframe"
 import { StyledButton } from "component/StyleComponents/StyledButton"
 import usePasswordInput from "hooks/usePasswordInput"
-import backgroundImage from "resources/globe.svg"
+import backgroundImage from "assets/svg/globe.svg"
 import { IsLoggedInWithBetaPassword } from "state/ApplicationStatus"
 import disintegrate from "./animation"
 import { ethers } from "ethers"
@@ -105,7 +105,7 @@ const Landing = () => {
           <LeftStyledLoginSection>
             <SlaminDiv
               src={
-                require("resources/axelar-logo-horizontal-white.svg").default
+                require("assets/svg/axelar-logo-horizontal-white.svg").default
               }
             />
             <br />

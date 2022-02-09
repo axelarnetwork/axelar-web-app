@@ -14,14 +14,14 @@ const LoadingWidget = ({ cb }: { cb: () => void }) => {
     <span onClick={onClick}>
       {isLoading ? (
         <SVGImage
-          src={require(`resources/refresh-loading.svg`).default}
+          src={require(`assets/svg/refresh-loading.svg`).default}
           width={`1em`}
           height={`1em`}
           style={{ marginLeft: `0.5em` }}
         />
       ) : (
         <SVGImage
-          src={require(`resources/refresh.svg`).default}
+          src={require(`assets/svg/refresh.svg`).default}
           width={`1em`}
           height={`1em`}
           style={{ cursor: `pointer`, marginLeft: `0.5em` }}

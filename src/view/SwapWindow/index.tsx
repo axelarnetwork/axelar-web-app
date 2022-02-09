@@ -12,8 +12,8 @@ import {
   IsValidDestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import inactiveBox from "resources/inactive-box.svg"
-import activeBox from "resources/active-box.svg"
+import inactiveBox from "assets/svg/inactive-box.svg"
+import activeBox from "assets/svg/active-box.svg"
 import UserInputWindow from "./UserInputWindow"
 import TransactionStatusWindow from "./TransactionStatusWindow"
 import SupportPage from "../SupportPage"
