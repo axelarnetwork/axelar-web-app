@@ -18,31 +18,9 @@ import App from "view/App"
 import "react-notifications-component/dist/theme.css"
 import "./index.css"
 import { GlobalStyle } from "./global-styles"
+import { RoutesWithTransitions } from "./routes"
 
 new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE as string)
-
-const routes = (props: any) => (
-  <TransitionGroup>
-    <CSSTransition
-      key={props.location.pathname}
-      classNames="page"
-      timeout={2000}
-    >
-      <Switch>
-        <ProtectedRoute exact path="/" component={App} />
-        <ProtectedRoute exact path="/app" component={App} />
-        <Route exact path="/landing" component={Landing} />
-        <ProtectedRoute exact path="/debug" component={Info} />
-      </Switch>
-    </CSSTransition>
-  </TransitionGroup>
-)
-
-const routesWithCSSTransition = (
-  <BrowserRouter>
-    <Route path="/" component={routes} />
-  </BrowserRouter>
-)
 
 const theme = {
   headerBackgroundColor: `rgba(0, 0, 0, 0.82)`,
@@ -53,7 +31,7 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <ReactNotification />
       {process.env.REACT_APP_STAGE !== "mainnet" && <RecoilLogger />}
-      {routesWithCSSTransition}
+      <RoutesWithTransitions />
       <GlobalStyle />
     </ThemeProvider>
   </RecoilRoot>,
