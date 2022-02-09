@@ -24,11 +24,11 @@ import {
   IsValidDestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import { StyledAppContainer } from "pages/App/styles/StyledAppContainer"
-import SwapWindow from "pages/SwapWindow"
-import Disclaimer from "../Disclaimer"
+import { StyledAppContainer } from "./styles/StyledAppContainer"
+import SwapWindow from "pages/app/parts/swap-widget"
+import Disclaimer from "../disclaimer"
 import { Redirect } from "react-router-dom"
-import TransactionHistory from "../TransactionHistory"
+import TransactionHistory from "../tx-history"
 
 const StyledDialogBox = styled.div`
   height: 50%;
@@ -127,7 +127,7 @@ const App = () => {
       <WalkThrough />
       <InfoWidget />
       <PageHeader />
-      {isRecaptchaSet ? <SwapWindow /> : null}
+      {isRecaptchaSet && <SwapWindow />}
       <PageFooter />
     </StyledAppContainer>
   )

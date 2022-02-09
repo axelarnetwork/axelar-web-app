@@ -2,9 +2,9 @@ import { Switch, Route, BrowserRouter } from "react-router-dom"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
 import ProtectedRoute from "./components/CompositeComponents/ProtectedRoute"
-import App from "./pages/App"
-import Info from "./pages/Debug"
-import Landing from "./pages/Landing"
+import App from "./pages/app"
+import Info from "./pages/debug"
+import Landing from "./pages/landing"
 
 const routes = (props: any) => (
   <TransitionGroup>

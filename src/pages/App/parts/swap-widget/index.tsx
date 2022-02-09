@@ -16,7 +16,7 @@ import inactiveBox from "assets/svg/inactive-box.svg"
 import activeBox from "assets/svg/active-box.svg"
 import UserInputWindow from "./UserInputWindow"
 import TransactionStatusWindow from "./TransactionStatusWindow"
-import SupportPage from "../SupportPage"
+import SupportPage from "../../../support"
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
   showContents?: boolean
