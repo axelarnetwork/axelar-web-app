@@ -1,7 +1,7 @@
-import {axelar, terra} from "./testnet";
+import { axelar, terra } from "./testnet"
 
 const exported = {
-	axelar,
-	terra
+  axelar,
+  terra,
 }
-export default exported;
+export default exported

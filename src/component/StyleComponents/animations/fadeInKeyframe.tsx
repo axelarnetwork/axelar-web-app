@@ -1,4 +1,4 @@
-import {keyframes} from "styled-components";
+import { keyframes } from "styled-components"
 
 export const fadeInFromLeft = keyframes`
 	0% { opacity: 0; transform: translate(-50%, 0%); }
@@ -12,7 +12,7 @@ export const fadeInFromLeft = keyframes`
 	80% { opacity: 0.8; transform: translate(-10%, 0%); }
 	90% { opacity: 0.9; transform: translate(-5%, 2%); }
 	100% { opacity: 1; transform: translate(0%, 0%); }
-`;
+`
 
 export const fadeIn = keyframes`
 	from {
@@ -21,4 +21,4 @@ export const fadeIn = keyframes`
 	to {
 		opacity: 1;
 	}
-`;
+`

@@ -1,7 +1,7 @@
-import {css} from "styled-components";
+import { css } from "styled-components"
 
 export const StyledCentered = css`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-`;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
