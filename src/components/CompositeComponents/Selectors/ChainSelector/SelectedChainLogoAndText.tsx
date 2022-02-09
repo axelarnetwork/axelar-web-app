@@ -1,5 +1,5 @@
 import { ChainInfo } from "@axelar-network/axelarjs-sdk"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { SVGImage } from "components/Widgets/SVGImage"
 import { BaseSelector } from "../BaseSelector"
 
 interface IChainComponentProps {

@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import Container from "component/StyleComponents/Container"
-import { StyledCentered } from "component/StyleComponents/Centered"
+import Container from "components/StyleComponents/Container"
+import { StyledCentered } from "components/StyleComponents/Centered"
 
 export const StyledAppContainer = styled(Container)`
   position: relative;

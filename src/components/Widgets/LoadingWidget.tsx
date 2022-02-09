@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { SVGImage } from "components/Widgets/SVGImage"
 
 const LoadingWidget = ({ cb }: { cb: () => void }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)

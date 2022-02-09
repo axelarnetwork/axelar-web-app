@@ -1,7 +1,7 @@
 import { useState } from "react"
 import styled, { ThemedStyledProps } from "styled-components"
-import { StyledInput } from "component/StyleComponents/StyledInput"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { StyledInput } from "components/StyleComponents/StyledInput"
+import { SVGImage } from "components/Widgets/SVGImage"
 import screenConfigs from "config/screenConfigs"
 import { ISearchItem } from "./index"
 

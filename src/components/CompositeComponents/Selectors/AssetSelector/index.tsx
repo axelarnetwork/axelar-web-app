@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil"
-import { FlexRow } from "component/StyleComponents/FlexRow"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { FlexRow } from "components/StyleComponents/FlexRow"
+import { SVGImage } from "components/Widgets/SVGImage"
 import { SourceAsset } from "state/ChainSelection"
 import { BaseSelector } from "../BaseSelector"
 import { ReactElement } from "react"

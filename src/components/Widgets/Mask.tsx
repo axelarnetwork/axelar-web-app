@@ -1,5 +1,5 @@
 import styled, { ThemedStyledProps } from "styled-components"
-import { StyledCentered } from "component/StyleComponents/Centered"
+import { StyledCentered } from "components/StyleComponents/Centered"
 
 export interface IMaskProps extends ThemedStyledProps<any, any> {
   centered: boolean

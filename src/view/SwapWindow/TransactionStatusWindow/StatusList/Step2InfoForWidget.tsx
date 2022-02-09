@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil"
 import styled from "styled-components"
-import BoldSpan from "component/StyleComponents/BoldSpan"
+import BoldSpan from "components/StyleComponents/BoldSpan"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import { SourceDepositAddress } from "state/TransactionStatus"

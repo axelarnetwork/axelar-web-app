@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { FlexColumn } from "component/StyleComponents/FlexColumn"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 const StyledButtonContainer = styled(FlexColumn)`
   width: 100%;

@@ -5,10 +5,10 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import downstreamServices from "config/downstreamServices"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import { InputForm } from "component/CompositeComponents/InputForm"
-import { StyledButton } from "component/StyleComponents/StyledButton"
-import { FlexRow } from "component/StyleComponents/FlexRow"
-import Link from "component/Widgets/Link"
+import { InputForm } from "components/CompositeComponents/InputForm"
+import { StyledButton } from "components/StyleComponents/StyledButton"
+import { FlexRow } from "components/StyleComponents/FlexRow"
+import Link from "components/Widgets/Link"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
 import {
   MetamaskTransferEvent,
@@ -22,9 +22,9 @@ import {
 } from "state/TransactionStatus"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
-import LoadingWidget from "component/Widgets/LoadingWidget"
+import LoadingWidget from "components/Widgets/LoadingWidget"
 import { getShortenedWord } from "utils/wordShortener"
-import BoldSpan from "component/StyleComponents/BoldSpan"
+import BoldSpan from "components/StyleComponents/BoldSpan"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};

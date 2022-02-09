@@ -1,6 +1,6 @@
 import { KeyboardEvent, useState } from "react"
-import { InputForm } from "component/CompositeComponents/InputForm"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { InputForm } from "components/CompositeComponents/InputForm"
+import { SVGImage } from "components/Widgets/SVGImage"
 
 const usePasswordInput = ({
   handleOnEnterPress,

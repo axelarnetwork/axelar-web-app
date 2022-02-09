@@ -5,11 +5,11 @@ import {
   AccordionItemHeading,
   AccordionItemPanel,
 } from "react-accessible-accordion"
-import BoldSpan from "../../component/StyleComponents/BoldSpan"
+import BoldSpan from "../../components/StyleComponents/BoldSpan"
 
 import "./accordian-styles.css"
 import configs from "../../config/downstreamServices"
-import { PopoutLink } from "../../component/Widgets/PopoutLink"
+import { PopoutLink } from "../../components/Widgets/PopoutLink"
 import React from "react"
 
 export interface IQA {

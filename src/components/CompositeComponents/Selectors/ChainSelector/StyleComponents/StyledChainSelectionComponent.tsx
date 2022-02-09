@@ -1,5 +1,5 @@
 import styled, { ThemedStyledProps } from "styled-components"
-import { FlexRow } from "component/StyleComponents/FlexRow"
+import { FlexRow } from "components/StyleComponents/FlexRow"
 import screenConfigs from "config/screenConfigs"
 
 interface IStyledChainSelectorProps extends ThemedStyledProps<any, any> {

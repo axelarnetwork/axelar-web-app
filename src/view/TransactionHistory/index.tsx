@@ -1,9 +1,9 @@
 import { useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { ShowTransactionHistoryPage } from "state/ApplicationStatus"
-import { Mask } from "component/Widgets/Mask"
-import { StyledLargePopupPage } from "component/StyleComponents/StyledLargePopupPage"
-import { StyledButton } from "component/StyleComponents/StyledButton"
+import { Mask } from "components/Widgets/Mask"
+import { StyledLargePopupPage } from "components/StyleComponents/StyledLargePopupPage"
+import { StyledButton } from "components/StyleComponents/StyledButton"
 
 const TextSection = styled.div`
   width: 100%;

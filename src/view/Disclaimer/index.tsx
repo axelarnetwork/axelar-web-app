@@ -2,9 +2,9 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import styled from "styled-components"
 import { ShowDisclaimer, ShowLargeDisclaimer } from "state/ApplicationStatus"
 import textLines from "./disclaimerText"
-import { StyledButton } from "component/StyleComponents/StyledButton"
-import { StyledLargePopupPage } from "component/StyleComponents/StyledLargePopupPage"
-import { Mask } from "component/Widgets/Mask"
+import { StyledButton } from "components/StyleComponents/StyledButton"
+import { StyledLargePopupPage } from "components/StyleComponents/StyledLargePopupPage"
+import { Mask } from "components/Widgets/Mask"
 
 const TextSection = styled.div`
   width: 100%;

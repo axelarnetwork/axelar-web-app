@@ -1,5 +1,5 @@
 import { HTMLInputTypeAttribute } from "react"
-import { StyledInput } from "component/StyleComponents/StyledInput"
+import { StyledInput } from "components/StyleComponents/StyledInput"
 
 interface IInputProps {
   name: string

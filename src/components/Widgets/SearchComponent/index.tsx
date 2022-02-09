@@ -1,9 +1,9 @@
 import { KeyboardEvent, useEffect, useState } from "react"
 import styled, { ThemedStyledProps } from "styled-components"
-import { FlexSpaceBetween } from "component/StyleComponents/FlexSpaceBetween"
-import { GridDisplay } from "component/StyleComponents/GridDisplay"
-import { SVGImage } from "component/Widgets/SVGImage"
-import SearchFilterText from "component/Widgets/SearchComponent/SearchFilterText"
+import { FlexSpaceBetween } from "components/StyleComponents/FlexSpaceBetween"
+import { GridDisplay } from "components/StyleComponents/GridDisplay"
+import { SVGImage } from "components/Widgets/SVGImage"
+import SearchFilterText from "components/Widgets/SearchComponent/SearchFilterText"
 import screenConfigs from "config/screenConfigs"
 
 interface IStyledSearchComponentProps extends ThemedStyledProps<any, any> {

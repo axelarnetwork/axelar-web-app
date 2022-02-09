@@ -4,8 +4,8 @@ import { useRecoilValue } from "recoil"
 import styled, { ThemedStyledProps } from "styled-components"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import screenConfigs from "config/screenConfigs"
-import { animateStyles } from "component/StyleComponents/animations/SwitchToggleAnimation"
-import { StyledCentered } from "component/StyleComponents/Centered"
+import { animateStyles } from "components/StyleComponents/animations/SwitchToggleAnimation"
+import { StyledCentered } from "components/StyleComponents/Centered"
 import usePostTransactionToBridge from "hooks/usePostTransactionToBridge"
 import {
   ChainSelection,

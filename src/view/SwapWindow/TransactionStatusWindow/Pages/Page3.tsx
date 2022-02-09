@@ -2,9 +2,9 @@ import styled, { ThemedStyledProps } from "styled-components"
 import step1InActive from "assets/svg/transaction_status_logos/step-1-inactive.svg"
 import step2Inctive from "assets/svg/transaction_status_logos/step-2-inactive.svg"
 import step3Active from "assets/svg/transaction_status_logos/step-3-active.svg"
-import { FlexRow } from "component/StyleComponents/FlexRow"
-import { StyledCentered } from "component/StyleComponents/Centered"
-import { FlexColumn } from "component/StyleComponents/FlexColumn"
+import { FlexRow } from "components/StyleComponents/FlexRow"
+import { StyledCentered } from "components/StyleComponents/Centered"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { StyledPTag } from "./StyledPTag"
 
 export const StyledImage = styled.img``
