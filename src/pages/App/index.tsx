@@ -24,8 +24,8 @@ import {
   IsValidDestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import { StyledAppContainer } from "view/App/styles/StyledAppContainer"
-import SwapWindow from "view/SwapWindow"
+import { StyledAppContainer } from "pages/App/styles/StyledAppContainer"
+import SwapWindow from "pages/SwapWindow"
 import Disclaimer from "../Disclaimer"
 import { Redirect } from "react-router-dom"
 import TransactionHistory from "../TransactionHistory"
