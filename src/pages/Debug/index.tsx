@@ -1,7 +1,7 @@
 import React from "react"
 import { dependencies } from "../../../package.json"
 
-const Info = () => {
+export const DebugPage = () => {
   const sdkVersion: string = dependencies?.[`@axelar-network/axelarjs-sdk`]
 
   return (
@@ -11,5 +11,3 @@ const Info = () => {
     </>
   )
 }
-
-export default Info

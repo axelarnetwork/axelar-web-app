@@ -26,9 +26,9 @@ import {
 } from "state/ChainSelection"
 import { StyledAppContainer } from "./styles/StyledAppContainer"
 import SwapWindow from "pages/app/parts/swap-widget"
-import Disclaimer from "../disclaimer"
+import { Disclaimer } from "./parts/disclaimer"
 import { Redirect } from "react-router-dom"
-import TransactionHistory from "../tx-history"
+import { TransactionHistory } from "./parts/tx-history"
 
 const StyledDialogBox = styled.div`
   height: 50%;
@@ -59,7 +59,7 @@ const options = {
   },
 }
 
-const App = () => {
+export const AppPage = () => {
   const [isRecaptchaSet, initiateRecaptcha] = useLoadRecaptcha()
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChainSelection = useRecoilValue(
@@ -132,5 +132,3 @@ const App = () => {
     </StyledAppContainer>
   )
 }
-
-export default App

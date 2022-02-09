@@ -78,7 +78,7 @@ const ContactUsSection = styled(SupportSection)`
   padding-bottom: 0.1em;
 `
 
-const SupportPage = () => {
+export const SupportWidget = () => {
   const transactionTraceId = useRecoilValue(TransactionTraceId)
   const setShowDisclaimer = useSetRecoilState(ShowDisclaimer)
   const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer)
@@ -435,4 +435,3 @@ export const NewLink = ({
     </StyledNewLink>
   )
 }
-export default SupportPage

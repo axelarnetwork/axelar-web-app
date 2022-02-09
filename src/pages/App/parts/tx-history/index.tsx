@@ -5,6 +5,10 @@ import { Mask } from "components/Widgets/Mask"
 import { StyledLargePopupPage } from "components/StyleComponents/StyledLargePopupPage"
 import { StyledButton } from "components/StyleComponents/StyledButton"
 
+interface LargeDisclaimerProps {
+  onClose?: () => void
+}
+
 const TextSection = styled.div`
   width: 100%;
   height: 75%;
@@ -16,9 +20,13 @@ const TextSection = styled.div`
   padding: 2em;
 `
 
-interface LargeDisclaimerProps {
-  onClose?: () => void
-}
+const DisclaimerAgreeButton = ({
+  callback,
+  text,
+}: {
+  callback: (agreed: boolean) => void
+  text: string
+}) => <StyledButton onClick={() => callback(true)}>{text}</StyledButton>
 
 export const TransactionHistory = ({ onClose }: LargeDisclaimerProps) => {
   const setShowTransactionHistory = useSetRecoilState(
@@ -42,13 +50,3 @@ export const TransactionHistory = ({ onClose }: LargeDisclaimerProps) => {
     </Mask>
   )
 }
-
-const DisclaimerAgreeButton = ({
-  callback,
-  text,
-}: {
-  callback: (agreed: boolean) => void
-  text: string
-}) => <StyledButton onClick={() => callback(true)}>{text}</StyledButton>
-
-export default TransactionHistory

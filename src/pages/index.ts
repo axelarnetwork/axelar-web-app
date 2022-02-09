@@ -1,6 +1,3 @@
 export * from "./app"
 export * from "./debug"
-export * from "./disclaimer"
 export * from "./landing"
-export * from "./support"
-export * from "./tx-history"

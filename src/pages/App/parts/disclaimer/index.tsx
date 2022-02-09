@@ -6,6 +6,10 @@ import { StyledButton } from "components/StyleComponents/StyledButton"
 import { StyledLargePopupPage } from "components/StyleComponents/StyledLargePopupPage"
 import { Mask } from "components/Widgets/Mask"
 
+interface LargeDisclaimerProps {
+  onClose?: () => void
+}
+
 const TextSection = styled.div`
   width: 100%;
   height: 75%;
@@ -21,15 +25,7 @@ const Text = styled.div`
   margin-top: 1em;
 `
 
-const Disclaimer = () => {
-  const showLargeDisclaimer = useRecoilValue(ShowLargeDisclaimer)
-
-  return showLargeDisclaimer ? <LargeDisclaimer /> : <TinyDisclaimer />
-}
-interface LargeDisclaimerProps {
-  onClose?: () => void
-}
-export const LargeDisclaimer = ({ onClose }: LargeDisclaimerProps) => {
+const LargeDisclaimer = ({ onClose }: LargeDisclaimerProps) => {
   const [showLargeDisclaimer, setShowLargeDisclaimer] =
     useRecoilState(ShowLargeDisclaimer)
   const setShowDisclaimer = useSetRecoilState(ShowDisclaimer)
@@ -101,4 +97,8 @@ const DisclaimerAgreeButton = ({
   <StyledButton onClick={() => setDisclaimerAgreed(true)}>{text}</StyledButton>
 )
 
-export default Disclaimer
+export const Disclaimer = () => {
+  const showLargeDisclaimer = useRecoilValue(ShowLargeDisclaimer)
+
+  return showLargeDisclaimer ? <LargeDisclaimer /> : <TinyDisclaimer />
+}

@@ -47,7 +47,7 @@ const SlaminDiv = styled(StyledImage)`
   margin-left: 20px;
 `
 
-const Landing = () => {
+export const LandingPage = () => {
   const imageRef = useRef(null)
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(IsLoggedInWithBetaPassword)
   const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE)
@@ -119,5 +119,3 @@ const Landing = () => {
     </>
   )
 }
-
-export default Landing

@@ -16,7 +16,7 @@ import inactiveBox from "assets/svg/inactive-box.svg"
 import activeBox from "assets/svg/active-box.svg"
 import UserInputWindow from "./UserInputWindow"
 import TransactionStatusWindow from "./TransactionStatusWindow"
-import SupportPage from "../../../support"
+import { SupportWidget } from "../support-widget"
 
 interface IStyledImageProps extends ThemedStyledProps<any, any> {
   showContents?: boolean
@@ -143,7 +143,7 @@ const SwapWindow = (): ReactElement => {
           </div>
         </CSSTransition>
       </SwitchTransition>
-      <SupportPage />
+      <SupportWidget />
     </StyledSwapWindow>
   )
 }
