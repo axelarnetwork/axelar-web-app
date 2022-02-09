@@ -1,5 +1,6 @@
 import { Switch, Route, BrowserRouter } from "react-router-dom"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
+
 import ProtectedRoute from "./components/CompositeComponents/ProtectedRoute"
 import App from "./view/App"
 import Info from "./view/Debug"
