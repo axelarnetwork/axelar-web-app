@@ -333,7 +333,7 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
 
   return txHash && blockExplorer ? (
     <div style={{ marginTop: `0.35em` }}>
-      <Link href={`${blockExplorer.url}${txHash}`}>Deposit Confirmation</Link>
+      <Link href={`${blockExplorer.url}${txHash}`}>Deposit Transaction</Link>
     </div>
   ) : null
 }

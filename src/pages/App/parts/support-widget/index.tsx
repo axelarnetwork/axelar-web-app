@@ -299,42 +299,42 @@ export const SupportWidget = () => {
                           <BoldSpan>Trace ID: </BoldSpan>
                           {getShortenedWord(transactionTraceId, 5)}
                         </div>
+                        {activeStep > 0 && (
+                            <div>
+                              <BoldSpan>Stuck on Step: </BoldSpan>
+                              {activeStep}
+                            </div>
+                        )}
+                        {srcChain && (
+                            <div>
+                              <BoldSpan>Source Chain: </BoldSpan>
+                              {srcChain.chainName}
+                            </div>
+                        )}
                         {depositAddress && (
                           <div>
                             <BoldSpan>Deposit Address: </BoldSpan>
                             {getShortenedWord(depositAddress?.assetAddress, 5)}
                           </div>
                         )}
+                        {srcChainDepositTxHash && (
+                            <div>
+                              <BoldSpan>
+                                Deposit TxHash on {srcChain?.chainName}:{" "}
+                              </BoldSpan>
+                              {getShortenedWord(srcChainDepositTxHash, 5)}
+                            </div>
+                        )}
+                        {destChain && (
+                            <div>
+                              <BoldSpan>Destination Chain: </BoldSpan>
+                              {destChain.chainName}
+                            </div>
+                        )}
                         {destAddr && (
                           <div>
                             <BoldSpan>Destination Address: </BoldSpan>
                             {getShortenedWord(destAddr, 5)}
-                          </div>
-                        )}
-                        {srcChain && (
-                          <div>
-                            <BoldSpan>Source Chain: </BoldSpan>
-                            {srcChain.chainName}
-                          </div>
-                        )}
-                        {destChain && (
-                          <div>
-                            <BoldSpan>Destination Chain: </BoldSpan>
-                            {destChain.chainName}
-                          </div>
-                        )}
-                        {srcChainDepositTxHash && (
-                          <div>
-                            <BoldSpan>
-                              Deposit TxHash on {srcChain?.chainName}:{" "}
-                            </BoldSpan>
-                            {getShortenedWord(srcChainDepositTxHash, 5)}
-                          </div>
-                        )}
-                        {activeStep > 0 && (
-                          <div>
-                            <BoldSpan>Stuck on Step: </BoldSpan>
-                            {activeStep}
                           </div>
                         )}
                       </>
@@ -378,17 +378,17 @@ const getTextToCopy = (
   destAddr: string
 ) => {
   return `* Trace ID: ${transactionTraceId}
-${depositAddress ? `* Deposit Address: ${depositAddress.assetAddress}\n` : ""}\
-${destAddr ? `* Destination Address: ${destAddr}\n` : ""}\
+${activeStep > 0 ? `* Stuck on Step: ${activeStep}\n` : ""}\
 ${depositAddress ? `* Asset: ${depositAddress.assetSymbol}\n` : ""}\
 ${srcChain ? `* Source Chain: ${srcChain.chainName}\n` : ""}\
-${destChain ? `* Destination Chain: ${destChain.chainName}\n` : ""}\
+${depositAddress ? `* Deposit Address: ${depositAddress.assetAddress}\n` : ""}\
 ${
   srcChainDepositTxHash
     ? `* Deposit TxHash on ${srcChain?.chainName}: ${srcChainDepositTxHash}\n`
     : ""
 }\
-${activeStep > 0 ? `* Stuck on Step: ${activeStep}\n` : ""}\
+${destChain ? `* Destination Chain: ${destChain.chainName}\n` : ""}\
+${destAddr ? `* Destination Address: ${destAddr}\n` : ""}\
 `
 }
 const StyledText = styled(FlexRow)`
