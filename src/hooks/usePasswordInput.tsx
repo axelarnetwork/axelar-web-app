@@ -1,6 +1,6 @@
 import { KeyboardEvent, useState } from "react"
-import { InputForm } from "component/CompositeComponents/InputForm"
-import { SVGImage } from "component/Widgets/SVGImage"
+import { InputForm } from "components/CompositeComponents/InputForm"
+import { SVGImage } from "components/Widgets/SVGImage"
 
 const usePasswordInput = ({
   handleOnEnterPress,
@@ -39,7 +39,7 @@ const usePasswordInput = ({
         }}
       >
         <SVGImage
-          src={require(`resources/show-password.svg`)?.default}
+          src={require(`assets/svg/show-password.svg`)?.default}
           height={"30px"}
           width={"30px"}
           onClick={togglePassword}
