@@ -6,7 +6,7 @@ const TERRA_CHAIN_ID: string = "bombay-12"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
 const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string
 const TERRA_CHANNEL_MAP = {
-  axelar: "channel-55",
+  axelar: "channel-78",
 }
 const terraChainInfo: ChainInfo = {
   rpc: TERRA_RPC,
