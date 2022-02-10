@@ -69,12 +69,11 @@ export default function usePostTransactionToBridge() {
     source: boolean
   ) => void = useCallback(
     (status: any, setConfirms: any, traceId: string, source: boolean): void => {
-      //only show this message if we got a timeout before the rest of the flow has transpired and still on the tx status window
+      //only show this message if we got a timeout before the rest of the flow has transpired
       if (
         source &&
         status?.timedOut &&
-        activeStep <= 2 &&
-        showTransactionStatusWindow
+        activeStep <= 2
       ) {
         const msg = {
           statusCode: 408,
@@ -105,7 +104,6 @@ export default function usePostTransactionToBridge() {
       sourceChain,
       notificationHandler,
       setDidWaitingForDepositTimeout,
-      showTransactionStatusWindow,
     ]
   )
 
@@ -255,7 +253,10 @@ export default function usePostTransactionToBridge() {
     notificationHandler,
   ])
 
-  const closeResultsScreen = () => setShowTransactionStatusWindow(false)
+  const closeResultsScreen = () => {
+    setShowTransactionStatusWindow(false)
+    window.location.reload()
+  }
 
   return [
     showTransactionStatusWindow as boolean,
