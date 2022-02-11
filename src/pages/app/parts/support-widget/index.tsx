@@ -5,7 +5,7 @@ import {
   SrcChainDepositTxHash,
   TransactionTraceId,
 } from "state/TransactionStatus"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import Tooltip from "components/Widgets/Tooltip"
 import CopyToClipboard from "components/Widgets/CopyToClipboard"
 import BoldSpan from "components/StyleComponents/BoldSpan"
@@ -29,6 +29,7 @@ import { toProperCase } from "utils/toProperCase"
 import { getShortenedWord } from "utils/wordShortener"
 import { QASection } from "./QA"
 import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
+import { ReactElement } from "react"
 
 const StyledHelperComponent = styled.div`
   position: absolute;
@@ -251,25 +252,26 @@ export const SupportWidget = () => {
             </div>
           </StyledHeader>
           <SupportSection>
+            <StyledBoldText>AXELAR SOCIAL LINKS</StyledBoldText>
+            <br/>
+              <SubLink 
+                text="Discord" 
+                onClick={() => window.open("https://discord.com/invite/aRZ3Ra6f7D", "_blank")} 
+                description={<><BoldSpan>#satellite-open-support-ticket</BoldSpan> for live support.</>}
+              />
+              <SubLink 
+                text="Twitter (@axl_satellite)" 
+                onClick={() => window.open("https://twitter.com/axl_satellite", "_blank")} 
+                description={<>Latest updates on Satellite.</>}
+              />
+              <SubLink 
+                text="Twitter (@axl_status)" 
+                onClick={() => window.open("https://twitter.com/axl_status", "_blank")} 
+                description={<>Latest updates on Axelar.</>}
+              />
+              <br/>
             <NewLink
-              text={"Discord Support Channel"}
-              onClick={() =>
-                window.open("https://discord.com/invite/aRZ3Ra6f7D", "_blank")
-              }
-            />
-            <DescriptorText>
-              <div>
-                Join our community and get Satellite support directly in the{" "}
-                <BoldSpan>#satellite-open-support-ticket</BoldSpan> channel.
-              </div>
-            </DescriptorText>
-            {/*<NewLink text={"Transaction History"} onClick={() => setShowTransactionHistory(true)}/>*/}
-            {/*<DescriptorText>*/}
-            {/*    <div>Your transaction history.*/}
-            {/*    </div>*/}
-            {/*</DescriptorText>*/}
-            <NewLink
-              text={"Terms of Use"}
+              text={"TERMS OF USE"}
               onClick={() => {
                 setShowDisclaimer(true)
                 setShowLargeDisclaimer(true)
@@ -395,16 +397,21 @@ const StyledText = styled(FlexRow)`
   justify-content: flex-start;
   margin-bottom: 0.25em;
 `
-const DescriptorText = styled(StyledText)`
-  font-style: italic;
-  margin-bottom: 1em;
-  color: #898994;
-  font-size: 0.9em;
-`
+const Italics = css`
+font-style: italic;
+margin-bottom: 1em;
+color: #898994;
+font-size: 0.9em;
+`;
 
-const StyledNewLink = styled(StyledText)`
-  cursor: pointer;
+const DescriptorText = styled(StyledText)`${Italics}`;
+
+const StyledBoldText = styled(StyledText)`
   font-weight: bold;
+`;
+
+const LinkStyles = css`
+  cursor: pointer;
   &:focus,
   &:hover,
   &:visited,
@@ -412,7 +419,9 @@ const StyledNewLink = styled(StyledText)`
   &:active {
     text-decoration: underline;
   }
-`
+`;
+const StyledNewLink = styled(StyledBoldText)`${LinkStyles}`;
+
 export const NewLink = ({
   text,
   onClick,
@@ -433,5 +442,25 @@ export const NewLink = ({
         width={`1em`}
       />
     </StyledNewLink>
+  )
+}
+
+const StyledAnchor = styled.span`${LinkStyles}`;
+const StyledDescription = styled.span`${Italics}`;
+export const SubLink = ({
+  text,
+  onClick,
+  description
+}: {
+  text: string
+  onClick?: any
+  description: string | ReactElement
+}) => {
+  return (
+    <div style={{ marginBottom: `0.5em`}}>
+      <StyledAnchor onClick={onClick} style={{ marginRight: `0.25em` }}><BoldSpan>{text}</BoldSpan></StyledAnchor>
+      <StyledDescription>{description}</StyledDescription>
+
+    </div>
   )
 }
