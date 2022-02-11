@@ -177,7 +177,7 @@ const UserInputWindow = ({
     if (destAddr && bannedAddresses.includes(destAddr))
       return (
         <ValidationErrorWidget
-          text={`Cannot send to a Token Contract address.`}
+          text={`Cannot send to a Token Contract`}
         />
       )
   }, [
@@ -185,6 +185,8 @@ const UserInputWindow = ({
     destChainSelection,
     selectedSourceAsset,
     isValidDestinationAddress,
+    bannedAddresses,
+    destAddr
   ])
 
   const enableSubmitBtn =

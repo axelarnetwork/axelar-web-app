@@ -17,7 +17,7 @@ let bannedAddresses: string[] = [];
 
 const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs;
 
-for (const [k,v] of Object.entries(ethersJsConfigs)) {
+for (const v of Object.values(ethersJsConfigs)) {
   const { tokenAddressMap } = v as EthersJsConfigs;
   bannedAddresses = bannedAddresses.concat(Object.values(tokenAddressMap))
 }
