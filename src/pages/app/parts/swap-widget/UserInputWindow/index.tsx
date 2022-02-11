@@ -35,6 +35,7 @@ import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import TopFlowsSelectorWidget from "../TopFlowsSelector"
 import { SendLogsToServer } from "api/SendLogsToServer"
+import { BannedAddresses } from "state/ChainList"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -117,6 +118,7 @@ const UserInputWindow = ({
   const resetUserInputs = useResetUserInputs()
   const [showValidationErrors, setShowValidationErrors] = useState(false)
   const [showAuthTooltip, setShowAuthTooltip] = useState(false)
+  const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
 
@@ -172,6 +174,12 @@ const UserInputWindow = ({
           text={`Invalid input address for ${destChainSelection.chainName}.`}
         />
       )
+    if (destAddr && bannedAddresses.includes(destAddr))
+      return (
+        <ValidationErrorWidget
+          text={`Cannot send to a Token Contract address.`}
+        />
+      )
   }, [
     sourceChainSelection,
     destChainSelection,
@@ -185,6 +193,7 @@ const UserInputWindow = ({
     sourceChainSelection.chainName !== destChainSelection.chainName &&
     selectedSourceAsset &&
     isValidDestinationAddress
+    && (destAddr && !bannedAddresses.includes(destAddr))
 
   const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
     e.stopPropagation()
