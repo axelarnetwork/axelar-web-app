@@ -9,6 +9,7 @@ import backgroundImage from "assets/svg/globe.svg"
 import { IsLoggedInWithBetaPassword } from "state/ApplicationStatus"
 import disintegrate from "./animation"
 import { ethers } from "ethers"
+import StyledLink from "components/Widgets/Link"
 
 const StyledLoginPage = styled.div`
   width: 100vw;
@@ -74,6 +75,11 @@ export const LandingPage = () => {
         <h1>We'll be right back</h1>
         <div style={{ fontSize: `1.25em`, width: `75%`, textAlign: "center" }}>
           <div>Satellite is under maintenance.</div>
+          <div>
+            For latest updates:{" "}
+            <StyledLink href="https://twitter.com/axl_satellite" children={"@axl_satellite"} />
+          </div>
+          <br/>
           <div>Back online shortly!</div>
         </div>
       </>
