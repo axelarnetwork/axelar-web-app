@@ -9,6 +9,7 @@ import { Height } from "cosmjs-types/ibc/core/client/v1/client"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { getShortenedWord } from "utils/wordShortener"
 import { SendLogsToServer } from "../../api/SendLogsToServer"
+import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 
 declare const window: Window &
   typeof globalThis & {
@@ -131,7 +132,7 @@ export class KeplrWallet implements WalletInterface {
       amount: ethers.utils.parseUnits(amount, 6).toString(),
     }
     const fee: StdFee = {
-      gas: "150000",
+      gas: AXELAR_TRANSFER_GAS_LIMIT,
       amount: [{ denom: "uaxl", amount: "30000" }],
     }
 
@@ -156,7 +157,7 @@ export class KeplrWallet implements WalletInterface {
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
     const fee: StdFee = {
-      gas: "150000",
+      gas: TERRA_IBC_GAS_LIMIT,
       amount: [{ denom: "uluna", amount: "30000" }],
     }
     const timeoutHeight: Height = {
