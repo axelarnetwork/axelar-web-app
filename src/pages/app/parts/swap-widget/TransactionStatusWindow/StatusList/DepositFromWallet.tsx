@@ -365,6 +365,6 @@ const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo
     <div>Your Address (Sender): <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan></div>
     <div>Amount to deposit: <BoldSpan>{amt} {sourceAsset.assetSymbol}</BoldSpan></div>
     <br />
-    <BoldSpan style={{ color: `black`}}>NOTE: Double-check that the details here and in the wallet popup on the next screen look correct before sending your deposit.</BoldSpan>
+    <BoldSpan style={{ color: `black`}}>NOTE: Double-check that the details here and in the wallet popup on the next screen look correct before sending your deposit. Funds may be lost otherwise.</BoldSpan>
   </StyledTxInfo>
 }
