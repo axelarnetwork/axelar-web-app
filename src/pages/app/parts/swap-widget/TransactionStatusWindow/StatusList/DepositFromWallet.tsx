@@ -411,7 +411,7 @@ export const DepositFromWallet = ({
 }
 
 const StyledTxInfo = styled.div`
-  color: #898994;
+  color: black;
   position: relative;
   width: 99%;
   padding: 1em;
@@ -425,11 +425,18 @@ const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo
   if (disableTransferButton || !amt) return null;
 
   return <StyledTxInfo>
-    <div>Source Chain: <BoldSpan>{sourceChain?.chainName}</BoldSpan></div>
-    <div>Deposit Address: <BoldSpan>{getShortenedWord(depositAddress.assetAddress)}</BoldSpan></div>
-    <div>Your Address (Sender): <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan></div>
-    <div>Amount to deposit: <BoldSpan>{amt} {sourceAsset.assetSymbol}</BoldSpan></div>
+    <div>
+      Deposit{" "}
+      <BoldSpan>{amt} {sourceAsset.assetSymbol}</BoldSpan>{" "}on{" "}
+      <BoldSpan>{sourceChain?.chainName}</BoldSpan>
+    </div>
+    <div>
+      {" "}from{" "}
+      <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
+      {" "}into{" "}
+      <BoldSpan>{getShortenedWord(depositAddress.assetAddress)}</BoldSpan>
+    </div>
     <br />
-    <BoldSpan style={{ color: `black`}}>NOTE: Double-check that the details here and in the wallet popup on the next screen look correct before sending your deposit. Funds may be lost otherwise.</BoldSpan>
+    <div>Make sure this and your {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"} confirmation screen are correct. Funds will get lost otherwise.</div>
   </StyledTxInfo>
 }
