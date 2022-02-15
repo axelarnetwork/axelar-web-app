@@ -269,7 +269,7 @@ const StatusList = (props: IStatusListProps) => {
                 </BoldSpan>{" "}
                 to {destinationChain?.chainName} within the next ~
                 {destinationChain?.chainName.toLowerCase() === "ethereum"
-                  ? 30
+                  ? 60
                   : 3}{" "}
                 min.
               </div>
