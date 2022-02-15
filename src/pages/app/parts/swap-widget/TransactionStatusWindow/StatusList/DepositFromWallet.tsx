@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import styled from "styled-components"
 import { AssetInfo } from "@axelar-network/axelarjs-sdk"
@@ -20,13 +20,14 @@ import {
   SourceDepositAddress,
   SrcChainDepositTxHash,
   TransactionTraceId,
-} from "state/TransactionStatus"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
-import { isValidDecimal } from "utils/isValidDecimal"
-import LoadingWidget from "components/Widgets/LoadingWidget"
-import { getShortenedWord } from "utils/wordShortener"
-import BoldSpan from "components/StyleComponents/BoldSpan"
+}                                                         from "state/TransactionStatus"
+import { getMinDepositAmount }                            from "utils/getMinDepositAmount"
+import { isValidDecimal }                                 from "utils/isValidDecimal"
+import LoadingWidget                                      from "components/Widgets/LoadingWidget"
+import { getShortenedWord }                               from "utils/wordShortener"
+import BoldSpan                                           from "components/StyleComponents/BoldSpan"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
+import {ImprovedTooltip}                                  from "components/Widgets/ImprovedTooltip";
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -269,6 +270,16 @@ export const DepositFromWallet = ({
       setAmountToDeposit(walletBalance.toString())
     }
   }
+  const getMaxButtonText = () => {
+    const terraNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "terra" && selectedSourceAsset?.common_key === "uluna";
+    const axelarNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "axelar" && selectedSourceAsset?.common_key === "uaxl";
+    if (terraNativeToken || axelarNativeToken) {
+      const text: string = "Will deduct a portion for expected gas fees"
+      return <ImprovedTooltip anchorContent={<div>max</div>} tooltipText={text} tooltipAltText={text} />
+    }
+    return "max"
+
+  }
 
   if (sentSuccess)
     return (
@@ -338,32 +349,36 @@ export const DepositFromWallet = ({
       {isWalletConnected ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <FlexRow>
-            <InputForm
-              name={"destination-address-input"}
-              value={amountToDeposit}
-              placeholder={"Enter amount to deposit"}
-              type={"number"}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setAmountToDeposit(e.target.value)
-              }
-            />
+            <div style={{ width: `100%`, position: `relative`}}>
+              <InputForm
+                  name={"destination-address-input"}
+                  value={amountToDeposit}
+                  placeholder={"Enter amount to deposit"}
+                  type={"number"}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setAmountToDeposit(e.target.value)
+                  }
+              />
+              {walletBalance > 0 && (
+                  <div
+                      style={{
+                        position: `absolute`,
+                        color: "grey",
+                        right: `0.5em`,
+                        bottom: `0.25em`,
+                        fontSize: `0.8em`,
+                        cursor: "pointer",
+                      }}
+                      onClick={handleMaxClick}
+                  >
+                    {getMaxButtonText()}
+                  </div>
+              )}
+            </div>
             <div style={{ marginLeft: `0.5em` }}>
               {selectedSourceAsset?.assetSymbol}
             </div>
           </FlexRow>
-          {walletBalance > 0 && (
-            <p
-              style={{
-                alignSelf: "flex-end",
-                color: "blue",
-                marginRight: "3.5em",
-                cursor: "pointer",
-              }}
-              onClick={handleMaxClick}
-            >
-              max
-            </p>
-          )}
           <br />
           <div>
             {walletAddress?.length > 0 && (
