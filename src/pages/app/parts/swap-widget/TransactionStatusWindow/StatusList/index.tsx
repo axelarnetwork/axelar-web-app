@@ -210,7 +210,7 @@ const StatusList = (props: IStatusListProps) => {
                     <CopyToClipboard
                       JSXToShow={
                         <BoldSpan>
-                          {getShortenedWord(depositAddress?.assetAddress, 4)}{" "}
+                          {getShortenedWord(depositAddress?.assetAddress, 5)}{" "}
                         </BoldSpan>
                       }
                       height={`12px`}

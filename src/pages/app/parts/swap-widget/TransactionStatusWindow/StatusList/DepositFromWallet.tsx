@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import styled                             from "styled-components"
+import {AssetInfo, ChainInfo}             from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import downstreamServices from "config/downstreamServices"
@@ -16,7 +16,6 @@ import {
 } from "hooks/wallet/MetaMaskWallet"
 import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import {
-  SourceDepositAddress,
   SrcChainDepositTxHash,
   TransactionTraceId,
 } from "state/TransactionStatus"
@@ -37,12 +36,14 @@ interface DepositFromWalletProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  depositAddress: AssetInfo
 }
 export const DepositFromWallet = ({
   isWalletConnected,
   walletBalance,
   reloadBalance,
   walletAddress,
+  depositAddress,
 }: DepositFromWalletProps) => {
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChainSelection = useRecoilValue(
@@ -50,7 +51,6 @@ export const DepositFromWallet = ({
   )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [amountToDeposit, setAmountToDeposit] = useState(null)
-  const depositAddress = useRecoilValue(SourceDepositAddress)
   const [minDepositAmt] = useState(
     getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
   )
@@ -258,13 +258,13 @@ export const DepositFromWallet = ({
     amountToDeposit < minDepositAmt ||
     !hasEnoughInWalletForMin ||
     amountToDeposit > walletBalance ||
-    !isValidDecimal(amountToDeposit as string)
+    !isValidDecimal(amountToDeposit as string) ||
+    (buttonText || "").toLowerCase().includes("sending")
 
   const getDisabledText = (disableTransferButton: boolean) => {
     if (!disableTransferButton)
       return (
         <span>
-          <br />
           <br />
         </span>
       )
@@ -290,6 +290,7 @@ export const DepositFromWallet = ({
 
     return (
       <div>
+        <br />
         {text}
         <br />
         <br />
@@ -319,7 +320,7 @@ export const DepositFromWallet = ({
             {walletAddress?.length > 0 && (
               <>
                 <BoldSpan>Connected Wallet:</BoldSpan>{" "}
-                {getShortenedWord(walletAddress, 4)}
+                {getShortenedWord(walletAddress, 5)}
               </>
             )}
             <div>
@@ -328,8 +329,9 @@ export const DepositFromWallet = ({
               <LoadingWidget cb={reloadBalance} />
             </div>
           </div>
-          <br />
           {getDisabledText(disableTransferButton)}
+          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, selectedSourceAsset as AssetInfo, depositAddress, walletAddress, amountToDeposit)}
+          <br />
           <TransferButton
             dim={disableTransferButton}
             disabled={disableTransferButton}
@@ -341,4 +343,28 @@ export const DepositFromWallet = ({
       ) : null}
     </div>
   )
+}
+
+const StyledTxInfo = styled.div`
+  color: #898994;
+  position: relative;
+  width: 99%;
+  padding: 1em;
+  box-sizing: border-box;
+  height: auto;
+  font-size: 0.9em;
+  border-radius: 5px;
+  border: solid 1px #e2e1e2;
+`;
+const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, sourceAsset: AssetInfo, depositAddress: AssetInfo, walletAddress: string, amt: any) => {
+  if (disableTransferButton || !amt) return null;
+
+  return <StyledTxInfo>
+    <div>Source Chain: <BoldSpan>{sourceChain?.chainName}</BoldSpan></div>
+    <div>Deposit Address: <BoldSpan>{getShortenedWord(depositAddress.assetAddress)}</BoldSpan></div>
+    <div>Your Address (Sender): <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan></div>
+    <div>Amount to deposit: <BoldSpan>{amt} {sourceAsset.assetSymbol}</BoldSpan></div>
+    <br />
+    <BoldSpan style={{ color: `black`}}>NOTE: Double-check that the details here and in the wallet popup on the next screen look correct before sending your deposit.</BoldSpan>
+  </StyledTxInfo>
 }

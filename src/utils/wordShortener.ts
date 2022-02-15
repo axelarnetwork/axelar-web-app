@@ -1,6 +1,6 @@
 export const getShortenedWord = (
   str: string | undefined,
-  truncation = 4
+  truncation = 5
 ): string => {
   if (!str) return "TBD"
   if (str.length < 10) return str
