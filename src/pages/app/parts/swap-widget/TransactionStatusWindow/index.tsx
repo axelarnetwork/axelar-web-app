@@ -230,7 +230,7 @@ const TransactionStatusWindow = ({
         setActiveStep(3)
         setCartoonMessage(null)
         break
-      case !!depositAddress:
+      case depositAddress !== null:
         setActiveStep(2)
         setCartoonMessage(
           <Step2InfoForWidget
@@ -238,6 +238,7 @@ const TransactionStatusWindow = ({
             walletBalance={walletBalance}
             reloadBalance={updateBalance}
             walletAddress={walletAddress}
+            depositAddress={depositAddress as AssetInfo}
           />
         )
         break

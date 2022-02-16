@@ -1,16 +1,17 @@
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS } from "react-joyride"
 import React, { useState } from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import useResetAllState from "hooks/useResetAllState"
+import useResetAllState                      from "hooks/useResetAllState"
 import {
   DismissWalkThrough,
   MessageShownInCartoon,
   ShowTransactionStatusWindow,
-} from "state/ApplicationStatus"
-import { ActiveStep } from "state/TransactionStatus"
-import { BreakIndex, WalkthroughSteps } from "./WalkthroughSteps"
-import { styles } from "./styles"
-import Step2InfoForWidget from "pages/app/parts/swap-widget/TransactionStatusWindow/StatusList/Step2InfoForWidget"
+}                                            from "state/ApplicationStatus"
+import { ActiveStep }                        from "state/TransactionStatus"
+import { BreakIndex, WalkthroughSteps }      from "./WalkthroughSteps"
+import { styles }                            from "./styles"
+import Step2InfoForWidget                    from "pages/app/parts/swap-widget/TransactionStatusWindow/StatusList/Step2InfoForWidget"
+import {AssetInfo}                           from "@axelar-network/axelarjs-sdk";
 
 const WalkThrough = () => {
   const setShowTransactionStatusWindow = useSetRecoilState(
@@ -67,6 +68,7 @@ const WalkThrough = () => {
               walletBalance={0}
               reloadBalance={() => {}}
               walletAddress={""}
+              depositAddress={{} as AssetInfo}
             />
           )
 

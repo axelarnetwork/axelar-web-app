@@ -1,12 +1,12 @@
-import { useRecoilValue } from "recoil"
-import styled from "styled-components"
-import BoldSpan from "components/StyleComponents/BoldSpan"
+import { useRecoilValue }                          from "recoil"
+import styled                                      from "styled-components"
+import BoldSpan                                    from "components/StyleComponents/BoldSpan"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import { ChainSelection, SourceAsset } from "state/ChainSelection"
-import { SourceDepositAddress } from "state/TransactionStatus"
-import { getShortenedWord } from "utils/wordShortener"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
-import { DepositFromWallet } from "./DepositFromWallet"
+import { ChainSelection, SourceAsset }             from "state/ChainSelection"
+import { getShortenedWord }                        from "utils/wordShortener"
+import { getMinDepositAmount }                     from "utils/getMinDepositAmount"
+import { DepositFromWallet }                       from "./DepositFromWallet"
+import {AssetInfo}                                 from "@axelar-network/axelarjs-sdk";
 
 export const StyledHeader = styled.div`
   position: relative;
@@ -25,15 +25,16 @@ interface Step2InfoForWidgetProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  depositAddress: AssetInfo
 }
 const Step2InfoForWidget = ({
   isWalletConnected,
   walletBalance,
   reloadBalance,
   walletAddress,
+  depositAddress,
 }: Step2InfoForWidgetProps) => {
   const sourceAsset = useRecoilValue(SourceAsset)
-  const depositAddress = useRecoilValue(SourceDepositAddress)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
 
@@ -79,6 +80,7 @@ const Step2InfoForWidget = ({
             walletBalance={walletBalance}
             reloadBalance={reloadBalance}
             walletAddress={walletAddress}
+            depositAddress={depositAddress}
           />
         )}
       <br />
