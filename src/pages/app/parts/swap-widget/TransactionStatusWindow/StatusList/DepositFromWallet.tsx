@@ -22,9 +22,6 @@ import {
 }                                                         from "state/TransactionStatus"
 import { getMinDepositAmount }                            from "utils/getMinDepositAmount"
 import { isValidDecimal }                                 from "utils/isValidDecimal"
-import LoadingWidget                                      from "components/Widgets/LoadingWidget"
-import { getShortenedWord }                               from "utils/wordShortener"
-import BoldSpan                                           from "components/StyleComponents/BoldSpan"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import {ImprovedTooltip}                                  from "components/Widgets/ImprovedTooltip";
 
@@ -44,7 +41,6 @@ interface DepositFromWalletProps {
 export const DepositFromWallet = ({
   isWalletConnected,
   walletBalance,
-  reloadBalance,
   walletAddress,
   depositAddress,
 }: DepositFromWalletProps) => {
@@ -345,7 +341,7 @@ export const DepositFromWallet = ({
   }
 
   return (
-    <div style={{ width: `95%` }}>
+    <div>
       <br />
       {isWalletConnected ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -354,7 +350,7 @@ export const DepositFromWallet = ({
               <InputForm
                   name={"destination-address-input"}
                   value={amountToDeposit}
-                  placeholder={"Enter amount to deposit"}
+                  placeholder={""}
                   type={"number"}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setAmountToDeposit(e.target.value)
@@ -380,22 +376,8 @@ export const DepositFromWallet = ({
               {selectedSourceAsset?.assetSymbol}
             </div>
           </FlexRow>
-          <br />
-          <div>
-            {walletAddress?.length > 0 && (
-              <>
-                <BoldSpan>Connected Wallet:</BoldSpan>{" "}
-                {getShortenedWord(walletAddress, 5)}
-              </>
-            )}
-            <div>
-              <BoldSpan>Balance:</BoldSpan> {walletBalance}{" "}
-              {selectedSourceAsset?.assetSymbol}
-              <LoadingWidget cb={reloadBalance} />
-            </div>
-          </div>
           {getDisabledText(disableTransferButton)}
-          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, selectedSourceAsset as AssetInfo, depositAddress, walletAddress, amountToDeposit)}
+          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, amountToDeposit)}
           <br />
           <TransferButton
             dim={disableTransferButton}
@@ -410,33 +392,11 @@ export const DepositFromWallet = ({
   )
 }
 
-const StyledTxInfo = styled.div`
-  color: black;
-  position: relative;
-  width: 99%;
-  padding: 1em;
-  box-sizing: border-box;
-  height: auto;
-  font-size: 0.9em;
-  border-radius: 5px;
-  border: solid 1px #e2e1e2;
-`;
-const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, sourceAsset: AssetInfo, depositAddress: AssetInfo, walletAddress: string, amt: string) => {
+const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, amt: string) => {
   if (disableTransferButton || !amt) return null;
 
-  return <StyledTxInfo>
-    <div>
-      Deposit{" "}
-      <BoldSpan>{amt} {sourceAsset.assetSymbol}</BoldSpan>{" "}on{" "}
-      <BoldSpan>{sourceChain?.chainName}</BoldSpan>
-    </div>
-    <div>
-      {" "}from{" "}
-      <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
-      {" "}into{" "}
-      <BoldSpan>{getShortenedWord(depositAddress.assetAddress)}</BoldSpan>
-    </div>
-    <br />
-    <div>Make sure this and your {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"} confirmation screen are correct. Funds will get lost otherwise.</div>
-  </StyledTxInfo>
+  return <div style={{ fontSize: `0.9em` }}>
+    Make sure this and your {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"} confirmation screen are correct before sending a deposit. Funds will get lost otherwise.
+  </div>
+
 }
