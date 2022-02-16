@@ -5,8 +5,8 @@ export interface ConfirmDepositRequest {
   from: string
   depositAddress: string
   amount: string
+  token: string
   signature?: string
-  token?: string
 }
 
 export interface ConfirmDepositResponse {
