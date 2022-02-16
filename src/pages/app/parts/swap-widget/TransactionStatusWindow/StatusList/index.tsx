@@ -35,7 +35,11 @@ import useInterval from "hooks/useInterval"
 import { confirmDeposit } from "api/ConfirmDepositAPI"
 import { ConfirmDepositRequest } from "interface/confirmDepositTypes"
 import { broadcastCosmosTx } from "utils/cosmos"
-import { BroadcastTxResponse, isBroadcastTxSuccess } from "@cosmjs/stargate"
+import {
+  BroadcastTxResponse,
+  isBroadcastTxFailure,
+  isBroadcastTxSuccess,
+} from "@cosmjs/stargate"
 import { getAxelarTxLink } from "utils/explorer"
 import { ethers } from "ethers"
 
@@ -167,11 +171,6 @@ const StatusList = (props: IStatusListProps) => {
       const currentTimestamp = new Date().getTime()
       const shouldShowConfirmButton =
         currentTimestamp - depositTimestamp > MS_DELAY_SHOW_CONFIRM_BTN
-      console.log(
-        "seconds until show confirm",
-        (currentTimestamp - depositTimestamp) / 1000,
-        shouldShowConfirmButton
-      )
       setShowConfirmButton(shouldShowConfirmButton)
     }
   }, 3000)
@@ -222,7 +221,6 @@ const StatusList = (props: IStatusListProps) => {
         .toString(),
       token: depositAddress.common_key,
     }
-    console.log("req", req)
     try {
       const base64SignedTx = await confirmDeposit(req)
       const tx = await broadcastCosmosTx(base64SignedTx)
@@ -276,11 +274,28 @@ const StatusList = (props: IStatusListProps) => {
       if (showConfirmButton) {
         return (
           <div>
-            Your deposit has not been confirmed yet.{" "}
-            <button onClick={confirmDepositTransaction}>
-              {confirming ? "Confirming..." : "Force Confirm"}
-            </button>
+            <p style={{ color: "black" }}>
+              Your deposit has not been confirmed yet.{" "}
+            </p>
+            <div style={{ display: "flex" }}>
+              <button
+                onClick={confirmDepositTransaction}
+                style={{ fontSize: 12, borderRadius: "4px", cursor: "pointer" }}
+              >
+                {confirming ? "Confirming..." : "Force Confirm"}
+              </button>
+            </div>
           </div>
+        )
+      } else if (confirmedTx && isBroadcastTxFailure(confirmedTx)) {
+        return (
+          <a
+            style={{ color: "red", marginLeft: "8px" }}
+            href={getAxelarTxLink(confirmedTx?.transactionHash || "")}
+            rel="noreferrer"
+          >
+            Confirm tx failed
+          </a>
         )
       } else {
         return `Detecting your deposit on ${sourceChain?.chainName}.`
