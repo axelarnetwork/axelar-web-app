@@ -350,7 +350,7 @@ export const DepositFromWallet = ({
               <InputForm
                   name={"destination-address-input"}
                   value={amountToDeposit}
-                  placeholder={""}
+                  placeholder={"Amount to deposit"}
                   type={"number"}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setAmountToDeposit(e.target.value)

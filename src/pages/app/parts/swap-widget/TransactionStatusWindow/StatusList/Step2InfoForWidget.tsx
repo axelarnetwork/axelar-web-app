@@ -70,7 +70,7 @@ const Step2InfoForWidget = ({
             {sourceAsset?.assetSymbol}
             <LoadingWidget cb={reloadBalance} />
           </span>)}
-          {generateLine("Deposit Amount:", <DepositFromWallet
+          {generateLine("", <DepositFromWallet
               isWalletConnected={isWalletConnected}
               walletBalance={walletBalance}
               reloadBalance={reloadBalance}
