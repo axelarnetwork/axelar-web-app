@@ -261,6 +261,15 @@ const StatusList = (props: IStatusListProps) => {
             {destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 3}{" "}
             min.
           </div>
+          {confirmedTx && isBroadcastTxSuccess(confirmedTx) && (
+            <a
+              href={getAxelarTxLink(confirmedTx.transactionHash)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Tx
+            </a>
+          )}
         </div>
       )
     } else {
@@ -274,19 +283,7 @@ const StatusList = (props: IStatusListProps) => {
           </div>
         )
       } else {
-        if (confirmedTx) {
-          return (
-            <a
-              href={getAxelarTxLink(confirmedTx.transactionHash)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Tx
-            </a>
-          )
-        } else {
-          return `Detecting your deposit on ${sourceChain?.chainName}.`
-        }
+        return `Detecting your deposit on ${sourceChain?.chainName}.`
       }
     }
   }
