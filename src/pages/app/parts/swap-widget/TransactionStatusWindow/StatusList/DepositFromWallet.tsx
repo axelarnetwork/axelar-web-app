@@ -396,7 +396,7 @@ const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo
   if (disableTransferButton || !amt) return null;
 
   return <div style={{ fontSize: `0.9em` }}>
-    Make sure this and your {sourceChain?.module === "axelarnet" ? "Keplr" : "Metamask"} confirmation screen are correct before sending a deposit. Funds will get lost otherwise.
+    Confirm all of the above info before sending funds. Funds will be lost otherwise.
   </div>
 
 }

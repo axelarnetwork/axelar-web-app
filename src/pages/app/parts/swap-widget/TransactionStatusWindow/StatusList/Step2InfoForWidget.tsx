@@ -59,14 +59,14 @@ const Step2InfoForWidget = ({
       <br />
       {generateLine("Transfer Fee: ", `${sourceChain?.txFeeInPercent}%`)}
       {minDepositAmt && generateLine("Min Transfer Amount: ", `${minDepositAmt} ${sourceAsset?.assetSymbol }`)}
-      {generateLine("Wait Time: ", `Up to ~${sourceChain?.estimatedWaitTime}min`)}
+      {generateLine("Wait Time: ", `~${sourceChain?.estimatedWaitTime}min`)}
       {generateLine("Deposit Address: ", getShortenedWord(depositAddress?.assetAddress))}
 
       {isWalletConnected && <div>
         {walletAddress?.length > 0 && <>
           {generateLine("Wallet Address: ", getShortenedWord(walletAddress, 5))}
           {generateLine("Balance: ", <span>
-            {walletBalance}{" "}
+            {+(walletBalance)?.toFixed(2)}{" "}
             {sourceAsset?.assetSymbol}
             <LoadingWidget cb={reloadBalance} />
           </span>)}
