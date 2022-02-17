@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import { ethers } from "ethers"
+import styled                             from "styled-components"
+import {AssetInfo, ChainInfo}             from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import downstreamServices from "config/downstreamServices"
@@ -16,15 +17,13 @@ import {
 } from "hooks/wallet/MetaMaskWallet"
 import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import {
-  SourceDepositAddress,
   SrcChainDepositTxHash,
   TransactionTraceId,
-} from "state/TransactionStatus"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
-import { isValidDecimal } from "utils/isValidDecimal"
-import LoadingWidget from "components/Widgets/LoadingWidget"
-import { getShortenedWord } from "utils/wordShortener"
-import BoldSpan from "components/StyleComponents/BoldSpan"
+}                                                         from "state/TransactionStatus"
+import { getMinDepositAmount }                            from "utils/getMinDepositAmount"
+import { isValidDecimal }                                 from "utils/isValidDecimal"
+import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
+import {ImprovedTooltip}                                  from "components/Widgets/ImprovedTooltip";
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -37,20 +36,20 @@ interface DepositFromWalletProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  depositAddress: AssetInfo
 }
 export const DepositFromWallet = ({
   isWalletConnected,
   walletBalance,
-  reloadBalance,
   walletAddress,
+  depositAddress,
 }: DepositFromWalletProps) => {
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChainSelection = useRecoilValue(
     ChainSelection(DESTINATION_TOKEN_KEY)
   )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
-  const [amountToDeposit, setAmountToDeposit] = useState(null)
-  const depositAddress = useRecoilValue(SourceDepositAddress)
+  const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [minDepositAmt] = useState(
     getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
   )
@@ -112,13 +111,15 @@ export const DepositFromWallet = ({
       if (sourceChainName === "axelar") {
         results = await wallet.transferTokens(
           depositAddress?.assetAddress as string,
-          (amountToDeposit || 0).toString()
+          amountToDeposit || "0"
         )
       } else {
         results = await wallet.ibcTransferFromTerra(
           depositAddress?.assetAddress as string,
           {
-            amount: ((amountToDeposit || 0) * 1000000).toString(),
+            amount: ethers.utils
+              .parseUnits(amountToDeposit, selectedSourceAsset?.decimals || 6)
+              .toString(),
             denom: selectedSourceAsset?.common_key?.toString() as string,
           }
         )
@@ -235,6 +236,47 @@ export const DepositFromWallet = ({
     ) : null
   }
 
+  const handleMaxClick = () => {
+    const highGasPrice = 0.2
+    if (
+      sourceChainSelection?.chainName?.toLowerCase() === "terra" &&
+      selectedSourceAsset?.common_key === "uluna"
+    ) {
+      const fee = parseFloat(
+        ethers.utils.formatUnits(
+          highGasPrice * parseInt(TERRA_IBC_GAS_LIMIT),
+          selectedSourceAsset?.decimals || 6
+        )
+      )
+      const maxWithFee = walletBalance - fee
+      setAmountToDeposit(maxWithFee.toString())
+    } else if (
+      sourceChainSelection?.chainName?.toLowerCase() === "axelar" &&
+      selectedSourceAsset?.common_key === "uaxl"
+    ) {
+      const fee = parseFloat(
+        ethers.utils.formatUnits(
+          highGasPrice * parseInt(AXELAR_TRANSFER_GAS_LIMIT),
+          selectedSourceAsset?.decimals || 6
+        )
+      )
+      const maxWithFee = walletBalance - fee
+      setAmountToDeposit(maxWithFee.toString())
+    } else {
+      setAmountToDeposit(walletBalance.toString())
+    }
+  }
+  const getMaxButtonText = () => {
+    const terraNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "terra" && selectedSourceAsset?.common_key === "uluna";
+    const axelarNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "axelar" && selectedSourceAsset?.common_key === "uaxl";
+    if (terraNativeToken || axelarNativeToken) {
+      const text: string = "Will deduct a portion for expected gas fees"
+      return <ImprovedTooltip anchorContent={<div>max</div>} tooltipText={text} tooltipAltText={text} />
+    }
+    return "max"
+
+  }
+
   if (sentSuccess)
     return (
       <>
@@ -255,16 +297,16 @@ export const DepositFromWallet = ({
 
   const disableTransferButton: boolean =
     !amountToDeposit ||
-    amountToDeposit < minDepositAmt ||
+    parseFloat(amountToDeposit) < minDepositAmt ||
     !hasEnoughInWalletForMin ||
-    amountToDeposit > walletBalance ||
-    !isValidDecimal(amountToDeposit as string)
+    parseFloat(amountToDeposit) > walletBalance ||
+    !isValidDecimal(amountToDeposit.toString()) ||
+    (buttonText || "").toLowerCase().includes("sending")
 
   const getDisabledText = (disableTransferButton: boolean) => {
     if (!disableTransferButton)
       return (
         <span>
-          <br />
           <br />
         </span>
       )
@@ -273,7 +315,7 @@ export const DepositFromWallet = ({
 
     if (
       !hasEnoughInWalletForMin ||
-      (amountToDeposit && amountToDeposit > walletBalance)
+      (amountToDeposit && parseFloat(amountToDeposit) > walletBalance)
     )
       text = "Not enough funds in this account"
     else if (!amountToDeposit)
@@ -283,13 +325,14 @@ export const DepositFromWallet = ({
           <br />
         </span>
       )
-    else if (amountToDeposit < minDepositAmt)
+    else if (parseFloat(amountToDeposit) < minDepositAmt)
       text = "Amount is below the minimum!"
-    else if (!isValidDecimal(amountToDeposit as string))
+    else if (!isValidDecimal(amountToDeposit.toString()))
       text = "Too many decimal points"
 
     return (
       <div>
+        <br />
         {text}
         <br />
         <br />
@@ -298,38 +341,44 @@ export const DepositFromWallet = ({
   }
 
   return (
-    <div style={{ width: `95%` }}>
+    <div>
       <br />
       {isWalletConnected ? (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <FlexRow>
-            <InputForm
-              name={"destination-address-input"}
-              value={amountToDeposit || ""}
-              placeholder={"Enter amount to deposit"}
-              type={"number"}
-              onChange={(e: any) => setAmountToDeposit(e.target.value)}
-            />
+            <div style={{ width: `100%`, position: `relative`}}>
+              <InputForm
+                  name={"destination-address-input"}
+                  value={amountToDeposit}
+                  placeholder={"Amount to deposit"}
+                  type={"number"}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setAmountToDeposit(e.target.value)
+                  }
+              />
+              {walletBalance > 0 && (
+                  <div
+                      style={{
+                        position: `absolute`,
+                        color: "grey",
+                        right: `0.5em`,
+                        bottom: `0.25em`,
+                        fontSize: `0.8em`,
+                        cursor: "pointer",
+                      }}
+                      onClick={handleMaxClick}
+                  >
+                    {getMaxButtonText()}
+                  </div>
+              )}
+            </div>
             <div style={{ marginLeft: `0.5em` }}>
               {selectedSourceAsset?.assetSymbol}
             </div>
           </FlexRow>
-          <br />
-          <div>
-            {walletAddress?.length > 0 && (
-              <>
-                <BoldSpan>Connected Wallet:</BoldSpan>{" "}
-                {getShortenedWord(walletAddress, 4)}
-              </>
-            )}
-            <div>
-              <BoldSpan>Balance:</BoldSpan> {walletBalance}{" "}
-              {selectedSourceAsset?.assetSymbol}
-              <LoadingWidget cb={reloadBalance} />
-            </div>
-          </div>
-          <br />
           {getDisabledText(disableTransferButton)}
+          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, amountToDeposit)}
+          <br />
           <TransferButton
             dim={disableTransferButton}
             disabled={disableTransferButton}
@@ -341,4 +390,13 @@ export const DepositFromWallet = ({
       ) : null}
     </div>
   )
+}
+
+const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, amt: string) => {
+  if (disableTransferButton || !amt) return null;
+
+  return <div style={{ fontSize: `0.9em` }}>
+    Confirm all of the above info before sending funds. Funds will be lost otherwise.
+  </div>
+
 }

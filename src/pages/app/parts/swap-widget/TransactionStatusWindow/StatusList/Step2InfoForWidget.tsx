@@ -1,12 +1,14 @@
-import { useRecoilValue } from "recoil"
-import styled from "styled-components"
-import BoldSpan from "components/StyleComponents/BoldSpan"
+import { useRecoilValue }                          from "recoil"
+import styled                                      from "styled-components"
+import BoldSpan                                    from "components/StyleComponents/BoldSpan"
+import LoadingWidget                               from "components/Widgets/LoadingWidget";
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import { ChainSelection, SourceAsset } from "state/ChainSelection"
-import { SourceDepositAddress } from "state/TransactionStatus"
-import { getShortenedWord } from "utils/wordShortener"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
-import { DepositFromWallet } from "./DepositFromWallet"
+import { ChainSelection, SourceAsset }             from "state/ChainSelection"
+import { getShortenedWord }                        from "utils/wordShortener"
+import { getMinDepositAmount }                     from "utils/getMinDepositAmount"
+import { DepositFromWallet }                       from "./DepositFromWallet"
+import {AssetInfo}                                 from "@axelar-network/axelarjs-sdk";
+import React                                       from "react";
 
 export const StyledHeader = styled.div`
   position: relative;
@@ -25,15 +27,16 @@ interface Step2InfoForWidgetProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  depositAddress: AssetInfo
 }
 const Step2InfoForWidget = ({
   isWalletConnected,
   walletBalance,
   reloadBalance,
   walletAddress,
+  depositAddress,
 }: Step2InfoForWidgetProps) => {
   const sourceAsset = useRecoilValue(SourceAsset)
-  const depositAddress = useRecoilValue(SourceDepositAddress)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
 
@@ -54,33 +57,28 @@ const Step2InfoForWidget = ({
         <br />
       </StyledHeader>
       <br />
-      {generateLine(
-        "Transfer Fee",
-        `${sourceChain?.txFeeInPercent}% of transferred ${sourceAsset?.assetSymbol}`
-      )}
-      {minDepositAmt &&
-        generateLine(
-          "Minimum Transfer Amount",
-          `Send at least ${minDepositAmt} ${
-            sourceAsset?.assetSymbol || "XX"
-          } to the deposit address ("${getShortenedWord(
-            depositAddress?.assetAddress
-          )}")`
-        )}
-      {generateLine(
-        "Deposit Confirmation Wait Time",
-        `Upwards of ~${sourceChain?.estimatedWaitTime} minutes to confirm your deposit on ${sourceChain?.chainName}`
-      )}
-      {isWalletConnected &&
-        generateLine(
-          "(Optional) Send deposit here!",
-          <DepositFromWallet
-            isWalletConnected={isWalletConnected}
-            walletBalance={walletBalance}
-            reloadBalance={reloadBalance}
-            walletAddress={walletAddress}
-          />
-        )}
+      {generateLine("Transfer Fee: ", `${sourceChain?.txFeeInPercent}%`)}
+      {minDepositAmt && generateLine("Min Transfer Amount: ", `${minDepositAmt} ${sourceAsset?.assetSymbol }`)}
+      {generateLine("Wait Time: ", `~${sourceChain?.estimatedWaitTime}min`)}
+      {generateLine("Deposit Address: ", getShortenedWord(depositAddress?.assetAddress))}
+
+      {isWalletConnected && <div>
+        {walletAddress?.length > 0 && <>
+          {generateLine("Wallet Address: ", getShortenedWord(walletAddress, 5))}
+          {generateLine("Balance: ", <span>
+            {+(walletBalance)?.toFixed(2)}{" "}
+            {sourceAsset?.assetSymbol}
+            <LoadingWidget cb={reloadBalance} />
+          </span>)}
+          {generateLine("", <DepositFromWallet
+              isWalletConnected={isWalletConnected}
+              walletBalance={walletBalance}
+              reloadBalance={reloadBalance}
+              walletAddress={walletAddress}
+              depositAddress={depositAddress}
+          />)}
+        </>}
+      </div>}
       <br />
     </div>
   )
@@ -91,12 +89,12 @@ const generateLine = (
   text: string | JSX.Element,
   addlStyles?: { [key: string]: string }
 ) => {
-  let style = { padding: `0.75em`, fontSize: `0.8em` }
+  let style = { padding: `0.4em 0.75em 0.4em 0.75em`, fontSize: `0.9em` }
   if (addlStyles) style = { ...style, ...addlStyles }
   return (
     <div style={style}>
-      <BoldSpan>{header}</BoldSpan>
-      <div>{text}</div>
+      <BoldSpan>{header} </BoldSpan>
+      <span>{text}</span>
     </div>
   )
 }

@@ -141,6 +141,7 @@ export default function usePostTransactionToBridge() {
         msg.signature = signature
         msg.otc = otc
         msg.publicAddr = publicAddr
+        setDepositAddress(null)
 
         const res: AssetInfoWithTrace =
           await TransferAssetBridgeFacade.transferAssets(

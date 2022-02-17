@@ -1,0 +1,2 @@
+export const TERRA_IBC_GAS_LIMIT = "150000"
+export const AXELAR_TRANSFER_GAS_LIMIT = "150000"
