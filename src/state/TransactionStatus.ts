@@ -69,3 +69,13 @@ export const DidWaitingForDepositTimeout = atom<boolean>({
   key: "DidWaitingForDepositTimeout",
   default: false,
 })
+
+export const DepositTimestamp = atom<number>({
+  key: "DepositTimestamp",
+  default: 0,
+})
+
+export const DepositAmount = atom<string>({
+  key: "DepositAmount",
+  default: "",
+})

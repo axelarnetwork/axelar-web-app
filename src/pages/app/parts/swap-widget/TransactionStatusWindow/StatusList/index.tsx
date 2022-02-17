@@ -1,9 +1,13 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { ChainInfo } from "@axelar-network/axelarjs-sdk"
 import styled from "styled-components"
 import screenConfigs from "config/screenConfigs"
 import { useRecoilValue } from "recoil"
-import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
+import {
+  DELAY_SHOW_CONFIRM_BTN,
+  DESTINATION_TOKEN_KEY,
+  SOURCE_TOKEN_KEY,
+} from "config/consts"
 import downstreamServices from "config/downstreamServices"
 import CopyToClipboard from "components/Widgets/CopyToClipboard"
 import Link from "components/Widgets/Link"
@@ -18,6 +22,8 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
+  DepositAmount,
+  DepositTimestamp,
   IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
@@ -25,6 +31,13 @@ import {
 } from "state/TransactionStatus"
 import { getShortenedWord } from "utils/wordShortener"
 import BigNumber from "decimal.js"
+import useInterval from "hooks/useInterval"
+import { confirmDeposit } from "api/ConfirmDepositAPI"
+import { ConfirmDepositRequest } from "interface/confirmDepositTypes"
+import { broadcastCosmosTx } from "utils/cosmos"
+import { BroadcastTxResponse, isBroadcastTxSuccess } from "@cosmjs/stargate"
+import { getAxelarTxLink } from "utils/explorer"
+import { ethers } from "ethers"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -133,15 +146,35 @@ interface IStatusListProps {
 
 const StatusList = (props: IStatusListProps) => {
   const { activeStep } = props
+  const [showConfirmButton, setShowConfirmButton] = useState(false)
+  const [confirming, setConfirming] = useState(false)
+  const [confirmedTx, setConfirmedTx] = useState<BroadcastTxResponse | null>(
+    null
+  )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
+  const depositTimestamp = useRecoilValue(DepositTimestamp)
+  const depositAmount = useRecoilValue(DepositAmount)
   const destNumConfirm: IConfirmationStatus = useRecoilValue(
     NumberConfirmations(DESTINATION_TOKEN_KEY)
   )
   const destinationAddress = useRecoilValue(DestinationAddress)
   const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash)
+  useInterval(() => {
+    if (depositTimestamp > 0 && !confirmedTx && !showConfirmButton) {
+      const currentTimestamp = new Date().getTime()
+      const shouldShowConfirmButton =
+        currentTimestamp - depositTimestamp > DELAY_SHOW_CONFIRM_BTN
+      console.log(
+        "seconds until show confirm",
+        (currentTimestamp - depositTimestamp) / 1000,
+        shouldShowConfirmButton
+      )
+      setShowConfirmButton(shouldShowConfirmButton)
+    }
+  }, 3000)
 
   const sourceAsset = useRecoilValue(SourceAsset)
   const sourceNumConfirmations = useRecoilValue(
@@ -171,6 +204,92 @@ const StatusList = (props: IStatusListProps) => {
       }
     />
   )
+
+  const confirmDepositTransaction = useCallback(async () => {
+    if (!srcChainDepositHash) return
+    if (!sourceChain?.chainName) return
+    if (!depositAddress?.assetAddress) return
+    if (!depositAddress?.common_key) return
+    if (!depositAmount) return
+
+    setConfirming(true)
+    const req: ConfirmDepositRequest = {
+      hash: srcChainDepositHash,
+      from: sourceChain?.chainName!,
+      depositAddress: depositAddress.assetAddress,
+      amount: ethers.utils
+        .parseUnits(depositAmount, selectedSourceAsset?.decimals || 6)
+        .toString(),
+      token: depositAddress.common_key,
+    }
+    console.log("req", req)
+    try {
+      const base64SignedTx = await confirmDeposit(req)
+      const tx = await broadcastCosmosTx(base64SignedTx)
+      console.log("confirmed tx", tx)
+      setConfirmedTx(tx)
+      setConfirming(false)
+      setShowConfirmButton(false)
+    } catch (e) {
+      console.log(e)
+      setConfirming(false)
+    }
+  }, [
+    depositAddress?.assetAddress,
+    depositAddress?.common_key,
+    depositAmount,
+    selectedSourceAsset?.decimals,
+    sourceChain?.chainName,
+    srcChainDepositHash,
+  ])
+
+  const renderStep3 = () => {
+    if (activeStep >= 3) {
+      return (
+        <div>
+          <div>
+            <BoldSpan>
+              {+amountConfirmedAdjusted.toFixed(2)} {sourceAsset?.assetSymbol}
+            </BoldSpan>{" "}
+            deposit confirmed. Sending
+          </div>
+          <div>
+            <BoldSpan>
+              {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
+            </BoldSpan>{" "}
+            to {destinationChain?.chainName} within the next ~
+            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 3}{" "}
+            min.
+          </div>
+        </div>
+      )
+    } else {
+      if (showConfirmButton) {
+        return (
+          <div>
+            Your deposit has not been confirmed yet.{" "}
+            <button onClick={confirmDepositTransaction}>
+              {confirming ? "Confirming..." : "Force Confirm"}
+            </button>
+          </div>
+        )
+      } else {
+        if (confirmedTx) {
+          return (
+            <a
+              href={getAxelarTxLink(confirmedTx.transactionHash)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Tx
+            </a>
+          )
+        } else {
+          return `Detecting your deposit on ${sourceChain?.chainName}.`
+        }
+      }
+    }
+  }
 
   return (
     <StyledStatusList>
@@ -253,31 +372,7 @@ const StatusList = (props: IStatusListProps) => {
         className={"joyride-status-step-3"}
         step={3}
         activeStep={activeStep}
-        text={
-          activeStep >= 3 ? (
-            <div>
-              <div>
-                <BoldSpan>
-                  {+amountConfirmedAdjusted.toFixed(2)}{" "}
-                  {sourceAsset?.assetSymbol}
-                </BoldSpan>{" "}
-                deposit confirmed. Sending
-              </div>
-              <div>
-                <BoldSpan>
-                  {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
-                </BoldSpan>{" "}
-                to {destinationChain?.chainName} within the next ~
-                {destinationChain?.chainName.toLowerCase() === "ethereum"
-                  ? 60
-                  : 3}{" "}
-                min.
-              </div>
-            </div>
-          ) : (
-            `Detecting your deposit on ${sourceChain?.chainName}.`
-          )
-        }
+        text={renderStep3()}
       />
       <ListItem
         className={"joyride-status-step-4"}
