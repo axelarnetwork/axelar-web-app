@@ -198,7 +198,7 @@ export const SupportWidget = () => {
                 window.open(
                   configs.tokenContracts[
                     process.env.REACT_APP_STAGE as string
-                  ] + "?id=minimum-transfer-amounts",
+                  ] + "#minimum-transfer-amounts",
                   "_blank"
                 )
               }
@@ -213,7 +213,7 @@ export const SupportWidget = () => {
                 window.open(
                   configs.tokenContracts[
                     process.env.REACT_APP_STAGE as string
-                  ] + "?id=transaction-fees",
+                  ] + "#transaction-fees",
                   "_blank"
                 )
               }
