@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import styled                             from "styled-components"
-import {AssetInfo, ChainInfo}             from "@axelar-network/axelarjs-sdk"
+import styled from "styled-components"
+import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import downstreamServices from "config/downstreamServices"
@@ -19,11 +19,11 @@ import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import {
   SrcChainDepositTxHash,
   TransactionTraceId,
-}                                                         from "state/TransactionStatus"
-import { getMinDepositAmount }                            from "utils/getMinDepositAmount"
-import { isValidDecimal }                                 from "utils/isValidDecimal"
+} from "state/TransactionStatus"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
-import {ImprovedTooltip}                                  from "components/Widgets/ImprovedTooltip";
+import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -38,6 +38,7 @@ interface DepositFromWalletProps {
   walletAddress: string
   depositAddress: AssetInfo
 }
+
 export const DepositFromWallet = ({
   isWalletConnected,
   walletBalance,
@@ -267,14 +268,23 @@ export const DepositFromWallet = ({
     }
   }
   const getMaxButtonText = () => {
-    const terraNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "terra" && selectedSourceAsset?.common_key === "uluna";
-    const axelarNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "axelar" && selectedSourceAsset?.common_key === "uaxl";
+    const terraNativeToken: boolean =
+      sourceChainSelection?.chainName.toLowerCase() === "terra" &&
+      selectedSourceAsset?.common_key === "uluna"
+    const axelarNativeToken: boolean =
+      sourceChainSelection?.chainName.toLowerCase() === "axelar" &&
+      selectedSourceAsset?.common_key === "uaxl"
     if (terraNativeToken || axelarNativeToken) {
       const text: string = "Will deduct a portion for expected gas fees"
-      return <ImprovedTooltip anchorContent={<div>max</div>} tooltipText={text} tooltipAltText={text} />
+      return (
+        <ImprovedTooltip
+          anchorContent={<div>max</div>}
+          tooltipText={text}
+          tooltipAltText={text}
+        />
+      )
     }
     return "max"
-
   }
 
   if (sentSuccess)
@@ -346,30 +356,30 @@ export const DepositFromWallet = ({
       {isWalletConnected ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <FlexRow>
-            <div style={{ width: `100%`, position: `relative`}}>
+            <div style={{ width: `100%`, position: `relative` }}>
               <InputForm
-                  name={"destination-address-input"}
-                  value={amountToDeposit}
-                  placeholder={"Amount to deposit"}
-                  type={"number"}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setAmountToDeposit(e.target.value)
-                  }
+                name={"destination-address-input"}
+                value={amountToDeposit}
+                placeholder={"Amount to deposit"}
+                type={"number"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setAmountToDeposit(e.target.value)
+                }
               />
               {walletBalance > 0 && (
-                  <div
-                      style={{
-                        position: `absolute`,
-                        color: "grey",
-                        right: `0.5em`,
-                        bottom: `0.25em`,
-                        fontSize: `0.8em`,
-                        cursor: "pointer",
-                      }}
-                      onClick={handleMaxClick}
-                  >
-                    {getMaxButtonText()}
-                  </div>
+                <div
+                  style={{
+                    position: `absolute`,
+                    color: "grey",
+                    right: `0.5em`,
+                    bottom: `0.25em`,
+                    fontSize: `0.8em`,
+                    cursor: "pointer",
+                  }}
+                  onClick={handleMaxClick}
+                >
+                  {getMaxButtonText()}
+                </div>
               )}
             </div>
             <div style={{ marginLeft: `0.5em` }}>
@@ -377,7 +387,11 @@ export const DepositFromWallet = ({
             </div>
           </FlexRow>
           {getDisabledText(disableTransferButton)}
-          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, amountToDeposit)}
+          {depositTxDetails(
+            disableTransferButton,
+            sourceChainSelection as ChainInfo,
+            amountToDeposit
+          )}
           <br />
           <TransferButton
             dim={disableTransferButton}
@@ -392,11 +406,17 @@ export const DepositFromWallet = ({
   )
 }
 
-const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, amt: string) => {
-  if (disableTransferButton || !amt) return null;
+const depositTxDetails = (
+  disableTransferButton: boolean,
+  sourceChain: ChainInfo,
+  amt: string
+) => {
+  if (disableTransferButton || !amt) return null
 
-  return <div style={{ fontSize: `0.9em` }}>
-    Confirm all of the above info before sending funds. Funds will be lost otherwise.
-  </div>
-
+  return (
+    <div style={{ fontSize: `0.9em` }}>
+      Confirm all of the above info before sending funds. Funds will be lost
+      otherwise.
+    </div>
+  )
 }

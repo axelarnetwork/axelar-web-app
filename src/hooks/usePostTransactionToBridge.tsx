@@ -2,34 +2,21 @@
 This component makes the API call to the SDK
 * */
 
-import { useCallback, useMemo } from "react"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { v4 as uuidv4 } from "uuid"
+import {useCallback, useMemo}                                           from "react"
+import {useRecoilState, useRecoilValue, useSetRecoilState}              from "recoil"
+import {v4 as uuidv4}                                                   from "uuid"
+import {AssetInfo, AssetInfoWithTrace, AssetTransferObject, ChainInfo,} from "@axelar-network/axelarjs-sdk"
+import {TransferAssetBridgeFacade}                                      from "api/TransferAssetBridgeFacade"
+import {DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY}                        from "config/consts"
+import {ChainSelection, DestinationAddress, SourceAsset,}               from "state/ChainSelection"
 import {
-  AssetInfo,
-  AssetInfoWithTrace,
-  AssetTransferObject,
-  ChainInfo,
-} from "@axelar-network/axelarjs-sdk"
-import { TransferAssetBridgeFacade } from "api/TransferAssetBridgeFacade"
-import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import {
-  ChainSelection,
-  DestinationAddress,
-  SourceAsset,
-} from "state/ChainSelection"
-import {
-  ActiveStep,
-  DidWaitingForDepositTimeout,
-  IConfirmationStatus,
-  NumberConfirmations,
-  SourceDepositAddress,
+  ActiveStep, DidWaitingForDepositTimeout, IConfirmationStatus, NumberConfirmations, SourceDepositAddress,
   TransactionTraceId,
-} from "state/TransactionStatus"
-import NotificationHandler from "utils/NotificationHandler"
-import { depositConfirmCbMap } from "./helper"
-import { ShowTransactionStatusWindow } from "../state/ApplicationStatus"
-import usePersonalSignAuthenticate from "./auth/usePersonalSignAuthenticate"
+}                                                                       from "state/TransactionStatus"
+import NotificationHandler                                              from "utils/NotificationHandler"
+import {depositConfirmCbMap}                                            from "./helper"
+import {ShowTransactionStatusWindow}                                    from "../state/ApplicationStatus"
+import usePersonalSignAuthenticate                                      from "./auth/usePersonalSignAuthenticate"
 
 class CustomError {
   private statusCode: number
@@ -40,6 +27,7 @@ class CustomError {
     this.message = message
   }
 }
+
 export default function usePostTransactionToBridge() {
   const [showTransactionStatusWindow, setShowTransactionStatusWindow] =
     useRecoilState(ShowTransactionStatusWindow)
@@ -70,11 +58,7 @@ export default function usePostTransactionToBridge() {
   ) => void = useCallback(
     (status: any, setConfirms: any, traceId: string, source: boolean): void => {
       //only show this message if we got a timeout before the rest of the flow has transpired
-      if (
-        source &&
-        status?.timedOut &&
-        activeStep <= 2
-      ) {
+      if (source && status?.timedOut && activeStep <= 2) {
         const msg = {
           statusCode: 408,
           message:

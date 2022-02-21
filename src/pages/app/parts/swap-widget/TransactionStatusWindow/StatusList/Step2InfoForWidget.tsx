@@ -1,14 +1,14 @@
-import { useRecoilValue }                          from "recoil"
-import styled                                      from "styled-components"
-import BoldSpan                                    from "components/StyleComponents/BoldSpan"
-import LoadingWidget                               from "components/Widgets/LoadingWidget";
+import { useRecoilValue } from "recoil"
+import styled from "styled-components"
+import BoldSpan from "components/StyleComponents/BoldSpan"
+import LoadingWidget from "components/Widgets/LoadingWidget"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import { ChainSelection, SourceAsset }             from "state/ChainSelection"
-import { getShortenedWord }                        from "utils/wordShortener"
-import { getMinDepositAmount }                     from "utils/getMinDepositAmount"
-import { DepositFromWallet }                       from "./DepositFromWallet"
-import {AssetInfo}                                 from "@axelar-network/axelarjs-sdk";
-import React                                       from "react";
+import { ChainSelection, SourceAsset } from "state/ChainSelection"
+import { getShortenedWord } from "utils/wordShortener"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { DepositFromWallet } from "./DepositFromWallet"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import React from "react"
 
 export const StyledHeader = styled.div`
   position: relative;
@@ -29,6 +29,7 @@ interface Step2InfoForWidgetProps {
   walletAddress: string
   depositAddress: AssetInfo
 }
+
 const Step2InfoForWidget = ({
   isWalletConnected,
   walletBalance,
@@ -58,27 +59,46 @@ const Step2InfoForWidget = ({
       </StyledHeader>
       <br />
       {generateLine("Transfer Fee: ", `${sourceChain?.txFeeInPercent}%`)}
-      {minDepositAmt && generateLine("Min Transfer Amount: ", `${minDepositAmt} ${sourceAsset?.assetSymbol }`)}
+      {minDepositAmt &&
+        generateLine(
+          "Min Transfer Amount: ",
+          `${minDepositAmt} ${sourceAsset?.assetSymbol}`
+        )}
       {generateLine("Wait Time: ", `~${sourceChain?.estimatedWaitTime}min`)}
-      {generateLine("Deposit Address: ", getShortenedWord(depositAddress?.assetAddress))}
+      {generateLine(
+        "Deposit Address: ",
+        getShortenedWord(depositAddress?.assetAddress)
+      )}
 
-      {isWalletConnected && <div>
-        {walletAddress?.length > 0 && <>
-          {generateLine("Wallet Address: ", getShortenedWord(walletAddress, 5))}
-          {generateLine("Balance: ", <span>
-            {+(walletBalance)?.toFixed(2)}{" "}
-            {sourceAsset?.assetSymbol}
-            <LoadingWidget cb={reloadBalance} />
-          </span>)}
-          {generateLine("", <DepositFromWallet
-              isWalletConnected={isWalletConnected}
-              walletBalance={walletBalance}
-              reloadBalance={reloadBalance}
-              walletAddress={walletAddress}
-              depositAddress={depositAddress}
-          />)}
-        </>}
-      </div>}
+      {isWalletConnected && (
+        <div>
+          {walletAddress?.length > 0 && (
+            <>
+              {generateLine(
+                "Wallet Address: ",
+                getShortenedWord(walletAddress, 5)
+              )}
+              {generateLine(
+                "Balance: ",
+                <span>
+                  {+walletBalance?.toFixed(2)} {sourceAsset?.assetSymbol}
+                  <LoadingWidget cb={reloadBalance} />
+                </span>
+              )}
+              {generateLine(
+                "",
+                <DepositFromWallet
+                  isWalletConnected={isWalletConnected}
+                  walletBalance={walletBalance}
+                  reloadBalance={reloadBalance}
+                  walletAddress={walletAddress}
+                  depositAddress={depositAddress}
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
       <br />
     </div>
   )

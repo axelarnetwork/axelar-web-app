@@ -1,17 +1,17 @@
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS } from "react-joyride"
 import React, { useState } from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import useResetAllState                      from "hooks/useResetAllState"
+import useResetAllState from "hooks/useResetAllState"
 import {
   DismissWalkThrough,
   MessageShownInCartoon,
   ShowTransactionStatusWindow,
-}                                            from "state/ApplicationStatus"
-import { ActiveStep }                        from "state/TransactionStatus"
-import { BreakIndex, WalkthroughSteps }      from "./WalkthroughSteps"
-import { styles }                            from "./styles"
-import Step2InfoForWidget                    from "pages/app/parts/swap-widget/TransactionStatusWindow/StatusList/Step2InfoForWidget"
-import {AssetInfo}                           from "@axelar-network/axelarjs-sdk";
+} from "state/ApplicationStatus"
+import { ActiveStep } from "state/TransactionStatus"
+import { BreakIndex, WalkthroughSteps } from "./WalkthroughSteps"
+import { styles } from "./styles"
+import Step2InfoForWidget from "pages/app/parts/swap-widget/TransactionStatusWindow/StatusList/Step2InfoForWidget"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 
 const WalkThrough = () => {
   const setShowTransactionStatusWindow = useSetRecoilState(
@@ -51,7 +51,7 @@ const WalkThrough = () => {
       setCurrStepIndex(currStepIndex)
 
       /*controlled transition between UserInputWindow
-			and TransactionStatusWindow*/
+				  and TransactionStatusWindow*/
       if (index === breakIndex) {
         setShouldRun(false)
         setShowTransactionStatusWindow(true)
@@ -73,9 +73,9 @@ const WalkThrough = () => {
           )
 
       /*for the "blue" active buttons on TransactionStatusWindow;
-			there are only four steps in our flow process,
-			so anything greater would cause an out-of-bounds exception
-			* */
+				  there are only four steps in our flow process,
+				  so anything greater would cause an out-of-bounds exception
+				  * */
       setActiveStepOnTxStatusWindow(Math.min(currStepIndex - breakIndex, 4))
     }
 

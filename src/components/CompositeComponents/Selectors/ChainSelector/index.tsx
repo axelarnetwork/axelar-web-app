@@ -48,8 +48,8 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
       ?.assets || []
 
   /*closeAllSearchWindows is a ref method called
-	from the parent component (UserInputWindow/index.tsx)
-	to programmatically close the asset search windows */
+	  from the parent component (UserInputWindow/index.tsx)
+	  to programmatically close the asset search windows */
   useImperativeHandle(ref, () => ({
     closeAllSearchWindows() {
       setShowChainSelectorSearchBox(false)
@@ -81,7 +81,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
         setSelectedChain(supportedChain)
 
         /* if the selected chain is the source token and the chain only
-			has a single asset, select that asset */
+					has a single asset, select that asset */
         if (isSourceChain) {
           supportedChain?.assets?.length === 1
             ? setSourceAsset(supportedChain.assets[0])

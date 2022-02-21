@@ -1,6 +1,7 @@
 class CustomQueueNode {
   public value: any
   public next: CustomQueueNode | null
+
   constructor(value: string) {
     this.value = value
     this.next = null
@@ -10,6 +11,7 @@ class CustomQueueNode {
 class MyQueue {
   private head: CustomQueueNode | null
   private back: CustomQueueNode | null
+
   constructor() {
     this.head = null
     this.back = null

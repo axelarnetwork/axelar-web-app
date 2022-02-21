@@ -13,12 +13,12 @@ const initialState: ChainInfo[] = ImportedChains.filter((chain: Chain) =>
   environment === "mainnet" ? chain.chainInfo.fullySupported : true
 ).map((chain: Chain) => chain.chainInfo)
 
-let bannedAddresses: string[] = []; 
+let bannedAddresses: string[] = []
 
-const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs;
+const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs
 
 for (const v of Object.values(ethersJsConfigs)) {
-  const { tokenAddressMap } = v as EthersJsConfigs;
+  const { tokenAddressMap } = v as EthersJsConfigs
   bannedAddresses = bannedAddresses.concat(Object.values(tokenAddressMap))
 }
 
@@ -32,5 +32,5 @@ export const ChainList = atom<ChainInfo[]>({
 
 export const BannedAddresses = atom<string[]>({
   key: "BannedAddresses",
-  default: bannedAddresses
+  default: bannedAddresses,
 })

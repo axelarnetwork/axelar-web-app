@@ -1,4 +1,4 @@
-import { Switch, Route, BrowserRouter } from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 
 import ProtectedRoute from "./components/CompositeComponents/ProtectedRoute"

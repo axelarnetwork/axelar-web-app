@@ -1,4 +1,9 @@
-import styled, { css } from "styled-components"
+import styled, {css} from "styled-components" /*
+TODO:
+1 - dynamically import supported assets from SDK
+2 - make table reusable component
+3 - clean up formatting
+* */
 
 /*
 TODO:

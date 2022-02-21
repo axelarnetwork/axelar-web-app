@@ -77,9 +77,12 @@ export const LandingPage = () => {
           <div>Satellite is under maintenance.</div>
           <div>
             For latest updates:{" "}
-            <StyledLink href="https://twitter.com/axl_satellite" children={"@axl_satellite"} />
+            <StyledLink
+              href="https://twitter.com/axl_satellite"
+              children={"@axl_satellite"}
+            />
           </div>
-          <br/>
+          <br />
           <div>Back online shortly!</div>
         </div>
       </>

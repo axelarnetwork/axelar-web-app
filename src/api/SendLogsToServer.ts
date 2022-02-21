@@ -2,6 +2,7 @@ import { getConfigs } from "@axelar-network/axelarjs-sdk"
 import axios from "axios"
 
 type messageType = "error" | "info" | "debug"
+
 interface LogMessageObject {
   messageType: messageType
   message: string
@@ -16,6 +17,14 @@ export class SendLogsToServer {
     SendLogsToServer.NODE_SERVER_URL + "/logMessageController"
   private static queuedLogs: []
 
+  public static error(topic: string, message: string, traceId: string) {
+    return SendLogsToServer.baseSend("error", topic, message, traceId)
+  }
+
+  public static info(topic: string, message: string, traceId: string) {
+    return SendLogsToServer.baseSend("info", topic, message, traceId)
+  }
+
   private static async baseSend(
     messageType: messageType,
     topic: string,
@@ -28,11 +37,5 @@ export class SendLogsToServer {
       { headers: { "x-traceid": traceId } }
     )
     return res
-  }
-  public static error(topic: string, message: string, traceId: string) {
-    return SendLogsToServer.baseSend("error", topic, message, traceId)
-  }
-  public static info(topic: string, message: string, traceId: string) {
-    return SendLogsToServer.baseSend("info", topic, message, traceId)
   }
 }

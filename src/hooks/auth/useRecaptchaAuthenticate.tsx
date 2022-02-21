@@ -2,7 +2,6 @@ import { RefObject, useCallback, useEffect, useState } from "react"
 import downstreamServices from "config/downstreamServices"
 import { useRecoilState } from "recoil"
 import { IsRecaptchaAuthenticated } from "state/TransactionStatus"
-import { SendLogsToServer } from "../../api/SendLogsToServer"
 
 declare const grecaptcha: any
 

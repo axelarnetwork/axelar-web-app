@@ -175,18 +175,14 @@ const UserInputWindow = ({
         />
       )
     if (destAddr && bannedAddresses.includes(destAddr))
-      return (
-        <ValidationErrorWidget
-          text={`Cannot send to a Token Contract`}
-        />
-      )
+      return <ValidationErrorWidget text={`Cannot send to a Token Contract`} />
   }, [
     sourceChainSelection,
     destChainSelection,
     selectedSourceAsset,
     isValidDestinationAddress,
     bannedAddresses,
-    destAddr
+    destAddr,
   ])
 
   const enableSubmitBtn =
@@ -194,8 +190,9 @@ const UserInputWindow = ({
     destChainSelection &&
     sourceChainSelection.chainName !== destChainSelection.chainName &&
     selectedSourceAsset &&
-    isValidDestinationAddress
-    && (destAddr && !bannedAddresses.includes(destAddr))
+    isValidDestinationAddress &&
+    destAddr &&
+    !bannedAddresses.includes(destAddr)
 
   const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
     e.stopPropagation()
@@ -221,7 +218,7 @@ const UserInputWindow = ({
   }
 
   /*closeAllSearchWindows is a method inside ChainSelector children called
-	to programmatically close the asset search windows, i.e. when TopFlowsSelectorWidget is made */
+	  to programmatically close the asset search windows, i.e. when TopFlowsSelectorWidget is made */
   const closeAllSearchWindows = () => {
     ;(srcChainComponentRef?.current as any)?.closeAllSearchWindows()
     ;(destChainComponentRef?.current as any)?.closeAllSearchWindows()
