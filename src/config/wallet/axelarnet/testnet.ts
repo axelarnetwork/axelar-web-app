@@ -43,7 +43,7 @@ const terraChainInfo: ChainInfo = {
   features: ["stargate", "no-legacy-stdTx", "ibc-transfer"],
 }
 
-const AXELAR_CHAIN_ID: string = "axelar-testnet-lisbon-2"
+const AXELAR_CHAIN_ID: string = "axelar-testnet-lisbon-3"
 const AXELAR_RPC: string = process.env.REACT_APP_AXELAR_RPC as string
 const AXELAR_REST = process.env.REACT_APP_AXELAR_LCD as string
 const AXELAR_CHANNEL_MAP = {
@@ -53,7 +53,7 @@ const axelarChainInfo: ChainInfo = {
   rpc: AXELAR_RPC,
   rest: AXELAR_REST,
   chainId: AXELAR_CHAIN_ID,
-  chainName: "Axelar Lisbon-2",
+  chainName: "Axelar Lisb 3",
   stakeCurrency: {
     coinDenom: "AXL",
     coinMinimalDenom: "uaxl",
@@ -94,8 +94,17 @@ export const terra: KeplrWalletChainConfig = {
   channelMap: TERRA_CHANNEL_MAP,
 }
 
+export const osmosis: KeplrWalletChainConfig = {
+  restEndpoint: "",
+  rpcEndpoint: "",
+  chainId: "osmosis-1",
+  chainInfo: {} as any,
+  channelMap: {} as any,
+}
+
 export const allChains = {
   axelar,
+  osmosis,
   terra,
 }
 export default allChains
