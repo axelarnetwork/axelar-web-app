@@ -21,7 +21,6 @@ import {
   TransactionTraceId,
   DepositAmount,
   DepositTimestamp,
-  SourceDepositAddress,
 } from "state/TransactionStatus"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
@@ -53,7 +52,7 @@ export const DepositFromWallet = ({
   )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
-  const [depositAmount, setDepositAmount] = useRecoilState(DepositAmount)
+  const [, setDepositAmount] = useRecoilState(DepositAmount)
   const [minDepositAmt] = useState(
     getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
   )
@@ -66,8 +65,7 @@ export const DepositFromWallet = ({
   const [numConfirmations, setNumConfirmations] = useState(0)
   const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true)
   const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
-  const [_depositedTimestamp, setDepositTimestamp] =
-    useRecoilState(DepositTimestamp)
+  const [, setDepositTimestamp] = useRecoilState(DepositTimestamp)
   const transactionTraceId = useRecoilValue(TransactionTraceId)
 
   useEffect(() => {
