@@ -4,7 +4,7 @@ import styled from "styled-components"
 import screenConfigs from "config/screenConfigs"
 import { useRecoilValue } from "recoil"
 import {
-  MS_DELAY_SHOW_CONFIRM_BTN,
+  MS_UNTIL_CONFIRM_BTN_VISIBLE,
   DESTINATION_TOKEN_KEY,
   SOURCE_TOKEN_KEY,
 } from "config/consts"
@@ -170,7 +170,7 @@ const StatusList = (props: IStatusListProps) => {
     if (depositTimestamp > 0 && !confirmedTx && !showConfirmButton) {
       const currentTimestamp = new Date().getTime()
       const shouldShowConfirmButton =
-        currentTimestamp - depositTimestamp > MS_DELAY_SHOW_CONFIRM_BTN
+        currentTimestamp - depositTimestamp > MS_UNTIL_CONFIRM_BTN_VISIBLE
       setShowConfirmButton(shouldShowConfirmButton)
     }
   }, 3000)
