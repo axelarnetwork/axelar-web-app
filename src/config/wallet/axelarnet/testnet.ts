@@ -53,7 +53,7 @@ const axelarChainInfo: ChainInfo = {
   rpc: AXELAR_RPC,
   rest: AXELAR_REST,
   chainId: AXELAR_CHAIN_ID,
-  chainName: "Axelar Lisb 3",
+  chainName: "Axelar Lisbon 3",
   stakeCurrency: {
     coinDenom: "AXL",
     coinMinimalDenom: "uaxl",
