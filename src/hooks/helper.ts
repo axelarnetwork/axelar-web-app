@@ -1,11 +1,10 @@
 import { Nullable } from "../interface/Nullable"
-import { BlockCypherResponse } from "@axelar-network/axelarjs-sdk/dist/chains/Bitcoin/WaitingService"
 
 export const depositConfirmCbMap: {
   [chainSymbol: string]: (param: any) => Nullable<number>
 } = {}
 
-depositConfirmCbMap.btc = (status: BlockCypherResponse): Nullable<number> => {
+depositConfirmCbMap.btc = (status: any): Nullable<number> => {
   console.log("status+++++", status)
 
   let numberConfirmations: Nullable<number> = null

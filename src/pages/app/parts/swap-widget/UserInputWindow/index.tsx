@@ -211,11 +211,7 @@ const UserInputWindow = ({
     const isEvm: boolean = destinationChain.module === "evm"
     wallet = isEvm
       ? new MetaMaskWallet(destinationChain.chainName.toLowerCase())
-      : new KeplrWallet(
-          destinationChain.chainName.toLowerCase() === "terra"
-            ? "terra"
-            : "axelar"
-        )
+      : new KeplrWallet(destinationChain.chainName.toLowerCase())
     if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet()
     wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
   }
