@@ -278,18 +278,12 @@ const StatusList = (props: IStatusListProps) => {
               It's taking a while to confirm your deposit...{" "}
             </p>
             <div style={{ display: "flex" }}>
-              <button
+              <HelperWidget
                 onClick={confirmDepositTransaction}
-                disabled={confirming}
-                style={{
-                  fontSize: 12,
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  opacity: confirming ? 0.7 : 1,
-                }}
+                style={{ opacity: confirming ? 0.7 : 1 }}
               >
                 {confirming ? "Confirming..." : "Force Confirm"}
-              </button>
+              </HelperWidget>
             </div>
           </div>
         )
