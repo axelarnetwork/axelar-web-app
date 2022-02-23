@@ -6,7 +6,7 @@ const OSMOSIS_CHAIN_ID: string = "osmo-test-3"
 const OSMOSIS_RPC: string = "https://testnet-rpc.osmosis.zone"
 const OSMOSIS_REST = "https://testnet-rest.osmosis.zone"
 const OSMOSIS_CHANNEL_MAP = {
-  axelar: "channel-198",
+  axelar: "channel-185",
 }
 
 const osmosisChainInfo: ChainInfo = {
