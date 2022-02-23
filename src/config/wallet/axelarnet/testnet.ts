@@ -2,6 +2,64 @@ import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
 
+const OSMOSIS_CHAIN_ID: string = "osmo-test-3"
+const OSMOSIS_RPC: string = "https://testnet-rpc.osmosis.zone"
+const OSMOSIS_REST = "https://testnet-rest.osmosis.zone"
+const OSMOSIS_CHANNEL_MAP = {
+  axelar: "channel-198",
+}
+
+const osmosisChainInfo: ChainInfo = {
+  rpc: OSMOSIS_RPC,
+  rest: OSMOSIS_REST,
+  chainId: OSMOSIS_CHAIN_ID,
+  chainName: "Osmosis",
+  stakeCurrency: {
+    coinDenom: "OSMO",
+    coinMinimalDenom: "uosmo",
+    coinDecimals: 6,
+    coinGeckoId: "osmosis",
+    coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+  },
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: Bech32Address.defaultBech32Config("osmo"),
+  currencies: [
+    {
+      coinDenom: "OSMO",
+      coinMinimalDenom: "uosmo",
+      coinDecimals: 6,
+      coinGeckoId: "osmosis",
+      coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+    },
+    {
+      coinDenom: "ION",
+      coinMinimalDenom: "uion",
+      coinDecimals: 6,
+      coinGeckoId: "ion",
+      coinImageUrl:
+        "https://dhj8dql1kzq2v.cloudfront.net/white/osmosis-ion.png",
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "OSMO",
+      coinMinimalDenom: "uosmo",
+      coinDecimals: 6,
+      coinGeckoId: "osmosis",
+      coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+    },
+  ],
+  coinType: 118,
+  gasPriceStep: {
+    low: 0,
+    average: 0,
+    high: 0.025,
+  },
+  features: ["stargate", "ibc-transfer", "no-legacy-stdTx", "ibc-go"]
+}
+
 const TERRA_CHAIN_ID: string = "bombay-12"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
 const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string
@@ -95,11 +153,11 @@ export const terra: KeplrWalletChainConfig = {
 }
 
 export const osmosis: KeplrWalletChainConfig = {
-  restEndpoint: "",
-  rpcEndpoint: "",
-  chainId: "osmosis-1",
-  chainInfo: {} as any,
-  channelMap: {} as any,
+  restEndpoint: OSMOSIS_REST,
+  rpcEndpoint: OSMOSIS_RPC,
+  chainId: OSMOSIS_CHAIN_ID,
+  chainInfo: osmosisChainInfo,
+  channelMap: OSMOSIS_CHANNEL_MAP,
 }
 
 export const allChains = {
