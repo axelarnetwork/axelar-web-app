@@ -275,12 +275,18 @@ const StatusList = (props: IStatusListProps) => {
         return (
           <div>
             <p style={{ color: "black" }}>
-              Your deposit has not been confirmed yet.{" "}
+              It's taking a while to confirm your deposit...{" "}
             </p>
             <div style={{ display: "flex" }}>
               <button
                 onClick={confirmDepositTransaction}
-                style={{ fontSize: 12, borderRadius: "4px", cursor: "pointer" }}
+                disabled={confirming}
+                style={{
+                  fontSize: 12,
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  opacity: confirming ? 0.7 : 1,
+                }}
               >
                 {confirming ? "Confirming..." : "Force Confirm"}
               </button>
@@ -289,13 +295,16 @@ const StatusList = (props: IStatusListProps) => {
         )
       } else if (confirmedTx && isBroadcastTxFailure(confirmedTx)) {
         return (
-          <a
-            style={{ color: "red", marginLeft: "8px" }}
-            href={getAxelarTxLink(confirmedTx?.transactionHash || "")}
-            rel="noreferrer"
-          >
-            Confirm tx failed
-          </a>
+          <div>
+            <a
+              style={{ color: "rgb(252,68,68)" }}
+              href={getAxelarTxLink(confirmedTx?.transactionHash || "")}
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              Confirm tx failed
+            </a>
+          </div>
         )
       } else {
         return `Detecting your deposit on ${sourceChain?.chainName}.`
