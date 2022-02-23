@@ -13,7 +13,7 @@ const osmosisChainInfo: ChainInfo = {
   rpc: OSMOSIS_RPC,
   rest: OSMOSIS_REST,
   chainId: OSMOSIS_CHAIN_ID,
-  chainName: "Osmosis",
+  chainName: "Osmosis Testnet",
   stakeCurrency: {
     coinDenom: "OSMO",
     coinMinimalDenom: "uosmo",
