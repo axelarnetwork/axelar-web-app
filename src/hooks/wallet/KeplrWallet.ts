@@ -22,7 +22,7 @@ export class KeplrWallet implements WalletInterface {
   public CHAIN_INFO: ChainInfo
   public CONFIG_FOR_CHAIN: KeplrWalletChainConfig
 
-  public constructor(chainName: "axelar" | "terra") {
+  public constructor(chainName: string) {
     const configs =
       require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default
     const configForChain = configs[chainName]
