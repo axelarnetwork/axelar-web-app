@@ -3,10 +3,13 @@ import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
 
 const OSMOSIS_CHAIN_ID: string = "osmo-test-3"
-const OSMOSIS_RPC: string = "https://testnet-rpc.osmosis.zone"
-const OSMOSIS_REST = "https://testnet-rest.osmosis.zone"
+const OSMOSIS_RPC: string = "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
+const OSMOSIS_REST = "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
 const OSMOSIS_CHANNEL_MAP = {
   axelar: "channel-185",
+}
+const OSMOSIS_DENOM_MAP = {
+  uusdc: "ibc/E701835F91D6AA6F6AE93DFA69BD73F2866C5875E1C3C122A17FF5C200AB96CE"
 }
 
 const osmosisChainInfo: ChainInfo = {
@@ -43,7 +46,7 @@ const osmosisChainInfo: ChainInfo = {
     },
     {
       coinDenom: "USDC_fake",
-      coinMinimalDenom: "uusdc",
+      coinMinimalDenom: "ibc/E701835F91D6AA6F6AE93DFA69BD73F2866C5875E1C3C122A17FF5C200AB96CE",
       coinDecimals: 6,
     },
   ],
@@ -168,6 +171,7 @@ export const osmosis: KeplrWalletChainConfig = {
   chainId: OSMOSIS_CHAIN_ID,
   chainInfo: osmosisChainInfo,
   channelMap: OSMOSIS_CHANNEL_MAP,
+  denomMap: OSMOSIS_DENOM_MAP
 }
 
 export const allChains = {
