@@ -41,6 +41,11 @@ const osmosisChainInfo: ChainInfo = {
       coinImageUrl:
         "https://dhj8dql1kzq2v.cloudfront.net/white/osmosis-ion.png",
     },
+    {
+      coinDenom: "USDC_fake",
+      coinMinimalDenom: "uusdc",
+      coinDecimals: 6,
+    },
   ],
   feeCurrencies: [
     {
@@ -127,6 +132,11 @@ const axelarChainInfo: ChainInfo = {
       coinDenom: "UST",
       coinMinimalDenom:
         "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F",
+      coinDecimals: 6,
+    },
+    {
+      coinDenom: "USDC_fake",
+      coinMinimalDenom: "uusdc",
       coinDecimals: 6,
     },
   ],
