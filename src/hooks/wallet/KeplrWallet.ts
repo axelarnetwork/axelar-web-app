@@ -94,7 +94,6 @@ export class KeplrWallet implements WalletInterface {
 
   public async getBalance(denom: string): Promise<number> {
     const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[denom] : denom;
-    console.log("denom in getBalance",denom, await this.getAddress(), derivedDenom);
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
