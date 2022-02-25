@@ -10,11 +10,10 @@ const StyledContainer = styled.div`
   left: 10px;
   box-sizing: border-box;
   padding: 1em 2.5em 1em 1em;
-  background-color: #017cff;
+  background-color: lightgray;
   border-radius: 10px;
   z-index: 100;
-  color: white;
-  font-size: 0.8em;
+  font-size: 0.85em;
 `
 
 const FirstTimeBadge = () => {
@@ -25,13 +24,10 @@ const FirstTimeBadge = () => {
   return (
     <StyledContainer>
       New to Satellite? Run a few flows in our{" "}
-      <StyledLink
-        href="http://bridge.testnet.axelar.dev"
-        style={{ color: `white` }}
-      >
-        <BoldSpan>playground</BoldSpan>
+      <StyledLink href="http://bridge.testnet.axelar.dev">
+        <BoldSpan>testnet</BoldSpan>
       </StyledLink>{" "}
-      (with testnet tokens) until you know what you're doing.{" "}
+      (with test tokens) and experiment here will small amounts first.{" "}
       <div
         style={{
           position: `absolute`,
@@ -41,7 +37,7 @@ const FirstTimeBadge = () => {
         }}
         onClick={() => setDismissBadge(true)}
       >
-        <img src={require(`assets/svg/close-icon.svg`).default} alt={""} />
+        <img src={require(`assets/svg/close-black.svg`).default} alt={""} />
       </div>
     </StyledContainer>
   )
