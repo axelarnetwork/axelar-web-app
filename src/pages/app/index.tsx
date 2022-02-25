@@ -125,7 +125,7 @@ export const AppPage = () => {
     <StyledAppContainer>
       {(showDisclaimerForFAQ || canLightUp) && showDisclaimer && <Disclaimer />}
       {showTransactionHistoryPage && <TransactionHistory />}
-      <FirstTimeBadge />
+      {process.env.REACT_APP_STAGE === "mainnet" && <FirstTimeBadge />}
       <WalkThrough />
       <InfoWidget />
       <PageHeader />
