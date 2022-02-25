@@ -1,5 +1,5 @@
 export const topFlowOptions =
-  process.env.ENVIRONMENT === "mainnet"
+  process.env.REACT_APP_STAGE === "mainnet"
     ? [
         {
           common_key: "uusd",
