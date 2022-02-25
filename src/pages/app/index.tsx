@@ -29,6 +29,7 @@ import SwapWindow from "pages/app/parts/swap-widget"
 import { Disclaimer } from "./parts/disclaimer"
 import { Redirect } from "react-router-dom"
 import { TransactionHistory } from "./parts/tx-history"
+import FirstTimeBadge from "components/CompositeComponents/FirstTimeBadge"
 
 const StyledDialogBox = styled.div`
   height: 50%;
@@ -124,6 +125,7 @@ export const AppPage = () => {
     <StyledAppContainer>
       {(showDisclaimerForFAQ || canLightUp) && showDisclaimer && <Disclaimer />}
       {showTransactionHistoryPage && <TransactionHistory />}
+      <FirstTimeBadge />
       <WalkThrough />
       <InfoWidget />
       <PageHeader />
