@@ -27,6 +27,11 @@ export const SrcChainDepositTxHash = atom<string | null>({
   default: null,
 })
 
+export const HasEnoughDepositConfirmation = atom<boolean>({
+  key: "HasEnoughDepositConfirmation",
+  default: false,
+})
+
 /*
 TODO: NumberConfirmations is (potentially) deprecated
 It had been used to follow the number of confirmations

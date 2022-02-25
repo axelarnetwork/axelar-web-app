@@ -21,6 +21,7 @@ import {
   TransactionTraceId,
   DepositAmount,
   DepositTimestamp,
+  HasEnoughDepositConfirmation,
 } from "state/TransactionStatus"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
@@ -64,6 +65,8 @@ export const DepositFromWallet = ({
   const [sentSuccess, setSentSuccess] = useState(false)
   const [numConfirmations, setNumConfirmations] = useState(0)
   const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true)
+  const [hasEnoughDepositConfirmation, setHasEnoughDepositConfirmation] =
+    useRecoilState(HasEnoughDepositConfirmation)
   const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
   const [, setDepositTimestamp] = useRecoilState(DepositTimestamp)
   const transactionTraceId = useRecoilValue(TransactionTraceId)
@@ -295,6 +298,16 @@ export const DepositFromWallet = ({
     return "max"
   }
 
+  useEffect(() => {
+    if (numConfirmations >= (sourceChainSelection?.confirmLevel as number)) {
+      setHasEnoughDepositConfirmation(true)
+    }
+  }, [
+    numConfirmations,
+    setHasEnoughDepositConfirmation,
+    sourceChainSelection?.confirmLevel,
+  ])
+
   if (sentSuccess)
     return (
       <>
@@ -305,7 +318,7 @@ export const DepositFromWallet = ({
         </div>
         {sourceChainSelection?.module === "evm" ? (
           <div>
-            {numConfirmations >= (sourceChainSelection?.confirmLevel as number)
+            {hasEnoughDepositConfirmation
               ? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations.`
               : `Waiting on (${numConfirmations}/${sourceChainSelection?.confirmLevel}) required confirmations before forwarding to Axelar...`}
           </div>

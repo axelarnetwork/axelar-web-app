@@ -24,6 +24,7 @@ import {
 import {
   DepositAmount,
   DepositTimestamp,
+  HasEnoughDepositConfirmation,
   IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
@@ -161,6 +162,9 @@ const StatusList = (props: IStatusListProps) => {
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const depositTimestamp = useRecoilValue(DepositTimestamp)
   const depositAmount = useRecoilValue(DepositAmount)
+  const hasEnoughDepositConfirmation = useRecoilValue(
+    HasEnoughDepositConfirmation
+  )
   const destNumConfirm: IConfirmationStatus = useRecoilValue(
     NumberConfirmations(DESTINATION_TOKEN_KEY)
   )
@@ -169,9 +173,15 @@ const StatusList = (props: IStatusListProps) => {
   useInterval(() => {
     if (depositTimestamp > 0 && !confirmedTx && !showConfirmButton) {
       const currentTimestamp = new Date().getTime()
-      const shouldShowConfirmButton =
+      let overWaitTime =
         currentTimestamp - depositTimestamp > MS_UNTIL_CONFIRM_BTN_VISIBLE
-      setShowConfirmButton(shouldShowConfirmButton)
+      if (sourceChain?.module === "evm") {
+        if (hasEnoughDepositConfirmation && overWaitTime) {
+          setShowConfirmButton(true)
+        }
+      } else if (overWaitTime) {
+        setShowConfirmButton(true)
+      }
     }
   }, 3000)
 
@@ -224,7 +234,6 @@ const StatusList = (props: IStatusListProps) => {
     try {
       const base64SignedTx = await confirmDeposit(req)
       const tx = await broadcastCosmosTx(base64SignedTx)
-      console.log("confirmed tx", tx)
       setConfirmedTx(tx)
       setConfirming(false)
       setShowConfirmButton(false)
