@@ -80,6 +80,19 @@ const PageHeader = () => {
       </div>
     )
   }
+
+  const pillStyle =
+    process.env.REACT_APP_STAGE === "mainnet"
+      ? { color: `green`, fontSize: `smaller`, fontWeight: `bolder` }
+      : {
+          color: `white`,
+          fontSize: `smaller`,
+          fontWeight: `bolder`,
+          backgroundColor: `red`,
+          padding: `0.2em`,
+          borderRadius: `10px`
+        }
+
   return (
     <StyledPageHeader>
       <HeaderText>
@@ -132,9 +145,7 @@ const PageHeader = () => {
           </div>
         </>
         {HeaderDivider()}
-        <div
-          style={{ color: `green`, fontSize: `smaller`, fontWeight: `bolder` }}
-        >
+        <div style={pillStyle}>
           {(process.env.REACT_APP_STAGE || "").toUpperCase()}
         </div>
         {HeaderDivider()}
