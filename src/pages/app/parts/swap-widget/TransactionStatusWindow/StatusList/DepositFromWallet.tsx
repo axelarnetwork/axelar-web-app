@@ -200,6 +200,7 @@ export const DepositFromWallet = ({
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.txHash)
+      setDepositTimestamp(new Date().getTime())
       const confirmInterval: number =
         sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2
       wallet.confirmEtherTransaction(
