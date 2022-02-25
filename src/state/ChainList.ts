@@ -11,7 +11,16 @@ import {
 const environment = process.env.REACT_APP_STAGE as string
 const initialState: ChainInfo[] = ImportedChains.filter((chain: Chain) =>
   environment === "mainnet" ? chain.chainInfo.fullySupported : true
-).map((chain: Chain) => chain.chainInfo)
+)
+.map((chain: Chain) => {
+  // this is temporary given polygon RPC issues
+  const newChainInfo = chain.chainInfo;
+  if (newChainInfo?.chainName?.toLowerCase() === "polygon") {
+    newChainInfo.confirmLevel = 225
+    newChainInfo.estimatedWaitTime = 15
+  }
+  return newChainInfo
+})
 
 let bannedAddresses: string[] = []; 
 
