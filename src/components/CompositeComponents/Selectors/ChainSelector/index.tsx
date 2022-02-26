@@ -76,7 +76,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
       active: false,
       icon: require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)
         ?.default,
-      disabled: supportedChain?.chainName?.toLowerCase() === "osmosis", // temporary
+      disabled: false,
       onClick: () => {
         setSelectedChain(supportedChain)
 
