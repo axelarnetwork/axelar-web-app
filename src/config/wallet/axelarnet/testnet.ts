@@ -9,7 +9,7 @@ const OSMOSIS_CHANNEL_MAP = {
   axelar: "channel-184",
 }
 const OSMOSIS_DENOM_MAP = {
-  uusdc: "ibc/E701835F91D6AA6F6AE93DFA69BD73F2866C5875E1C3C122A17FF5C200AB96CE"
+  uusdc: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F"
 }
 
 const osmosisChainInfo: ChainInfo = {
@@ -46,7 +46,7 @@ const osmosisChainInfo: ChainInfo = {
     },
     {
       coinDenom: "USDC_fake",
-      coinMinimalDenom: "ibc/E701835F91D6AA6F6AE93DFA69BD73F2866C5875E1C3C122A17FF5C200AB96CE",
+      coinMinimalDenom: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F",
       coinDecimals: 6,
     },
   ],
