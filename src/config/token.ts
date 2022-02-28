@@ -4,6 +4,6 @@ export function getTokenDenomForAxelarChain(token: string) {
   } else if (token === "uusd") {
     return "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F"
   } else {
-    return "uaxl"
+    return token
   }
 }
