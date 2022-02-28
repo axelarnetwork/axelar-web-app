@@ -9,5 +9,7 @@ export const Mask = styled.div<IMaskProps>`
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: 10000;
+  background-color: rgba(0,0,0,0.25);
   ${(props) => (props.centered ? `${StyledCentered}` : null)}
 `
