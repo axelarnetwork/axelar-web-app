@@ -27,6 +27,11 @@ export const SrcChainDepositTxHash = atom<string | null>({
   default: null,
 })
 
+export const HasEnoughDepositConfirmation = atom<boolean>({
+  key: "HasEnoughDepositConfirmation",
+  default: false,
+})
+
 /*
 TODO: NumberConfirmations is (potentially) deprecated
 It had been used to follow the number of confirmations
@@ -68,4 +73,14 @@ export const ActiveStep = atom<number>({
 export const DidWaitingForDepositTimeout = atom<boolean>({
   key: "DidWaitingForDepositTimeout",
   default: false,
+})
+
+export const DepositTimestamp = atom<number>({
+  key: "DepositTimestamp",
+  default: 0,
+})
+
+export const DepositAmount = atom<string>({
+  key: "DepositAmount",
+  default: "",
 })
