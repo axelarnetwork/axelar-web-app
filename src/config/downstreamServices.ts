@@ -60,9 +60,9 @@ const tokenContracts = {
 }
 
 const txConfirmationTool = {
-  local: "https://transaction-confirmation.axelar.dev",
-  devnet: "https://transaction-confirmation.axelar.dev",
-  testnet: "https://transaction-confirmation.axelar.dev",
+  local: "https://testnet.axelarbridger.com/recover",
+  devnet: "https://testnet.axelarbridger.com/recover",
+  testnet: "https://testnet.axelarbridger.com/recover",
   mainnet: "https://transaction-confirmation.axelar.dev",
 }
 
