@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import { useState } from "react"
 import { ChainInfo } from "@axelar-network/axelarjs-sdk"
 import styled from "styled-components"
 import screenConfigs from "config/screenConfigs"
@@ -22,7 +22,6 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
-  DepositAmount,
   DepositTimestamp,
   HasEnoughDepositConfirmation,
   IConfirmationStatus,
@@ -33,16 +32,12 @@ import {
 import { getShortenedWord } from "utils/wordShortener"
 import BigNumber from "decimal.js"
 import useInterval from "hooks/useInterval"
-import { confirmDeposit } from "api/ConfirmDepositAPI"
-import { ConfirmDepositRequest } from "interface/confirmDepositTypes"
-import { broadcastCosmosTx } from "utils/cosmos"
 import {
   BroadcastTxResponse,
   isBroadcastTxFailure,
   isBroadcastTxSuccess,
 } from "@cosmjs/stargate"
 import { getAxelarTxLink } from "utils/explorer"
-import { ethers } from "ethers"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -152,8 +147,8 @@ interface IStatusListProps {
 const StatusList = (props: IStatusListProps) => {
   const { activeStep } = props
   const [showConfirmButton, setShowConfirmButton] = useState(false)
-  const [confirming, setConfirming] = useState(false)
-  const [confirmedTx, setConfirmedTx] = useState<BroadcastTxResponse | null>(
+  const [confirming] = useState(false)
+  const [confirmedTx] = useState<BroadcastTxResponse | null>(
     null
   )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
@@ -161,7 +156,7 @@ const StatusList = (props: IStatusListProps) => {
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const depositTimestamp = useRecoilValue(DepositTimestamp)
-  const depositAmount = useRecoilValue(DepositAmount)
+  // const depositAmount = useRecoilValue(DepositAmount)
   const hasEnoughDepositConfirmation = useRecoilValue(
     HasEnoughDepositConfirmation
   )
@@ -214,41 +209,41 @@ const StatusList = (props: IStatusListProps) => {
     />
   )
 
-  const confirmDepositTransaction = useCallback(async () => {
-    if (!srcChainDepositHash) return
-    if (!sourceChain?.chainName) return
-    if (!depositAddress?.assetAddress) return
-    if (!depositAddress?.common_key) return
-    if (!depositAmount) return
+  // const confirmDepositTransaction = useCallback(async () => {
+  //   if (!srcChainDepositHash) return
+  //   if (!sourceChain?.chainName) return
+  //   if (!depositAddress?.assetAddress) return
+  //   if (!depositAddress?.common_key) return
+  //   if (!depositAmount) return
 
-    setConfirming(true)
-    const req: ConfirmDepositRequest = {
-      hash: srcChainDepositHash,
-      from: sourceChain?.chainName!,
-      depositAddress: depositAddress.assetAddress,
-      amount: ethers.utils
-        .parseUnits(depositAmount, selectedSourceAsset?.decimals || 6)
-        .toString(),
-      token: depositAddress.common_key,
-    }
-    try {
-      const base64SignedTx = await confirmDeposit(req)
-      const tx = await broadcastCosmosTx(base64SignedTx)
-      setConfirmedTx(tx)
-      setConfirming(false)
-      setShowConfirmButton(false)
-    } catch (e) {
-      console.log(e)
-      setConfirming(false)
-    }
-  }, [
-    depositAddress?.assetAddress,
-    depositAddress?.common_key,
-    depositAmount,
-    selectedSourceAsset?.decimals,
-    sourceChain?.chainName,
-    srcChainDepositHash,
-  ])
+  //   setConfirming(true)
+  //   const req: ConfirmDepositRequest = {
+  //     hash: srcChainDepositHash,
+  //     from: sourceChain?.chainName!,
+  //     depositAddress: depositAddress.assetAddress,
+  //     amount: ethers.utils
+  //       .parseUnits(depositAmount, selectedSourceAsset?.decimals || 6)
+  //       .toString(),
+  //     token: depositAddress.common_key,
+  //   }
+  //   try {
+  //     const base64SignedTx = await confirmDeposit(req)
+  //     const tx = await broadcastCosmosTx(base64SignedTx)
+  //     setConfirmedTx(tx)
+  //     setConfirming(false)
+  //     setShowConfirmButton(false)
+  //   } catch (e) {
+  //     console.log(e)
+  //     setConfirming(false)
+  //   }
+  // }, [
+  //   depositAddress?.assetAddress,
+  //   depositAddress?.common_key,
+  //   depositAmount,
+  //   selectedSourceAsset?.decimals,
+  //   sourceChain?.chainName,
+  //   srcChainDepositHash,
+  // ])
 
   const renderStep3 = () => {
     if (activeStep >= 3) {
@@ -284,14 +279,23 @@ const StatusList = (props: IStatusListProps) => {
         return (
           <div>
             <p style={{ color: "black" }}>
-              It's taking a while to confirm your deposit...{" "}
+              This is taking longer than expected...{" "}
             </p>
             <div style={{ display: "flex" }}>
               <HelperWidget
-                onClick={confirmDepositTransaction}
+                onClick={() =>
+                  window.open(
+                    downstreamServices.txConfirmationTool[
+                      process.env.REACT_APP_STAGE as string
+                    ],
+                    "_blank"
+                  )
+                }
                 style={{ opacity: confirming ? 0.7 : 1 }}
               >
-                {confirming ? "Confirming..." : "Force Confirm"}
+                {confirming
+                  ? "Confirming..."
+                  : "Open our Deposit Recovery Tool"}
               </HelperWidget>
             </div>
           </div>
