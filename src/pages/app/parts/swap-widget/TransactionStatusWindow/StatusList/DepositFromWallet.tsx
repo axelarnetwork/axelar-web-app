@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import styled                             from "styled-components"
-import {AssetInfo, ChainInfo}             from "@axelar-network/axelarjs-sdk"
+import styled from "styled-components"
+import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import downstreamServices from "config/downstreamServices"
@@ -19,11 +19,14 @@ import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import {
   SrcChainDepositTxHash,
   TransactionTraceId,
-}                                                         from "state/TransactionStatus"
-import { getMinDepositAmount }                            from "utils/getMinDepositAmount"
-import { isValidDecimal }                                 from "utils/isValidDecimal"
+  DepositAmount,
+  DepositTimestamp,
+  HasEnoughDepositConfirmation,
+} from "state/TransactionStatus"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
-import {ImprovedTooltip}                                  from "components/Widgets/ImprovedTooltip";
+import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -50,6 +53,7 @@ export const DepositFromWallet = ({
   )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
+  const [, setDepositAmount] = useRecoilState(DepositAmount)
   const [minDepositAmt] = useState(
     getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
   )
@@ -61,7 +65,10 @@ export const DepositFromWallet = ({
   const [sentSuccess, setSentSuccess] = useState(false)
   const [numConfirmations, setNumConfirmations] = useState(0)
   const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true)
+  const [hasEnoughDepositConfirmation, setHasEnoughDepositConfirmation] =
+    useRecoilState(HasEnoughDepositConfirmation)
   const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
+  const [, setDepositTimestamp] = useRecoilState(DepositTimestamp)
   const transactionTraceId = useRecoilValue(TransactionTraceId)
 
   useEffect(() => {
@@ -82,12 +89,14 @@ export const DepositFromWallet = ({
     setButtonText("Sending...")
     let results: MetamaskTransferEvent
     try {
+      setDepositAmount(amountToDeposit)
       results = await wallet.transferTokens(
         depositAddress?.assetAddress as string,
         (amountToDeposit || 0).toString(),
         selectedSourceAsset as AssetInfo
       )
     } catch (error: any) {
+      setDepositAmount("")
       results = error
     }
     handleMetamaskTxResult(wallet, results)
@@ -108,6 +117,7 @@ export const DepositFromWallet = ({
 
     let results
     try {
+      setDepositAmount(amountToDeposit)
       if (sourceChainName === "axelar") {
         results = await wallet.transferTokens(
           depositAddress?.assetAddress as string,
@@ -125,6 +135,7 @@ export const DepositFromWallet = ({
         )
       }
     } catch (error: any) {
+      setDepositAmount("")
       results = error
     }
     handleKeplrTxResult(results)
@@ -156,6 +167,7 @@ export const DepositFromWallet = ({
     if (results && results.transactionHash && results.height && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.transactionHash)
+      setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
         "deposit made within app: " + results,
@@ -188,6 +200,7 @@ export const DepositFromWallet = ({
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.txHash)
+      setDepositTimestamp(new Date().getTime())
       const confirmInterval: number =
         sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2
       wallet.confirmEtherTransaction(
@@ -267,15 +280,34 @@ export const DepositFromWallet = ({
     }
   }
   const getMaxButtonText = () => {
-    const terraNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "terra" && selectedSourceAsset?.common_key === "uluna";
-    const axelarNativeToken: boolean = sourceChainSelection?.chainName.toLowerCase() === "axelar" && selectedSourceAsset?.common_key === "uaxl";
+    const terraNativeToken: boolean =
+      sourceChainSelection?.chainName.toLowerCase() === "terra" &&
+      selectedSourceAsset?.common_key === "uluna"
+    const axelarNativeToken: boolean =
+      sourceChainSelection?.chainName.toLowerCase() === "axelar" &&
+      selectedSourceAsset?.common_key === "uaxl"
     if (terraNativeToken || axelarNativeToken) {
       const text: string = "Will deduct a portion for expected gas fees"
-      return <ImprovedTooltip anchorContent={<div>max</div>} tooltipText={text} tooltipAltText={text} />
+      return (
+        <ImprovedTooltip
+          anchorContent={<div>max</div>}
+          tooltipText={text}
+          tooltipAltText={text}
+        />
+      )
     }
     return "max"
-
   }
+
+  useEffect(() => {
+    if (numConfirmations >= (sourceChainSelection?.confirmLevel as number)) {
+      setHasEnoughDepositConfirmation(true)
+    }
+  }, [
+    numConfirmations,
+    setHasEnoughDepositConfirmation,
+    sourceChainSelection?.confirmLevel,
+  ])
 
   if (sentSuccess)
     return (
@@ -287,7 +319,7 @@ export const DepositFromWallet = ({
         </div>
         {sourceChainSelection?.module === "evm" ? (
           <div>
-            {numConfirmations >= (sourceChainSelection?.confirmLevel as number)
+            {hasEnoughDepositConfirmation
               ? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations.`
               : `Waiting on (${numConfirmations}/${sourceChainSelection?.confirmLevel}) required confirmations before forwarding to Axelar...`}
           </div>
@@ -346,30 +378,30 @@ export const DepositFromWallet = ({
       {isWalletConnected ? (
         <div style={{ display: "flex", flexDirection: "column" }}>
           <FlexRow>
-            <div style={{ width: `100%`, position: `relative`}}>
+            <div style={{ width: `100%`, position: `relative` }}>
               <InputForm
-                  name={"destination-address-input"}
-                  value={amountToDeposit}
-                  placeholder={"Amount to deposit"}
-                  type={"number"}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setAmountToDeposit(e.target.value)
-                  }
+                name={"destination-address-input"}
+                value={amountToDeposit}
+                placeholder={"Amount to deposit"}
+                type={"number"}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setAmountToDeposit(e.target.value)
+                }
               />
               {walletBalance > 0 && (
-                  <div
-                      style={{
-                        position: `absolute`,
-                        color: "grey",
-                        right: `0.5em`,
-                        bottom: `0.25em`,
-                        fontSize: `0.8em`,
-                        cursor: "pointer",
-                      }}
-                      onClick={handleMaxClick}
-                  >
-                    {getMaxButtonText()}
-                  </div>
+                <div
+                  style={{
+                    position: `absolute`,
+                    color: "grey",
+                    right: `0.5em`,
+                    bottom: `0.25em`,
+                    fontSize: `0.8em`,
+                    cursor: "pointer",
+                  }}
+                  onClick={handleMaxClick}
+                >
+                  {getMaxButtonText()}
+                </div>
               )}
             </div>
             <div style={{ marginLeft: `0.5em` }}>
@@ -377,7 +409,11 @@ export const DepositFromWallet = ({
             </div>
           </FlexRow>
           {getDisabledText(disableTransferButton)}
-          {depositTxDetails(disableTransferButton, sourceChainSelection as ChainInfo, amountToDeposit)}
+          {depositTxDetails(
+            disableTransferButton,
+            sourceChainSelection as ChainInfo,
+            amountToDeposit
+          )}
           <br />
           <TransferButton
             dim={disableTransferButton}
@@ -392,11 +428,17 @@ export const DepositFromWallet = ({
   )
 }
 
-const depositTxDetails = (disableTransferButton: boolean, sourceChain: ChainInfo, amt: string) => {
-  if (disableTransferButton || !amt) return null;
+const depositTxDetails = (
+  disableTransferButton: boolean,
+  sourceChain: ChainInfo,
+  amt: string
+) => {
+  if (disableTransferButton || !amt) return null
 
-  return <div style={{ fontSize: `0.9em` }}>
-    Confirm all of the above info before sending funds. Funds will be lost otherwise.
-  </div>
-
+  return (
+    <div style={{ fontSize: `0.9em` }}>
+      Confirm all of the above info before sending funds. Funds will be lost
+      otherwise.
+    </div>
+  )
 }

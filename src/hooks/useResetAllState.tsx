@@ -2,6 +2,7 @@ import { useResetRecoilState } from "recoil"
 import useResetUserInputs from "./useResetUserInputs"
 import {
   ActiveStep,
+  DepositTimestamp,
   SrcChainDepositTxHash,
   TransactionTraceId,
 } from "state/TransactionStatus"
@@ -22,6 +23,7 @@ const useResetAllState = () => {
     useResetRecoilState(ShowLargeDisclaimer)
   const resetShowFAQDisclaimer = useResetRecoilState(ShowDisclaimerFromFAQ)
   const resetTxHash = useResetRecoilState(SrcChainDepositTxHash)
+  const resetDepositedTimestamp = useResetRecoilState(DepositTimestamp)
 
   return () => {
     resetUserInputs()
@@ -32,6 +34,7 @@ const useResetAllState = () => {
     resetShowLargeDisclaimerToggle()
     resetShowFAQDisclaimer()
     resetTxHash()
+    resetDepositedTimestamp()
   }
 }
 

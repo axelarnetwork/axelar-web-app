@@ -9,8 +9,12 @@ import {
 } from "@axelar-network/axelarjs-sdk"
 
 const environment = process.env.REACT_APP_STAGE as string
-const initialState: ChainInfo[] = ImportedChains.filter((chain: Chain) =>
+const initialState: ChainInfo[] = ImportedChains
+.filter((chain: Chain) =>
   environment === "mainnet" ? chain.chainInfo.fullySupported : true
+)
+.filter((chain: Chain) =>
+  environment !== "mainnet" && chain?.chainInfo?.chainName?.toLowerCase() !== "fantom" // only temporary, given fantom RPC issues
 )
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues

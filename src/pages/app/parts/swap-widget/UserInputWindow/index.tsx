@@ -118,7 +118,6 @@ const UserInputWindow = ({
     useRecoilState(IsValidDestinationAddress)
   const resetUserInputs = useResetUserInputs()
   const [showValidationErrors, setShowValidationErrors] = useState(false)
-  const [showAuthTooltip, setShowAuthTooltip] = useState(false)
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const srcChainComponentRef = createRef()
@@ -213,11 +212,7 @@ const UserInputWindow = ({
     const isEvm: boolean = destinationChain.module === "evm"
     wallet = isEvm
       ? new MetaMaskWallet(destinationChain.chainName.toLowerCase())
-      : new KeplrWallet(
-          destinationChain.chainName.toLowerCase() === "terra"
-            ? "terra"
-            : "axelar"
-        )
+      : new KeplrWallet(destinationChain.chainName.toLowerCase())
     if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet()
     wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
   }
@@ -315,21 +310,14 @@ const UserInputWindow = ({
           onClick={() => enableSubmitBtn && onInitiateTransfer()}
           onMouseEnter={() => {
             if (!enableSubmitBtn) setShowValidationErrors(true)
-            if (enableSubmitBtn) setShowAuthTooltip(true)
           }}
           onMouseLeave={() => {
             setShowValidationErrors(false)
-            setShowAuthTooltip(false)
           }}
         >
           {isSubmitting ? "Please check Metamask..." : "Connect Wallet & Transfer"}
         </PlainButton>
       </StyledButtonContainer>
-      {showAuthTooltip && (
-        <span style={{ fontSize: `0.7em`, color: `grey` }}>
-          We'll first ask you to verify a one-time code with Metamask.{" "}
-        </span>
-      )}
     </StyledUserInputWindow>
   )
 }
