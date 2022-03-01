@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import styled from "styled-components"
 import {
   AssetInfo,
