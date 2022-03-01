@@ -29,6 +29,9 @@ import SwapWindow from "pages/app/parts/swap-widget"
 import { Disclaimer } from "./parts/disclaimer"
 import { Redirect } from "react-router-dom"
 import { TransactionHistory } from "./parts/tx-history"
+import FirstTimeBadge from "components/CompositeComponents/FirstTimeBadge"
+import { Mask } from "components/Widgets/Mask"
+import { IsTxSubmitting } from "state/TransactionStatus"
 
 const StyledDialogBox = styled.div`
   height: 50%;
@@ -71,6 +74,7 @@ export const AppPage = () => {
   const showDisclaimerForFAQ = useRecoilValue(ShowDisclaimerFromFAQ)
   const showTransactionHistoryPage = useRecoilValue(ShowTransactionHistoryPage)
   const [underMaintenance] = useState(process.env.REACT_APP_UNDER_MAINTENANCE)
+  const isSubmitting = useRecoilValue(IsTxSubmitting)
   const [hasAcknowledgedTerra, setHasAcknowledgedTerra] = useRecoilState(
     HasAcknowledgedTerraReinstall
   )
@@ -124,8 +128,10 @@ export const AppPage = () => {
     <StyledAppContainer>
       {(showDisclaimerForFAQ || canLightUp) && showDisclaimer && <Disclaimer />}
       {showTransactionHistoryPage && <TransactionHistory />}
+      {process.env.REACT_APP_STAGE === "mainnet" && <FirstTimeBadge />}
       <WalkThrough />
       <InfoWidget />
+      {isSubmitting && <Mask />}
       <PageHeader />
       {isRecaptchaSet && <SwapWindow />}
       <PageFooter />

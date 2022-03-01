@@ -60,6 +60,11 @@ export const IsRecaptchaAuthenticated = atom<boolean>({
   default: true,
 })
 
+export const IsTxSubmitting = atom<boolean>({
+  key: "IsTxSubmitting",
+  default: false,
+})
+
 export const IsBlockchainAuthenticated = atom<boolean>({
   key: "IsBlockchainAuthenticated",
   default: true,

@@ -16,7 +16,15 @@ const initialState: ChainInfo[] = ImportedChains
 .filter((chain: Chain) =>
   environment !== "mainnet" && chain?.chainInfo?.chainName?.toLowerCase() !== "fantom" // only temporary, given fantom RPC issues
 )
-.map((chain: Chain) => chain.chainInfo)
+.map((chain: Chain) => {
+  // this is temporary given polygon RPC issues
+  const newChainInfo = chain.chainInfo;
+  if (newChainInfo?.chainName?.toLowerCase() === "polygon") {
+    newChainInfo.confirmLevel = 225
+    newChainInfo.estimatedWaitTime = 15
+  }
+  return newChainInfo
+})
 
 let bannedAddresses: string[] = []; 
 

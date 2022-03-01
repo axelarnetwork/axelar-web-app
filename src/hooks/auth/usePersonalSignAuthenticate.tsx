@@ -39,7 +39,6 @@ const usePersonalSignAuthenticate = () => {
         })
       } catch (e: any) {
         setIsBlockchainAuthenticated(false)
-        // SendLogsToServer.error("authenticateWithMetamask_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
         reject(e)
       }
     })

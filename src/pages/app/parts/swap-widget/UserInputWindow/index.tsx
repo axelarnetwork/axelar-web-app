@@ -36,6 +36,7 @@ import PlainButton from "../StyledComponents/PlainButton"
 import TopFlowsSelectorWidget from "../TopFlowsSelector"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import { BannedAddresses } from "state/ChainList"
+import { IsTxSubmitting } from "state/TransactionStatus"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -118,6 +119,7 @@ const UserInputWindow = ({
   const resetUserInputs = useResetUserInputs()
   const [showValidationErrors, setShowValidationErrors] = useState(false)
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
+  const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
 
@@ -135,6 +137,8 @@ const UserInputWindow = ({
 
   const onInitiateTransfer = useCallback(async () => {
     if (!(destAddr && isValidDestinationAddress)) return
+
+    setIsSubmitting(true)
     try {
       await handleTransactionSubmission()
     } catch (e: any) {
@@ -150,6 +154,7 @@ const UserInputWindow = ({
     isValidDestinationAddress,
     handleTransactionSubmission,
     resetUserInputs,
+    setIsSubmitting
   ])
 
   const renderValidationErrors = useCallback(() => {
@@ -174,18 +179,14 @@ const UserInputWindow = ({
         />
       )
     if (destAddr && bannedAddresses.includes(destAddr))
-      return (
-        <ValidationErrorWidget
-          text={`Cannot send to a Token Contract`}
-        />
-      )
+      return <ValidationErrorWidget text={`Cannot send to a Token Contract`} />
   }, [
     sourceChainSelection,
     destChainSelection,
     selectedSourceAsset,
     isValidDestinationAddress,
     bannedAddresses,
-    destAddr
+    destAddr,
   ])
 
   const enableSubmitBtn =
@@ -193,8 +194,9 @@ const UserInputWindow = ({
     destChainSelection &&
     sourceChainSelection.chainName !== destChainSelection.chainName &&
     selectedSourceAsset &&
-    isValidDestinationAddress
-    && (destAddr && !bannedAddresses.includes(destAddr))
+    isValidDestinationAddress &&
+    destAddr &&
+    !bannedAddresses.includes(destAddr)
 
   const handleOnEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
     e.stopPropagation()
@@ -313,7 +315,7 @@ const UserInputWindow = ({
             setShowValidationErrors(false)
           }}
         >
-          Connect Wallet & Transfer
+          {isSubmitting ? "Please check Metamask..." : "Connect Wallet & Transfer"}
         </PlainButton>
       </StyledButtonContainer>
     </StyledUserInputWindow>

@@ -3,11 +3,11 @@ import styled from "styled-components"
 interface ILinkProps {
   children: any
   href?: string
-  className?: string
+  style?: any
 }
 
-const Link = ({ children, href, className }: ILinkProps) => (
-  <a href={href} target={"_blank"} rel="noreferrer">
+const Link = ({ children, href, style }: ILinkProps) => (
+  <a href={href} target={"_blank"} rel="noreferrer" style={style}>
     {children}
   </a>
 )
