@@ -120,7 +120,7 @@ const UserInputWindow = ({
   const [showValidationErrors, setShowValidationErrors] = useState(false)
   const [showAuthTooltip, setShowAuthTooltip] = useState(false)
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
-  const setIsSubmitting = useSetRecoilState(IsTxSubmitting)
+  const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
 
@@ -322,7 +322,7 @@ const UserInputWindow = ({
             setShowAuthTooltip(false)
           }}
         >
-          Connect Wallet & Transfer
+          {isSubmitting ? "Please check Metamask..." : "Connect Wallet & Transfer"}
         </PlainButton>
       </StyledButtonContainer>
       {showAuthTooltip && (

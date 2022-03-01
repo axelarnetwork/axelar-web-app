@@ -217,9 +217,11 @@ export default function usePostTransactionToBridge() {
       } catch (e: any) {
         setShowTransactionStatusWindow(false)
         setIsSubmitting(false)
-        if (e?.code === 4001)
-          // case of user hitting cancel on metamask signature request
-          return
+        if (e?.code === 4001) {          
+          return // case of user hitting cancel on metamask signature request
+        } else if (e?.toString().includes("missing provider")) {
+          return // case of user not having metamask
+        }
         const error = new CustomError(403.1, "Network error from servers")
         notificationHandler.notifyInfo(error)
         reject(error)
