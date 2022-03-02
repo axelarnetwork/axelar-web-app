@@ -30,6 +30,7 @@ import { getShortenedWord } from "utils/wordShortener"
 import { QASection } from "./QA"
 import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 import { ReactElement } from "react"
+import StyledLink from "components/Widgets/Link"
 
 const StyledHelperComponent = styled.div`
   position: absolute;
@@ -257,7 +258,7 @@ export const SupportWidget = () => {
               <SubLink 
                 text="Discord" 
                 onClick={() => window.open("https://discord.com/invite/aRZ3Ra6f7D", "_blank")} 
-                description={<><BoldSpan>#satellite-open-support-ticket</BoldSpan> for live support.</>}
+                description={<><BoldSpan>#satellite-cross-chain-chat</BoldSpan> for general support.</>}
               />
               <SubLink 
                 text="Twitter (@axl_satellite)" 
@@ -289,8 +290,10 @@ export const SupportWidget = () => {
             <ContactUsSection>
               <h3>Issues with a live transaction?</h3>
               <div style={{ marginBottom: `5px` }}>
-                Go to the <BoldSpan>#satellite-open-support-ticket</BoldSpan>{" "}
-                Discord channel with:
+                Find more support or submit a request {" "}
+                <StyledLink href="https://axelar.zendesk.com/hc/en-us">
+                  <BoldSpan>HERE</BoldSpan>
+                </StyledLink> and make sure to mention these Support Details:
               </div>
               <Tooltip
                 anchorContent={

@@ -5,12 +5,11 @@ import {
   AccordionItemHeading,
   AccordionItemPanel,
 } from "react-accessible-accordion"
-import BoldSpan from "../../../../components/StyleComponents/BoldSpan"
-
 import "./accordian-styles.css"
 import configs from "../../../../config/downstreamServices"
 import { PopoutLink } from "../../../../components/Widgets/PopoutLink"
 import React from "react"
+import StyledLink from "components/Widgets/Link"
 
 export interface IQA {
   question: string
@@ -114,8 +113,7 @@ const QAs: IQA[] = [
           </li>
         </ul>
         If you still can’t find it, copy the Trace ID & the destination address
-        & your transaction on the source chain and post in{" "}
-        <BoldSpan>#satellite-open-support-ticket</BoldSpan> channel on Discord.
+        & your transaction on the source chain and submit a request <StyledLink href="https://axelar.zendesk.com/hc/en-us">here</StyledLink>.
       </div>
     ),
   },
