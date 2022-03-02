@@ -143,7 +143,7 @@ const UserInputWindow = ({
       await handleTransactionSubmission()
     } catch (e: any) {
       if (![403.1].includes(e.statusCode)) resetUserInputs()
-      SendLogsToServer.error(
+      SendLogsToServer.info(
         "UserInputWindow_onInitiateTransfer",
         JSON.stringify(e),
         "NO_UUID"

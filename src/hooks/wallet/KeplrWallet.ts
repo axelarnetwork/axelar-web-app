@@ -60,7 +60,7 @@ export class KeplrWallet implements WalletInterface {
         text = "added"
       } catch (e2: any) {
         console.log("and yet there is a problem in trying to do that too", e2)
-        SendLogsToServer.error(
+        SendLogsToServer.info(
           "KeplrWallet_connectToWallet",
           JSON.stringify(e2),
           "NO_UUID"

@@ -177,7 +177,7 @@ export const DepositFromWallet = ({
       setButtonText("Something went wrong, try again?")
       const msg = "user failed to send tx: " + results
       console.log("message", msg)
-      SendLogsToServer.error("DEPOSIT_CONFIRMATION", msg, transactionTraceId)
+      SendLogsToServer.info("DEPOSIT_CONFIRMATION", msg, transactionTraceId)
     }
   }
 
@@ -216,7 +216,7 @@ export const DepositFromWallet = ({
       )
     } else if (results?.error?.length > 0 || hasAnyErrors) {
       setButtonText("Something went wrong, try again?")
-      SendLogsToServer.error(
+      SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
         "user failed to send tx: " + JSON.stringify(results),
         transactionTraceId
