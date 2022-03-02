@@ -22,6 +22,7 @@ import {
   ActiveStep,
   DidWaitingForDepositTimeout,
   IConfirmationStatus,
+  IsTxSubmitting,
   NumberConfirmations,
   SourceDepositAddress,
   TransactionTraceId,
@@ -61,6 +62,7 @@ export default function usePostTransactionToBridge() {
     DidWaitingForDepositTimeout
   )
   const activeStep = useRecoilValue(ActiveStep)
+  const setIsSubmitting = useSetRecoilState(IsTxSubmitting)
 
   const sCb: (
     status: any,
@@ -214,13 +216,18 @@ export default function usePostTransactionToBridge() {
         isBlockchainAuthenticated = res.isBlockchainAuthenticated
       } catch (e: any) {
         setShowTransactionStatusWindow(false)
-        if (e?.code === 4001)
-          // case of user hitting cancel on metamask signature request
-          return
+        setIsSubmitting(false)
+        if (e?.code === 4001) {          
+          return // case of user hitting cancel on metamask signature request
+        } else if (e?.toString().includes("missing provider")) {
+          return // case of user not having metamask
+        }
         const error = new CustomError(403.1, "Network error from servers")
         notificationHandler.notifyInfo(error)
         reject(error)
       }
+
+      setIsSubmitting(false)
 
       if (!isBlockchainAuthenticated) {
         reject("You did not sign")
@@ -252,6 +259,7 @@ export default function usePostTransactionToBridge() {
     postRequest,
     personalSignAuthenticate,
     notificationHandler,
+    setIsSubmitting
   ])
 
   const closeResultsScreen = () => {

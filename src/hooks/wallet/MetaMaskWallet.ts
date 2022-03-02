@@ -49,6 +49,9 @@ export class MetaMaskWallet implements WalletInterface {
   private nodeServerUrl: string
 
   public constructor(chainName: string) {
+    
+    if (!this.isWalletInstalled()) this.installWallet()
+    
     this.chainName = chainName
     this.nodeServerUrl = getConfigs(
       process.env.REACT_APP_STAGE as string

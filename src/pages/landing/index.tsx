@@ -74,7 +74,7 @@ export const LandingPage = () => {
       <>
         <h1>We'll be right back</h1>
         <div style={{ fontSize: `1.25em`, width: `75%`, textAlign: "center" }}>
-          <div>Satellite is under maintenance.</div>
+          <div>Satellite is under scheduled maintenance.</div>
           <div>
             For latest updates:{" "}
             <StyledLink href="https://twitter.com/axl_satellite" children={"@axl_satellite"} />

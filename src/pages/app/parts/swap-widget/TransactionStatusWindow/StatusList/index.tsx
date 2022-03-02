@@ -1,9 +1,13 @@
-import React from "react"
+import { useState } from "react"
 import { ChainInfo } from "@axelar-network/axelarjs-sdk"
 import styled from "styled-components"
 import screenConfigs from "config/screenConfigs"
 import { useRecoilValue } from "recoil"
-import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
+import {
+  MS_UNTIL_CONFIRM_BTN_VISIBLE,
+  DESTINATION_TOKEN_KEY,
+  SOURCE_TOKEN_KEY,
+} from "config/consts"
 import downstreamServices from "config/downstreamServices"
 import CopyToClipboard from "components/Widgets/CopyToClipboard"
 import Link from "components/Widgets/Link"
@@ -18,6 +22,8 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
+  DepositTimestamp,
+  HasEnoughDepositConfirmation,
   IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
@@ -25,6 +31,13 @@ import {
 } from "state/TransactionStatus"
 import { getShortenedWord } from "utils/wordShortener"
 import BigNumber from "decimal.js"
+import useInterval from "hooks/useInterval"
+import {
+  BroadcastTxResponse,
+  isBroadcastTxFailure,
+  isBroadcastTxSuccess,
+} from "@cosmjs/stargate"
+import { getAxelarTxLink } from "utils/explorer"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -133,15 +146,39 @@ interface IStatusListProps {
 
 const StatusList = (props: IStatusListProps) => {
   const { activeStep } = props
+  const [showConfirmButton, setShowConfirmButton] = useState(false)
+  const [confirming] = useState(false)
+  const [confirmedTx] = useState<BroadcastTxResponse | null>(
+    null
+  )
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
+  const depositTimestamp = useRecoilValue(DepositTimestamp)
+  // const depositAmount = useRecoilValue(DepositAmount)
+  const hasEnoughDepositConfirmation = useRecoilValue(
+    HasEnoughDepositConfirmation
+  )
   const destNumConfirm: IConfirmationStatus = useRecoilValue(
     NumberConfirmations(DESTINATION_TOKEN_KEY)
   )
   const destinationAddress = useRecoilValue(DestinationAddress)
   const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash)
+  useInterval(() => {
+    if (depositTimestamp > 0 && !confirmedTx && !showConfirmButton) {
+      const currentTimestamp = new Date().getTime()
+      let overWaitTime =
+        currentTimestamp - depositTimestamp > MS_UNTIL_CONFIRM_BTN_VISIBLE
+      if (sourceChain?.module === "evm") {
+        if (hasEnoughDepositConfirmation && overWaitTime) {
+          setShowConfirmButton(true)
+        }
+      } else if (overWaitTime) {
+        setShowConfirmButton(true)
+      }
+    }
+  }, 3000)
 
   const sourceAsset = useRecoilValue(SourceAsset)
   const sourceNumConfirmations = useRecoilValue(
@@ -171,6 +208,116 @@ const StatusList = (props: IStatusListProps) => {
       }
     />
   )
+
+  // const confirmDepositTransaction = useCallback(async () => {
+  //   if (!srcChainDepositHash) return
+  //   if (!sourceChain?.chainName) return
+  //   if (!depositAddress?.assetAddress) return
+  //   if (!depositAddress?.common_key) return
+  //   if (!depositAmount) return
+
+  //   setConfirming(true)
+  //   const req: ConfirmDepositRequest = {
+  //     hash: srcChainDepositHash,
+  //     from: sourceChain?.chainName!,
+  //     depositAddress: depositAddress.assetAddress,
+  //     amount: ethers.utils
+  //       .parseUnits(depositAmount, selectedSourceAsset?.decimals || 6)
+  //       .toString(),
+  //     token: depositAddress.common_key,
+  //   }
+  //   try {
+  //     const base64SignedTx = await confirmDeposit(req)
+  //     const tx = await broadcastCosmosTx(base64SignedTx)
+  //     setConfirmedTx(tx)
+  //     setConfirming(false)
+  //     setShowConfirmButton(false)
+  //   } catch (e) {
+  //     console.log(e)
+  //     setConfirming(false)
+  //   }
+  // }, [
+  //   depositAddress?.assetAddress,
+  //   depositAddress?.common_key,
+  //   depositAmount,
+  //   selectedSourceAsset?.decimals,
+  //   sourceChain?.chainName,
+  //   srcChainDepositHash,
+  // ])
+
+  const renderStep3 = () => {
+    if (activeStep >= 3) {
+      return (
+        <div>
+          <div>
+            <BoldSpan>
+              {+amountConfirmedAdjusted.toFixed(2)} {sourceAsset?.assetSymbol}
+            </BoldSpan>{" "}
+            deposit confirmed. Sending
+          </div>
+          <div>
+            <BoldSpan>
+              {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
+            </BoldSpan>{" "}
+            to {destinationChain?.chainName} within the next ~
+            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 3}{" "}
+            min.
+          </div>
+          {confirmedTx && isBroadcastTxSuccess(confirmedTx) && (
+            <a
+              href={getAxelarTxLink(confirmedTx.transactionHash)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Tx
+            </a>
+          )}
+        </div>
+      )
+    } else {
+      if (showConfirmButton) {
+        return (
+          <div>
+            <p style={{ color: "black" }}>
+              This is taking longer than expected...{" "}
+            </p>
+            <div style={{ display: "flex" }}>
+              <HelperWidget
+                onClick={() =>
+                  window.open(
+                    downstreamServices.txConfirmationTool[
+                      process.env.REACT_APP_STAGE as string
+                    ],
+                    "_blank"
+                  )
+                }
+                style={{ opacity: confirming ? 0.7 : 1 }}
+              >
+                {confirming
+                  ? "Confirming..."
+                  : "Open our Deposit Recovery Tool"}
+              </HelperWidget>
+            </div>
+          </div>
+        )
+      } else if (confirmedTx && isBroadcastTxFailure(confirmedTx)) {
+        return (
+          <div>
+            <a
+              style={{ color: "rgb(252,68,68)" }}
+              href={getAxelarTxLink(confirmedTx?.transactionHash || "")}
+              target={"_blank"}
+              rel="noreferrer"
+            >
+              Confirm tx failed
+            </a>
+          </div>
+        )
+      } else {
+        return `Detecting your deposit on ${sourceChain?.chainName}.`
+      }
+    }
+  }
 
   return (
     <StyledStatusList>
@@ -253,31 +400,7 @@ const StatusList = (props: IStatusListProps) => {
         className={"joyride-status-step-3"}
         step={3}
         activeStep={activeStep}
-        text={
-          activeStep >= 3 ? (
-            <div>
-              <div>
-                <BoldSpan>
-                  {+amountConfirmedAdjusted.toFixed(2)}{" "}
-                  {sourceAsset?.assetSymbol}
-                </BoldSpan>{" "}
-                deposit confirmed. Sending
-              </div>
-              <div>
-                <BoldSpan>
-                  {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
-                </BoldSpan>{" "}
-                to {destinationChain?.chainName} within the next ~
-                {destinationChain?.chainName.toLowerCase() === "ethereum"
-                  ? 60
-                  : 3}{" "}
-                min.
-              </div>
-            </div>
-          ) : (
-            `Detecting your deposit on ${sourceChain?.chainName}.`
-          )
-        }
+        text={renderStep3()}
       />
       <ListItem
         className={"joyride-status-step-4"}

@@ -22,7 +22,7 @@ export class KeplrWallet implements WalletInterface {
   public CHAIN_INFO: ChainInfo
   public CONFIG_FOR_CHAIN: KeplrWalletChainConfig
 
-  public constructor(chainName: "axelar" | "terra") {
+  public constructor(chainName: string) {
     const configs =
       require(`config/wallet/axelarnet/${process.env.REACT_APP_STAGE}.ts`).default
     const configForChain = configs[chainName]
@@ -60,7 +60,7 @@ export class KeplrWallet implements WalletInterface {
         text = "added"
       } catch (e2: any) {
         console.log("and yet there is a problem in trying to do that too", e2)
-        SendLogsToServer.error(
+        SendLogsToServer.info(
           "KeplrWallet_connectToWallet",
           JSON.stringify(e2),
           "NO_UUID"
@@ -93,10 +93,11 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getBalance(denom: string): Promise<number> {
+    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[denom] : denom;
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
-      denom
+      derivedDenom
     )
     const balance = ethers.utils.formatUnits(balanceResponse.amount, 6)
     return +balance
@@ -156,6 +157,7 @@ export class KeplrWallet implements WalletInterface {
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
+    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom] : coinToSend.denom;
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
       amount: [{ denom: "uluna", amount: "30000" }],

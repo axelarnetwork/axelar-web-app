@@ -2,6 +2,72 @@ import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
 
+const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
+const OSMOSIS_RPC: string = "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
+const OSMOSIS_REST = "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
+const OSMOSIS_CHANNEL_MAP = {
+  axelar: "channel-184",
+}
+const OSMOSIS_DENOM_MAP = {
+  uusdc: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F"
+}
+
+const osmosisChainInfo: ChainInfo = {
+  rpc: OSMOSIS_RPC,
+  rest: OSMOSIS_REST,
+  chainId: OSMOSIS_CHAIN_ID,
+  chainName: "Osmosis Testnet",
+  stakeCurrency: {
+    coinDenom: "OSMO",
+    coinMinimalDenom: "uosmo",
+    coinDecimals: 6,
+    coinGeckoId: "osmosis",
+    coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+  },
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: Bech32Address.defaultBech32Config("osmo"),
+  currencies: [
+    {
+      coinDenom: "OSMO",
+      coinMinimalDenom: "uosmo",
+      coinDecimals: 6,
+      coinGeckoId: "osmosis",
+      coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+    },
+    {
+      coinDenom: "ION",
+      coinMinimalDenom: "uion",
+      coinDecimals: 6,
+      coinGeckoId: "ion",
+      coinImageUrl:
+        "https://dhj8dql1kzq2v.cloudfront.net/white/osmosis-ion.png",
+    },
+    {
+      coinDenom: "USDC_fake",
+      coinMinimalDenom: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F",
+      coinDecimals: 6,
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "OSMO",
+      coinMinimalDenom: "uosmo",
+      coinDecimals: 6,
+      coinGeckoId: "osmosis",
+      coinImageUrl: "https://dhj8dql1kzq2v.cloudfront.net/white/osmo.png",
+    },
+  ],
+  coinType: 118,
+  gasPriceStep: {
+    low: 0,
+    average: 0,
+    high: 0.025,
+  },
+  features: ["stargate", "ibc-transfer", "no-legacy-stdTx", "ibc-go"]
+}
+
 const TERRA_CHAIN_ID: string = "bombay-12"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
 const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string
@@ -43,7 +109,7 @@ const terraChainInfo: ChainInfo = {
   features: ["stargate", "no-legacy-stdTx", "ibc-transfer"],
 }
 
-const AXELAR_CHAIN_ID: string = "axelar-testnet-lisbon-2"
+const AXELAR_CHAIN_ID: string = "axelar-testnet-lisbon-3"
 const AXELAR_RPC: string = process.env.REACT_APP_AXELAR_RPC as string
 const AXELAR_REST = process.env.REACT_APP_AXELAR_LCD as string
 const AXELAR_CHANNEL_MAP = {
@@ -53,7 +119,7 @@ const axelarChainInfo: ChainInfo = {
   rpc: AXELAR_RPC,
   rest: AXELAR_REST,
   chainId: AXELAR_CHAIN_ID,
-  chainName: "Axelar Lisbon-2",
+  chainName: "Axelar Lisbon 3",
   stakeCurrency: {
     coinDenom: "AXL",
     coinMinimalDenom: "uaxl",
@@ -69,6 +135,11 @@ const axelarChainInfo: ChainInfo = {
       coinDenom: "UST",
       coinMinimalDenom:
         "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F",
+      coinDecimals: 6,
+    },
+    {
+      coinDenom: "USDC_fake",
+      coinMinimalDenom: "uusdc",
       coinDecimals: 6,
     },
   ],
@@ -94,8 +165,18 @@ export const terra: KeplrWalletChainConfig = {
   channelMap: TERRA_CHANNEL_MAP,
 }
 
+export const osmosis: KeplrWalletChainConfig = {
+  restEndpoint: OSMOSIS_REST,
+  rpcEndpoint: OSMOSIS_RPC,
+  chainId: OSMOSIS_CHAIN_ID,
+  chainInfo: osmosisChainInfo,
+  channelMap: OSMOSIS_CHANNEL_MAP,
+  denomMap: OSMOSIS_DENOM_MAP
+}
+
 export const allChains = {
   axelar,
+  "osmosis-2": osmosis,
   terra,
 }
 export default allChains

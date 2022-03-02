@@ -12,6 +12,7 @@ interface IConfig {
     [environment: string]: { [chain: string]: { name: string; url: string } }
   }
   tokenContracts: { [environment: string]: string }
+  txConfirmationTool: { [environment: string]: string }
 }
 
 const blockExplorers = {
@@ -58,12 +59,20 @@ const tokenContracts = {
   mainnet: "https://docs.axelar.dev/releases/mainnet",
 }
 
+const txConfirmationTool = {
+  local: "https://testnet.axelarbridger.com/recover",
+  devnet: "https://testnet.axelarbridger.com/recover",
+  testnet: "https://testnet.axelarbridger.com/recover",
+  mainnet: "https://transaction-confirmation.axelar.dev",
+}
+
 const configs: IConfig = {
   GITHUB_LINK,
   RECAPTCHA_V3_SITE_KEY: RECAPTCHA_V3_SITE_KEY,
   RECAPTCHA_V2_SITE_KEY: RECAPTCHA_V2_SITE_KEY,
   blockExplorers,
   tokenContracts,
+  txConfirmationTool
 }
 
 export default configs

@@ -5,14 +5,17 @@ import CopyToClipboard from "components/Widgets/CopyToClipboard"
 import { getNotificationMessage } from "config/errorsMap"
 import "react-notifications-component/dist/theme.css"
 import "animate.css/animate.min.css"
+import StyledLink from "components/Widgets/Link"
 
 const traceIdDiv = (traceId: string | undefined) => {
   if (!traceId) return null
   return (
     <div>
       <br />
-      For support, reach out on Discord in the{" "}
-      <BoldSpan>#satellite-open-support-ticket</BoldSpan> channel with this{" "}
+      For support
+      <StyledLink href="https://axelar.zendesk.com/hc/en-us">
+        <BoldSpan>Submit a Request</BoldSpan>
+        </StyledLink> with this{" "}
       <Tooltip
         anchorContent={
           <CopyToClipboard
