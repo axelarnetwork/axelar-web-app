@@ -93,7 +93,9 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getBalance(denom: string): Promise<number> {
-    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[denom] : denom;
+    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap
+      ? this.CONFIG_FOR_CHAIN.denomMap[denom]
+      : denom
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
@@ -152,12 +154,18 @@ export class KeplrWallet implements WalletInterface {
     console.log("results", result)
   }
 
-  public async ibcTransferFromTerra(recipient: any, coinToSend: Coin) {
+  public async ibcTransferFromTerra(
+    recipient: any,
+    amount: string,
+    _denom: string
+  ) {
     const senderAddress = await this.getAddress()
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom] : coinToSend.denom;
+    const denom = this.CONFIG_FOR_CHAIN?.denomMap
+      ? this.CONFIG_FOR_CHAIN.denomMap[_denom]
+      : _denom
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
       amount: [{ denom: "uluna", amount: "30000" }],
@@ -172,7 +180,10 @@ export class KeplrWallet implements WalletInterface {
       const res = await cosmjs.sendIbcTokens(
         senderAddress,
         recipient,
-        coinToSend,
+        Coin.fromPartial({
+          denom,
+          amount: ethers.utils.parseUnits(amount, 6).toString(),
+        }),
         PORT,
         AXELAR_CHANNEL_ID,
         timeoutHeight,

@@ -33,6 +33,7 @@ import {
   useLCDClient,
   useWallet,
 } from "@terra-money/wallet-provider"
+import { SelectedWallet, WalletType } from "state/Wallet"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -60,6 +61,7 @@ export const DepositFromWallet = ({
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [, setDepositAmount] = useRecoilState(DepositAmount)
+  const selectedWallet = useRecoilValue(SelectedWallet)
   const [minDepositAmt] = useState(
     getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
   )
@@ -118,12 +120,15 @@ export const DepositFromWallet = ({
     )
   }
   const transferKeplr = async () => {
-    const sourceChainName: "axelar" | "terra" =
-      sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra"
-    // let wallet: any = new KeplrWallet(sourceChainName)
-    // if (sourceChainName === "terra") {
-    let wallet: any = new TerraWallet(terraWallet, lcdClient, connectedWallet)
-    // }
+    if (!sourceChainSelection?.chainName) return
+    const sourceChainName = sourceChainSelection.chainName.toLowerCase()
+    let wallet
+    if (selectedWallet === WalletType.KEPLR) {
+      wallet = new KeplrWallet(sourceChainName)
+    } else {
+      wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+    }
+
     setButtonText("Sending...")
 
     let results
@@ -137,10 +142,12 @@ export const DepositFromWallet = ({
       if (sourceChainName === "axelar") {
         results = await wallet.transferTokens(recipientAddress, amountToDeposit)
       } else {
-        results = await wallet.ibcTransferFromTerra(recipientAddress, {
-          amount: amountToDeposit,
-          denom: selectedSourceAsset.common_key,
-        })
+        console.log("AMOUNT IBC", amountToDeposit.toString())
+        results = await wallet.ibcTransferFromTerra(
+          recipientAddress,
+          amountToDeposit,
+          selectedSourceAsset.common_key
+        )
       }
     } catch (error: any) {
       setDepositAmount("")

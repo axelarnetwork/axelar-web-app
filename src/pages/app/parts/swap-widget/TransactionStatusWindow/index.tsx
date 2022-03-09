@@ -36,12 +36,11 @@ import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
 import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
 import {
-  ConnectType,
   useConnectedWallet,
   useLCDClient,
   useWallet,
 } from "@terra-money/wallet-provider"
-import { Fee, MsgSend } from "@terra-money/terra.js"
+import { SelectedWallet, WalletType } from "state/Wallet"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -144,6 +143,7 @@ const TransactionStatusWindow = ({
   const setCartoonMessage = useSetRecoilState(MessageShownInCartoon)
   const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated)
   const [activeStep, setActiveStep] = useRecoilState(ActiveStep)
+  const [, setSelectedWallet] = useRecoilState(SelectedWallet)
   const resetAllstate = useResetAllState()
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
@@ -165,8 +165,9 @@ const TransactionStatusWindow = ({
     setShowLargeDisclaimer(true)
   }, [setShowDisclaimer, setShowLargeDisclaimer])
 
-  const connectToWallet = async () => {
-    if (sourceChain?.module === "evm") {
+  const connectToWallet = async (walletType: WalletType) => {
+    setSelectedWallet(walletType)
+    if (walletType === WalletType.METAMASK) {
       let wallet: MetaMaskWallet = new MetaMaskWallet(
         sourceChain?.chainName.toLowerCase() as string
       )
@@ -182,7 +183,15 @@ const TransactionStatusWindow = ({
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
-      const wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+      let wallet: WalletInterface
+      if (!sourceChain?.chainName) return
+
+      if (walletType === WalletType.TERRA) {
+        wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+      } else {
+        wallet = new KeplrWallet(sourceChain?.chainName.toLowerCase())
+      }
+
       setWalletToUse(wallet)
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
       setIsWalletConnected(isWalletInstalled)

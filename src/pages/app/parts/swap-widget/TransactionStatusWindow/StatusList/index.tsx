@@ -41,6 +41,7 @@ import { getAxelarTxLink } from "utils/explorer"
 import logoKeplr from "assets/svg/keplr.svg"
 import logoMetamask from "assets/svg/keplr.svg"
 import logoTerraStation from "assets/svg/terra-station.svg"
+import { WalletType } from "state/Wallet"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -148,7 +149,7 @@ const ListItem = (props: IListItemProps) => {
 interface IStatusListProps {
   activeStep: number
   isWalletConnected: boolean
-  connectToWallet: () => void
+  connectToWallet: (walletType: WalletType) => void
 }
 
 const StatusList = (props: IStatusListProps) => {
@@ -222,7 +223,9 @@ const StatusList = (props: IStatusListProps) => {
             justifyContent: `space-between`,
           }}
         >
-          <HelperWidget onClick={props.connectToWallet}>
+          <HelperWidget
+            onClick={() => props.connectToWallet(WalletType.METAMASK)}
+          >
             <span style={{ marginRight: "4px" }}>Connect Metamask</span>
             <WalletLogo src={logoMetamask} />
           </HelperWidget>
@@ -237,14 +240,14 @@ const StatusList = (props: IStatusListProps) => {
           }}
         >
           <HelperWidget
-            onClick={props.connectToWallet}
+            onClick={() => props.connectToWallet(WalletType.KEPLR)}
             style={{ marginRight: "8px" }}
           >
             <span style={{ marginRight: "4px" }}>Connect Keplr</span>
             <WalletLogo src={logoKeplr} />
           </HelperWidget>
           <p style={{ marginRight: "8px" }}>OR</p>
-          <HelperWidget onClick={props.connectToWallet}>
+          <HelperWidget onClick={() => props.connectToWallet(WalletType.TERRA)}>
             <span style={{ marginRight: "4px" }}>Connect Terra</span>
             <WalletLogo src={logoTerraStation} />
           </HelperWidget>

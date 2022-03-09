@@ -69,21 +69,19 @@ export class TerraWallet implements WalletInterface {
 
   public async ibcTransferFromTerra(
     recipientAddress: string,
-    coinToSend: Coin
+    amount: string,
+    _denom: string
   ): Promise<any> {
     const sourcePort = "transfer"
     const senderAddress = await this.getAddress()
     const denom = this.chainConfig?.denomMap
-      ? this.chainConfig.denomMap[coinToSend.denom]
-      : coinToSend.denom
+      ? this.chainConfig.denomMap[_denom]
+      : _denom
     const fee = new Fee(parseInt(TERRA_IBC_GAS_LIMIT), "30000uluna")
     const transferMsg: MsgTransfer = new MsgTransfer(
       sourcePort,
       this.chainConfig.channelMap["axelar"],
-      new Coin(
-        denom,
-        ethers.utils.parseUnits(coinToSend.amount.toString(), 6).toString()
-      ),
+      new Coin(denom, ethers.utils.parseUnits(amount, 6).toString()),
       senderAddress,
       recipientAddress,
       new Height(100, 100),
