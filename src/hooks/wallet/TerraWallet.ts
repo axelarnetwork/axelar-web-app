@@ -1,9 +1,5 @@
 import { WalletInterface } from "./WalletInterface"
-import {
-  ConnectedWallet,
-  Wallet,
-  WalletStatus,
-} from "@terra-money/wallet-provider"
+import { ConnectedWallet, Wallet } from "@terra-money/wallet-provider"
 import { Coin, Fee, LCDClient, MsgTransfer } from "@terra-money/terra.js"
 import { ConnectType } from "@terra-money/wallet-provider"
 import { ethers } from "ethers"
@@ -84,7 +80,10 @@ export class TerraWallet implements WalletInterface {
     const transferMsg: MsgTransfer = new MsgTransfer(
       sourcePort,
       this.chainConfig.channelMap["axelar"],
-      new Coin(denom, coinToSend.amount),
+      new Coin(
+        denom,
+        ethers.utils.parseUnits(coinToSend.amount.toString(), 6).toString()
+      ),
       senderAddress,
       recipientAddress,
       new Height(100, 100),

@@ -33,7 +33,6 @@ import {
   useLCDClient,
   useWallet,
 } from "@terra-money/wallet-provider"
-import { Fee, MsgSend } from "@terra-money/terra.js"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -101,7 +100,7 @@ export const DepositFromWallet = ({
     try {
       setDepositAmount(amountToDeposit)
       results = await wallet.transferTokens(
-        depositAddress?.assetAddress as string,
+        depositAddress.assetAddress as string,
         (amountToDeposit || 0).toString(),
         selectedSourceAsset as AssetInfo
       )
@@ -129,21 +128,19 @@ export const DepositFromWallet = ({
 
     let results
     try {
+      if (!depositAddress?.assetAddress) return
+      if (!selectedSourceAsset?.common_key) return
+
+      const recipientAddress = depositAddress.assetAddress
+
       setDepositAmount(amountToDeposit)
       if (sourceChainName === "axelar") {
-        results = await wallet.transferTokens(
-          depositAddress?.assetAddress as string,
-          amountToDeposit || "0"
-        )
+        results = await wallet.transferTokens(recipientAddress, amountToDeposit)
       } else {
-        results = await wallet
-          .ibcTransferFromTerra(depositAddress?.assetAddress as string, {
-            amount: ethers.utils
-              .parseUnits(amountToDeposit, selectedSourceAsset?.decimals || 6)
-              .toString(),
-            denom: selectedSourceAsset?.common_key?.toString() as string,
-          })
-          .catch((e: any) => console.log(e))
+        results = await wallet.ibcTransferFromTerra(recipientAddress, {
+          amount: amountToDeposit,
+          denom: selectedSourceAsset.common_key,
+        })
       }
     } catch (error: any) {
       setDepositAmount("")
