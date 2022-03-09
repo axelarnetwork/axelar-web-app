@@ -39,7 +39,7 @@ import {
 } from "@cosmjs/stargate"
 import { getAxelarTxLink } from "utils/explorer"
 import logoKeplr from "assets/svg/keplr.svg"
-import logoMetamask from "assets/svg/keplr.svg"
+import logoMetamask from "assets/svg/metamask.svg"
 import logoTerraStation from "assets/svg/terra-station.svg"
 import { WalletType } from "state/Wallet"
 
@@ -214,7 +214,11 @@ const StatusList = (props: IStatusListProps) => {
   const renderWalletButton = () => {
     if (props.isWalletConnected) return null
 
-    if (sourceChain?.module === "evm") {
+    if (sourceChain?.chainName?.toLowerCase() !== "terra") {
+      const logo = sourceChain?.module === "evm" ? logoMetamask : logoKeplr
+      const walletName = sourceChain?.module === "evm" ? "Metamask" : "Keplr"
+      const walletType =
+        sourceChain?.module === "evm" ? WalletType.METAMASK : WalletType.KEPLR
       return (
         <FlexRow
           style={{
@@ -223,11 +227,10 @@ const StatusList = (props: IStatusListProps) => {
             justifyContent: `space-between`,
           }}
         >
-          <HelperWidget
-            onClick={() => props.connectToWallet(WalletType.METAMASK)}
-          >
-            <span style={{ marginRight: "4px" }}>Connect Metamask</span>
-            <WalletLogo src={logoMetamask} />
+          <div>OR deposit from here!</div>
+          <HelperWidget onClick={() => props.connectToWallet(walletType)}>
+            <span style={{ marginRight: "4px" }}>Connect {walletName}</span>
+            <WalletLogo src={logo} />
           </HelperWidget>
         </FlexRow>
       )
@@ -254,11 +257,6 @@ const StatusList = (props: IStatusListProps) => {
         </div>
       )
     }
-
-    // <HelperWidget onClick={props.connectToWallet}>
-    //   Connect Keplr
-    //   <WalletLogo />
-    // </HelperWidget>
   }
 
   // const confirmDepositTransaction = useCallback(async () => {
@@ -422,25 +420,9 @@ const StatusList = (props: IStatusListProps) => {
                   tooltipAltText={"Copied to Clipboard!"}
                 />
               </div>
-              {
-                activeStep >= 3 && srcChainDepositHash
-                  ? linkToExplorer(
-                      sourceChain as ChainInfo,
-                      srcChainDepositHash
-                    )
-                  : // <FlexRow
-                    //   style={{
-                    //     height: `1.5em`,
-                    //     width: `100%`,
-                    //     justifyContent: `space-between`,
-                    //   }}
-                    // >
-                    // <div>OR deposit from here!</div>
-                    // {
-                    renderWalletButton()
-                // }
-                // </FlexRow>
-              }
+              {activeStep >= 3 && srcChainDepositHash
+                ? linkToExplorer(sourceChain as ChainInfo, srcChainDepositHash)
+                : renderWalletButton()}
             </div>
           ) : (
             `Waiting for your deposit into a temporary deposit account.`
