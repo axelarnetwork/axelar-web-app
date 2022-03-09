@@ -142,7 +142,6 @@ export const DepositFromWallet = ({
       if (sourceChainName === "axelar") {
         results = await wallet.transferTokens(recipientAddress, amountToDeposit)
       } else {
-        console.log("AMOUNT IBC", amountToDeposit.toString())
         results = await wallet.ibcTransferFromTerra(
           recipientAddress,
           amountToDeposit,
