@@ -16,6 +16,7 @@ import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
+import { TerraWallet } from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
@@ -34,6 +35,13 @@ import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
 import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
+import {
+  ConnectType,
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+} from "@terra-money/wallet-provider"
+import { Fee, MsgSend } from "@terra-money/terra.js"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -145,6 +153,9 @@ const TransactionStatusWindow = ({
   const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer)
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient()
+  const connectedWallet = useConnectedWallet()
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
   )
@@ -171,9 +182,7 @@ const TransactionStatusWindow = ({
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
-      let wallet: KeplrWallet = new KeplrWallet(
-        sourceChain?.chainName.toLowerCase() as "axelar" | "terra"
-      )
+      const wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
       setWalletToUse(wallet)
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
       setIsWalletConnected(isWalletInstalled)

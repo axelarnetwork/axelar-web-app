@@ -27,6 +27,13 @@ import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
+import { TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+} from "@terra-money/wallet-provider"
+import { Fee, MsgSend } from "@terra-money/terra.js"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -70,6 +77,9 @@ export const DepositFromWallet = ({
   const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
   const [, setDepositTimestamp] = useRecoilState(DepositTimestamp)
   const transactionTraceId = useRecoilValue(TransactionTraceId)
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient()
+  const connectedWallet = useConnectedWallet()
 
   useEffect(() => {
     setHasEnoughInWalletForMin(walletBalance >= minDepositAmt)
@@ -111,8 +121,10 @@ export const DepositFromWallet = ({
   const transferKeplr = async () => {
     const sourceChainName: "axelar" | "terra" =
       sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra"
-    let wallet: KeplrWallet = new KeplrWallet(sourceChainName)
-    await wallet.connectToWallet()
+    // let wallet: any = new KeplrWallet(sourceChainName)
+    // if (sourceChainName === "terra") {
+    let wallet: any = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+    // }
     setButtonText("Sending...")
 
     let results
@@ -124,15 +136,14 @@ export const DepositFromWallet = ({
           amountToDeposit || "0"
         )
       } else {
-        results = await wallet.ibcTransferFromTerra(
-          depositAddress?.assetAddress as string,
-          {
+        results = await wallet
+          .ibcTransferFromTerra(depositAddress?.assetAddress as string, {
             amount: ethers.utils
               .parseUnits(amountToDeposit, selectedSourceAsset?.decimals || 6)
               .toString(),
             denom: selectedSourceAsset?.common_key?.toString() as string,
-          }
-        )
+          })
+          .catch((e: any) => console.log(e))
       }
     } catch (error: any) {
       setDepositAmount("")
@@ -176,7 +187,6 @@ export const DepositFromWallet = ({
     } else {
       setButtonText("Something went wrong, try again?")
       const msg = "user failed to send tx: " + results
-      console.log("message", msg)
       SendLogsToServer.info("DEPOSIT_CONFIRMATION", msg, transactionTraceId)
     }
   }
