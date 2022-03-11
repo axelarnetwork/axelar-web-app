@@ -39,6 +39,7 @@ import {
   useConnectedWallet,
   useLCDClient,
   useWallet,
+  WalletStatus,
 } from "@terra-money/wallet-provider"
 import { SelectedWallet, WalletType } from "state/Wallet"
 
@@ -195,6 +196,7 @@ const TransactionStatusWindow = ({
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
+
       const address = await wallet.getAddress()
       if (!address) return
       setWalletToUse(wallet)
@@ -203,7 +205,7 @@ const TransactionStatusWindow = ({
         selectedSourceAsset?.common_key as string
       )
       setWalletBalance(balance)
-      setWalletAddress(await wallet.getAddress())
+      setWalletAddress(address)
     }
   }
 
