@@ -68,7 +68,7 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
-    const _signer = await window.keplr.getOfflineSigner(this.CHAIN_ID)
+    const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
     return text
@@ -93,7 +93,9 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getBalance(denom: string): Promise<number> {
-    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[denom] : denom;
+    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap
+      ? this.CONFIG_FOR_CHAIN.denomMap[denom]
+      : denom
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
@@ -104,7 +106,9 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getSigner(): Promise<OfflineSigner> {
-    const signer: OfflineSigner = window.keplr?.getOfflineSigner(this.CHAIN_ID)
+    const signer: OfflineSigner = window.keplr?.getOfflineSignerAuto(
+      this.CHAIN_ID
+    )
     return signer
   }
 
@@ -157,7 +161,9 @@ export class KeplrWallet implements WalletInterface {
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom] : coinToSend.denom;
+    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap
+      ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
+      : coinToSend.denom
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
       amount: [{ denom: "uluna", amount: "30000" }],
