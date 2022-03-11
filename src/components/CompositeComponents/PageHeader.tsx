@@ -11,12 +11,13 @@ const StyledPageHeader = styled(Container)`
   position: fixed;
   top: 0;
   width: 100%;
-  height: 45px;
+  height: 56px;
   box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.21);
   background-color: black;
   z-index: 1000;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `
 const HeaderText = styled.div`
   display: flex;
@@ -63,10 +64,10 @@ const PageHeader = () => {
         text = "Successfully added Terra to your Keplr wallet!"
         break
       case "exists":
-        text = "You already had Terra in your Keplr wallet!"
+        text = "Terra chain is already added."
         break
       case "error":
-        text = "Something went wrong. Try again?  "
+        text = "Something went wrong. Try again?"
         break
       default:
         return null
@@ -74,7 +75,8 @@ const PageHeader = () => {
     return (
       <div
         style={{
-          color: onAddedKeplr !== "error" ? "green" : "red",
+          color:
+            onAddedKeplr !== "error" ? "rgb(52 211 153)" : "rgb(239 68 68)",
           fontSize: `smaller`,
           fontWeight: `bolder`,
           marginRight: `1em`,
@@ -138,7 +140,7 @@ const PageHeader = () => {
                   borderRadius: "4px",
                   display: "flex",
                   flexDirection: "row",
-                  backgroundColor: "rgb(99 102 241)",
+                  backgroundColor: "rgb(30 64 175)",
                   color: "white",
                 }}
               >
