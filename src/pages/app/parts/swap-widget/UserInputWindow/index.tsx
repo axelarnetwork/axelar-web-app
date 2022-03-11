@@ -43,6 +43,7 @@ import {
   ROUTE_PARAM_SRC_CHAIN,
   ROUTE_PARAM_TOKEN,
 } from "config/route"
+import useSearchParams from "hooks/useSearchParams"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -114,7 +115,7 @@ const StyledSVGImage = styled(SVGImage)`
 const UserInputWindow = ({
   handleTransactionSubmission,
 }: IUserInputWindowProps) => {
-  const { search } = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [sourceChainSelection, setSourceChainSelection] = useRecoilState(
     ChainSelection(SOURCE_TOKEN_KEY)
   )
@@ -135,13 +136,12 @@ const UserInputWindow = ({
   const destChainComponentRef = createRef()
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(search)
     const srcChainName: string =
-      urlSearchParams.get(ROUTE_PARAM_SRC_CHAIN)?.toLowerCase() || ""
+      searchParams.get(ROUTE_PARAM_SRC_CHAIN)?.toLowerCase() || ""
     const dstChainName: string =
-      urlSearchParams.get(ROUTE_PARAM_DST_CHAIN)?.toLowerCase() || ""
+      searchParams.get(ROUTE_PARAM_DST_CHAIN)?.toLowerCase() || ""
     const tokenName: string =
-      urlSearchParams.get(ROUTE_PARAM_TOKEN)?.toLowerCase() || ""
+      searchParams.get(ROUTE_PARAM_TOKEN)?.toLowerCase() || ""
 
     const srcChain = chainList.find(
       (chain) => chain.chainName.toLowerCase() === srcChainName
@@ -163,10 +163,36 @@ const UserInputWindow = ({
     }
   }, [
     chainList,
-    search,
+    searchParams,
     setDestChainSelection,
     setSelectedSourceAsset,
     setSourceChainSelection,
+  ])
+
+  useEffect(() => {
+    if (sourceChainSelection) {
+      setSearchParams(
+        ROUTE_PARAM_SRC_CHAIN,
+        sourceChainSelection?.chainName.toString().toLowerCase()
+      )
+    }
+    if (destChainSelection) {
+      setSearchParams(
+        ROUTE_PARAM_DST_CHAIN,
+        destChainSelection?.chainName.toString().toLowerCase()
+      )
+    }
+    if (selectedSourceAsset?.assetSymbol) {
+      setSearchParams(
+        ROUTE_PARAM_TOKEN,
+        selectedSourceAsset?.assetSymbol?.toString().toLowerCase()
+      )
+    }
+  }, [
+    destChainSelection,
+    selectedSourceAsset?.assetSymbol,
+    setSearchParams,
+    sourceChainSelection,
   ])
 
   useEffect(() => {
