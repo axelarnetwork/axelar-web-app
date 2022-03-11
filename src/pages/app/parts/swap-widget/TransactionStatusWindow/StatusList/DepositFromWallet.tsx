@@ -275,7 +275,8 @@ export const DepositFromWallet = ({
         )
       )
       const maxWithFee = walletBalance - fee
-      setAmountToDeposit(maxWithFee.toString())
+      const roundedMax = (Math.floor(maxWithFee * 100) / 100).toFixed(2)
+      setAmountToDeposit(roundedMax)
     } else if (
       sourceChainSelection?.chainName?.toLowerCase() === "axelar" &&
       selectedSourceAsset?.common_key === "uaxl"
@@ -287,9 +288,11 @@ export const DepositFromWallet = ({
         )
       )
       const maxWithFee = walletBalance - fee
-      setAmountToDeposit(maxWithFee.toString())
+      const roundedMax = (Math.floor(maxWithFee * 100) / 100).toFixed(2)
+      setAmountToDeposit(roundedMax)
     } else {
-      setAmountToDeposit(walletBalance.toString())
+      const roundedMax = (Math.floor(walletBalance * 100) / 100).toFixed(2)
+      setAmountToDeposit(roundedMax)
     }
   }
   const getMaxButtonText = () => {

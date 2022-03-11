@@ -68,7 +68,7 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
-    const _signer = await window.keplr.getOfflineSigner(this.CHAIN_ID)
+    const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
     return text
@@ -106,7 +106,9 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getSigner(): Promise<OfflineSigner> {
-    const signer: OfflineSigner = window.keplr?.getOfflineSigner(this.CHAIN_ID)
+    const signer: OfflineSigner = window.keplr?.getOfflineSignerAuto(
+      this.CHAIN_ID
+    )
     return signer
   }
 
