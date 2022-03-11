@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { useHistory, useLocation } from "react-router-dom"
 
 const useSearchParams = () => {
