@@ -134,6 +134,7 @@ const UserInputWindow = ({
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
 
+  // Read URL params and pre-fill chains and token input.
   useEffect(() => {
     const srcChainName: string =
       searchParams.get(ROUTE_PARAM_SRC_CHAIN)?.toLowerCase() || ""
@@ -168,6 +169,7 @@ const UserInputWindow = ({
     setSourceChainSelection,
   ])
 
+  // Write URL params and when chains and token input get updated.
   useEffect(() => {
     if (sourceChainSelection) {
       setSearchParams(
