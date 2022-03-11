@@ -42,6 +42,10 @@ const ByText = styled.span`
 `
 const ConnectWalletButton = styled(FlexRow)`
   cursor: pointer;
+  transition: opacity 0.15s ease-in;
+  &:hover {
+    opacity: 0.7;
+  }
 `
 const PageHeader = () => {
   const [onAddedKeplr, setOnAddedKeplr] = useState<
@@ -90,7 +94,7 @@ const PageHeader = () => {
           fontWeight: `bolder`,
           backgroundColor: `red`,
           padding: `0.2em`,
-          borderRadius: `10px`
+          borderRadius: `10px`,
         }
 
   return (
@@ -127,20 +131,25 @@ const PageHeader = () => {
                 setOnAddedKeplr(connectWalletResult)
               }}
             >
-              <FlexColumn style={{ alignItems: `flex-end` }}>
-                <div style={{ fontWeight: "bolder" }}>
-                  Need Terra on Keplr? Add it here!
-                </div>
-                <div style={{ fontStyle: "italic", fontSize: "0.75em" }}>
-                  (Required for UST/Luna transfers from Terra)
-                </div>
+              <FlexColumn
+                style={{
+                  alignItems: `center`,
+                  padding: "4px 8px 4px 8px",
+                  borderRadius: "4px",
+                  display: "flex",
+                  flexDirection: "row",
+                  backgroundColor: "rgb(99 102 241)",
+                  color: "white",
+                }}
+              >
+                <p>Add Terra chain</p>
+                <SVGImage
+                  height={`1.25em`}
+                  width={`1.25em`}
+                  margin={`0px 0em 0px 0.5em`}
+                  src={require(`assets/svg/keplr.svg`).default}
+                />
               </FlexColumn>
-              <SVGImage
-                height={`1.25em`}
-                width={`1.25em`}
-                margin={`0px 0em 0px 0.75em`}
-                src={require(`assets/svg/keplr.svg`).default}
-              />
             </ConnectWalletButton>
           </div>
         </>
