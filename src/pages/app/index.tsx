@@ -27,7 +27,7 @@ import {
 import { StyledAppContainer } from "./styles/StyledAppContainer"
 import SwapWindow from "pages/app/parts/swap-widget"
 import { Disclaimer } from "./parts/disclaimer"
-import { Redirect, useLocation } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import { TransactionHistory } from "./parts/tx-history"
 import FirstTimeBadge from "components/CompositeComponents/FirstTimeBadge"
 import { Mask } from "components/Widgets/Mask"

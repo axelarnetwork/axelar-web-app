@@ -37,7 +37,6 @@ import TopFlowsSelectorWidget from "../TopFlowsSelector"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import { BannedAddresses, ChainList } from "state/ChainList"
 import { IsTxSubmitting } from "state/TransactionStatus"
-import { useLocation } from "react-router-dom"
 import {
   ROUTE_PARAM_DST_CHAIN,
   ROUTE_PARAM_SRC_CHAIN,
