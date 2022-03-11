@@ -48,7 +48,8 @@ export class TerraWallet implements WalletInterface {
   }
 
   public async getAddress(): Promise<string> {
-    return this.wallet.wallets[0].terraAddress
+    console.log(this.wallet.wallets)
+    return this.wallet?.wallets[0]?.terraAddress
   }
 
   public async getBalance(denom: string): Promise<number> {

@@ -16,7 +16,12 @@ new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE as string)
 const theme = {
   headerBackgroundColor: `rgba(0, 0, 0, 0.82)`,
 }
-getChainOptions().then((chainOptions) => {
+getChainOptions().then((_chainOptions) => {
+  const defaultNetwork =
+    process.env.REACT_APP_STAGE === "mainnet"
+      ? _chainOptions.walletConnectChainIds[1]
+      : _chainOptions.walletConnectChainIds[0]
+  const chainOptions = { ..._chainOptions, defaultNetwork }
   ReactDOM.render(
     <WalletProvider {...chainOptions}>
       <RecoilRoot>

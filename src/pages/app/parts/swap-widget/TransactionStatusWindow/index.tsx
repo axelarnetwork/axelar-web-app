@@ -192,11 +192,13 @@ const TransactionStatusWindow = ({
         wallet = new KeplrWallet(sourceChain?.chainName.toLowerCase())
       }
 
-      setWalletToUse(wallet)
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
-      setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
+      const address = await wallet.getAddress()
+      if (!address) return
+      setWalletToUse(wallet)
+      setIsWalletConnected(isWalletInstalled)
       const balance: number = await wallet.getBalance(
         selectedSourceAsset?.common_key as string
       )
