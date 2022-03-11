@@ -35,8 +35,14 @@ import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import TopFlowsSelectorWidget from "../TopFlowsSelector"
 import { SendLogsToServer } from "api/SendLogsToServer"
-import { BannedAddresses } from "state/ChainList"
+import { BannedAddresses, ChainList } from "state/ChainList"
 import { IsTxSubmitting } from "state/TransactionStatus"
+import { useLocation } from "react-router-dom"
+import {
+  ROUTE_PARAM_DST_CHAIN,
+  ROUTE_PARAM_SRC_CHAIN,
+  ROUTE_PARAM_TOKEN,
+} from "config/route"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -108,20 +114,60 @@ const StyledSVGImage = styled(SVGImage)`
 const UserInputWindow = ({
   handleTransactionSubmission,
 }: IUserInputWindowProps) => {
-  const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
-  const destChainSelection = useRecoilValue(
+  const { search } = useLocation()
+  const [sourceChainSelection, setSourceChainSelection] = useRecoilState(
+    ChainSelection(SOURCE_TOKEN_KEY)
+  )
+  const [destChainSelection, setDestChainSelection] = useRecoilState(
     ChainSelection(DESTINATION_TOKEN_KEY)
   )
-  const selectedSourceAsset = useRecoilValue(SourceAsset)
+  const [selectedSourceAsset, setSelectedSourceAsset] =
+    useRecoilState(SourceAsset)
   const [destAddr, setDestAddr] = useRecoilState(DestinationAddress)
   const [isValidDestinationAddress, setIsValidDestinationAddress] =
     useRecoilState(IsValidDestinationAddress)
   const resetUserInputs = useResetUserInputs()
   const [showValidationErrors, setShowValidationErrors] = useState(false)
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
+  const chainList = useRecoilValue(ChainList)
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(search)
+    const srcChainName: string =
+      urlSearchParams.get(ROUTE_PARAM_SRC_CHAIN)?.toLowerCase() || ""
+    const dstChainName: string =
+      urlSearchParams.get(ROUTE_PARAM_DST_CHAIN)?.toLowerCase() || ""
+    const tokenName: string =
+      urlSearchParams.get(ROUTE_PARAM_TOKEN)?.toLowerCase() || ""
+
+    const srcChain = chainList.find(
+      (chain) => chain.chainName.toLowerCase() === srcChainName
+    )
+    const dstChain = chainList.find(
+      (chain) => chain.chainName.toLowerCase() === dstChainName
+    )
+    if (srcChain) {
+      const token = srcChain?.assets?.find(
+        (asset) => asset.assetSymbol?.toLowerCase() === tokenName.toLowerCase()
+      )
+      if (token) {
+        setSelectedSourceAsset(token)
+      }
+      setSourceChainSelection(srcChain)
+    }
+    if (dstChain) {
+      setDestChainSelection(dstChain)
+    }
+  }, [
+    chainList,
+    search,
+    setDestChainSelection,
+    setSelectedSourceAsset,
+    setSourceChainSelection,
+  ])
 
   useEffect(() => {
     const destToken: AssetInfo = {
@@ -154,7 +200,7 @@ const UserInputWindow = ({
     isValidDestinationAddress,
     handleTransactionSubmission,
     resetUserInputs,
-    setIsSubmitting
+    setIsSubmitting,
   ])
 
   const renderValidationErrors = useCallback(() => {
@@ -315,7 +361,9 @@ const UserInputWindow = ({
             setShowValidationErrors(false)
           }}
         >
-          {isSubmitting ? "Please check Metamask..." : "Connect Wallet & Transfer"}
+          {isSubmitting
+            ? "Please check Metamask..."
+            : "Connect Wallet & Transfer"}
         </PlainButton>
       </StyledButtonContainer>
     </StyledUserInputWindow>

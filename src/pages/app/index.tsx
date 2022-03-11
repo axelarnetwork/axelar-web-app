@@ -27,11 +27,16 @@ import {
 import { StyledAppContainer } from "./styles/StyledAppContainer"
 import SwapWindow from "pages/app/parts/swap-widget"
 import { Disclaimer } from "./parts/disclaimer"
-import { Redirect } from "react-router-dom"
+import { Redirect, useLocation } from "react-router-dom"
 import { TransactionHistory } from "./parts/tx-history"
 import FirstTimeBadge from "components/CompositeComponents/FirstTimeBadge"
 import { Mask } from "components/Widgets/Mask"
 import { IsTxSubmitting } from "state/TransactionStatus"
+import {
+  ROUTE_PARAM_DST_CHAIN,
+  ROUTE_PARAM_SRC_CHAIN,
+  ROUTE_PARAM_TOKEN,
+} from "config/route"
 
 const StyledDialogBox = styled.div`
   height: 50%;
