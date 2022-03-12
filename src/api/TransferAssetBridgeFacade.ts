@@ -10,6 +10,7 @@ export class TransferAssetBridgeFacade {
   private static transferAssetBridge: TransferAssetBridge
 
   constructor(environment: string) {
+    console.log("environment",environment);
     TransferAssetBridgeFacade.environment = environment
     TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(
       TransferAssetBridgeFacade.environment
