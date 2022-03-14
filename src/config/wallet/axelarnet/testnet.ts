@@ -75,10 +75,9 @@ const COSMOS_CHAIN_ID: string = "vega-testnet"
 const COSMOS_RPC: string = "https://vega-rpc.interchain.io"
 const COSMOS_REST = "https://vega-rest.interchain.io"
 const COSMOS_CHANNEL_MAP = {
-  axelar: "TBU",
+  axelar: "channel-238",
 }
 const COSMOS_DENOM_MAP = {
-  uusdc: "TBU",
 }
 const cosmosChainInfo: ChainInfo = {
   rpc: COSMOS_RPC,
