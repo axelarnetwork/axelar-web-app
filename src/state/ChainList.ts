@@ -28,6 +28,7 @@ const initialState: ChainInfo[] = ImportedChains
   return newChainInfo
 })
 
+console.log("chians...",initialState)
 let bannedAddresses: string[] = []; 
 
 const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs;
