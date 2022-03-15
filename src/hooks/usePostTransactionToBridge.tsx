@@ -145,10 +145,6 @@ export default function usePostTransactionToBridge() {
         msg.publicAddr = publicAddr
         setDepositAddress(null)
 
-        const feeeInfo = await TransferAssetBridgeFacade.getFeeForChainAndAsset("fantom","wdev-wei")
-        console.log("fee info",feeeInfo)
-        debugger;
-
         const res: AssetInfoWithTrace =
           await TransferAssetBridgeFacade.transferAssets(
             msg,
