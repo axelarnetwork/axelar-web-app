@@ -208,7 +208,7 @@ export class MetaMaskWallet implements WalletInterface {
     }
 
     try {
-      amount = ethers.utils.parseUnits(amount as string, 6)
+      amount = ethers.utils.parseUnits(amount as string, asset.decimals)
       if (amount.isNegative()) {
         throw new Error()
       }
@@ -220,8 +220,8 @@ export class MetaMaskWallet implements WalletInterface {
     const balance = await ethersContract.balanceOf(userAddress)
 
     if (balance.lt(amount)) {
-      let amountFormatted = ethers.utils.formatUnits(amount, 6)
-      let balanceFormatted = ethers.utils.formatUnits(balance, 6)
+      let amountFormatted = ethers.utils.formatUnits(amount, asset.decimals)
+      let balanceFormatted = ethers.utils.formatUnits(balance, asset.decimals)
       console.error(
         `Insufficient balance receiver send ${amountFormatted} (You have ${balanceFormatted})`
       )
