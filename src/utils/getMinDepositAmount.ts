@@ -21,5 +21,5 @@ export const getMinDepositAmount = (
 
   if (!minDepAmtOnDestChain || !minDepAmtOnSrcChain) return null
 
-  return new BigNumber(minDepAmtOnDestChain + minDepAmtOnSrcChain).toNumber()
+  return new BigNumber(minDepAmtOnDestChain).add(minDepAmtOnSrcChain).toNumber()
 }
