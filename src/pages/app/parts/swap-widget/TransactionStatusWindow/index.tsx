@@ -180,7 +180,7 @@ const TransactionStatusWindow = ({
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
       const balance: number = await wallet.getBalance(
-        selectedSourceAsset?.common_key as string
+        selectedSourceAsset as AssetInfo
       )
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())

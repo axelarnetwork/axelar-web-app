@@ -124,7 +124,7 @@ export const DepositFromWallet = ({
           amountToDeposit || "0"
         )
       } else {
-        results = await wallet.ibcTransferFromTerra(
+        results = await wallet.ibcTransfer(
           depositAddress?.assetAddress as string,
           {
             amount: ethers.utils
