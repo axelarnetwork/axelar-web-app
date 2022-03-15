@@ -13,11 +13,6 @@ const initialState: ChainInfo[] = ImportedChains
 .filter((chain: Chain) =>
   environment === "mainnet" ? chain.chainInfo.fullySupported : true
 )
-.filter((chain: Chain) =>
-  environment === "mainnet"
-    ? true
-    : chain?.chainInfo?.chainName?.toLowerCase() !== "fantom" // only temporary, given fantom RPC issues
-)
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues
   const newChainInfo = chain.chainInfo;
