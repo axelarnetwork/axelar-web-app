@@ -105,8 +105,36 @@ export const terra: KeplrWalletChainConfig = {
   channelMap: TERRA_CHANNEL_MAP,
 }
 
+export const osmosis: KeplrWalletChainConfig = {
+  restEndpoint: "NA",
+  rpcEndpoint: "NA",
+  chainId: "osmosis-1",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "OSMO", coinMinimalDenom: "uosmo", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-208" },
+  denomMap: {},
+}
+
+export const cosmoshub: KeplrWalletChainConfig = {
+  restEndpoint: "NA",
+  rpcEndpoint: "NA",
+  chainId: "cosmoshub-4",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "ATOM", coinMinimalDenom: "uatom", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-293" },
+  denomMap: {},
+}
+
 export const allChains = {
   axelar,
   terra,
+  cosmoshub,
+  osmosis
 }
 export default allChains
