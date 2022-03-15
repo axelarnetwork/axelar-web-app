@@ -10,7 +10,7 @@ export class TransferAssetBridgeFacade {
   private static transferAssetBridge: TransferAssetBridge
 
   constructor(environment: string) {
-    console.log("environment",environment);
+    console.log("environment", environment)
     TransferAssetBridgeFacade.environment = environment
     TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(
       TransferAssetBridgeFacade.environment
@@ -32,6 +32,21 @@ export class TransferAssetBridgeFacade {
     } catch (e: any) {
       sourceCbs?.failCb()
       // SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
+      throw e
+    }
+  }
+
+  public static async getFeeForChainAndAsset(
+    chain: string,
+    asset: string
+  ): Promise<any> {
+    try {
+      return TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
+        chain,
+        asset
+      )
+    } catch (e: any) {
+      console.log("eee in facade",e)
       throw e
     }
   }
