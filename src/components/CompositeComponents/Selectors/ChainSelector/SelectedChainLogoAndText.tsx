@@ -14,7 +14,6 @@ export const SelectedChainLogoAndText = (props: IChainComponentProps) => {
   } catch (e) {
     image = require(`assets/svg/select-chain-eye.svg`)?.default
   }
-
   return (
     <BaseSelector
       image={<SVGImage height={`1.5em`} width={`1.5em`} src={image} />}

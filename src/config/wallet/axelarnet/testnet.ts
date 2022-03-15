@@ -3,15 +3,13 @@ import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
 
 const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
-const OSMOSIS_RPC: string =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
-const OSMOSIS_REST =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
+const OSMOSIS_RPC: string = "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
+const OSMOSIS_REST = "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
 const OSMOSIS_CHANNEL_MAP = {
   axelar: "channel-184",
 }
 const OSMOSIS_DENOM_MAP = {
-  uusdc: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F",
+  uusdc: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F"
 }
 
 const osmosisChainInfo: ChainInfo = {

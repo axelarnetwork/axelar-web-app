@@ -1,4 +1,4 @@
-import React, {
+import {
   createRef,
   KeyboardEvent,
   useCallback,
@@ -227,7 +227,7 @@ const UserInputWindow = ({
     isValidDestinationAddress,
     handleTransactionSubmission,
     resetUserInputs,
-    setIsSubmitting,
+    setIsSubmitting
   ])
 
   const renderValidationErrors = useCallback(() => {

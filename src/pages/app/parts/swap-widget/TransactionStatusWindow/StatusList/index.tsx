@@ -256,13 +256,13 @@ const StatusList = (props: IStatusListProps) => {
         <div>
           <div>
             <BoldSpan>
-              {+amountConfirmedAdjusted.toFixed(2)} {sourceAsset?.assetSymbol}
+              {+amountConfirmedAdjusted.toFixed(3)} {sourceAsset?.assetSymbol}
             </BoldSpan>{" "}
             deposit confirmed. Sending
           </div>
           <div>
             <BoldSpan>
-              {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
+              {+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}
             </BoldSpan>{" "}
             to {destinationChain?.chainName} within the next ~
             {destinationChain?.chainName.toLowerCase() === "ethereum" ? 60 : 3}{" "}
