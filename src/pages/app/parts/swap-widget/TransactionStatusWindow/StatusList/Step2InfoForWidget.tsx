@@ -42,7 +42,7 @@ const Step2InfoForWidget = ({
 
   if (!sourceAsset || !depositAddress || !sourceChain || !destChain) return null
 
-  const minDepositAmt = getMinDepositAmount(sourceAsset, destChain)
+  const minDepositAmt = getMinDepositAmount(sourceAsset, sourceChain, destChain)
 
   return (
     <div

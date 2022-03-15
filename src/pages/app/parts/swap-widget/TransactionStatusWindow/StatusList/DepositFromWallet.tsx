@@ -55,7 +55,7 @@ export const DepositFromWallet = ({
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [, setDepositAmount] = useRecoilState(DepositAmount)
   const [minDepositAmt] = useState(
-    getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
+    getMinDepositAmount(selectedSourceAsset, sourceChainSelection, destChainSelection) || 0
   )
   const [buttonText, setButtonText] = useState(
     sourceChainSelection?.chainName.toLowerCase() === "terra"
