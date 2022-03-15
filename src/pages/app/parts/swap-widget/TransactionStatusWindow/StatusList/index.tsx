@@ -38,6 +38,7 @@ import {
   isBroadcastTxSuccess,
 } from "@cosmjs/stargate"
 import { getAxelarTxLink } from "utils/explorer"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -191,9 +192,13 @@ const StatusList = (props: IStatusListProps) => {
   const amountConfirmedAdjusted: number =
     amountConfirmedAtomicUnits *
     BigNumber.pow(10, -1 * (sourceAsset?.decimals || 1)).toNumber()
-  const afterFees: number = new BigNumber(1)
-    .minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
-    .times(amountConfirmedAdjusted)
+  // const afterFees: number = new BigNumber(1)
+  //   .minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
+  //   .times(amountConfirmedAdjusted)
+  //   .toNumber()
+
+  const afterFees: number = new BigNumber(amountConfirmedAdjusted)
+    .minus(getMinDepositAmount(sourceAsset, sourceChain, destinationChain) as number)
     .toNumber()
 
   const WalletLogo = () => (
@@ -260,7 +265,7 @@ const StatusList = (props: IStatusListProps) => {
               {+afterFees.toFixed(2)} {sourceAsset?.assetSymbol}
             </BoldSpan>{" "}
             to {destinationChain?.chainName} within the next ~
-            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 30 : 3}{" "}
+            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 60 : 3}{" "}
             min.
           </div>
           {confirmedTx && isBroadcastTxSuccess(confirmedTx) && (
