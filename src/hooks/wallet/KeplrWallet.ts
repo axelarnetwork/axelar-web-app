@@ -98,6 +98,7 @@ export class KeplrWallet implements WalletInterface {
     const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN?.denomMap[denom as string]
       ? this.CONFIG_FOR_CHAIN.denomMap[denom as string]
       : (denom as string)
+      console.log("derived denom",assetInfo, derivedDenom)
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
