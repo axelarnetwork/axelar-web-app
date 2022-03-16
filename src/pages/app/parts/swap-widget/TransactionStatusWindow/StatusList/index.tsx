@@ -265,7 +265,7 @@ const StatusList = (props: IStatusListProps) => {
               {+afterFees.toFixed(3)} {sourceAsset?.assetSymbol}
             </BoldSpan>{" "}
             to {destinationChain?.chainName} within the next ~
-            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 60 : 3}{" "}
+            {destinationChain?.chainName.toLowerCase() === "ethereum" ? 10 : 3}{" "}
             min.
           </div>
           {confirmedTx && isBroadcastTxSuccess(confirmedTx) && (
