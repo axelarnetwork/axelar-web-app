@@ -10,6 +10,7 @@ import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { getShortenedWord } from "utils/wordShortener"
 import { SendLogsToServer } from "../../api/SendLogsToServer"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 
 declare const window: Window &
   typeof globalThis & {
@@ -68,7 +69,7 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
-    const _signer = await window.keplr.getOfflineSigner(this.CHAIN_ID)
+    const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
     return text
@@ -92,19 +93,25 @@ export class KeplrWallet implements WalletInterface {
     return account.address
   }
 
-  public async getBalance(denom: string): Promise<number> {
-    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[denom] : denom;
+  public async getBalance(assetInfo: AssetInfo): Promise<number> {
+    const { common_key: denom, decimals} = assetInfo;
+    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN?.denomMap[denom as string]
+      ? this.CONFIG_FOR_CHAIN.denomMap[denom as string]
+      : (denom as string)
+      console.log("derived denom",assetInfo, derivedDenom)
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
       derivedDenom
     )
-    const balance = ethers.utils.formatUnits(balanceResponse.amount, 6)
+    const balance = ethers.utils.formatUnits(balanceResponse.amount, decimals)
     return +balance
   }
 
   public async getSigner(): Promise<OfflineSigner> {
-    const signer: OfflineSigner = window.keplr?.getOfflineSigner(this.CHAIN_ID)
+    const signer: OfflineSigner = window.keplr?.getOfflineSignerAuto(
+      this.CHAIN_ID
+    )
     return signer
   }
 
@@ -152,15 +159,17 @@ export class KeplrWallet implements WalletInterface {
     console.log("results", result)
   }
 
-  public async ibcTransferFromTerra(recipient: any, coinToSend: Coin) {
+  public async ibcTransfer(recipient: any, coinToSend: Coin) {
     const senderAddress = await this.getAddress()
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom] : coinToSend.denom;
+    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap
+      ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
+      : coinToSend.denom
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
-      amount: [{ denom: "uluna", amount: "30000" }],
+      amount: [{ denom: this.CONFIG_FOR_CHAIN.chainInfo.feeCurrencies[0].coinMinimalDenom, amount: "30000" }],
     }
     const timeoutHeight: Height = {
         revisionHeight: Long.fromNumber(10),

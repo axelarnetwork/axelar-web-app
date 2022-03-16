@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRecoilValue } from "recoil"
 import InfoWidget from "components/CompositeComponents/InfoWidget"
 import PageHeader from "components/CompositeComponents/PageHeader"
