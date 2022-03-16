@@ -332,7 +332,7 @@ export const DepositFromWallet = ({
 
   const disableTransferButton: boolean =
     !amountToDeposit ||
-    parseFloat(amountToDeposit) < minDepositAmt ||
+    parseFloat(amountToDeposit) <= minDepositAmt ||
     !hasEnoughInWalletForMin ||
     parseFloat(amountToDeposit) > walletBalance ||
     !isValidDecimal(amountToDeposit.toString()) ||
