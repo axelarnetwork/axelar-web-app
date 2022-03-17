@@ -131,6 +131,19 @@ export const cosmoshub: KeplrWalletChainConfig = {
   denomMap: {},
 }
 
+export const juno: KeplrWalletChainConfig = {
+  restEndpoint: "NA",
+  rpcEndpoint: "NA",
+  chainId: "juno-1",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "JUNO", coinMinimalDenom: "ujuno", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-71" },
+  denomMap: {},
+}
+
 export const allChains = {
   axelar,
   terra,
