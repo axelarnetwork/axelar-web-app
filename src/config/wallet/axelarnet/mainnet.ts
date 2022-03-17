@@ -148,6 +148,7 @@ export const allChains = {
   axelar,
   terra,
   cosmoshub,
+  juno,
   osmosis
 }
 export default allChains
