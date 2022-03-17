@@ -53,7 +53,7 @@ export class KeplrWallet implements WalletInterface {
         "KeplrWallet connectToWallet - unable to connect to wallet natively, so trying experimental chain",
         e,
         this.CHAIN_ID,
-        getShortenedWord(this.CHAIN_INFO.rpc, 20)
+        getShortenedWord(this.RPC_ENDPOINT, 20)
       )
       try {
         await window.keplr.experimentalSuggestChain(this.CHAIN_INFO)
