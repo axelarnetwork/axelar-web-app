@@ -120,7 +120,7 @@ export const osmosis: KeplrWalletChainConfig = {
 
 export const cosmoshub: KeplrWalletChainConfig = {
   restEndpoint: "https://api.cosmos.network",
-  rpcEndpoint: "https://rpc.cosmoshub.forbole.com",
+  rpcEndpoint: "https://cosmoshub.validator.network",
   chainId: "cosmoshub-4",
   chainInfo: {
     feeCurrencies: [
