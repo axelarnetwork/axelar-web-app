@@ -106,8 +106,8 @@ export const terra: KeplrWalletChainConfig = {
 }
 
 export const osmosis: KeplrWalletChainConfig = {
-  restEndpoint: "NA",
-  rpcEndpoint: "NA",
+  restEndpoint: "https://osmosis-lcd.quickapi.com",
+  rpcEndpoint: "https://osmosis-rpc.quickapi.com",
   chainId: "osmosis-1",
   chainInfo: {
     feeCurrencies: [
@@ -119,8 +119,8 @@ export const osmosis: KeplrWalletChainConfig = {
 }
 
 export const cosmoshub: KeplrWalletChainConfig = {
-  restEndpoint: "NA",
-  rpcEndpoint: "NA",
+  restEndpoint: "https://api.cosmos.network",
+  rpcEndpoint: "https://rpc.cosmoshub.forbole.com",
   chainId: "cosmoshub-4",
   chainInfo: {
     feeCurrencies: [
