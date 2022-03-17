@@ -132,8 +132,8 @@ export const cosmoshub: KeplrWalletChainConfig = {
 }
 
 export const juno: KeplrWalletChainConfig = {
-  restEndpoint: "NA",
-  rpcEndpoint: "NA",
+  restEndpoint: "https://lcd-juno.itastakers.com",
+  rpcEndpoint: "https://rpc-juno.nodes.guru",
   chainId: "juno-1",
   chainInfo: {
     feeCurrencies: [
