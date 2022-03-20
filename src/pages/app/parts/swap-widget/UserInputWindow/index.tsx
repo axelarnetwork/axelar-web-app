@@ -217,7 +217,8 @@ const UserInputWindow = ({
     }
     const validAddr: boolean = validateDestinationAddress(
       destChainSelection?.chainSymbol as string,
-      destToken
+      destToken,
+      process.env.REACT_APP_STAGE as string
     )
     setIsValidDestinationAddress(validAddr)
   }, [destAddr, destChainSelection, setIsValidDestinationAddress])

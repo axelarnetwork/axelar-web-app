@@ -40,7 +40,7 @@ export class TransferAssetBridgeFacade {
     asset: string
   ): Promise<any> {
     try {
-      return TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
+      return await TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
         chain,
         asset
       )
@@ -48,5 +48,10 @@ export class TransferAssetBridgeFacade {
       console.log("eee in facade",e)
       throw e
     }
+  }
+
+  public static async getTxFee(srcChain: string, destChain: string, asset: string) {
+    // return await TransferAssetBridgeFacade.transferAssetBridge.getTransferFee(srcChain, destChain, asset)
+
   }
 }

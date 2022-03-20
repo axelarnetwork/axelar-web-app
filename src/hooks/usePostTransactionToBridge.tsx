@@ -141,7 +141,7 @@ export default function usePostTransactionToBridge() {
     ) => {
       try {
         msg.signature = signature
-        msg.otc = otc
+        // msg.otc = otc
         msg.publicAddr = publicAddr
         setDepositAddress(null)
 

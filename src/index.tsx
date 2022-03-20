@@ -13,6 +13,8 @@ import "./index.css"
 
 new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE as string)
 
+TransferAssetBridgeFacade.getTxFee("ethereum", "terra", "uusd").then(res => console.log("res!!!!",res))
+
 const theme = {
   headerBackgroundColor: `rgba(0, 0, 0, 0.82)`,
 }
