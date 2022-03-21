@@ -1,9 +1,9 @@
 {
 	"name": "@axelar-network/axelarjs-ui",
-	"version": "0.4.6",
+	"version": "0.4.7",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "0.4.21",
+		"@axelar-network/axelarjs-sdk": "0.4.27",
 		"@cosmjs/launchpad": "^0.26.5",
 		"@cosmjs/stargate": "^0.26.5",
 		"@keplr-wallet/cosmos": "0.9.9",
