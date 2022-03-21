@@ -164,7 +164,7 @@ export class KeplrWallet implements WalletInterface {
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap
+    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
       ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
       : coinToSend.denom
     const fee: StdFee = {
