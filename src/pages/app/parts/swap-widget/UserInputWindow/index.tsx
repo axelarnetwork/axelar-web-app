@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil"
 import styled from "styled-components"
 import {
   AssetInfo,
@@ -133,6 +133,9 @@ const UserInputWindow = ({
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
+  const resetDestinationChain = useResetRecoilState(
+    ChainSelection(DESTINATION_TOKEN_KEY)
+  )
 
   // Read URL params and pre-fill chains and token input.
   useEffect(() => {
@@ -177,7 +180,16 @@ const UserInputWindow = ({
         sourceChainSelection?.chainName.toString().toLowerCase()
       )
     }
-    if (destChainSelection) {
+    if (
+      destChainSelection &&
+      selectedSourceAsset?.common_key &&
+      !destChainSelection?.assets?.find(
+        (destAsset) => destAsset?.common_key === selectedSourceAsset?.common_key
+      )
+    ) {
+      setSearchParams(ROUTE_PARAM_DST_CHAIN, "")
+      resetDestinationChain()
+    } else if (destChainSelection) {
       setSearchParams(
         ROUTE_PARAM_DST_CHAIN,
         destChainSelection?.chainName.toString().toLowerCase()
@@ -192,6 +204,8 @@ const UserInputWindow = ({
   }, [
     destChainSelection,
     selectedSourceAsset?.assetSymbol,
+    selectedSourceAsset?.common_key,
+    resetDestinationChain,
     setSearchParams,
     sourceChainSelection,
   ])
@@ -227,7 +241,7 @@ const UserInputWindow = ({
     isValidDestinationAddress,
     handleTransactionSubmission,
     resetUserInputs,
-    setIsSubmitting
+    setIsSubmitting,
   ])
 
   const renderValidationErrors = useCallback(() => {
