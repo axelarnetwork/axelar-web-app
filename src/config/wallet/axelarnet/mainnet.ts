@@ -115,7 +115,10 @@ export const osmosis: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-208" },
-  denomMap: {},
+  denomMap: {
+    uusdc: "ibc/6CE0F4F76F1B5CB3C233BE6167DBD2BB5CF72CF52A30146AE96EF7D29E4FE15C",
+    "frax-wei": "ibc/0BB49E2DF79C5379A23B91EFA7A3E78EFF13673A0C8F759C45A8FEE6338A3599"
+  },
 }
 
 export const cosmoshub: KeplrWalletChainConfig = {
@@ -128,7 +131,10 @@ export const cosmoshub: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-293" },
-  denomMap: {},
+  denomMap: {
+    uusdc: "ibc/D14E72008CFCEA3350A78D784EF8387D8D4A1E91E9E3FBB22A8BE86FAFBC04BE",
+    "frax-wei": "ibc/260F19355653B57FC201CA718EB831F7D58FE678B845AF19CAB91E2141D78979"
+  },
 }
 
 export const juno: KeplrWalletChainConfig = {
