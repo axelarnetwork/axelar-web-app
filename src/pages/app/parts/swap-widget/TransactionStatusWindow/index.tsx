@@ -288,7 +288,7 @@ const TransactionStatusWindow = ({
         )
       },
     }
-    if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed) {
+    if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed && sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain) {
       const message: any = (
         <div>
           Be sure to send only the{" "}
