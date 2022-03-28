@@ -10,7 +10,7 @@ import styled from "styled-components"
 import {
   AssetInfo,
   ChainInfo,
-  validateDestinationAddress,
+  validateDestinationAddressByChainName,
 } from "@axelar-network/axelarjs-sdk"
 import { InputForm } from "components/CompositeComponents/InputForm"
 import ChainSelector from "components/CompositeComponents/Selectors/ChainSelector"
@@ -215,9 +215,9 @@ const UserInputWindow = ({
       assetAddress: destAddr as string,
       assetSymbol: destChainSelection?.chainSymbol,
     }
-    const validAddr: boolean = validateDestinationAddress(
-      destChainSelection?.chainSymbol as string,
-      destToken,
+    const validAddr: boolean = !!validateDestinationAddressByChainName(
+      destChainSelection?.chainName || "",
+      destToken.assetAddress || "",
       process.env.REACT_APP_STAGE as string
     )
     setIsValidDestinationAddress(validAddr)

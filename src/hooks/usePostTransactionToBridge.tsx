@@ -2,15 +2,9 @@
 This component makes the API call to the SDK
 * */
 
-import { useCallback, useMemo } from "react"
+import { useCallback } from "react"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { v4 as uuidv4 } from "uuid"
-import {
-  AssetInfo,
-  AssetInfoWithTrace,
-  AssetTransferObject,
-  ChainInfo,
-} from "@axelar-network/axelarjs-sdk"
 import { TransferAssetBridgeFacade } from "api/TransferAssetBridgeFacade"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import {
@@ -18,17 +12,8 @@ import {
   DestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import {
-  ActiveStep,
-  DidWaitingForDepositTimeout,
-  IConfirmationStatus,
-  IsTxSubmitting,
-  NumberConfirmations,
-  SourceDepositAddress,
-  TransactionTraceId,
-} from "state/TransactionStatus"
+import { IsTxSubmitting, SourceDepositAddress } from "state/TransactionStatus"
 import NotificationHandler from "utils/NotificationHandler"
-import { depositConfirmCbMap } from "./helper"
 import { ShowTransactionStatusWindow } from "../state/ApplicationStatus"
 import usePersonalSignAuthenticate from "./auth/usePersonalSignAuthenticate"
 
@@ -48,89 +33,55 @@ export default function usePostTransactionToBridge() {
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
   const destinationAddress = useRecoilValue(DestinationAddress)
   const setDepositAddress = useSetRecoilState(SourceDepositAddress)
-  const setSourceNumConfirmations = useSetRecoilState(
-    NumberConfirmations(SOURCE_TOKEN_KEY)
-  )
-  const setDestinationNumConfirmations = useSetRecoilState(
-    NumberConfirmations(DESTINATION_TOKEN_KEY)
-  )
-  const setTransactionTraceId = useSetRecoilState(TransactionTraceId)
   const sourceAsset = useRecoilValue(SourceAsset)
   const notificationHandler = NotificationHandler()
   const personalSignAuthenticate = usePersonalSignAuthenticate()
-  const setDidWaitingForDepositTimeout = useSetRecoilState(
-    DidWaitingForDepositTimeout
-  )
-  const activeStep = useRecoilValue(ActiveStep)
   const setIsSubmitting = useSetRecoilState(IsTxSubmitting)
 
-  const sCb: (
-    status: any,
-    setConfirms: any,
-    traceId: string,
-    source: boolean
-  ) => void = useCallback(
-    (status: any, setConfirms: any, traceId: string, source: boolean): void => {
-      //only show this message if we got a timeout before the rest of the flow has transpired
-      if (
-        source &&
-        status?.timedOut &&
-        activeStep <= 2
-      ) {
-        const msg = {
-          statusCode: 408,
-          message:
-            "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
-          traceId,
-        }
-        notificationHandler.notifyInfo(msg, 0)
-        setDidWaitingForDepositTimeout(true)
-        return
-      }
-      const confirms: IConfirmationStatus = {
-        numberConfirmations: depositConfirmCbMap[
-          sourceChain?.chainSymbol.toLowerCase() as string
-        ]
-          ? depositConfirmCbMap[
-              sourceChain?.chainSymbol.toLowerCase() as string
-            ](status)
-          : 1,
-        numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
-        transactionHash: status?.transactionHash,
-        amountConfirmedString: status?.Attributes?.amount,
-      }
-      setConfirms(confirms)
-    },
-    [
-      activeStep,
-      sourceChain,
-      notificationHandler,
-      setDidWaitingForDepositTimeout,
-    ]
-  )
-
-  const failCb = (data: any): void => console.log(data)
-
-  const msg: AssetTransferObject = useMemo(
-    () => ({
-      sourceChainInfo: { ...sourceChain, assets: undefined } as ChainInfo,
-      selectedSourceAsset: sourceAsset as AssetInfo,
-      destinationChainInfo: {
-        ...destinationChain,
-        assets: undefined,
-      } as ChainInfo,
-      selectedDestinationAsset: {
-        assetAddress: destinationAddress,
-        assetSymbol: sourceAsset?.assetSymbol, // the destination asset will be the wrapped asset of the source token
-        common_key: sourceAsset?.common_key,
-      } as AssetInfo,
-      signature: "",
-      otc: "",
-      publicAddr: "",
-      transactionTraceId: "",
-    }),
-    [destinationAddress, destinationChain, sourceAsset, sourceChain]
-  )
+  // const sCb: (
+  //   status: any,
+  //   setConfirms: any,
+  //   traceId: string,
+  //   source: boolean
+  // ) => void = useCallback(
+  //   (status: any, setConfirms: any, traceId: string, source: boolean): void => {
+  //     //only show this message if we got a timeout before the rest of the flow has transpired
+  //     if (
+  //       source &&
+  //       status?.timedOut &&
+  //       activeStep <= 2
+  //     ) {
+  //       const msg = {
+  //         statusCode: 408,
+  //         message:
+  //           "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
+  //         traceId,
+  //       }
+  //       notificationHandler.notifyInfo(msg, 0)
+  //       setDidWaitingForDepositTimeout(true)
+  //       return
+  //     }
+  //     const confirms: IConfirmationStatus = {
+  //       numberConfirmations: depositConfirmCbMap[
+  //         sourceChain?.chainSymbol.toLowerCase() as string
+  //       ]
+  //         ? depositConfirmCbMap[
+  //             sourceChain?.chainSymbol.toLowerCase() as string
+  //           ](status)
+  //         : 1,
+  //       numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
+  //       transactionHash: status?.transactionHash,
+  //       amountConfirmedString: status?.Attributes?.amount,
+  //     }
+  //     setConfirms(confirms)
+  //   },
+  //   [
+  //     activeStep,
+  //     sourceChain,
+  //     notificationHandler,
+  //     setDidWaitingForDepositTimeout,
+  //   ]
+  // )
 
   const postRequest = useCallback(
     async (
@@ -140,27 +91,21 @@ export default function usePostTransactionToBridge() {
       publicAddr: string
     ) => {
       try {
-        msg.signature = signature
-        // msg.otc = otc
-        msg.publicAddr = publicAddr
         setDepositAddress(null)
 
-        const res: AssetInfoWithTrace =
-          await TransferAssetBridgeFacade.transferAssets(
-            msg,
-            {
-              successCb: (data: any) =>
-                sCb(data, setSourceNumConfirmations, traceId, true),
-              failCb,
+        const depositAddress =
+          await TransferAssetBridgeFacade.getDepositAddress({
+            payload: {
+              fromChain: sourceChain?.chainName || "",
+              toChain: destinationChain?.chainName || "",
+              asset: sourceAsset?.common_key || "",
+              destinationAddress: destinationAddress || "",
             },
-            {
-              successCb: (data: any) =>
-                sCb(data, setDestinationNumConfirmations, traceId, false),
-              failCb,
-            }
-          )
-        setDepositAddress(res.assetInfo)
-        return res
+          })
+
+        setDepositAddress({
+          assetAddress: depositAddress,
+        })
       } catch (e: any) {
         e.traceId = traceId
         console.log("usePostTransactionToBridge_postRequest_1", e)
@@ -176,21 +121,18 @@ export default function usePostTransactionToBridge() {
       }
     },
     [
+      destinationAddress,
+      destinationChain,
+      sourceAsset,
+      sourceChain,
       notificationHandler,
-      msg,
-      sCb,
       setDepositAddress,
-      setDestinationNumConfirmations,
-      setSourceNumConfirmations,
       setShowTransactionStatusWindow,
     ]
   )
 
   const handleTransactionSubmission = useCallback(() => {
-    let traceId: string = msg.transactionTraceId || uuidv4()
-    setTransactionTraceId(traceId)
-    msg.transactionTraceId = traceId
-    console.log("transaction trace id to use", msg.transactionTraceId)
+    let traceId: string = uuidv4()
 
     return new Promise(async (resolve, reject) => {
       if (
@@ -217,7 +159,7 @@ export default function usePostTransactionToBridge() {
       } catch (e: any) {
         setShowTransactionStatusWindow(false)
         setIsSubmitting(false)
-        if (e?.code === 4001) {          
+        if (e?.code === 4001) {
           return // case of user hitting cancel on metamask signature request
         } else if (e?.toString().includes("missing provider")) {
           return // case of user not having metamask
@@ -253,13 +195,11 @@ export default function usePostTransactionToBridge() {
     destinationChain,
     destinationAddress,
     setShowTransactionStatusWindow,
-    setTransactionTraceId,
     sourceAsset,
-    msg,
     postRequest,
     personalSignAuthenticate,
     notificationHandler,
-    setIsSubmitting
+    setIsSubmitting,
   ])
 
   const closeResultsScreen = () => {
