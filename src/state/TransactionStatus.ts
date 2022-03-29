@@ -72,7 +72,7 @@ export const IsBlockchainAuthenticated = atom<boolean>({
 
 export const ActiveStep = atom<number>({
   key: "ActiveStep",
-  default: 0,
+  default: 1,
 })
 
 export const DidWaitingForDepositTimeout = atom<boolean>({

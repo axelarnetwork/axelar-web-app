@@ -1,6 +1,12 @@
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import {
+  AssetInfo,
+  BlockchainWaitingService,
+  ChainInfo,
+  getConfigs,
+  getWaitingService,
+} from "@axelar-network/axelarjs-sdk"
 import styled, { ThemedStyledProps } from "styled-components"
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { confirm } from "react-confirm-box"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
@@ -25,7 +31,7 @@ import {
 import {
   ActiveStep,
   DidWaitingForDepositTimeout,
-  IsRecaptchaAuthenticated,
+  IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
 } from "state/TransactionStatus"
@@ -34,6 +40,8 @@ import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
 import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
+import { buildDepositConfirmationRoomId } from "api/AxelarEventListener"
+import { SocketServices } from "@axelar-network/axelarjs-sdk/dist/src/services"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -124,7 +132,7 @@ const TransactionStatusWindow = ({
   isOpen,
   closeResultsScreen,
 }: ITransactionStatusWindowProps) => {
-  const sourceConfirmStatus = useRecoilValue(
+  const [sourceConfirmStatus, setSourceConfirmStatus] = useRecoilState(
     NumberConfirmations(SOURCE_TOKEN_KEY)
   )
   const destinationConfirmStatus = useRecoilValue(
@@ -134,7 +142,6 @@ const TransactionStatusWindow = ({
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const setCartoonMessage = useSetRecoilState(MessageShownInCartoon)
-  const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated)
   const [activeStep, setActiveStep] = useRecoilState(ActiveStep)
   const resetAllstate = useResetAllState()
   const selectedSourceAsset = useRecoilValue(SourceAsset)
@@ -196,7 +203,9 @@ const TransactionStatusWindow = ({
       const balance = await walletToUse.getBalance(tokenAddress)
       setWalletBalance(balance)
     } else {
-      const balance: number = await walletToUse.getBalance(selectedSourceAsset as AssetInfo)
+      const balance: number = await walletToUse.getBalance(
+        selectedSourceAsset as AssetInfo
+      )
       setWalletBalance(balance)
     }
     setWalletAddress(await walletToUse.getAddress())
@@ -230,15 +239,6 @@ const TransactionStatusWindow = ({
         break
       case depositAddress !== null:
         setActiveStep(2)
-        setCartoonMessage(
-          <Step2InfoForWidget
-            isWalletConnected={isWalletConnected}
-            walletBalance={walletBalance}
-            reloadBalance={updateBalance}
-            walletAddress={walletAddress}
-            depositAddress={depositAddress as AssetInfo}
-          />
-        )
         break
       default:
         setActiveStep(1)
@@ -248,15 +248,70 @@ const TransactionStatusWindow = ({
     dNumConfirms,
     dReqNumConfirms,
     depositAddress,
-    isWalletConnected,
     sNumConfirms,
     sReqNumConfirms,
     setCartoonMessage,
     setActiveStep,
-    walletBalance,
+    didWaitingForDepositTimeout,
+  ])
+
+  useEffect(() => {
+    ;(async () => {
+      if (activeStep !== 2) return
+
+      setCartoonMessage(
+        <Step2InfoForWidget
+          isWalletConnected={isWalletConnected}
+          walletBalance={walletBalance}
+          reloadBalance={updateBalance}
+          walletAddress={walletAddress}
+          depositAddress={depositAddress as AssetInfo}
+        />
+      )
+
+      const env = process.env.REACT_APP_STAGE as string
+      const waitService:
+        | BlockchainWaitingService
+        | Promise<BlockchainWaitingService> = await getWaitingService(
+        sourceChain as ChainInfo,
+        selectedSourceAsset as AssetInfo,
+        "source",
+        env
+      )
+      const roomId = buildDepositConfirmationRoomId(
+        sourceChain?.module as string,
+        depositAddress?.assetAddress as string,
+        sourceChain?.chainName as string,
+        destinationChain?.chainName as string,
+        selectedSourceAsset?.common_key as string
+      )
+
+      const res = await waitService.waitForDepositConfirmation(
+        roomId,
+        null,
+        new SocketServices(getConfigs(env).resourceUrl)
+      )
+
+      const confirms: IConfirmationStatus = {
+        numberConfirmations: 1,
+        numberRequiredConfirmations: res.axelarRequiredNumConfirmations,
+        transactionHash: "",
+        amountConfirmedString: res?.Attributes?.amount,
+      }
+      setSourceConfirmStatus(confirms)
+    })()
+  }, [
+    activeStep,
+    depositAddress,
+    isWalletConnected,
+    setCartoonMessage,
     updateBalance,
     walletAddress,
-    didWaitingForDepositTimeout,
+    walletBalance,
+    selectedSourceAsset,
+    sourceChain,
+    destinationChain,
+    setSourceConfirmStatus,
   ])
 
   useEffect(() => {
@@ -288,7 +343,12 @@ const TransactionStatusWindow = ({
         )
       },
     }
-    if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed && sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain) {
+    if (
+      sourceChain?.module === "evm" &&
+      activeStep === 2 &&
+      !userConfirmed &&
+      sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain
+    ) {
       const message: any = (
         <div>
           Be sure to send only the{" "}
@@ -373,19 +433,11 @@ const TransactionStatusWindow = ({
           <SelectedChainLogoAndText chainInfo={destinationChain} />
         </StyledChainSelectionIconWidget>
       </StyledFlexRow>
-      {isRecaptchaAuthenticated ? (
-        <StatusList
-          activeStep={activeStep}
-          isWalletConnected={isWalletConnected}
-          connectToWallet={connectToWallet}
-        />
-      ) : (
-        <FlexRow>
-          <br />
-          The transaction was not initiated. Some error occurred, potentially
-          including a failed recaptcha authentication
-        </FlexRow>
-      )}
+      <StatusList
+        activeStep={activeStep}
+        isWalletConnected={isWalletConnected}
+        connectToWallet={connectToWallet}
+      />
       <br />
 
       <StyledButtonContainer>

@@ -1,7 +1,4 @@
 import {
-  AssetInfoWithTrace,
-  AssetTransferObject,
-  CallbackStatus,
   GetDepositAddressDto,
   TransferAssetBridge,
 } from "@axelar-network/axelarjs-sdk"
@@ -17,30 +14,13 @@ export class TransferAssetBridgeFacade {
     )
   }
 
-  public static async transferAssets(
-    message: AssetTransferObject,
-    sourceCbs: CallbackStatus,
-    destCbs: CallbackStatus
-  ): Promise<AssetInfoWithTrace> {
-    try {
-      return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(
-        message,
-        sourceCbs,
-        destCbs,
-        false
-      )
-    } catch (e: any) {
-      sourceCbs?.failCb()
-      // SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
-      throw e
-    }
-  }
-
   public static async getDepositAddress(
     dto: GetDepositAddressDto
   ): Promise<string> {
     try {
-      return TransferAssetBridgeFacade.transferAssetBridge.getDepositAddress(dto)
+      return TransferAssetBridgeFacade.transferAssetBridge.getDepositAddress(
+        dto
+      )
     } catch (e: any) {
       // sourceCbs?.failCb()
       // SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
