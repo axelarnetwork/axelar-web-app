@@ -166,7 +166,7 @@ export class MetaMaskWallet implements WalletInterface {
     if (this.tokenMap[tokenSymbol]) {
       tokenContract = this.tokenMap[tokenSymbol] as string
     } else {
-      const endpoint = `/getTokenAddress?module=evm&chain=${this.chainName.toLowerCase()}&asset=${
+      const endpoint = `/token-address?module=evm&chain=${this.chainName.toLowerCase()}&asset=${
         assetInfo.common_key
       }`
       try {
