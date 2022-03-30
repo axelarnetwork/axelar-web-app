@@ -339,6 +339,8 @@ const TransactionStatusWindow = ({
         selectedSourceAsset?.common_key as string
       )
 
+      console.log("topic for step 4",roomId)
+
       const res = await (
         await getWaitingService(
           destinationChain as ChainInfo,

@@ -1,7 +1,7 @@
 import { KeplrWalletChainConfig } from "./interface"
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
-import { cosmoshub, osmosis, terra } from "./testnet"
+import { cosmoshub, crescent, osmosis, terra } from "./testnet"
 
 const AXELAR_CHAIN_ID: string = "axelar-devnet-rammstein-3"
 const AXELAR_RPC: string = "https://hackathon-nodes.devnet.axelar.dev"
@@ -43,6 +43,7 @@ export const axelar: KeplrWalletChainConfig = {
 const exported = {
   axelar,
   cosmoshub,
+  crescent,
   osmosis,
   terra,
 }
