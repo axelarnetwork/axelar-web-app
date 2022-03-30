@@ -8,7 +8,7 @@ import { getConfigs } from "@axelar-network/axelarjs-sdk"
 const NODE_SERVER_URL: string = getConfigs(
   process.env.REACT_APP_STAGE as string
 )?.resourceUrl
-const OTC_ENDPOINT: string = NODE_SERVER_URL + "/getOneTimeCode"
+const OTC_ENDPOINT: string = NODE_SERVER_URL + "/otc"
 
 const usePersonalSignAuthenticate = () => {
   const [isBlockchainAuthenticated, setIsBlockchainAuthenticated] =
