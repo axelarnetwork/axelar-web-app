@@ -23,51 +23,6 @@ export default function usePostTransactionToBridge() {
   const sourceAsset = useRecoilValue(SourceAsset)
   const setIsSubmitting = useSetRecoilState(IsTxSubmitting)
 
-  // const sCb: (
-  //   status: any,
-  //   setConfirms: any,
-  //   traceId: string,
-  //   source: boolean
-  // ) => void = useCallback(
-  //   (status: any, setConfirms: any, traceId: string, source: boolean): void => {
-  //     //only show this message if we got a timeout before the rest of the flow has transpired
-  //     if (
-  //       source &&
-  //       status?.timedOut &&
-  //       activeStep <= 2
-  //     ) {
-  //       const msg = {
-  //         statusCode: 408,
-  //         message:
-  //           "Timed out waiting for your deposit... If you believe you made your deposit before seeing this message, please reach out.",
-  //         traceId,
-  //       }
-  //       notificationHandler.notifyInfo(msg, 0)
-  //       setDidWaitingForDepositTimeout(true)
-  //       return
-  //     }
-  //     const confirms: IConfirmationStatus = {
-  //       numberConfirmations: depositConfirmCbMap[
-  //         sourceChain?.chainSymbol.toLowerCase() as string
-  //       ]
-  //         ? depositConfirmCbMap[
-  //             sourceChain?.chainSymbol.toLowerCase() as string
-  //           ](status)
-  //         : 1,
-  //       numberRequiredConfirmations: status.axelarRequiredNumConfirmations,
-  //       transactionHash: status?.transactionHash,
-  //       amountConfirmedString: status?.Attributes?.amount,
-  //     }
-  //     setConfirms(confirms)
-  //   },
-  //   [
-  //     activeStep,
-  //     sourceChain,
-  //     notificationHandler,
-  //     setDidWaitingForDepositTimeout,
-  //   ]
-  // )
-
   const handleTransactionSubmission = useCallback(() => {
     return new Promise(async (resolve, reject) => {
       setIsSubmitting(false)

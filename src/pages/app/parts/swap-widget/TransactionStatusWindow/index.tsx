@@ -339,8 +339,6 @@ const TransactionStatusWindow = ({
         selectedSourceAsset?.common_key as string
       )
 
-      console.log("topic for step 4",roomId)
-
       const res = await (
         await getWaitingService(
           destinationChain as ChainInfo,
@@ -361,8 +359,6 @@ const TransactionStatusWindow = ({
         new SocketServices(getConfigs(env).resourceUrl),
         roomId
       )
-
-      console.log("ressss", res)
 
       const confirms: IConfirmationStatus = {
         numberConfirmations: 1,
