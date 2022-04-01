@@ -105,8 +105,56 @@ export const terra: KeplrWalletChainConfig = {
   channelMap: TERRA_CHANNEL_MAP,
 }
 
+export const osmosis: KeplrWalletChainConfig = {
+  restEndpoint: "https://osmosis-lcd.quickapi.com",
+  rpcEndpoint: "https://rpc-osmosis.blockapsis.com",
+  chainId: "osmosis-1",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "OSMO", coinMinimalDenom: "uosmo", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-208" },
+  denomMap: {
+    uusdc: "ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858",
+    "frax-wei": "ibc/0E43EDE2E2A3AFA36D0CD38BDDC0B49FECA64FA426A82E102F304E430ECF46EE"
+  },
+}
+
+export const cosmoshub: KeplrWalletChainConfig = {
+  restEndpoint: "https://api.cosmos.network",
+  rpcEndpoint: "https://cosmoshub.validator.network",
+  chainId: "cosmoshub-4",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "ATOM", coinMinimalDenom: "uatom", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-293" },
+  denomMap: {
+    uusdc: "ibc/932D6003DA334ECBC5B23A071B4287D0A5CC97331197FE9F1C0689BA002A8421",
+    "frax-wei": "ibc/3792246C7C422C037C603C955F8383B4E32E7555D693344F9A029A67FE221C57"
+  },
+}
+
+export const juno: KeplrWalletChainConfig = {
+  restEndpoint: "https://lcd-juno.itastakers.com",
+  rpcEndpoint: "https://rpc-juno.nodes.guru",
+  chainId: "juno-1",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "JUNO", coinMinimalDenom: "ujuno", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-71" },
+  denomMap: {},
+}
+
 export const allChains = {
   axelar,
   terra,
+  cosmoshub,
+  juno,
+  osmosis
 }
 export default allChains

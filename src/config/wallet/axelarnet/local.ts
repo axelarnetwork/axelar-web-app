@@ -1,8 +1,10 @@
-import { axelar, osmosis, terra } from "./testnet"
+import { axelar, cosmoshub, crescent, osmosis, terra } from "./testnet"
 
 const exported = {
   axelar,
-  "osmosis-2": osmosis,
+  cosmoshub,
+  crescent,
+  osmosis,
   terra,
 }
 export default exported

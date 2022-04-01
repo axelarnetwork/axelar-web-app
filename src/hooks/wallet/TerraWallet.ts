@@ -67,7 +67,7 @@ export class TerraWallet implements WalletInterface {
     amount: string
   ): Promise<any> {}
 
-  public async ibcTransferFromTerra(
+  public async ibcTransfer(
     recipientAddress: string,
     amount: string,
     _denom: string

@@ -166,7 +166,7 @@ const TopFlowsSelector = ({
       (chainInfo) => chainInfo.chainName === "Terra"
     ) as ChainInfo
     map.Osmosis = chainList.find(
-      (chainInfo) => chainInfo.chainName === "Osmosis-2"
+      (chainInfo) => chainInfo.chainName === "Osmosis"
     ) as ChainInfo
     map.Ethereum = chainList.find(
       (chainInfo) => chainInfo.chainName === "Ethereum"

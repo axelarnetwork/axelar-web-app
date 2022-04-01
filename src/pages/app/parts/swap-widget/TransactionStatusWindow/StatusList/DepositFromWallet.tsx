@@ -63,7 +63,7 @@ export const DepositFromWallet = ({
   const [, setDepositAmount] = useRecoilState(DepositAmount)
   const selectedWallet = useRecoilValue(SelectedWallet)
   const [minDepositAmt] = useState(
-    getMinDepositAmount(selectedSourceAsset, destChainSelection) || 0
+    getMinDepositAmount(selectedSourceAsset, sourceChainSelection, destChainSelection) || 0
   )
   const [buttonText, setButtonText] = useState(
     sourceChainSelection?.chainName.toLowerCase() === "terra"
@@ -142,7 +142,7 @@ export const DepositFromWallet = ({
       if (sourceChainName === "axelar") {
         results = await wallet.transferTokens(recipientAddress, amountToDeposit)
       } else {
-        results = await wallet.ibcTransferFromTerra(
+        results = await wallet.ibcTransfer(
           recipientAddress,
           amountToDeposit,
           selectedSourceAsset.common_key
@@ -345,7 +345,7 @@ export const DepositFromWallet = ({
 
   const disableTransferButton: boolean =
     !amountToDeposit ||
-    parseFloat(amountToDeposit) < minDepositAmt ||
+    parseFloat(amountToDeposit) <= minDepositAmt ||
     !hasEnoughInWalletForMin ||
     parseFloat(amountToDeposit) > walletBalance ||
     !isValidDecimal(amountToDeposit.toString()) ||

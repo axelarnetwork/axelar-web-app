@@ -42,12 +42,26 @@ const TransactionInfo = () => {
     ChainSelection(DESTINATION_TOKEN_KEY)
   )
   const selectedSrcAsset = useRecoilValue(SourceAsset)
+  // const [srcFee, setSrcFee] = useState(0)
+  // const [destFee, setDestFee] = useState(0)
 
   const waitTime: number = srcChainSelection?.estimatedWaitTime || 0
   const minDeposit: number | null = getMinDepositAmount(
     selectedSrcAsset,
+    srcChainSelection,
     destChainSelection
   )
+
+  // async function getFees(chainName: string, assetCommonKey: string, cb: any) {
+  //   let response = await TransferAssetBridgeFacade.getFeeForChainAndAsset(chainName, assetCommonKey)
+  //   cb(response?.fee_info?.min_fee)
+  // }
+
+  // useEffect(() => {
+  //   if (srcChainSelection && selectedSrcAsset?.common_key) getFees(srcChainSelection.chainName.toLowerCase(), selectedSrcAsset.common_key, setSrcFee)
+  //   if (destChainSelection && selectedSrcAsset?.common_key) getFees(destChainSelection.chainName.toLowerCase(), selectedSrcAsset.common_key, setDestFee)
+
+  // }, [srcChainSelection, destChainSelection, selectedSrcAsset])
 
   return (
     <StyledTransferFeeDivider
@@ -62,8 +76,8 @@ const TransactionInfo = () => {
             `${minDeposit} ${selectedSrcAsset?.assetSymbol}`
           )}
         {generateInfoLine(
-          "Fee (% of assets transferred)",
-          `${srcChainSelection?.txFeeInPercent}%`
+          "Fee",
+          `${minDeposit} ${selectedSrcAsset?.assetSymbol}`
         )}
         {generateInfoLine(
           "Total Approximate Wait Time",

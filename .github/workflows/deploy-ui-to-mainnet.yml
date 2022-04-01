@@ -7,12 +7,19 @@ on:
         description: Deploy in maintenance mode?
         required: true
         default: false
+      branch:
+        type: string
+        description: Target branch
+        required: true
+        default: "main"
 
 jobs:
   deploy-ui-to-mainnet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
       - uses: amondnet/vercel-action@v20
         id: vercel-action-mainnet
         with:
