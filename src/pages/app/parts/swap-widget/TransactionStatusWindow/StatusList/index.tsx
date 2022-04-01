@@ -466,12 +466,6 @@ const ShowTransactionComplete = ({
     downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][
       destinationChain?.chainName?.toLowerCase() as string
     ]
-  console.log(
-    "block explorer",
-    blockExplorer,
-    destNumConfirm,
-    process.env.REACT_APP_STAGE
-  )
   return destNumConfirm.transactionHash && blockExplorer ? (
     <div style={{ overflowWrap: `break-word`, overflow: `hidden` }}>
       Transaction completed - see it{" "}

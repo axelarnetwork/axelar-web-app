@@ -49,11 +49,16 @@ import {
   useConnectedWallet,
   useLCDClient,
   useWallet,
+  WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
 import { SelectedWallet, WalletType } from "state/Wallet"
-import { buildDepositConfirmationRoomId, buildTransferCompletedRoomId } from "api/AxelarEventListener"
+import {
+  buildDepositConfirmationRoomId,
+  buildTransferCompletedRoomId,
+} from "api/AxelarEventListener"
 import { SocketServices } from "@axelar-network/axelarjs-sdk/dist/src/services"
 import { AssetAndChainInfo } from "@axelar-network/axelarjs-sdk"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -139,6 +144,30 @@ const StyledDialogBox = styled.div`
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
   border: solid 1px #b9bac8;
 `
+const options = {
+  render: (message: string, onConfirm: () => void, onCancel: () => void) => {
+    return (
+      <StyledDialogBox>
+        <div>{message}</div>
+        <br />
+        <FlexRow>
+          <StyledButton
+            style={{ margin: `0.5em`, backgroundColor: `grey` }}
+            onClick={onCancel}
+          >
+            {" "}
+            Go back{" "}
+          </StyledButton>
+          <br />
+          <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
+            {" "}
+            Confirm{" "}
+          </StyledButton>
+        </FlexRow>
+      </StyledDialogBox>
+    )
+  },
+}
 
 const TransactionStatusWindow = ({
   isOpen,
@@ -155,7 +184,8 @@ const TransactionStatusWindow = ({
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const setCartoonMessage = useSetRecoilState(MessageShownInCartoon)
   const [activeStep, setActiveStep] = useRecoilState(ActiveStep)
-  const [, setSelectedWallet] = useRecoilState(SelectedWallet)
+  const [selectedWallet, setSelectedWallet] =
+    useRecoilState<WalletType>(SelectedWallet)
   const resetAllstate = useResetAllState()
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
@@ -166,11 +196,49 @@ const TransactionStatusWindow = ({
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
-  const lcdClient = useLCDClient()
+  const lcdClient = useLCDClient({
+    URL:
+      process.env.REACT_APP_STAGE === "mainnet"
+        ? "https://lcd.terra.dev"
+        : "https://bombay-lcd.terra.dev",
+    chainId:
+      process.env.REACT_APP_STAGE === "mainnet" ? "columbus-5" : "bombay-12",
+  } as WalletLCDClientConfig)
   const connectedWallet = useConnectedWallet()
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
   )
+
+  useEffect(() => {
+    if (selectedWallet !== WalletType.TERRA) return
+
+    let msg = ""
+
+    const isMainnet = process.env.REACT_APP_STAGE === "mainnet"
+
+    if (isMainnet && terraWallet?.network?.chainID !== "columbus-5") {
+      msg =
+        "Your Terra Station extension is not set to mainnet. Please switch those settings before trying to send any funds."
+    } else if (!isMainnet && terraWallet?.network?.chainID !== "bombay-12") {
+      msg =
+        "Your Terra Station extension is not set to testnet. Please switch those settings before trying to send any funds."
+    } else return
+
+    const message: any = (
+      <FlexColumn>
+        <h3>
+          <BoldSpan>Warning</BoldSpan>
+        </h3>
+        {msg}
+      </FlexColumn>
+    )
+    confirm(message, options as any).then((positiveAffirmation) => {
+      if (!positiveAffirmation) {
+        resetAllstate()
+        closeResultsScreen()
+      }
+    })
+  }, [selectedWallet, terraWallet, closeResultsScreen, resetAllstate])
 
   useEffect(() => {
     setShowDisclaimer(false)
@@ -399,34 +467,6 @@ const TransactionStatusWindow = ({
   ])
 
   useEffect(() => {
-    const options = {
-      render: (
-        message: string,
-        onConfirm: () => void,
-        onCancel: () => void
-      ) => {
-        return (
-          <StyledDialogBox>
-            <div>{message}</div>
-            <br />
-            <FlexRow>
-              <StyledButton
-                style={{ margin: `0.5em`, backgroundColor: `grey` }}
-                onClick={onCancel}
-              >
-                {" "}
-                Go back{" "}
-              </StyledButton>
-              <br />
-              <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
-                {" "}
-                Confirm{" "}
-              </StyledButton>
-            </FlexRow>
-          </StyledDialogBox>
-        )
-      },
-    }
     if (
       sourceChain?.module === "evm" &&
       activeStep === 2 &&

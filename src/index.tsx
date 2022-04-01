@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import { ThemeProvider } from "styled-components"
 import ReactNotification from "react-notifications-component"
 import { RecoilRoot } from "recoil"
-import { RecoilLogger } from "recoil-devtools-logger"
 import { TransferAssetBridgeFacade } from "api/TransferAssetBridgeFacade"
 import { GlobalStyle } from "./global-styles"
 import { RoutesWithTransitions } from "./routes"
@@ -27,7 +26,6 @@ getChainOptions().then((_chainOptions) => {
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <ReactNotification />
-          {process.env.REACT_APP_STAGE !== "mainnet" && <RecoilLogger />}
           <RoutesWithTransitions />
           <GlobalStyle />
         </ThemeProvider>

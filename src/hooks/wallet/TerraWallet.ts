@@ -6,6 +6,7 @@ import { ethers } from "ethers"
 import { TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 
 export class TerraWallet implements WalletInterface {
   public wallet: Wallet
@@ -51,7 +52,8 @@ export class TerraWallet implements WalletInterface {
     return this.wallet?.wallets[0]?.terraAddress
   }
 
-  public async getBalance(denom: string): Promise<number> {
+  public async getBalance(assetInfo: AssetInfo): Promise<number> {
+    const denom = assetInfo.common_key || "";
     const address = await this.getAddress()
     const balance = await this.lcdClient.bank
       .balance(address)

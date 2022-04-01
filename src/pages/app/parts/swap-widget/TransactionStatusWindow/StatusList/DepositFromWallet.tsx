@@ -178,9 +178,9 @@ export const DepositFromWallet = ({
       inSufficientFunds ||
       requestRejected
 
-    if (results && results.transactionHash && results.height && !hasAnyErrors) {
+    if (results && (results.transactionHash || results.txhash) && results.height >= 0 && !hasAnyErrors) {
       setSentSuccess(true)
-      setTxHash(results.transactionHash)
+      setTxHash(results.transactionHash || results.txhash)
       setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
