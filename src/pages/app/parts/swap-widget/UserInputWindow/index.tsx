@@ -43,6 +43,13 @@ import {
   ROUTE_PARAM_TOKEN,
 } from "config/route"
 import useSearchParams from "hooks/useSearchParams"
+import { TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+  WalletLCDClientConfig,
+} from "@terra-money/wallet-provider"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -131,6 +138,16 @@ const UserInputWindow = ({
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
   const chainList = useRecoilValue(ChainList)
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient({
+    URL:
+      process.env.REACT_APP_STAGE === "mainnet"
+        ? "https://lcd.terra.dev"
+        : "https://bombay-lcd.terra.dev",
+    chainId:
+      process.env.REACT_APP_STAGE === "mainnet" ? "columbus-5" : "bombay-12",
+  } as WalletLCDClientConfig)
+  const connectedWallet = useConnectedWallet()
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
   const resetDestinationChain = useResetRecoilState(
@@ -305,6 +322,16 @@ const UserInputWindow = ({
     wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
   }
 
+  const getDestinationAddressFromTerraWallet = async () => {
+    let wallet: WalletInterface = new TerraWallet(
+      terraWallet,
+      lcdClient,
+      connectedWallet
+    )
+    if (!wallet.isWalletInstalled()) await wallet.connectToWallet()
+    wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
+  }
+
   /*closeAllSearchWindows is a method inside ChainSelector children called
 	to programmatically close the asset search windows, i.e. when TopFlowsSelectorWidget is made */
   const closeAllSearchWindows = () => {
@@ -370,7 +397,7 @@ const UserInputWindow = ({
                   )
                 }
               >
-                Autofill Destination Address (optional)
+                Autofill Destination Addr (optional) from:
               </span>
               <StyledSVGImage
                 onClick={() =>
@@ -386,6 +413,13 @@ const UserInputWindow = ({
                     ? require(`assets/svg/keplr.svg`).default
                     : require(`assets/svg/metamask.svg`).default
                 }
+              /> OR 
+              <StyledSVGImage
+                onClick={getDestinationAddressFromTerraWallet}
+                height={`1.35em`}
+                width={`1.35em`}
+                margin={`0em 0.75em 0em 0.5em`}
+                src={require(`assets/svg/terra-station.svg`).default}
               />
             </div>
           )}

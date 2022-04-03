@@ -33,12 +33,13 @@ export class TerraWallet implements WalletInterface {
   }
 
   public async connectToWallet(): Promise<any> {
+    if (!this.isWalletInstalled()) return this.installWallet()
     await this.wallet.connect(ConnectType.EXTENSION)
   }
 
   public installWallet(): void {
     const confirm = window.confirm(
-      "Click OK to be brought to the Chrome Store to download the Terra Station. Please (1) set up an Keplr account and (2) refresh this Satellite page before trying this again."
+      "Click OK to be brought to the Chrome Store to download Terra Station. Please ensure your Terra Station account is set up before returning to Satellite."
     )
     if (confirm) {
       window.open(

@@ -77,7 +77,7 @@ export class KeplrWallet implements WalletInterface {
 
   public installWallet(): void {
     const confirm = window.confirm(
-      "Click OK to be brought to the Chrome Store to download the Keplr Wallet. Please (1) set up an Keplr account and (2) refresh this Satellite page before trying this again."
+      "Click OK to be brought to the Chrome Store to download the Keplr Wallet. Please ensure your Keplr account is set up before returning to Satellite."
     )
     if (confirm) {
       window.open(
