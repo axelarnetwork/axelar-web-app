@@ -15,6 +15,7 @@ import {
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
 import { TerraWallet } from "hooks/wallet/TerraWallet"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 const StyledPageHeader = styled(Container)`
   position: fixed;
@@ -97,7 +98,9 @@ const PageHeader = () => {
     }
 
     const message: any = (
-      <div
+      <FlexColumn>
+        <h2>Select Wallets</h2>
+        <div
         style={{
           display: `flex`,
           flexWrap: `wrap`,
@@ -127,6 +130,7 @@ const PageHeader = () => {
           image={require(`assets/svg/metamask.svg`).default}
         />
       </div>
+      </FlexColumn>
     )
     confirm(message, options as any).then((done) => {
       done && setShowWalletOptions(false)
