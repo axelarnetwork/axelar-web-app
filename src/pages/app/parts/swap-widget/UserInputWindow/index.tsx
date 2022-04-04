@@ -43,7 +43,11 @@ import {
   ROUTE_PARAM_TOKEN,
 } from "config/route"
 import useSearchParams from "hooks/useSearchParams"
-import { TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  terraConfigMainnet,
+  terraConfigTestnet,
+  TerraWallet,
+} from "hooks/wallet/TerraWallet"
 import {
   useConnectedWallet,
   useLCDClient,
@@ -139,14 +143,11 @@ const UserInputWindow = ({
   const chainList = useRecoilValue(ChainList)
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
   const terraWallet = useWallet()
-  const lcdClient = useLCDClient({
-    URL:
-      process.env.REACT_APP_STAGE === "mainnet"
-        ? "https://lcd.terra.dev"
-        : "https://bombay-lcd.terra.dev",
-    chainId:
-      process.env.REACT_APP_STAGE === "mainnet" ? "columbus-5" : "bombay-12",
-  } as WalletLCDClientConfig)
+  const lcdClient = useLCDClient(
+    (process.env.REACT_APP_STAGE === "mainnet"
+      ? terraConfigMainnet
+      : terraConfigTestnet) as WalletLCDClientConfig
+  )
   const connectedWallet = useConnectedWallet()
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
@@ -413,14 +414,17 @@ const UserInputWindow = ({
                     ? require(`assets/svg/keplr.svg`).default
                     : require(`assets/svg/metamask.svg`).default
                 }
-              /> OR 
-              <StyledSVGImage
-                onClick={getDestinationAddressFromTerraWallet}
-                height={`1.35em`}
-                width={`1.35em`}
-                margin={`0em 0.75em 0em 0.5em`}
-                src={require(`assets/svg/terra-station.svg`).default}
               />
+              {destChainSelection?.chainName?.toLowerCase() === "terra" && "OR"}
+              {destChainSelection?.chainName?.toLowerCase() === "terra" && (
+                <StyledSVGImage
+                  onClick={getDestinationAddressFromTerraWallet}
+                  height={`1.35em`}
+                  width={`1.35em`}
+                  margin={`0em 0.75em 0em 0.5em`}
+                  src={require(`assets/svg/terra-station.svg`).default}
+                />
+              )}
             </div>
           )}
         </StyledInputFormSection>

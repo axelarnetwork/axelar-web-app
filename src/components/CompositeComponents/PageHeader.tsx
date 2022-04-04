@@ -14,7 +14,7 @@ import {
   useWallet,
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
-import { TerraWallet } from "hooks/wallet/TerraWallet"
+import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 const StyledPageHeader = styled(Container)`
@@ -151,7 +151,7 @@ const PageHeader = () => {
           fontSize: `smaller`,
           fontWeight: `bolder`,
           backgroundColor: `red`,
-          padding: `0.2em`,
+          padding: `0.3em`,
           borderRadius: `10px`,
         }
 
@@ -170,9 +170,10 @@ const PageHeader = () => {
             <FlexRow
               style={{
                 padding: "4px 8px 4px 8px",
-                borderRadius: "4px",
-                backgroundColor: "rgb(30 64 175)",
+                borderRadius: "10px",
+                backgroundColor: "slategrey",
                 color: "white",
+                fontWeight: "bolder"
               }}
             >
               <p>Connect Wallet</p>
@@ -202,16 +203,6 @@ const StyledWalletOption = styled(ConnectWalletButton)`
     border-radius: 10px;
   }
 `
-
-const terraConfigMainnet = {
-  URL: "https://lcd.terra.dev",
-  chainId: "columbus-5",
-}
-
-const terraConfigTestnet = {
-  URL: "https://bombay-lcd.terra.dev",
-  chainId: "bombay-12",
-}
 
 const WalletOption = ({ label, onClick, image }: any) => {
   return (

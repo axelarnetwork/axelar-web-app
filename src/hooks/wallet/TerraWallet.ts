@@ -8,6 +8,15 @@ import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
 import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 
+export const terraConfigMainnet = {
+  URL: "https://lcd.terra.dev",
+  chainId: "columbus-5",
+}
+
+export const terraConfigTestnet = {
+  URL: "https://bombay-lcd.terra.dev",
+  chainId: "bombay-12",
+}
 export class TerraWallet implements WalletInterface {
   public wallet: Wallet
   public connectedWallet?: ConnectedWallet
