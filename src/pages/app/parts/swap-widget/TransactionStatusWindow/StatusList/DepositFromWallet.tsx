@@ -101,11 +101,12 @@ export const DepositFromWallet = ({
     let results: MetamaskTransferEvent
     try {
       setDepositAmount(amountToDeposit)
-      if (wallet.handleNativeTokens(selectedSourceAsset as AssetInfo, sourceChainSelection?.chainName) !== null) {
+      if (wallet.getNativeAssetBalance(selectedSourceAsset as AssetInfo, sourceChainSelection?.chainName) !== null) {
         results = await wallet.transferNativeTokens(
           depositAddress.assetAddress as string,
           (amountToDeposit || 0).toString(),
-          selectedSourceAsset as AssetInfo
+          selectedSourceAsset as AssetInfo,
+          sourceChainSelection?.chainName as string
         )        
       } else {
         results = await wallet.transferTokens(

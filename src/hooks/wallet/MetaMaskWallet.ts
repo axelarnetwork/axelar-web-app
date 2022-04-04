@@ -10,6 +10,7 @@ import { erc20Abi } from "config/wallet/evm/erc20Abi"
 import { ChainParam } from "config/wallet/evm/testnet"
 import { WalletInterface } from "./WalletInterface"
 import { convertAndDepositAbi } from "config/wallet/evm/convertAndDepositAbi"
+import { convertAndDepositContractAddress, nativeAssetMap } from "config/contracts/deployedContractAddresses"
 
 declare const window: Window &
   typeof globalThis & {
@@ -149,13 +150,13 @@ export class MetaMaskWallet implements WalletInterface {
     return address
   }
 
-  public async handleNativeTokens(
+  public async getNativeAssetBalance(
     assetInfo: AssetInfo,
     sourceChainName?: string
   ) {
+    const env = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet";
     if (
-      assetInfo.common_key === "weth-wei" &&
-      assetInfo.native_chain === sourceChainName?.toLowerCase()
+      nativeAssetMap[env][(sourceChainName?.toLowerCase() || "")] === assetInfo.common_key
     )
       return +ethers.utils.formatUnits(
         await this.provider.getBalance(await this.getAddress()),
@@ -168,7 +169,7 @@ export class MetaMaskWallet implements WalletInterface {
     assetInfo: AssetInfo,
     sourceChainName?: string
   ): Promise<number> {
-    const checkNativeBalance = await this.handleNativeTokens(
+    const checkNativeBalance = await this.getNativeAssetBalance(
       assetInfo,
       sourceChainName
     )
@@ -208,7 +209,8 @@ export class MetaMaskWallet implements WalletInterface {
   public async transferNativeTokens(
     receiver: string,
     amount: string | BigNumber,
-    asset: AssetInfo
+    asset: AssetInfo,
+    sourceChainName: string
   ): Promise<MetamaskTransferEvent> {
     const response: MetamaskTransferEvent = {
       txHash: "",
@@ -221,9 +223,11 @@ export class MetaMaskWallet implements WalletInterface {
 
     let userAddress = await this.getAddress()
 
-    const ethersContract = new ethers.Contract("0xcA646d14fF0890301E8503dC090c288857f9d60e", convertAndDepositAbi, this.signer)
+    const env: string = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet";
+    const contractAddress: string = convertAndDepositContractAddress[env][(sourceChainName?.toLowerCase() || "")];
+    const ethersContract = new ethers.Contract(contractAddress, convertAndDepositAbi, this.signer)
 
-    response.tokenContractAddress = "0xcA646d14fF0890301E8503dC090c288857f9d60e"
+    response.tokenContractAddress = ""
     try {
       receiver = ethers.utils.getAddress(receiver)
     } catch {
