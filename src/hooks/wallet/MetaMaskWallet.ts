@@ -9,6 +9,7 @@ import MetaMaskOnboarding from "@metamask/onboarding"
 import { erc20Abi } from "config/wallet/evm/erc20Abi"
 import { ChainParam } from "config/wallet/evm/testnet"
 import { WalletInterface } from "./WalletInterface"
+import { convertAndDepositAbi } from "config/wallet/evm/convertAndDepositAbi"
 
 declare const window: Window &
   typeof globalThis & {
@@ -49,9 +50,8 @@ export class MetaMaskWallet implements WalletInterface {
   private nodeServerUrl: string
 
   public constructor(chainName: string) {
-    
     if (!this.isWalletInstalled()) this.installWallet()
-    
+
     this.chainName = chainName
     this.nodeServerUrl = getConfigs(
       process.env.REACT_APP_STAGE as string
@@ -149,7 +149,34 @@ export class MetaMaskWallet implements WalletInterface {
     return address
   }
 
-  public async getBalance(tokenContractAddress: string): Promise<number> {
+  public async handleNativeTokens(
+    assetInfo: AssetInfo,
+    sourceChainName?: string
+  ) {
+    if (
+      assetInfo.common_key === "weth-wei" &&
+      assetInfo.native_chain === sourceChainName?.toLowerCase()
+    )
+      return +ethers.utils.formatUnits(
+        await this.provider.getBalance(await this.getAddress()),
+        assetInfo.decimals
+      )
+    return null
+  }
+
+  public async getBalance(
+    assetInfo: AssetInfo,
+    sourceChainName?: string
+  ): Promise<number> {
+    const checkNativeBalance = await this.handleNativeTokens(
+      assetInfo,
+      sourceChainName
+    )
+    if (checkNativeBalance) return checkNativeBalance
+
+    const tokenContractAddress: string = await this.getOrFetchTokenAddress(
+      assetInfo as AssetInfo
+    )
     const signer = await this.getSigner().getAddress()
     const contract: Contract = this.getEthersContract(tokenContractAddress)
     const decimals = await contract.decimals()
@@ -176,6 +203,66 @@ export class MetaMaskWallet implements WalletInterface {
       }
     }
     return tokenContract
+  }
+
+  public async transferNativeTokens(
+    receiver: string,
+    amount: string | BigNumber,
+    asset: AssetInfo
+  ): Promise<MetamaskTransferEvent> {
+    const response: MetamaskTransferEvent = {
+      txHash: "",
+      tokenContractAddress: "",
+      receiver,
+      amount: "",
+      error: "",
+      blockNumber: "",
+    }
+
+    let userAddress = await this.getAddress()
+
+    const ethersContract = new ethers.Contract("0xcA646d14fF0890301E8503dC090c288857f9d60e", convertAndDepositAbi, this.signer)
+
+    response.tokenContractAddress = "0xcA646d14fF0890301E8503dC090c288857f9d60e"
+    try {
+      receiver = ethers.utils.getAddress(receiver)
+    } catch {
+      response.error += `, Invalid address: ${receiver}, `
+    }
+
+    console.log("AMOUTN!",amount)
+
+    try {
+      amount = ethers.utils.parseUnits(amount as string, asset.decimals)
+      if (amount.isNegative()) {
+        throw new Error()
+      }
+    } catch (e) {
+      console.error(`Invalid amount: ${amount}` + e)
+      response.error += `, Invalid amount: ${amount}`
+    }
+
+    const balance = await this.provider.getBalance(userAddress)
+    console.log("balance and amount",balance, amount)
+
+    if (balance.lt(amount)) {
+      let amountFormatted = ethers.utils.formatUnits(amount, asset.decimals)
+      let balanceFormatted = ethers.utils.formatUnits(balance, asset.decimals)
+      console.error(
+        `Insufficient balance receiver send ${amountFormatted} (You have ${balanceFormatted})`
+      )
+      response.error += `, Insufficient balance receiver send ${amountFormatted} (You have ${balanceFormatted})`
+    }
+
+    const options = {value: amount}
+
+    const tx = await ethersContract.depositAndTransfer(receiver, options)
+    response.txHash = tx.hash
+
+    const receipt = await tx.wait()
+    response.blockNumber = receipt.blockNumber
+
+    return response
   }
 
   public async transferTokens(

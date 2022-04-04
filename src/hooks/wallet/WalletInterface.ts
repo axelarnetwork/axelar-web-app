@@ -9,7 +9,7 @@ export interface WalletInterface {
 
   getAddress(): Promise<string>
 
-  getBalance(assetSymbol?: string | AssetInfo): Promise<any>
+  getBalance(assetInfo: AssetInfo, sourceChainName?: string): Promise<any>
 
   getSigner(): any
 

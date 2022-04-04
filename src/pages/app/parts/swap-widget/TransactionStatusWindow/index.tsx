@@ -256,10 +256,7 @@ const TransactionStatusWindow = ({
       setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
-      const tokenAddress: string = await wallet.getOrFetchTokenAddress(
-        selectedSourceAsset as AssetInfo
-      )
-      const balance = await wallet.getBalance(tokenAddress)
+      const balance = await wallet.getBalance(selectedSourceAsset as AssetInfo, sourceChain?.chainName)
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
@@ -290,20 +287,14 @@ const TransactionStatusWindow = ({
 
   const updateBalance = useCallback(async () => {
     if (!walletToUse) return
-    if (sourceChain?.module === "evm") {
-      const tokenAddress: string = await (
-        walletToUse as MetaMaskWallet
-      ).getOrFetchTokenAddress(selectedSourceAsset as AssetInfo)
-      const balance = await walletToUse.getBalance(tokenAddress)
-      setWalletBalance(balance)
-    } else {
-      const balance: number = await walletToUse.getBalance(
-        selectedSourceAsset as AssetInfo
-      )
-      setWalletBalance(balance)
-    }
+
+    const balance = await walletToUse.getBalance(
+      selectedSourceAsset as AssetInfo,
+      sourceChain?.chainName
+    )
+    setWalletBalance(balance)
     setWalletAddress(await walletToUse.getAddress())
-  }, [walletToUse, selectedSourceAsset, sourceChain?.module])
+  }, [walletToUse, selectedSourceAsset, sourceChain?.chainName])
 
   const {
     numberConfirmations: sNumConfirms,
