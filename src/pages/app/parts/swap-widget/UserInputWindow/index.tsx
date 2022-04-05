@@ -415,15 +415,17 @@ const UserInputWindow = ({
                     : require(`assets/svg/metamask.svg`).default
                 }
               />
-              {destChainSelection?.chainName?.toLowerCase() === "terra" && "OR"}
               {destChainSelection?.chainName?.toLowerCase() === "terra" && (
-                <StyledSVGImage
-                  onClick={getDestinationAddressFromTerraWallet}
-                  height={`1.35em`}
-                  width={`1.35em`}
-                  margin={`0em 0.75em 0em 0.5em`}
-                  src={require(`assets/svg/terra-station.svg`).default}
-                />
+                <>
+                  <span>OR</span>
+                  <StyledSVGImage
+                    onClick={getDestinationAddressFromTerraWallet}
+                    height={`1.35em`}
+                    width={`1.35em`}
+                    margin={`0em 0.75em 0em 0.5em`}
+                    src={require(`assets/svg/terra-station.svg`).default}
+                  />
+                </>
               )}
             </div>
           )}

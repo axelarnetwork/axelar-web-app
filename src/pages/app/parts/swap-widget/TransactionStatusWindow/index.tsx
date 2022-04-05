@@ -22,7 +22,7 @@ import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
-import { TerraWallet } from "hooks/wallet/TerraWallet"
+import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
@@ -196,14 +196,11 @@ const TransactionStatusWindow = ({
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
-  const lcdClient = useLCDClient({
-    URL:
-      process.env.REACT_APP_STAGE === "mainnet"
-        ? "https://lcd.terra.dev"
-        : "https://bombay-lcd.terra.dev",
-    chainId:
-      process.env.REACT_APP_STAGE === "mainnet" ? "columbus-5" : "bombay-12",
-  } as WalletLCDClientConfig)
+  const lcdClient = useLCDClient(
+    (process.env.REACT_APP_STAGE === "mainnet"
+      ? terraConfigMainnet
+      : terraConfigTestnet) as WalletLCDClientConfig
+  )
   const connectedWallet = useConnectedWallet()
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
