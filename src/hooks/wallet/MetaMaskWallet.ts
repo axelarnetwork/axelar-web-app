@@ -10,7 +10,8 @@ import { erc20Abi } from "config/wallet/evm/erc20Abi"
 import { ChainParam } from "config/wallet/evm/testnet"
 import { WalletInterface } from "./WalletInterface"
 import { convertAndDepositAbi } from "config/wallet/evm/convertAndDepositAbi"
-import { convertAndDepositContractAddress, nativeAssetMap } from "config/contracts/deployedContractAddresses"
+import { convertAndDepositContractAddress } from "config/contracts/deployedContractAddresses"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 
 declare const window: Window &
   typeof globalThis & {
@@ -154,10 +155,7 @@ export class MetaMaskWallet implements WalletInterface {
     assetInfo: AssetInfo,
     sourceChainName?: string
   ) {
-    const env = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet";
-    if (
-      nativeAssetMap[env][(sourceChainName?.toLowerCase() || "")] === assetInfo.common_key
-    )
+    if (hasSelectedNativeAssetForChain(assetInfo, sourceChainName))
       return +ethers.utils.formatUnits(
         await this.provider.getBalance(await this.getAddress()),
         assetInfo.decimals
@@ -223,9 +221,17 @@ export class MetaMaskWallet implements WalletInterface {
 
     let userAddress = await this.getAddress()
 
-    const env: string = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet";
-    const contractAddress: string = convertAndDepositContractAddress[env][(sourceChainName?.toLowerCase() || "")];
-    const ethersContract = new ethers.Contract(contractAddress, convertAndDepositAbi, this.signer)
+    const env: string =
+      process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet"
+    const contractAddress: string =
+      convertAndDepositContractAddress[env][
+        sourceChainName?.toLowerCase() || ""
+      ]
+    const ethersContract = new ethers.Contract(
+      contractAddress,
+      convertAndDepositAbi,
+      this.signer
+    )
 
     response.tokenContractAddress = ""
     try {
@@ -233,8 +239,6 @@ export class MetaMaskWallet implements WalletInterface {
     } catch {
       response.error += `, Invalid address: ${receiver}, `
     }
-
-    console.log("AMOUTN!",amount)
 
     try {
       amount = ethers.utils.parseUnits(amount as string, asset.decimals)
@@ -247,7 +251,7 @@ export class MetaMaskWallet implements WalletInterface {
     }
 
     const balance = await this.provider.getBalance(userAddress)
-    console.log("balance and amount",balance, amount)
+    console.log("balance and amount", balance, amount)
 
     if (balance.lt(amount)) {
       let amountFormatted = ethers.utils.formatUnits(amount, asset.decimals)
@@ -258,9 +262,9 @@ export class MetaMaskWallet implements WalletInterface {
       response.error += `, Insufficient balance receiver send ${amountFormatted} (You have ${balanceFormatted})`
     }
 
-    const options = {value: amount}
-
-    const tx = await ethersContract.depositAndTransfer(receiver, options)
+    const tx = await ethersContract.depositAndTransfer(receiver, {
+      value: amount,
+    })
     response.txHash = tx.hash
 
     const receipt = await tx.wait()

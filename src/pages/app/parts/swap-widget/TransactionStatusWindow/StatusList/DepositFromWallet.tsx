@@ -34,6 +34,7 @@ import {
   useWallet,
 } from "@terra-money/wallet-provider"
 import { SelectedWallet, WalletType } from "state/Wallet"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -63,7 +64,11 @@ export const DepositFromWallet = ({
   const [, setDepositAmount] = useRecoilState(DepositAmount)
   const selectedWallet = useRecoilValue(SelectedWallet)
   const [minDepositAmt] = useState(
-    getMinDepositAmount(selectedSourceAsset, sourceChainSelection, destChainSelection) || 0
+    getMinDepositAmount(
+      selectedSourceAsset,
+      sourceChainSelection,
+      destChainSelection
+    ) || 0
   )
   const [buttonText, setButtonText] = useState(
     sourceChainSelection?.chainName.toLowerCase() === "terra"
@@ -101,13 +106,18 @@ export const DepositFromWallet = ({
     let results: MetamaskTransferEvent
     try {
       setDepositAmount(amountToDeposit)
-      if (wallet.getNativeAssetBalance(selectedSourceAsset as AssetInfo, sourceChainSelection?.chainName) !== null) {
+      if (
+        hasSelectedNativeAssetForChain(
+          selectedSourceAsset as AssetInfo,
+          sourceChainSelection?.chainName
+        ) !== null
+      ) {
         results = await wallet.transferNativeTokens(
           depositAddress.assetAddress as string,
           (amountToDeposit || 0).toString(),
           selectedSourceAsset as AssetInfo,
           sourceChainSelection?.chainName as string
-        )        
+        )
       } else {
         results = await wallet.transferTokens(
           depositAddress.assetAddress as string,
@@ -115,7 +125,6 @@ export const DepositFromWallet = ({
           selectedSourceAsset as AssetInfo
         )
       }
-
     } catch (error: any) {
       setDepositAmount("")
       results = error
@@ -188,7 +197,12 @@ export const DepositFromWallet = ({
       inSufficientFunds ||
       requestRejected
 
-    if (results && (results.transactionHash || results.txhash) && results.height >= 0 && !hasAnyErrors) {
+    if (
+      results &&
+      (results.transactionHash || results.txhash) &&
+      results.height >= 0 &&
+      !hasAnyErrors
+    ) {
       setSentSuccess(true)
       setTxHash(results.transactionHash || results.txhash)
       setDepositTimestamp(new Date().getTime())
@@ -431,7 +445,12 @@ export const DepositFromWallet = ({
               )}
             </div>
             <div style={{ marginLeft: `0.5em` }}>
-              {selectedSourceAsset?.assetSymbol}
+              {hasSelectedNativeAssetForChain(
+                selectedSourceAsset as AssetInfo,
+                sourceChainSelection?.chainName
+              )
+                ? sourceChainSelection?.chainSymbol
+                : selectedSourceAsset?.assetSymbol}
             </div>
           </FlexRow>
           {getDisabledText(disableTransferButton)}

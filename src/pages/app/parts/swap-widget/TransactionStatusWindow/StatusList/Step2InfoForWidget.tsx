@@ -1,14 +1,15 @@
-import { useRecoilValue }                          from "recoil"
-import styled                                      from "styled-components"
-import BoldSpan                                    from "components/StyleComponents/BoldSpan"
-import LoadingWidget                               from "components/Widgets/LoadingWidget";
+import { useRecoilValue } from "recoil"
+import styled from "styled-components"
+import BoldSpan from "components/StyleComponents/BoldSpan"
+import LoadingWidget from "components/Widgets/LoadingWidget"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
-import { ChainSelection, SourceAsset }             from "state/ChainSelection"
-import { getShortenedWord }                        from "utils/wordShortener"
-import { getMinDepositAmount }                     from "utils/getMinDepositAmount"
-import { DepositFromWallet }                       from "./DepositFromWallet"
-import {AssetInfo}                                 from "@axelar-network/axelarjs-sdk";
-import React                                       from "react";
+import { ChainSelection, SourceAsset } from "state/ChainSelection"
+import { getShortenedWord } from "utils/wordShortener"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { DepositFromWallet } from "./DepositFromWallet"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import React from "react"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 
 export const StyledHeader = styled.div`
   position: relative;
@@ -43,6 +44,10 @@ const Step2InfoForWidget = ({
   if (!sourceAsset || !depositAddress || !sourceChain || !destChain) return null
 
   const minDepositAmt = getMinDepositAmount(sourceAsset, sourceChain, destChain)
+  const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
+    sourceAsset as AssetInfo,
+    sourceChain.chainName
+  )
 
   return (
     <div
@@ -57,28 +62,61 @@ const Step2InfoForWidget = ({
         <br />
       </StyledHeader>
       <br />
-      {generateLine("Transfer Fee: ", `${minDepositAmt} ${sourceAsset?.assetSymbol }`)}
-      {minDepositAmt && generateLine("Min Transfer Amount: ", `${minDepositAmt} ${sourceAsset?.assetSymbol }`)}
+      {generateLine(
+        "Transfer Fee: ",
+        `${minDepositAmt} ${sourceAsset?.assetSymbol}`
+      )}
+      {minDepositAmt &&
+        generateLine(
+          "Min Transfer Amount: ",
+          `${minDepositAmt} ${sourceAsset?.assetSymbol}`
+        )}
       {generateLine("Wait Time: ", `~${sourceChain?.estimatedWaitTime}min`)}
-      {generateLine("Deposit Address: ", getShortenedWord(depositAddress?.assetAddress))}
+      {generateLine(
+        "Deposit Address: ",
+        getShortenedWord(depositAddress?.assetAddress)
+      )}
 
-      {isWalletConnected && <div>
-        {walletAddress?.length > 0 && <>
-          {generateLine("Wallet Address: ", getShortenedWord(walletAddress, 5))}
-          {generateLine("Balance: ", <span>
-            {+(walletBalance)?.toFixed(2)}{" "}
-            {sourceAsset?.assetSymbol}
-            <LoadingWidget cb={reloadBalance} />
-          </span>)}
-          {generateLine("", <DepositFromWallet
-              isWalletConnected={isWalletConnected}
-              walletBalance={walletBalance}
-              reloadBalance={reloadBalance}
-              walletAddress={walletAddress}
-              depositAddress={depositAddress}
-          />)}
-        </>}
-      </div>}
+      {isWalletConnected && (
+        <div>
+          {walletAddress?.length > 0 && (
+            <>
+              {generateLine(
+                "Wallet Address: ",
+                getShortenedWord(walletAddress, 5)
+              )}
+              {generateLine(
+                "Balance: ",
+                <span>
+                  {+walletBalance?.toFixed(2)}{" "}
+                  {userHasSelectedNativeAssetForChain
+                    ? sourceChain.chainSymbol
+                    : sourceAsset?.assetSymbol}
+                  <LoadingWidget cb={reloadBalance} />
+                </span>
+              )}
+              {userHasSelectedNativeAssetForChain && generateLine(
+                "",
+                `Satellite accepts native ${sourceChain?.chainSymbol} tokens and
+                  automatically converts them to W${sourceChain?.chainSymbol} for the
+                  required deposit.`,
+                { fontSize: `0.7em`, fontStyle: `italic` }
+              )}
+
+              {generateLine(
+                "",
+                <DepositFromWallet
+                  isWalletConnected={isWalletConnected}
+                  walletBalance={walletBalance}
+                  reloadBalance={reloadBalance}
+                  walletAddress={walletAddress}
+                  depositAddress={depositAddress}
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
       <br />
     </div>
   )
