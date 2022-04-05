@@ -110,7 +110,7 @@ export const DepositFromWallet = ({
         hasSelectedNativeAssetForChain(
           selectedSourceAsset as AssetInfo,
           sourceChainSelection?.chainName
-        ) !== null
+        )
       ) {
         results = await wallet.transferNativeTokens(
           depositAddress.assetAddress as string,
