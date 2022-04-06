@@ -40,7 +40,6 @@ export class SocketService {
   }
 
   public joinRoomAndWaitForEvent(roomId: string): Promise<any> {
-    console.log("joining room and waiting for event",roomId)
     return new Promise(async (resolve) => {
       await this.createSocket()
       const ms = 1.8e6 //30 minutes
