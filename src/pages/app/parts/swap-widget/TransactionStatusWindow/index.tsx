@@ -1,9 +1,7 @@
 import {
   AssetInfo,
-  BlockchainWaitingService,
   ChainInfo,
   getConfigs,
-  getWaitingService,
 } from "@axelar-network/axelarjs-sdk"
 import styled, { ThemedStyledProps } from "styled-components"
 import { useCallback, useEffect, useState } from "react"
@@ -22,7 +20,11 @@ import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
-import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  terraConfigMainnet,
+  terraConfigTestnet,
+  TerraWallet,
+} from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
@@ -54,10 +56,9 @@ import {
 import { SelectedWallet, WalletType } from "state/Wallet"
 import {
   buildDepositConfirmationRoomId,
-  buildTransferCompletedRoomId,
 } from "api/AxelarEventListener"
-import { SocketServices } from "@axelar-network/axelarjs-sdk/dist/src/services"
-import { AssetAndChainInfo } from "@axelar-network/axelarjs-sdk"
+import { SocketService } from "api/WaitService/SocketService"
+import { transferEvent } from "api/WaitService"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 interface ITransactionStatusWindowProps {
@@ -363,15 +364,6 @@ const TransactionStatusWindow = ({
     ;(async () => {
       if (activeStep !== 2) return
 
-      const env = process.env.REACT_APP_STAGE as string
-      const waitService:
-        | BlockchainWaitingService
-        | Promise<BlockchainWaitingService> = await getWaitingService(
-        sourceChain as ChainInfo,
-        selectedSourceAsset as AssetInfo,
-        "source",
-        env
-      )
       const roomId = buildDepositConfirmationRoomId(
         sourceChain?.module as string,
         depositAddress?.assetAddress as string,
@@ -380,15 +372,13 @@ const TransactionStatusWindow = ({
         selectedSourceAsset?.common_key as string
       )
 
-      const res = await waitService.waitForDepositConfirmation(
-        roomId,
-        () => {},
-        new SocketServices(getConfigs(env).resourceUrl)
-      )
+      const res = await new SocketService(
+        getConfigs(process.env.REACT_APP_STAGE as string).resourceUrl
+      ).joinRoomAndWaitForEvent(roomId)
 
       const confirms: IConfirmationStatus = {
         numberConfirmations: 1,
-        numberRequiredConfirmations: res.axelarRequiredNumConfirmations,
+        numberRequiredConfirmations: 1,
         transactionHash: "",
         amountConfirmedString: res?.Attributes?.amount,
       }
@@ -407,39 +397,11 @@ const TransactionStatusWindow = ({
     ;(async () => {
       if (activeStep !== 3) return
 
-      const env = process.env.REACT_APP_STAGE as string
-
-      const roomId = buildTransferCompletedRoomId(
-        destinationAddress as string,
-        sourceChain?.chainName as string,
-        destinationChain?.chainName as string,
-        selectedSourceAsset?.common_key as string
-      )
-
-      const res = await (
-        await getWaitingService(
-          destinationChain as ChainInfo,
-          selectedSourceAsset as AssetInfo,
-          "destination",
-          env
-        )
-      ).waitForTransferEvent(
-        {
-          assetInfo: {
-            assetAddress: destinationAddress as string,
-            common_key: selectedSourceAsset?.common_key,
-          } as AssetInfo,
-          sourceChainInfo: sourceChain,
-          destinationChainInfo: destinationChain,
-        } as AssetAndChainInfo,
-        () => {},
-        new SocketServices(getConfigs(env).resourceUrl),
-        roomId
-      )
+      const res = await transferEvent(destinationChain as ChainInfo, selectedSourceAsset as AssetInfo, destinationAddress as string)
 
       const confirms: IConfirmationStatus = {
         numberConfirmations: 1,
-        numberRequiredConfirmations: res.axelarRequiredNumConfirmations,
+        numberRequiredConfirmations: 1,
         transactionHash: res.transactionHash,
         amountConfirmedString: "",
       }

@@ -18,8 +18,6 @@ export function buildDepositConfirmationRoomId(
 
 export function buildTransferCompletedRoomId(
   destinationAddress: string,
-  sourceChainName: string,
-  destinationChainName: string,
   assetCommonKey: string
 ): string {
   const environment =

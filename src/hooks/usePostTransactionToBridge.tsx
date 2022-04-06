@@ -30,15 +30,12 @@ export default function usePostTransactionToBridge() {
       try {
         setShowTransactionStatusWindow(true)
         setDepositAddress(null)
-        const payload = {
-          fromChain: sourceChain?.chainName || "",
-          toChain: destinationChain?.chainName || "",
-          asset: sourceAsset?.common_key || "",
-          destinationAddress: destinationAddress || "",
-        }
-        const assetAddress = await TransferAssetBridgeFacade.getDepositAddress({
-          payload,
-        })
+        const assetAddress = await TransferAssetBridgeFacade.getDepositAddress(
+          sourceChain?.chainName || "",
+          destinationChain?.chainName || "",
+          destinationAddress || "",
+          sourceAsset?.common_key || ""
+        )
         setDepositAddress({ assetAddress })
         resolve(true)
       } catch (e: any) {

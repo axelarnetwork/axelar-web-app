@@ -1,7 +1,5 @@
 import {
   AssetInfo,
-  EthersJsTokenMap,
-  getConfigs,
 } from "@axelar-network/axelarjs-sdk"
 import axios from "axios"
 import { BigNumber, Contract, ethers } from "ethers"
@@ -12,6 +10,7 @@ import { WalletInterface } from "./WalletInterface"
 import { convertAndDepositAbi } from "config/wallet/evm/convertAndDepositAbi"
 import { convertAndDepositContractAddress } from "config/contracts/deployedContractAddresses"
 import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
+import { EthersJsTokenMap, getConfigs } from "api/WaitService"
 
 declare const window: Window &
   typeof globalThis & {
