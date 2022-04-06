@@ -20,11 +20,15 @@ import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
+<<<<<<< HEAD
 import {
   terraConfigMainnet,
   terraConfigTestnet,
   TerraWallet,
 } from "hooks/wallet/TerraWallet"
+=======
+import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
+>>>>>>> develop
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
@@ -56,10 +60,18 @@ import {
 import { SelectedWallet, WalletType } from "state/Wallet"
 import {
   buildDepositConfirmationRoomId,
+<<<<<<< HEAD
 } from "api/AxelarEventListener"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { SocketService } from "api/WaitService/SocketService"
 import { transferEvent } from "api/WaitService"
+=======
+  buildTransferCompletedRoomId,
+} from "api/AxelarEventListener"
+import { SocketServices } from "@axelar-network/axelarjs-sdk/dist/src/services"
+import { AssetAndChainInfo } from "@axelar-network/axelarjs-sdk"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
+>>>>>>> develop
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
