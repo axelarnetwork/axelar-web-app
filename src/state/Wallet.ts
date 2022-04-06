@@ -8,3 +8,14 @@ export const HasAcknowledgedTerraReinstall = atom<boolean>({
   default: false,
   effects_UNSTABLE: [persistAtom],
 })
+
+export enum WalletType {
+  METAMASK = "metamask",
+  KEPLR = "keplr",
+  TERRA = "terra",
+}
+
+export const SelectedWallet = atom<WalletType>({
+  key: "SelectedWallet",
+  default: WalletType.KEPLR,
+})

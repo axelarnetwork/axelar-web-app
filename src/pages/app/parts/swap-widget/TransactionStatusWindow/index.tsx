@@ -22,6 +22,7 @@ import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
+import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
@@ -44,9 +45,20 @@ import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
 import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
-import { buildDepositConfirmationRoomId, buildTransferCompletedRoomId } from "api/AxelarEventListener"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+  WalletLCDClientConfig,
+} from "@terra-money/wallet-provider"
+import { SelectedWallet, WalletType } from "state/Wallet"
+import {
+  buildDepositConfirmationRoomId,
+  buildTransferCompletedRoomId,
+} from "api/AxelarEventListener"
 import { SocketServices } from "@axelar-network/axelarjs-sdk/dist/src/services"
 import { AssetAndChainInfo } from "@axelar-network/axelarjs-sdk"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -132,6 +144,30 @@ const StyledDialogBox = styled.div`
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
   border: solid 1px #b9bac8;
 `
+const options = {
+  render: (message: string, onConfirm: () => void, onCancel: () => void) => {
+    return (
+      <StyledDialogBox>
+        <div>{message}</div>
+        <br />
+        <FlexRow>
+          <StyledButton
+            style={{ margin: `0.5em`, backgroundColor: `grey` }}
+            onClick={onCancel}
+          >
+            {" "}
+            Go back{" "}
+          </StyledButton>
+          <br />
+          <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
+            {" "}
+            Confirm{" "}
+          </StyledButton>
+        </FlexRow>
+      </StyledDialogBox>
+    )
+  },
+}
 
 const TransactionStatusWindow = ({
   isOpen,
@@ -148,6 +184,8 @@ const TransactionStatusWindow = ({
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const setCartoonMessage = useSetRecoilState(MessageShownInCartoon)
   const [activeStep, setActiveStep] = useRecoilState(ActiveStep)
+  const [selectedWallet, setSelectedWallet] =
+    useRecoilState<WalletType>(SelectedWallet)
   const resetAllstate = useResetAllState()
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
@@ -157,17 +195,56 @@ const TransactionStatusWindow = ({
   const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer)
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient(
+    (process.env.REACT_APP_STAGE === "mainnet"
+      ? terraConfigMainnet
+      : terraConfigTestnet) as WalletLCDClientConfig
+  )
+  const connectedWallet = useConnectedWallet()
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
   )
+
+  useEffect(() => {
+    if (selectedWallet !== WalletType.TERRA) return
+
+    let msg = ""
+
+    const isMainnet = process.env.REACT_APP_STAGE === "mainnet"
+
+    if (isMainnet && terraWallet?.network?.chainID !== "columbus-5") {
+      msg =
+        "Your Terra Station extension is not set to mainnet. Please switch those settings before trying to send any funds."
+    } else if (!isMainnet && terraWallet?.network?.chainID !== "bombay-12") {
+      msg =
+        "Your Terra Station extension is not set to testnet. Please switch those settings before trying to send any funds."
+    } else return
+
+    const message: any = (
+      <FlexColumn>
+        <h3>
+          <BoldSpan>Warning</BoldSpan>
+        </h3>
+        {msg}
+      </FlexColumn>
+    )
+    confirm(message, options as any).then((positiveAffirmation) => {
+      if (!positiveAffirmation) {
+        resetAllstate()
+        closeResultsScreen()
+      }
+    })
+  }, [selectedWallet, terraWallet, closeResultsScreen, resetAllstate])
 
   useEffect(() => {
     setShowDisclaimer(false)
     setShowLargeDisclaimer(true)
   }, [setShowDisclaimer, setShowLargeDisclaimer])
 
-  const connectToWallet = async () => {
-    if (sourceChain?.module === "evm") {
+  const connectToWallet = async (walletType: WalletType) => {
+    setSelectedWallet(walletType)
+    if (walletType === WalletType.METAMASK) {
       let wallet: MetaMaskWallet = new MetaMaskWallet(
         sourceChain?.chainName.toLowerCase() as string
       )
@@ -183,19 +260,28 @@ const TransactionStatusWindow = ({
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
-      let wallet: KeplrWallet = new KeplrWallet(
-        sourceChain?.chainName.toLowerCase() as "axelar" | "terra"
-      )
-      setWalletToUse(wallet)
+      let wallet: WalletInterface
+      if (!sourceChain?.chainName) return
+
+      if (walletType === WalletType.TERRA) {
+        wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+      } else {
+        wallet = new KeplrWallet(sourceChain?.chainName.toLowerCase())
+      }
+
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
-      setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
+
+      const address = await wallet.getAddress()
+      if (!address) return
+      setWalletToUse(wallet)
+      setIsWalletConnected(isWalletInstalled)
       const balance: number = await wallet.getBalance(
         selectedSourceAsset as AssetInfo
       )
       setWalletBalance(balance)
-      setWalletAddress(await wallet.getAddress())
+      setWalletAddress(address)
     }
   }
 
@@ -378,34 +464,6 @@ const TransactionStatusWindow = ({
   ])
 
   useEffect(() => {
-    const options = {
-      render: (
-        message: string,
-        onConfirm: () => void,
-        onCancel: () => void
-      ) => {
-        return (
-          <StyledDialogBox>
-            <div>{message}</div>
-            <br />
-            <FlexRow>
-              <StyledButton
-                style={{ margin: `0.5em`, backgroundColor: `grey` }}
-                onClick={onCancel}
-              >
-                {" "}
-                Go back{" "}
-              </StyledButton>
-              <br />
-              <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
-                {" "}
-                Confirm{" "}
-              </StyledButton>
-            </FlexRow>
-          </StyledDialogBox>
-        )
-      },
-    }
     if (
       sourceChain?.module === "evm" &&
       activeStep === 2 &&

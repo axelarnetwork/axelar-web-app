@@ -61,7 +61,6 @@ export class MetaMaskWallet implements WalletInterface {
     this.tokenMap = getConfigs(
       process.env.REACT_APP_STAGE as string
     ).ethersJsConfigs[chainName.toLowerCase()].tokenAddressMap
-    console.log("tokenMap", this.tokenMap)
   }
 
   public getSigner(): ethers.providers.JsonRpcSigner {
@@ -147,7 +146,6 @@ export class MetaMaskWallet implements WalletInterface {
     await this.provider.send("eth_requestAccounts", [])
     this.signer = await this.provider.getSigner()
     const address = await this.signer.getAddress()
-    console.log("address", address)
     return address
   }
 

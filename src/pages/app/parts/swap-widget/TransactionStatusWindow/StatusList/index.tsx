@@ -38,6 +38,10 @@ import {
   isBroadcastTxSuccess,
 } from "@cosmjs/stargate"
 import { getAxelarTxLink } from "utils/explorer"
+import logoKeplr from "assets/svg/keplr.svg"
+import logoMetamask from "assets/svg/metamask.svg"
+import logoTerraStation from "assets/svg/terra-station.svg"
+import { WalletType } from "state/Wallet"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 
 const StyledStatusList = styled.div`
@@ -60,6 +64,10 @@ const HelperWidget = styled.div`
   cursor: pointer;
   font-size: smaller;
   margin-bottom: 0.5em;
+  transition: opacity 0.2s ease;
+  &:hover {
+    opacity: 0.8;
+  }
 `
 const StyledListItem = styled.div`
   height: 25%;
@@ -142,16 +150,14 @@ const ListItem = (props: IListItemProps) => {
 interface IStatusListProps {
   activeStep: number
   isWalletConnected: boolean
-  connectToWallet: () => void
+  connectToWallet: (walletType: WalletType) => void
 }
 
 const StatusList = (props: IStatusListProps) => {
   const { activeStep } = props
   const [showConfirmButton, setShowConfirmButton] = useState(false)
   const [confirming] = useState(false)
-  const [confirmedTx] = useState<BroadcastTxResponse | null>(
-    null
-  )
+  const [confirmedTx] = useState<BroadcastTxResponse | null>(null)
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
@@ -201,18 +207,62 @@ const StatusList = (props: IStatusListProps) => {
     .minus(getMinDepositAmount(sourceAsset, sourceChain, destinationChain) as number)
     .toNumber()
 
-  const WalletLogo = () => (
+  const WalletLogo = ({ src }: { src: any }) => (
     <StyledSVGImage
       height={`1em`}
       width={`1em`}
       margin={`0em 0em -0.125em 0em`}
-      src={
-        sourceChain?.module === "axelarnet"
-          ? require(`assets/svg/keplr.svg`).default
-          : require(`assets/svg/metamask.svg`).default
-      }
+      src={src}
     />
   )
+
+  const renderWalletButton = () => {
+    if (props.isWalletConnected) return null
+
+    if (sourceChain?.chainName?.toLowerCase() !== "terra") {
+      const logo = sourceChain?.module === "evm" ? logoMetamask : logoKeplr
+      const walletName = sourceChain?.module === "evm" ? "Metamask" : "Keplr"
+      const walletType =
+        sourceChain?.module === "evm" ? WalletType.METAMASK : WalletType.KEPLR
+      return (
+        <FlexRow
+          style={{
+            height: `1.5em`,
+            width: `100%`,
+            justifyContent: `space-between`,
+          }}
+        >
+          <div>OR deposit from here!</div>
+          <HelperWidget onClick={() => props.connectToWallet(walletType)}>
+            <span style={{ marginRight: "4px" }}>Connect {walletName}</span>
+            <WalletLogo src={logo} />
+          </HelperWidget>
+        </FlexRow>
+      )
+    } else {
+      return (
+        <div
+          style={{
+            display: "flex",
+            marginTop: "8px",
+          }}
+        >
+          <HelperWidget
+            onClick={() => props.connectToWallet(WalletType.KEPLR)}
+            style={{ marginRight: "8px" }}
+          >
+            <span style={{ marginRight: "4px" }}>Connect Keplr</span>
+            <WalletLogo src={logoKeplr} />
+          </HelperWidget>
+          <p style={{ marginRight: "8px" }}>OR</p>
+          <HelperWidget onClick={() => props.connectToWallet(WalletType.TERRA)}>
+            <span style={{ marginRight: "4px" }}>Connect Terra</span>
+            <WalletLogo src={logoTerraStation} />
+          </HelperWidget>
+        </div>
+      )
+    }
+  }
 
   // const confirmDepositTransaction = useCallback(async () => {
   //   if (!srcChainDepositHash) return
@@ -375,26 +425,9 @@ const StatusList = (props: IStatusListProps) => {
                   tooltipAltText={"Copied to Clipboard!"}
                 />
               </div>
-              {activeStep >= 3 && srcChainDepositHash ? (
-                linkToExplorer(sourceChain as ChainInfo, srcChainDepositHash)
-              ) : (
-                <FlexRow
-                  style={{
-                    height: `1.5em`,
-                    width: `100%`,
-                    justifyContent: `space-between`,
-                  }}
-                >
-                  <div>OR deposit from here!</div>
-                  {!props.isWalletConnected ? (
-                    <HelperWidget onClick={props.connectToWallet}>
-                      Connect{" "}
-                      {sourceChain?.module === "evm" ? "Metamask" : "Keplr"}{" "}
-                      <WalletLogo />
-                    </HelperWidget>
-                  ) : null}
-                </FlexRow>
-              )}
+              {activeStep >= 3 && srcChainDepositHash
+                ? linkToExplorer(sourceChain as ChainInfo, srcChainDepositHash)
+                : renderWalletButton()}
             </div>
           ) : (
             `Waiting for your deposit into a temporary deposit account.`
@@ -433,12 +466,6 @@ const ShowTransactionComplete = ({
     downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][
       destinationChain?.chainName?.toLowerCase() as string
     ]
-  console.log(
-    "block explorer",
-    blockExplorer,
-    destNumConfirm,
-    process.env.REACT_APP_STAGE
-  )
   return destNumConfirm.transactionHash && blockExplorer ? (
     <div style={{ overflowWrap: `break-word`, overflow: `hidden` }}>
       Transaction completed - see it{" "}
