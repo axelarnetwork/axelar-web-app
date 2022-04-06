@@ -1,5 +1,5 @@
-import { getConfigs } from "@axelar-network/axelarjs-sdk"
 import axios from "axios"
+import { getConfigs } from "./WaitService"
 
 type messageType = "error" | "info" | "debug"
 interface LogMessageObject {

@@ -1,7 +1,5 @@
 import {
   AssetInfo,
-  EthersJsTokenMap,
-  getConfigs,
 } from "@axelar-network/axelarjs-sdk"
 import axios from "axios"
 import { BigNumber, Contract, ethers } from "ethers"
@@ -9,6 +7,7 @@ import MetaMaskOnboarding from "@metamask/onboarding"
 import { erc20Abi } from "config/wallet/evm/erc20Abi"
 import { ChainParam } from "config/wallet/evm/testnet"
 import { WalletInterface } from "./WalletInterface"
+import { EthersJsTokenMap, getConfigs } from "api/WaitService"
 
 declare const window: Window &
   typeof globalThis & {

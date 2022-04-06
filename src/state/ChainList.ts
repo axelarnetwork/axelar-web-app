@@ -3,10 +3,8 @@ import {
   Chain,
   ChainInfo,
   loadChains,
-  EnvironmentConfigs,
-  EthersJsConfigs,
-  getConfigs,
 } from "@axelar-network/axelarjs-sdk"
+import { ConfigsForEnvironment, EthersJsConfigs, getConfigs } from "api/WaitService/constants";
 
 const environment = process.env.REACT_APP_STAGE as string
 const initialChainList: ChainInfo[] = loadChains({ environment })
@@ -25,7 +23,7 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
 
 let bannedAddresses: string[] = []; 
 
-const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs;
+const { ethersJsConfigs } = getConfigs(environment) as ConfigsForEnvironment;
 
 for (const v of Object.values(ethersJsConfigs)) {
   const { tokenAddressMap } = v as EthersJsConfigs;
