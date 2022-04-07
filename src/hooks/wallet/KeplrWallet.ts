@@ -69,6 +69,7 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
+    localStorage.setItem("IsKeplrWalletConnected", "true")
     const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
