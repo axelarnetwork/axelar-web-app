@@ -154,11 +154,25 @@ export const juno: KeplrWalletChainConfig = {
   denomMap: {},
 }
 
+export const eMoney: KeplrWalletChainConfig = {
+  restEndpoint: "https://emoney.validator.network/api",
+  rpcEndpoint: "https://emoney.validator.network",
+  chainId: "emoney-3",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "NGM", coinMinimalDenom: "ungm", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-26" },
+  denomMap: {},
+}
+
 export const allChains = {
   axelar,
   terra,
   cosmoshub,
   juno,
+  "e-money": eMoney,
   osmosis
 }
 export default allChains
