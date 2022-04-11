@@ -10,8 +10,9 @@ import {
   DestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import { IsTxSubmitting, SourceDepositAddress } from "state/TransactionStatus"
+import { IsTxSubmitting, SourceDepositAddress, TransactionTraceId } from "state/TransactionStatus"
 import { ShowTransactionStatusWindow } from "../state/ApplicationStatus"
+import { v4 as uuid } from "uuid"
 
 export default function usePostTransactionToBridge() {
   const [showTransactionStatusWindow, setShowTransactionStatusWindow] =
@@ -22,10 +23,12 @@ export default function usePostTransactionToBridge() {
   const setDepositAddress = useSetRecoilState(SourceDepositAddress)
   const sourceAsset = useRecoilValue(SourceAsset)
   const setIsSubmitting = useSetRecoilState(IsTxSubmitting)
+  const setTransactionsTraceId = useSetRecoilState(TransactionTraceId)
 
   const handleTransactionSubmission = useCallback(() => {
     return new Promise(async (resolve, reject) => {
       setIsSubmitting(false)
+      const _traceId = uuid()
 
       try {
         setShowTransactionStatusWindow(true)
@@ -34,8 +37,10 @@ export default function usePostTransactionToBridge() {
           sourceChain?.chainName || "",
           destinationChain?.chainName || "",
           destinationAddress || "",
-          sourceAsset?.common_key || ""
+          sourceAsset?.common_key || "", 
+          { _traceId  }
         )
+        setTransactionsTraceId(_traceId)
         setDepositAddress({ assetAddress })
         resolve(true)
       } catch (e: any) {
@@ -52,6 +57,7 @@ export default function usePostTransactionToBridge() {
     setShowTransactionStatusWindow,
     sourceAsset,
     setIsSubmitting,
+    setTransactionsTraceId
   ])
 
   const closeResultsScreen = () => {

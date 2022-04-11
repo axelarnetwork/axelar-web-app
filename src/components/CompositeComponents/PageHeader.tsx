@@ -14,7 +14,11 @@ import {
   useWallet,
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
-import { terraConfigMainnet, terraConfigTestnet, TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  terraConfigMainnet,
+  terraConfigTestnet,
+  TerraWallet,
+} from "hooks/wallet/TerraWallet"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 
 const StyledPageHeader = styled(Container)`
@@ -81,6 +85,28 @@ const PageHeader = () => {
       : terraConfigTestnet) as WalletLCDClientConfig
   )
   const connectedWallet = useConnectedWallet()
+  const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false)
+  const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useState(false)
+  const [isTerraStationWalletConnected, setIsTerraStationWalletConnected] = useState(false)
+
+  useEffect(() => {
+    const getIsKeplrConnected = !!localStorage.getItem("IsKeplrWalletConnected")
+    if (getIsKeplrConnected) setIsKeplrWalletConnected(true)
+    if (!!connectedWallet) setIsTerraStationWalletConnected(true)
+  }, [connectedWallet])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const accounts = await (window as any).ethereum.request({
+          method: "eth_accounts",
+        })
+        if (accounts?.length > 0) setIsMetaMaskConnected(true)
+      } catch (err) {
+        console.error(err)
+      }
+    })()
+  }, [])
 
   useEffect(() => {
     if (!showWalletOptions) return
@@ -101,35 +127,43 @@ const PageHeader = () => {
       <FlexColumn>
         <h2>Select Wallets</h2>
         <div
-        style={{
-          display: `flex`,
-          flexWrap: `wrap`,
-          width: `100%`,
-          border: "0.1px solid lightgrey",
-        }}
-      >
-        <WalletOption
-          onClick={async () => new KeplrWallet("terra").connectToWallet()}
-          label={"Keplr Wallet"}
-          image={require(`assets/svg/keplr.svg`).default}
-        />
-        <WalletOption
-          onClick={async () =>
-            new TerraWallet(
-              terraWallet,
-              lcdClient,
-              connectedWallet
-            ).connectToWallet()
-          }
-          label={"Terra Station"}
-          image={require(`assets/svg/terra-station.svg`).default}
-        />
-        <WalletOption
-          onClick={async () => new MetaMaskWallet("ethereum").connectToWallet()}
-          label={"MetaMask"}
-          image={require(`assets/svg/metamask.svg`).default}
-        />
-      </div>
+          style={{
+            display: `flex`,
+            flexWrap: `wrap`,
+            width: `100%`,
+            border: "0.1px solid lightgrey",
+          }}
+        >
+          <WalletOption
+            onClick={async () => {
+              const connectionResult = await new KeplrWallet("terra").connectToWallet();
+              if (connectionResult && ["added", "exists"].includes(connectionResult)) setIsKeplrWalletConnected(true)
+            }}
+            label={"Keplr Wallet"}
+            image={require(`assets/svg/keplr.svg`).default}
+            isConnected={isKeplrWalletConnected}
+          />
+          <WalletOption
+            onClick={async () =>
+              new TerraWallet(
+                terraWallet,
+                lcdClient,
+                connectedWallet
+              ).connectToWallet()
+            }
+            label={"Terra Station"}
+            image={require(`assets/svg/terra-station.svg`).default}
+            isConnected={isTerraStationWalletConnected}
+          />
+          <WalletOption
+            onClick={async () =>
+              new MetaMaskWallet("ethereum").connectToWallet()
+            }
+            label={"MetaMask"}
+            image={require(`assets/svg/metamask.svg`).default}
+            isConnected={isMetaMaskConnected}
+          />
+        </div>
       </FlexColumn>
     )
     confirm(message, options as any).then((done) => {
@@ -141,6 +175,9 @@ const PageHeader = () => {
     connectedWallet,
     lcdClient,
     terraWallet,
+    isMetaMaskConnected,
+    isKeplrWalletConnected,
+    isTerraStationWalletConnected
   ])
 
   const pillStyle =
@@ -173,7 +210,7 @@ const PageHeader = () => {
                 borderRadius: "10px",
                 backgroundColor: "slategrey",
                 color: "white",
-                fontWeight: "bolder"
+                fontWeight: "bolder",
               }}
             >
               <p>Connect Wallet</p>
@@ -204,11 +241,19 @@ const StyledWalletOption = styled(ConnectWalletButton)`
   }
 `
 
-const WalletOption = ({ label, onClick, image }: any) => {
+const WalletOption = ({ label, onClick, image, isConnected }: any) => {
   return (
     <StyledWalletOption onClick={onClick}>
       <SVGImage height={`3em`} width={`3em`} margin={`auto`} src={image} />
       <h3>{label}</h3>
+      {isConnected && (
+        <FlexRow>
+          <span style={{ backgroundColor: `green`, padding: `0.25em` }}></span>
+          <span style={{ fontSize: `0.8em`, marginLeft: `5px` }}>
+            Connected
+          </span>
+        </FlexRow>
+      )}
     </StyledWalletOption>
   )
 }

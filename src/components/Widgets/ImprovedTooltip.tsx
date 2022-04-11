@@ -16,25 +16,25 @@ export const ImprovedTooltip = ({
 
   const updateTextToShow = useCallback(() => {
     setClicked(true)
-    setTimeout(() => setClicked(false), 2000)
+    setTimeout(() => setClicked(false), 5000)
   }, [setClicked])
 
   return (
-    <div>
-      <div
+    <span>
+      <span
         style={{ cursor: `pointer`, display: `inline-block` }}
         data-tip={tooltipText}
       >
         {cloneElement(anchorContent as JSX.Element, {
           cbOnClick: updateTextToShow,
         })}
-      </div>
+      </span>
       <ReactTooltip
         className={"width-override"}
         getContent={() => {
           return clicked ? tooltipAltText : tooltipText
         }}
       />
-    </div>
+    </span>
   )
 }

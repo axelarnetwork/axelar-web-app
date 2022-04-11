@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ChainInfo } from "@axelar-network/axelarjs-sdk"
+import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 import styled from "styled-components"
 import screenConfigs from "config/screenConfigs"
 import { useRecoilValue } from "recoil"
@@ -43,6 +43,7 @@ import logoMetamask from "assets/svg/metamask.svg"
 import logoTerraStation from "assets/svg/terra-station.svg"
 import { WalletType } from "state/Wallet"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -54,7 +55,7 @@ const StyledStatusList = styled.div`
 const StyledSVGImage = styled(SVGImage)`
   cursor: pointer;
 `
-const HelperWidget = styled.div`
+const HelperWidget = styled.span`
   box-sizing: border-box;
   padding: 0.5em 1em 0.5em 1em;
   text-align: center;
@@ -63,7 +64,6 @@ const HelperWidget = styled.div`
   color: white;
   cursor: pointer;
   font-size: smaller;
-  margin-bottom: 0.5em;
   transition: opacity 0.2s ease;
   &:hover {
     opacity: 0.8;
@@ -204,7 +204,9 @@ const StatusList = (props: IStatusListProps) => {
   //   .toNumber()
 
   const afterFees: number = new BigNumber(amountConfirmedAdjusted)
-    .minus(getMinDepositAmount(sourceAsset, sourceChain, destinationChain) as number)
+    .minus(
+      getMinDepositAmount(sourceAsset, sourceChain, destinationChain) as number
+    )
     .toNumber()
 
   const WalletLogo = ({ src }: { src: any }) => (
@@ -225,80 +227,73 @@ const StatusList = (props: IStatusListProps) => {
       const walletType =
         sourceChain?.module === "evm" ? WalletType.METAMASK : WalletType.KEPLR
       return (
-        <FlexRow
-          style={{
-            height: `1.5em`,
-            width: `100%`,
-            justifyContent: `space-between`,
-          }}
-        >
-          <div>OR deposit from here!</div>
-          <HelperWidget onClick={() => props.connectToWallet(walletType)}>
-            <span style={{ marginRight: "4px" }}>Connect {walletName}</span>
-            <WalletLogo src={logo} />
-          </HelperWidget>
-        </FlexRow>
+        <div>
+          <FlexRow
+            style={{
+              width: `100%`,
+              justifyContent: `flex-start`,
+              marginTop: `0.5em`,
+            }}
+          >
+            <div style={{ marginRight: `5px` }}>
+              Send{" "}
+              {sourceChain?.module === "axelarnet" ? "IBC transfer" : "deposit"}{" "}
+              here via:
+            </div>
+            <HelperWidget onClick={() => props.connectToWallet(walletType)}>
+              <WalletLogo src={logo} />
+              <span style={{ marginLeft: "0.5em" }}>{walletName}</span>
+            </HelperWidget>
+          </FlexRow>
+          {hasSelectedNativeAssetForChain(
+            selectedSourceAsset as AssetInfo,
+            sourceChain?.chainName
+          ) && (
+            <div
+              style={{
+                width: `100%`,
+                justifyContent: `flex-start`,
+                marginTop: `0.5em`,
+                fontStyle: `italic`,
+                fontSize: `0.8em`,
+              }}
+            >
+              (Satellite accepts native {sourceChain?.chainSymbol} tokens and
+              automatically converts them to W{sourceChain?.chainSymbol} for the
+              required deposit.)
+            </div>
+          )}
+        </div>
       )
     } else {
       return (
-        <div
-          style={{
-            display: "flex",
-            marginTop: "8px",
-          }}
-        >
-          <HelperWidget
-            onClick={() => props.connectToWallet(WalletType.KEPLR)}
-            style={{ marginRight: "8px" }}
+        <div style={{ marginTop: `0.5em` }}>
+          <p>Send IBC transfer here via:</p>
+          <FlexRow
+            style={{
+              justifyContent: `space-between`,
+              width: `80%`,
+            }}
           >
-            <span style={{ marginRight: "4px" }}>Connect Keplr</span>
-            <WalletLogo src={logoKeplr} />
-          </HelperWidget>
-          <p style={{ marginRight: "8px" }}>OR</p>
-          <HelperWidget onClick={() => props.connectToWallet(WalletType.TERRA)}>
-            <span style={{ marginRight: "4px" }}>Connect Terra</span>
-            <WalletLogo src={logoTerraStation} />
-          </HelperWidget>
+            <HelperWidget
+              onClick={() => props.connectToWallet(WalletType.KEPLR)}
+              style={{ marginRight: "2px" }}
+            >
+              <span style={{ marginRight: "5px" }}>Keplr Wallet</span>
+              <WalletLogo src={logoKeplr} />
+            </HelperWidget>
+            <p style={{ marginRight: "2px" }}>OR</p>
+            <HelperWidget
+              onClick={() => props.connectToWallet(WalletType.TERRA)}
+            >
+              <span style={{ marginRight: "5px" }}>Terra Station</span>
+              <WalletLogo src={logoTerraStation} />
+            </HelperWidget>
+          </FlexRow>
         </div>
       )
     }
   }
-
-  // const confirmDepositTransaction = useCallback(async () => {
-  //   if (!srcChainDepositHash) return
-  //   if (!sourceChain?.chainName) return
-  //   if (!depositAddress?.assetAddress) return
-  //   if (!depositAddress?.common_key) return
-  //   if (!depositAmount) return
-
-  //   setConfirming(true)
-  //   const req: ConfirmDepositRequest = {
-  //     hash: srcChainDepositHash,
-  //     from: sourceChain?.chainName!,
-  //     depositAddress: depositAddress.assetAddress,
-  //     amount: ethers.utils
-  //       .parseUnits(depositAmount, selectedSourceAsset?.decimals || 6)
-  //       .toString(),
-  //     token: depositAddress.common_key,
-  //   }
-  //   try {
-  //     const base64SignedTx = await confirmDeposit(req)
-  //     const tx = await broadcastCosmosTx(base64SignedTx)
-  //     setConfirmedTx(tx)
-  //     setConfirming(false)
-  //     setShowConfirmButton(false)
-  //   } catch (e) {
-  //     console.log(e)
-  //     setConfirming(false)
-  //   }
-  // }, [
-  //   depositAddress?.assetAddress,
-  //   depositAddress?.common_key,
-  //   depositAmount,
-  //   selectedSourceAsset?.decimals,
-  //   sourceChain?.chainName,
-  //   srcChainDepositHash,
-  // ])
 
   const renderStep3 = () => {
     if (activeStep >= 3) {
@@ -382,11 +377,11 @@ const StatusList = (props: IStatusListProps) => {
         activeStep={activeStep}
         text={
           <span>
-            Generating a one-time deposit address for recipient:{" "}
+            Generating a one-time deposit address for{" "}
+            {selectedSourceAsset?.assetSymbol} recipient:{" "}
             <BoldSpan>
               {getShortenedWord(destinationAddress as string, 5)}
             </BoldSpan>
-            .
           </span>
         }
       />
@@ -403,26 +398,23 @@ const StatusList = (props: IStatusListProps) => {
                 width: `100%`,
               }}
             >
-              {sourceChain?.chainName.toLowerCase() === "terra"
-                ? `Send ${selectedSourceAsset?.assetSymbol} from Terra to Axelar via IBC:`
-                : `Deposit ${selectedSourceAsset?.assetSymbol} on ${sourceChain?.chainName} to this address:`}
-              <div style={{ margin: `5px 0px 0px 0px` }}>
+              <div>
+                Deposit address:{" "}
+                <BoldSpan style={{ marginRight: `10px`}}>
+                  {getShortenedWord(depositAddress?.assetAddress, 5)}
+                </BoldSpan>
                 <ImprovedTooltip
                   anchorContent={
                     <CopyToClipboard
-                      JSXToShow={
-                        <BoldSpan>
-                          {getShortenedWord(depositAddress?.assetAddress, 5)}{" "}
-                        </BoldSpan>
-                      }
+                      JSXToShow={<span></span>}
                       height={`12px`}
                       width={`10px`}
                       textToCopy={depositAddress?.assetAddress || ""}
                       showImage={true}
                     />
                   }
-                  tooltipText={"Copy to Clipboard"}
-                  tooltipAltText={"Copied to Clipboard!"}
+                  tooltipText={"Advanced Usage: Copy this address to make this deposit from outside Satellite."}
+                  tooltipAltText={"Copied! Please be sure you send the correct assets to this address."}
                 />
               </div>
               {activeStep >= 3 && srcChainDepositHash

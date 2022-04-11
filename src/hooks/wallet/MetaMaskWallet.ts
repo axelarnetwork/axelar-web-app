@@ -1,12 +1,13 @@
-import {
-  AssetInfo,
-} from "@axelar-network/axelarjs-sdk"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 import axios from "axios"
 import { BigNumber, Contract, ethers } from "ethers"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { erc20Abi } from "config/wallet/evm/erc20Abi"
 import { ChainParam } from "config/wallet/evm/testnet"
 import { WalletInterface } from "./WalletInterface"
+import { convertAndDepositAbi } from "config/wallet/evm/convertAndDepositAbi"
+import { convertAndDepositContractAddress } from "config/contracts/deployedContractAddresses"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 import { EthersJsTokenMap, getConfigs } from "api/WaitService"
 
 declare const window: Window &
@@ -48,9 +49,8 @@ export class MetaMaskWallet implements WalletInterface {
   private nodeServerUrl: string
 
   public constructor(chainName: string) {
-    
     if (!this.isWalletInstalled()) this.installWallet()
-    
+
     this.chainName = chainName
     this.nodeServerUrl = getConfigs(
       process.env.REACT_APP_STAGE as string
@@ -148,9 +148,33 @@ export class MetaMaskWallet implements WalletInterface {
     return address
   }
 
-  public async getBalance(tokenContractAddress: string): Promise<number> {
+  public async getNativeAssetBalance(
+    assetInfo: AssetInfo,
+    sourceChainName?: string
+  ) {
+    if (hasSelectedNativeAssetForChain(assetInfo, sourceChainName))
+      return +ethers.utils.formatUnits(
+        await this.provider.getBalance(await this.getAddress()),
+        assetInfo.decimals
+      )
+    return null
+  }
+
+  public async getBalance(
+    assetInfo: AssetInfo,
+    sourceChainName?: string
+  ): Promise<number> {
+    const checkNativeBalance = await this.getNativeAssetBalance(
+      assetInfo,
+      sourceChainName
+    )
+    if (checkNativeBalance) return checkNativeBalance
+
+    const tokenContractAddress: string = await this.getOrFetchTokenAddress(
+      assetInfo as AssetInfo
+    )
     const signer = await this.getSigner().getAddress()
-    const contract: Contract = this.getEthersContract(tokenContractAddress)
+    const contract: Contract = this.getEthersContract(tokenContractAddress, erc20Abi)
     const decimals = await contract.decimals()
     const balance = (await contract.balanceOf(signer)).toString()
     return +ethers.utils.formatUnits(balance, decimals)
@@ -178,10 +202,78 @@ export class MetaMaskWallet implements WalletInterface {
   }
 
   public async transferTokens(
-    receiver: string,
-    amount: string | BigNumber,
+    _receiver: string,
+    _amount: string | BigNumber,
     asset: AssetInfo
   ): Promise<MetamaskTransferEvent> {
+    const tokenContractAddr: string = await this.getOrFetchTokenAddress(asset)
+    const ethersContract = this.getEthersContract(tokenContractAddr, erc20Abi)
+    const balance = await ethersContract.balanceOf(await this.getAddress())
+    const { response, amount, receiver } = this.validateInputs(
+      _receiver,
+      _amount,
+      asset,
+      balance
+    )
+
+    const tx = await ethersContract.transfer(
+      receiver,
+      amount,
+      createFeeTxOption(this.signer)
+    )
+
+    const receipt = await tx.wait()
+
+    response.tokenContractAddress = tokenContractAddr
+    response.txHash = tx.hash
+    response.blockNumber = receipt.blockNumber
+
+    return response
+  }
+
+  public async transferNativeTokens(
+    _receiver: string,
+    _amount: string | BigNumber,
+    asset: AssetInfo,
+    sourceChainName: string
+  ): Promise<MetamaskTransferEvent> {
+    const balance: BigNumber = await this.provider.getBalance(
+      await this.getAddress()
+    )
+    const {
+      response,
+      amount: value,
+      receiver,
+    } = this.validateInputs(_receiver, _amount, asset, balance)
+
+    const contractAddress: string =
+      convertAndDepositContractAddress[
+        process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet"
+      ][sourceChainName?.toLowerCase() || ""]
+
+    const tx = await this.getEthersContract(
+      contractAddress,
+      convertAndDepositAbi
+    ).depositAndTransfer(receiver, { value })
+
+    const receipt = await tx.wait()
+
+    response.txHash = tx.hash
+    response.blockNumber = receipt.blockNumber
+
+    return response
+  }
+
+  private validateInputs(
+    receiver: string,
+    amount: string | BigNumber,
+    asset: AssetInfo,
+    balance: BigNumber
+  ): {
+    response: MetamaskTransferEvent
+    amount: string | BigNumber
+    receiver: string
+  } {
     const response: MetamaskTransferEvent = {
       txHash: "",
       tokenContractAddress: "",
@@ -191,19 +283,14 @@ export class MetaMaskWallet implements WalletInterface {
       blockNumber: "",
     }
 
-    let userAddress = await this.getAddress()
-    const tokenContractAddress: string = await this.getOrFetchTokenAddress(
-      asset
-    )
-    const ethersContract = this.getEthersContract(tokenContractAddress)
-
-    response.tokenContractAddress = tokenContractAddress
+    /*validate input address*/
     try {
       receiver = ethers.utils.getAddress(receiver)
     } catch {
       response.error += `, Invalid address: ${receiver}, `
     }
 
+    /*validate amounts are not malformed */
     try {
       amount = ethers.utils.parseUnits(amount as string, asset.decimals)
       if (amount.isNegative()) {
@@ -214,8 +301,7 @@ export class MetaMaskWallet implements WalletInterface {
       response.error += `, Invalid amount: ${amount}`
     }
 
-    const balance = await ethersContract.balanceOf(userAddress)
-
+    /*validate balance on wallet are greater than amount requested for transfer */
     if (balance.lt(amount)) {
       let amountFormatted = ethers.utils.formatUnits(amount, asset.decimals)
       let balanceFormatted = ethers.utils.formatUnits(balance, asset.decimals)
@@ -225,15 +311,7 @@ export class MetaMaskWallet implements WalletInterface {
       response.error += `, Insufficient balance receiver send ${amountFormatted} (You have ${balanceFormatted})`
     }
 
-    const txOptions = createFeeTxOption(this.signer)
-
-    const tx = await ethersContract.transfer(receiver, amount, txOptions)
-    response.txHash = tx.hash
-
-    const receipt = await tx.wait()
-    response.blockNumber = receipt.blockNumber
-
-    return response
+    return { response, amount, receiver }
   }
 
   public confirmEtherTransaction(
@@ -256,7 +334,7 @@ export class MetaMaskWallet implements WalletInterface {
     }, confirmInterval * 1000)
   }
 
-  private getEthersContract(tokenAddress: string) {
-    return new ethers.Contract(tokenAddress, erc20Abi, this.signer)
+  private getEthersContract(tokenAddress: string, abi: any) {
+    return new ethers.Contract(tokenAddress, abi, this.signer)
   }
 }
