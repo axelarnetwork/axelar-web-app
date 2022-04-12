@@ -5,5 +5,7 @@
 
 .confirm-box {
   left: 35% !important;
-  top: 35% !important;
+  top: 10% !important;
+  width: 50% !important;
+  z-index: 10000;
 }

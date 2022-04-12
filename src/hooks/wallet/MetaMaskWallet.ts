@@ -79,7 +79,7 @@ export class MetaMaskWallet implements WalletInterface {
     return Boolean(ethereum && ethereum.isMetaMask)
   }
 
-  public async connectToWallet() {
+  public async connectToWallet(cb?: any) {
     if (!this.isWalletInstalled()) {
       console.log("need to install wallet")
       this.installWallet()
@@ -113,6 +113,7 @@ export class MetaMaskWallet implements WalletInterface {
         }
         // handle other "switch" errors
       }
+      cb && cb();
       await this.getAddress()
     }
   }

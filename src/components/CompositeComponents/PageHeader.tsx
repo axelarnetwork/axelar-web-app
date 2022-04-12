@@ -157,7 +157,7 @@ const PageHeader = () => {
           />
           <WalletOption
             onClick={async () =>
-              new MetaMaskWallet("ethereum").connectToWallet()
+              new MetaMaskWallet("ethereum").connectToWallet(() => setIsMetaMaskConnected(true))
             }
             label={"MetaMask"}
             image={require(`assets/svg/metamask.svg`).default}
