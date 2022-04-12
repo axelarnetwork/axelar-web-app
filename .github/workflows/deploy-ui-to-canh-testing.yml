@@ -1,7 +1,7 @@
 name: deploy-ui-to-canh-testing-mainnet
 on:
   push:
-    branches: wrapped-native-assets
+    branches: canh-testing
 
 jobs:
   deploy-ui-to-canh-testing-mainnet:
