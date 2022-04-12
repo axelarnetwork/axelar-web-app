@@ -30,5 +30,6 @@ jobs:
           alias-domains: |
             bridge.testnet.axelar.dev
             axelar-satellite-testnet.vercel.app
+            testnet.satellite.money
         env:
           REACT_APP_UNDER_MAINTENANCE: ${{github.event.inputs.maintenance}}
