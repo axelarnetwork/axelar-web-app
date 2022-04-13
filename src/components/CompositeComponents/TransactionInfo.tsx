@@ -70,11 +70,6 @@ const TransactionInfo = () => {
       }
     >
       <div style={{ display: `flex`, flexDirection: `column` }}>
-        {minDeposit &&
-          generateInfoLine(
-            `Minimum Transfer Amount`,
-            `${minDeposit} ${selectedSrcAsset?.assetSymbol}`
-          )}
         {generateInfoLine(
           "Fee",
           `${minDeposit} ${selectedSrcAsset?.assetSymbol}`

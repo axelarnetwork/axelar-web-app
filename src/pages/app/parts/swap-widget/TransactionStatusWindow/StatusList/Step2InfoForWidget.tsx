@@ -66,11 +66,6 @@ const Step2InfoForWidget = ({
         "Transfer Fee: ",
         `${minDepositAmt} ${sourceAsset?.assetSymbol}`
       )}
-      {minDepositAmt &&
-        generateLine(
-          "Min Transfer Amount: ",
-          `${minDepositAmt} ${sourceAsset?.assetSymbol}`
-        )}
       {generateLine("Wait Time: ", `~${sourceChain?.estimatedWaitTime}min`)}
       {generateLine(
         "Deposit Address: ",

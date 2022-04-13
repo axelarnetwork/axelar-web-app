@@ -135,7 +135,7 @@ const PageHeader = () => {
         >
           <WalletOption
             onClick={async () => {
-              const connectionResult = await new KeplrWallet("terra").connectToWallet(() => setIsKeplrWalletConnected(true));
+              await new KeplrWallet("terra").connectToWallet(() => setIsKeplrWalletConnected(true));
             }}
             label={"Keplr Wallet"}
             image={require(`assets/svg/keplr.svg`).default}

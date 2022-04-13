@@ -397,8 +397,8 @@ export const DepositFromWallet = ({
           <br />
         </span>
       )
-    else if (parseFloat(amountToDeposit) < minDepositAmt)
-      text = "Amount is below the minimum!"
+    else if (parseFloat(amountToDeposit) <= minDepositAmt)
+      text = "Amount must be greater than the fee!"
     else if (!isValidDecimal(amountToDeposit.toString()))
       text = "Too many decimal points"
 
@@ -406,7 +406,6 @@ export const DepositFromWallet = ({
       <div>
         <br />
         {text}
-        <br />
         <br />
       </div>
     )
