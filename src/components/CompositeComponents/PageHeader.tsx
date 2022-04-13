@@ -64,8 +64,7 @@ const ConnectWalletButton = styled(FlexRow)`
 `
 
 const StyledDialogBox = styled.div`
-  height: 50%;
-  width: 50%;
+  width: 25%;
   min-width: 400px;
   background-color: white;
   padding: 2em;
