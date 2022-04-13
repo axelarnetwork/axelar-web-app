@@ -243,7 +243,6 @@ const UserInputWindow = ({
 
   const onInitiateTransfer = useCallback(async () => {
     if (!(destAddr && isValidDestinationAddress)) return
-
     setIsSubmitting(true)
     try {
       await handleTransactionSubmission()
