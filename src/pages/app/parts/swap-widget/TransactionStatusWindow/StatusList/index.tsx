@@ -44,6 +44,7 @@ import logoTerraStation from "assets/svg/terra-station.svg"
 import { WalletType } from "state/Wallet"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
+import { getConfigs } from "api/WaitService"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -209,15 +210,6 @@ const StatusList = (props: IStatusListProps) => {
       getMinDepositAmount(sourceAsset, sourceChain, destinationChain) as number
     )
     .toNumber()
-
-  const WalletLogo = ({ src }: { src: any }) => (
-    <StyledSVGImage
-      height={`1em`}
-      width={`1em`}
-      margin={`0em 0em -0.125em 0em`}
-      src={src}
-    />
-  )
 
   const renderWalletButton = () => {
     if (props.isWalletConnected) return null
@@ -401,7 +393,7 @@ const StatusList = (props: IStatusListProps) => {
             >
               <div>
                 Deposit address:{" "}
-                <BoldSpan style={{ marginRight: `10px`}}>
+                <BoldSpan style={{ marginRight: `10px` }}>
                   {getShortenedWord(depositAddress?.assetAddress, 5)}
                 </BoldSpan>
                 <ImprovedTooltip
@@ -414,8 +406,12 @@ const StatusList = (props: IStatusListProps) => {
                       showImage={true}
                     />
                   }
-                  tooltipText={"Advanced Usage: Copy this address to make this deposit from outside Satellite."}
-                  tooltipAltText={"Copied! Please be sure you send the correct assets to this address."}
+                  tooltipText={
+                    "Advanced Usage: Copy this address to make this deposit from outside Satellite."
+                  }
+                  tooltipAltText={
+                    "Copied! Please be sure you send the correct assets to this address."
+                  }
                 />
               </div>
               {activeStep >= 3 && srcChainDepositHash
@@ -439,7 +435,7 @@ const StatusList = (props: IStatusListProps) => {
         activeStep={activeStep}
         text={
           activeStep >= 4
-            ? ShowTransactionComplete({ destNumConfirm, destinationChain })
+            ? ShowTransactionComplete({ destNumConfirm, destinationChain, selectedSourceAsset })
             : `Detecting your transfer on ${destinationChain?.chainName}`
         }
       />
@@ -450,9 +446,11 @@ const StatusList = (props: IStatusListProps) => {
 const ShowTransactionComplete = ({
   destNumConfirm,
   destinationChain,
+  selectedSourceAsset
 }: {
   destNumConfirm: IConfirmationStatus
   destinationChain: Nullable<ChainInfo>
+  selectedSourceAsset: Nullable<AssetInfo>
 }) => {
   const blockExplorer: { name: string; url: string } =
     downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string] &&
@@ -465,10 +463,61 @@ const ShowTransactionComplete = ({
       <Link href={`${blockExplorer.url}${destNumConfirm.transactionHash}`}>
         here
       </Link>{" "}
-      on {blockExplorer.name}!
+      on {blockExplorer.name}!{addTokenToMetamask(destinationChain, selectedSourceAsset)}
     </div>
   ) : (
     "Transfer Completed!"
+  )
+}
+
+const WalletLogo = ({ src, onClick }: { src: any, onClick?: any }) => (
+  <span onClick={onClick}>
+    <StyledSVGImage
+    height={`1em`}
+    width={`1em`}
+    margin={`0em 0em -0.125em 0em`}
+    src={src}
+  />
+  </span>
+)
+
+const addTokenToMetamask = (
+  destinationChain: ChainInfo | null,
+  selectedSourceAsset: AssetInfo | null
+) => {
+  const addToken = async () => {
+    const tokenAddress = getConfigs(process.env.REACT_APP_STAGE as string)?.ethersJsConfigs[destinationChain?.chainName?.toLowerCase() as string]?.tokenAddressMap[selectedSourceAsset?.assetSymbol as string]
+    const tokenSymbol = selectedSourceAsset?.assetSymbol
+    const tokenDecimals = selectedSourceAsset?.decimals
+
+    console.log("toek info",tokenAddress, tokenSymbol, tokenDecimals)
+
+    try {
+      
+      await (window as any).ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20",
+          options: {
+            address: tokenAddress,
+            symbol: tokenSymbol,
+            decimals: tokenDecimals,
+            image: "",
+          },
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  if (destinationChain?.module !== "evm") return null
+
+  return (
+    <ImprovedTooltip
+      anchorContent={<WalletLogo src={logoMetamask} onClick={addToken} />}
+      tooltipText={"Add to Metamask"}
+      tooltipAltText={"Add to Metamask"}
+    />
   )
 }
 
