@@ -54,6 +54,7 @@ import {
   useWallet,
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
+import { IsKeplrWalletConnected } from "state/Wallet"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -149,6 +150,7 @@ const UserInputWindow = ({
       : terraConfigTestnet) as WalletLCDClientConfig
   )
   const connectedWallet = useConnectedWallet()
+  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
   const resetDestinationChain = useResetRecoilState(
@@ -318,7 +320,7 @@ const UserInputWindow = ({
     wallet = isEvm
       ? new MetaMaskWallet(destinationChain.chainName.toLowerCase())
       : new KeplrWallet(destinationChain.chainName.toLowerCase())
-    if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet()
+    if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet(() => setIsKeplrWalletConnected(true))
     wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
   }
 

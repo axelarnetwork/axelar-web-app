@@ -53,7 +53,7 @@ import {
   useWallet,
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
-import { SelectedWallet, WalletType } from "state/Wallet"
+import { IsKeplrWalletConnected, SelectedWallet, WalletType } from "state/Wallet"
 import {
   buildDepositConfirmationRoomId,
 } from "api/AxelarEventListener"
@@ -196,6 +196,7 @@ const TransactionStatusWindow = ({
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
+  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
   const lcdClient = useLCDClient(
     (process.env.REACT_APP_STAGE === "mainnet"
       ? terraConfigMainnet
@@ -268,7 +269,7 @@ const TransactionStatusWindow = ({
 
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
       if (!isWalletInstalled) return
-      await wallet.connectToWallet()
+      await wallet.connectToWallet(walletType === WalletType.KEPLR ? () => setIsKeplrWalletConnected(true) : null)
 
       const address = await wallet.getAddress()
       if (!address) return

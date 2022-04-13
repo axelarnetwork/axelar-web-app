@@ -37,7 +37,7 @@ export class KeplrWallet implements WalletInterface {
     return !!window.keplr
   }
 
-  public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
+  public async connectToWallet(cb?: any): Promise<"added" | "exists" | "error" | null> {
     let text: "added" | "exists" | "error" | null = "error"
 
     if (!this.isWalletInstalled()) {
@@ -69,7 +69,8 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
-    localStorage.setItem("IsKeplrWalletConnected", "true")
+    cb && cb();
+    // localStorage.setItem("IsKeplrWalletConnected", "true")
     const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)

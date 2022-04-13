@@ -3,7 +3,7 @@ import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 export interface WalletInterface {
   isWalletInstalled(): Boolean
 
-  connectToWallet(): void
+  connectToWallet(cb?: any): void
 
   installWallet(): void
 

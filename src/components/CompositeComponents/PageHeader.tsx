@@ -20,6 +20,8 @@ import {
   TerraWallet,
 } from "hooks/wallet/TerraWallet"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { useRecoilState } from "recoil"
+import { IsKeplrWalletConnected } from "state/Wallet"
 
 const StyledPageHeader = styled(Container)`
   position: fixed;
@@ -85,12 +87,10 @@ const PageHeader = () => {
   )
   const connectedWallet = useConnectedWallet()
   const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false)
-  const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useState(false)
+  const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
   const [isTerraStationWalletConnected, setIsTerraStationWalletConnected] = useState(false)
 
   useEffect(() => {
-    const getIsKeplrConnected = !!localStorage.getItem("IsKeplrWalletConnected")
-    if (getIsKeplrConnected) setIsKeplrWalletConnected(true)
     if (!!connectedWallet) setIsTerraStationWalletConnected(true)
   }, [connectedWallet])
 
@@ -135,8 +135,7 @@ const PageHeader = () => {
         >
           <WalletOption
             onClick={async () => {
-              const connectionResult = await new KeplrWallet("terra").connectToWallet();
-              if (connectionResult && ["added", "exists"].includes(connectionResult)) setIsKeplrWalletConnected(true)
+              const connectionResult = await new KeplrWallet("terra").connectToWallet(() => setIsKeplrWalletConnected(true));
             }}
             label={"Keplr Wallet"}
             image={require(`assets/svg/keplr.svg`).default}
@@ -176,7 +175,8 @@ const PageHeader = () => {
     terraWallet,
     isMetaMaskConnected,
     isKeplrWalletConnected,
-    isTerraStationWalletConnected
+    isTerraStationWalletConnected,
+    setIsKeplrWalletConnected
   ])
 
   const pillStyle =
