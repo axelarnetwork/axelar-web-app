@@ -65,6 +65,7 @@ const HelperWidget = styled.span`
   cursor: pointer;
   font-size: smaller;
   transition: opacity 0.2s ease;
+  min-width: fit-content;
   &:hover {
     opacity: 0.8;
   }
