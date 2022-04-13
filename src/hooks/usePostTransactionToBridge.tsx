@@ -10,9 +10,15 @@ import {
   DestinationAddress,
   SourceAsset,
 } from "state/ChainSelection"
-import { IsTxSubmitting, SourceDepositAddress, TransactionTraceId } from "state/TransactionStatus"
+import {
+  IsTxSubmitting,
+  SourceDepositAddress,
+  TransactionTraceId,
+} from "state/TransactionStatus"
 import { ShowTransactionStatusWindow } from "../state/ApplicationStatus"
 import { v4 as uuid } from "uuid"
+
+import { datadogLogs } from "@datadog/browser-logs"
 
 export default function usePostTransactionToBridge() {
   const [showTransactionStatusWindow, setShowTransactionStatusWindow] =
@@ -37,9 +43,17 @@ export default function usePostTransactionToBridge() {
           sourceChain?.chainName || "",
           destinationChain?.chainName || "",
           destinationAddress || "",
-          sourceAsset?.common_key || "", 
-          { _traceId  }
+          sourceAsset?.common_key || "",
+          { _traceId }
         )
+        const log = {
+          sourceChain: sourceChain?.chainName,
+          destinationChain: destinationChain?.chainName,
+          destinationAddress,
+          asset: sourceAsset?.common_key,
+          traceId: _traceId,
+        }
+        datadogLogs.logger.info("LINK_EVENT", log)
         setTransactionsTraceId(_traceId)
         setDepositAddress({ assetAddress })
         resolve(true)
@@ -57,7 +71,7 @@ export default function usePostTransactionToBridge() {
     setShowTransactionStatusWindow,
     sourceAsset,
     setIsSubmitting,
-    setTransactionsTraceId
+    setTransactionsTraceId,
   ])
 
   const closeResultsScreen = () => {

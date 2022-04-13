@@ -25,6 +25,10 @@ import FirstTimeBadge from "components/CompositeComponents/FirstTimeBadge"
 import { Mask } from "components/Widgets/Mask"
 import { IsTxSubmitting } from "state/TransactionStatus"
 
+import { datadogLogs } from "@datadog/browser-logs"
+
+declare const DD_LOGS: any
+
 export const AppPage = () => {
   const [isRecaptchaSet, initiateRecaptcha] = useLoadRecaptcha()
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
@@ -49,6 +53,25 @@ export const AppPage = () => {
   useEffect(() => {
     if (!isRecaptchaSet) initiateRecaptcha()
   }, [isRecaptchaSet, initiateRecaptcha])
+
+  useEffect(() => {
+    DD_LOGS.onReady(function () {
+      datadogLogs.init({
+        clientToken: process.env.REACT_APP_DD_CLIENT_TOKEN as string,
+        datacenter: "us",
+        site: "datadoghq.com",
+        forwardErrorsToLogs: true,
+        sampleRate: 1,
+        service: "satellite-browser",
+        env: process.env.REACT_APP_STAGE,
+        beforeSend: (log) => {
+          if (log.http && log.http.status_code === 404) {
+            return false
+          }
+        },
+      })
+    })
+  }, [])
 
   if (underMaintenance === "true") return <Redirect to={"/landing"} />
 
