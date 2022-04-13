@@ -62,7 +62,7 @@ export const AppPage = () => {
         site: "datadoghq.com",
         forwardErrorsToLogs: true,
         sampleRate: 1,
-        service: "satellite-browser",
+        service: `satellite-browser-${process.env.REACT_APP_STAGE}`,
         env: process.env.REACT_APP_STAGE,
         beforeSend: (log) => {
           if (log.http && log.http.status_code === 404) {
