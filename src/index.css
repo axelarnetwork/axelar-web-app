@@ -4,11 +4,11 @@
 }
 
 .confirm-box {
-  top: 0;
+  top: 0 !important;
   z-index: 10000 !important;
   width: 100vw !important;
   height: 100vh !important;
-  left: 0;
+  left: 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
