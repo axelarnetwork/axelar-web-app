@@ -45,6 +45,7 @@ import { WalletType } from "state/Wallet"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
 import { getConfigs } from "api/WaitService"
+import { ListItem } from "./ListItem"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -71,83 +72,6 @@ const HelperWidget = styled.span`
     opacity: 0.8;
   }
 `
-const StyledListItem = styled.div`
-  height: 25%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  @media ${screenConfigs.media.desktop} {
-    font-size: 18px;
-  }
-  @media ${screenConfigs.media.laptop} {
-    font-size: 15px;
-  }
-  @media ${screenConfigs.media.tablet} {
-    font-size: 12px;
-  }
-  @media ${screenConfigs.media.mobile} {
-    font-size: 10px;
-  }
-`
-
-const StyledImage = styled.object`
-  height: 75%;
-  width: 75%;
-`
-
-interface IListItemProps {
-  activeStep: number
-  step: number
-  text: any
-  className?: string
-}
-
-const ListItem = (props: IListItemProps) => {
-  const { activeStep, className, step, text } = props
-  let suffix: string
-
-  if (activeStep > step) {
-    suffix = "complete"
-  } else if (activeStep === step) {
-    suffix = "active"
-  } else {
-    suffix = "inactive"
-  }
-
-  return (
-    <StyledListItem className={className}>
-      <div
-        style={{
-          width: `20%`,
-          height: `100%`,
-          display: `flex`,
-          alignItems: `center`,
-          justifyContent: `center`,
-        }}
-      >
-        <StyledImage
-          data={
-            require(`assets/svg/transaction_status_logos/step-${step}-${suffix}.svg`)
-              ?.default
-          }
-        />
-      </div>
-      <div
-        style={{
-          width: `80%`,
-          height: `100%`,
-          display: `flex`,
-          alignItems: `center`,
-          color: activeStep >= step ? "black" : "lightgray",
-        }}
-      >
-        {text}
-      </div>
-    </StyledListItem>
-  )
-}
 
 interface IStatusListProps {
   activeStep: number
@@ -165,7 +89,6 @@ const StatusList = (props: IStatusListProps) => {
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const depositTimestamp = useRecoilValue(DepositTimestamp)
-  // const depositAmount = useRecoilValue(DepositAmount)
   const hasEnoughDepositConfirmation = useRecoilValue(
     HasEnoughDepositConfirmation
   )
@@ -200,10 +123,6 @@ const StatusList = (props: IStatusListProps) => {
   const amountConfirmedAdjusted: number =
     amountConfirmedAtomicUnits *
     BigNumber.pow(10, -1 * (sourceAsset?.decimals || 1)).toNumber()
-  // const afterFees: number = new BigNumber(1)
-  //   .minus(new BigNumber(sourceChain?.txFeeInPercent || 0).div(100))
-  //   .times(amountConfirmedAdjusted)
-  //   .toNumber()
 
   const afterFees: number = new BigNumber(amountConfirmedAdjusted)
     .minus(
@@ -435,7 +354,11 @@ const StatusList = (props: IStatusListProps) => {
         activeStep={activeStep}
         text={
           activeStep >= 4
-            ? ShowTransactionComplete({ destNumConfirm, destinationChain, selectedSourceAsset })
+            ? ShowTransactionComplete({
+                destNumConfirm,
+                destinationChain,
+                selectedSourceAsset,
+              })
             : `Detecting your transfer on ${destinationChain?.chainName}`
         }
       />
@@ -446,7 +369,7 @@ const StatusList = (props: IStatusListProps) => {
 const ShowTransactionComplete = ({
   destNumConfirm,
   destinationChain,
-  selectedSourceAsset
+  selectedSourceAsset,
 }: {
   destNumConfirm: IConfirmationStatus
   destinationChain: Nullable<ChainInfo>
@@ -463,21 +386,22 @@ const ShowTransactionComplete = ({
       <Link href={`${blockExplorer.url}${destNumConfirm.transactionHash}`}>
         here
       </Link>{" "}
-      on {blockExplorer.name}!{addTokenToMetamask(destinationChain, selectedSourceAsset)}
+      on {blockExplorer.name}!
+      {addTokenToMetamask(destinationChain, selectedSourceAsset)}
     </div>
   ) : (
     "Transfer Completed!"
   )
 }
 
-const WalletLogo = ({ src, onClick }: { src: any, onClick?: any }) => (
+const WalletLogo = ({ src, onClick }: { src: any; onClick?: any }) => (
   <span onClick={onClick}>
     <StyledSVGImage
-    height={`1em`}
-    width={`1em`}
-    margin={`0em 0em -0.125em 0em`}
-    src={src}
-  />
+      height={`1em`}
+      width={`1em`}
+      margin={`0em 0em -0.125em 0em`}
+      src={src}
+    />
   </span>
 )
 
@@ -486,14 +410,15 @@ const addTokenToMetamask = (
   selectedSourceAsset: AssetInfo | null
 ) => {
   const addToken = async () => {
-    const tokenAddress = getConfigs(process.env.REACT_APP_STAGE as string)?.ethersJsConfigs[destinationChain?.chainName?.toLowerCase() as string]?.tokenAddressMap[selectedSourceAsset?.assetSymbol as string]
+    const tokenAddress = getConfigs(process.env.REACT_APP_STAGE as string)
+      ?.ethersJsConfigs[destinationChain?.chainName?.toLowerCase() as string]
+      ?.tokenAddressMap[selectedSourceAsset?.assetSymbol as string]
     const tokenSymbol = selectedSourceAsset?.assetSymbol
     const tokenDecimals = selectedSourceAsset?.decimals
 
-    console.log("toek info",tokenAddress, tokenSymbol, tokenDecimals)
+    console.log("toek info", tokenAddress, tokenSymbol, tokenDecimals)
 
     try {
-      
       await (window as any).ethereum.request({
         method: "wallet_watchAsset",
         params: {
