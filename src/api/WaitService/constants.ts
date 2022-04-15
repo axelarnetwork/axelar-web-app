@@ -73,10 +73,10 @@ const testnetConfigs: ConfigsForEnvironment = {
     },
     avalanche: {
       tokenAddressMap: {
-        uaxl: "0x46Cc87ea84586C03bB2109ED9B33F998d40B7623",
-        uusd: "0x43F4600b552089655645f8c16D86A5a9Fa296bc3",
-        uluna: "0x50a70aBb7bd6EbBcC46Df7C0d033C568F563cA27",
-        "USDC.fake": "0x3fb643De114d5dc03dDE8DFDBC06c60dcAF7D3C4",
+        // uaxl: "0x46Cc87ea84586C03bB2109ED9B33F998d40B7623",
+        // uusd: "0x43F4600b552089655645f8c16D86A5a9Fa296bc3",
+        // uluna: "0x50a70aBb7bd6EbBcC46Df7C0d033C568F563cA27",
+        // "USDC.fake": "0x3fb643De114d5dc03dDE8DFDBC06c60dcAF7D3C4",
       },
       providerOptions: {
         provider: "https://api.avax-test.network/ext/bc/C/rpc",

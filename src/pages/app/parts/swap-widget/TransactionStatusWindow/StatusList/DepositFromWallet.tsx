@@ -205,6 +205,7 @@ export const DepositFromWallet = ({
     ) {
       setSentSuccess(true)
       setTxHash(results.transactionHash || results.txhash)
+      setHasEnoughDepositConfirmation(true)
       setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
@@ -233,6 +234,8 @@ export const DepositFromWallet = ({
       stringifiedResults.includes("transaction failed")
     const hasAnyErrors: boolean =
       userDenied || transactionFailed || gasTooLow || insufficientFunds
+
+      console.log("results",results)
 
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
@@ -278,7 +281,7 @@ export const DepositFromWallet = ({
 
     return txHash && blockExplorer ? (
       <span>
-        See it <Link href={`${blockExplorer.url}${txHash}`}>here</Link> on{" "}
+        See it <Link href={`${blockExplorer.url}tx/${txHash}`}>here</Link> on{" "}
         {blockExplorer.name}.
         <br />
         <br />

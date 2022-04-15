@@ -34,9 +34,11 @@ import {
 import {
   ActiveStep,
   DidWaitingForDepositTimeout,
+  HasEnoughDepositConfirmation,
   IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
+  SrcChainDepositTxHash,
 } from "state/TransactionStatus"
 import {
   ChainSelection,
@@ -197,6 +199,9 @@ const TransactionStatusWindow = ({
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
   const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
+  const txHash = useRecoilValue(SrcChainDepositTxHash)
+  const [hasEnoughDepositConfirmation,] =
+    useRecoilState(HasEnoughDepositConfirmation)
   const lcdClient = useLCDClient(
     (process.env.REACT_APP_STAGE === "mainnet"
       ? terraConfigMainnet
@@ -310,13 +315,7 @@ const TransactionStatusWindow = ({
       case didWaitingForDepositTimeout:
         setCartoonMessage(null)
         break
-      case !!(dNumConfirms && dReqNumConfirms):
-        setActiveStep(4)
-        break
-      case depositAddress &&
-        sNumConfirms &&
-        sReqNumConfirms &&
-        sNumConfirms >= sReqNumConfirms:
+      case txHash && txHash.length > 0 && hasEnoughDepositConfirmation:
         setActiveStep(3)
         setCartoonMessage(null)
         break
@@ -336,6 +335,8 @@ const TransactionStatusWindow = ({
     setCartoonMessage,
     setActiveStep,
     didWaitingForDepositTimeout,
+    txHash,
+    hasEnoughDepositConfirmation
   ])
 
   useEffect(() => {
@@ -471,7 +472,7 @@ const TransactionStatusWindow = ({
   return (
     <StyledTransactionStatusWindow>
       <FlexRow style={{ color: `white` }}>
-        {activeStep < 4 ? "Transferring" : "Complete!"}
+        {activeStep < 3 ? "Transferring" : "Complete!"}
       </FlexRow>
       <br />
       <br />

@@ -2,7 +2,7 @@ import screenConfigs from "config/screenConfigs"
 import styled from "styled-components"
 
 const StyledListItem = styled.div`
-  height: 25%;
+  height: 33%;
   width: 100%;
   display: flex;
   align-items: center;

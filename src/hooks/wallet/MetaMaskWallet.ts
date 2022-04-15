@@ -89,11 +89,14 @@ export class MetaMaskWallet implements WalletInterface {
           this.chainName
         ]
 
+      let res
+
       try {
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
           params: [{ chainId: params.chainId }],
         })
+        res = "switched"
       } catch (switchError: any) {
         console.warn(
           "error adding chain, so trying wallet_addEthereumChain",
@@ -102,10 +105,11 @@ export class MetaMaskWallet implements WalletInterface {
         if (switchError.code === 4902) {
           // This error code indicates that the chain has not been added to MetaMask.
           try {
-            await window.ethereum.request({
+            res = await window.ethereum.request({
               method: "wallet_addEthereumChain",
               params: [params],
             })
+            res = "added"
           } catch (addError) {
             // handle "add" error
             console.warn("error adding chain to metamask", addError)
@@ -113,8 +117,8 @@ export class MetaMaskWallet implements WalletInterface {
         }
         // handle other "switch" errors
       }
-      cb && cb();
-      await this.getAddress()
+      cb && cb()
+      return res
     }
   }
 
@@ -128,14 +132,18 @@ export class MetaMaskWallet implements WalletInterface {
     return Number(window.ethereum.networkVersion)
   }
 
-  public async switchChain(chainName: string) {
-    this.chainName = chainName
+  public isChainActive(chainName: string): boolean {
     const params: ChainParam =
       require(`config/wallet/evm/${process.env.REACT_APP_STAGE}.ts`).default[
-        this.chainName
+        chainName
       ]
-    if (Number(params.chainId) !== this.getCurrentNetworkId())
-      await this.connectToWallet()
+    return Number(params.chainId) === this.getCurrentNetworkId()
+  }
+
+  public async switchChain(chainName: string, cb?: any) {
+    this.chainName = chainName
+    if (!this.isChainActive(chainName))
+      return await this.connectToWallet(cb)
   }
 
   public async isWalletConnected(): Promise<boolean> {
@@ -175,7 +183,10 @@ export class MetaMaskWallet implements WalletInterface {
       assetInfo as AssetInfo
     )
     const signer = await this.getSigner().getAddress()
-    const contract: Contract = this.getEthersContract(tokenContractAddress, erc20Abi)
+    const contract: Contract = this.getEthersContract(
+      tokenContractAddress,
+      erc20Abi
+    )
     const decimals = await contract.decimals()
     const balance = (await contract.balanceOf(signer)).toString()
     return +ethers.utils.formatUnits(balance, decimals)
