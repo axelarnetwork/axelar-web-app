@@ -231,7 +231,7 @@ const StatusList = (props: IStatusListProps) => {
           activeStep >= 3 ? (
             <FlexRow style={{ width: `100%` }}>
               <div>
-                Deposit detected! Your {destinationChain?.chainName} balance
+                Deposit looks good! Your {destinationChain?.chainName} balance
                 will be updated shortly
               </div>
 
@@ -309,7 +309,7 @@ const StatusList = (props: IStatusListProps) => {
               </FlexRow>
             </FlexRow>
           ) : (
-            `Detecting your deposit on ${sourceChain?.chainName}.`
+            `Finalizing your transaction on ${destinationChain?.chainName}.`
           )
         }
       />
