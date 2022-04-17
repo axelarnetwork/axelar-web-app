@@ -175,7 +175,7 @@ const TransactionStatusWindow = ({
   isOpen,
   closeResultsScreen,
 }: ITransactionStatusWindowProps) => {
-  const [sourceConfirmStatus, setSourceConfirmStatus] = useRecoilState(
+  const [, setSourceConfirmStatus] = useRecoilState(
     NumberConfirmations(SOURCE_TOKEN_KEY)
   )
   const [destinationConfirmStatus, setDestinationConfirmStatus] =
@@ -299,10 +299,7 @@ const TransactionStatusWindow = ({
     setWalletAddress(await walletToUse.getAddress())
   }, [walletToUse, selectedSourceAsset, sourceChain?.chainName])
 
-  const {
-    numberConfirmations: sNumConfirms,
-    numberRequiredConfirmations: sReqNumConfirms,
-  } = sourceConfirmStatus
+
   const {
     numberConfirmations: dNumConfirms,
     numberRequiredConfirmations: dReqNumConfirms,
@@ -314,6 +311,10 @@ const TransactionStatusWindow = ({
     switch (true) {
       case didWaitingForDepositTimeout:
         setCartoonMessage(null)
+        break
+      case !!(dNumConfirms && dReqNumConfirms):
+        console.log("DONE")
+        setActiveStep(4)
         break
       case txHash && txHash.length > 0 && hasEnoughDepositConfirmation:
         setActiveStep(3)
@@ -330,8 +331,6 @@ const TransactionStatusWindow = ({
     dNumConfirms,
     dReqNumConfirms,
     depositAddress,
-    sNumConfirms,
-    sReqNumConfirms,
     setCartoonMessage,
     setActiveStep,
     didWaitingForDepositTimeout,

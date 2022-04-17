@@ -231,8 +231,11 @@ const StatusList = (props: IStatusListProps) => {
           activeStep >= 3 ? (
             <FlexRow style={{ width: `100%` }}>
               <div>
-                Deposit looks good! Your {destinationChain?.chainName} balance
-                will be updated shortly
+                {
+                  activeStep === 4
+                    ? "Transaction Complete!"
+                    : `Deposit looks good! Your ${destinationChain?.chainName} balance will be updated shortly`
+                }
               </div>
 
               <FlexRow>
