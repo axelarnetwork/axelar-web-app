@@ -229,7 +229,7 @@ const StatusList = (props: IStatusListProps) => {
         activeStep={activeStep}
         text={
           activeStep >= 3 ? (
-            <FlexRow style={{ width: `100%` }}>
+            <FlexRow style={{ width: `100%`, justifyContent: `space-between` }}>
               <div>
                 {
                   activeStep === 4

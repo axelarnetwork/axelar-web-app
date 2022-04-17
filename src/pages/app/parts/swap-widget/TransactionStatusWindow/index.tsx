@@ -313,7 +313,6 @@ const TransactionStatusWindow = ({
         setCartoonMessage(null)
         break
       case !!(dNumConfirms && dReqNumConfirms):
-        console.log("DONE")
         setActiveStep(4)
         break
       case txHash && txHash.length > 0 && hasEnoughDepositConfirmation:
