@@ -212,7 +212,7 @@ const StatusList = (props: IStatusListProps) => {
                 />
               </div>
               {activeStep === 2 && renderWalletButton()}
-              {activeStep === 3 &&
+              {activeStep >= 3 &&
                 linkToExplorer(
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
