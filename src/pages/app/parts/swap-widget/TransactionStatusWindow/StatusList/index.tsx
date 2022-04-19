@@ -260,7 +260,13 @@ const StatusList = (props: IStatusListProps) => {
               <div>
                 {activeStep === 4
                   ? "Transaction Complete!"
-                  : `${!!srcConfirmStatus?.numberConfirmations ? "Deposit tx confirmed. " : ""}Your ${destinationChain?.chainName} balance will be updated shortly`}
+                  : `${
+                      !!srcConfirmStatus?.numberConfirmations
+                        ? "Deposit tx confirmed. "
+                        : ""
+                    }Your ${
+                      destinationChain?.chainName
+                    } balance will be updated shortly`}
               </div>
 
               <FlexRow>
@@ -411,19 +417,33 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
   const blockExplorer = getBlockExplorer(sourceChainSelection)
 
   return txHash && blockExplorer ? (
-    <div>
+    <FlexRow style={{ justifyContent: `space-between` }}>
       <span>
-        TX: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
+        Deposit TX: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
       </span>
-      <Link href={`${blockExplorer.url}tx/${txHash}`}>
-        <SVGImage
-          style={{ marginLeft: `5px` }}
-          src={require(`assets/svg/link-new-tab.svg`).default}
-          height={`1em`}
-          width={`1em`}
+      {getBlockExplorer(sourceChainSelection as ChainInfo) && (
+        <ImprovedTooltip
+          anchorContent={
+            <Link href={`${blockExplorer.url}tx/${txHash}`}>
+              <SVGImage
+                style={{ marginLeft: `5px` }}
+                src={
+                  require(`assets/svg/logos/${sourceChainSelection.chainSymbol}.svg`)
+                    .default
+                }
+                height={`1.5em`}
+                width={`1.5em`}
+                margin={`0.5em`}
+              />
+            </Link>
+          }
+          tooltipText={`Deposit transaction on ${
+            getBlockExplorer(sourceChainSelection as ChainInfo)?.name
+          }`}
+          tooltipAltText={""}
         />
-      </Link>
-    </div>
+      )}
+    </FlexRow>
   ) : null
 }
 
