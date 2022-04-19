@@ -30,6 +30,8 @@ import { getConfigs } from "api/WaitService"
 import { ListItem } from "./ListItem"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { useEffect, useState } from "react"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { DepositFromWallet } from "./DepositFromWallet"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -61,6 +63,10 @@ interface IStatusListProps {
   activeStep: number
   isWalletConnected: boolean
   connectToWallet: (walletType: WalletType) => void
+  walletBalance: number
+  reloadBalance: () => void
+  walletAddress: string
+  depositAddress: AssetInfo
 }
 
 const StatusList = (props: IStatusListProps) => {
@@ -72,6 +78,8 @@ const StatusList = (props: IStatusListProps) => {
   const destinationAddress = useRecoilValue(DestinationAddress)
   const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash)
   const [tokenToAdd, setTokenToAdd] = useState(false)
+
+
 
   useEffect(() => {
     if (tokenToAdd) {
@@ -166,29 +174,24 @@ const StatusList = (props: IStatusListProps) => {
         step={1}
         activeStep={activeStep}
         text={
-          <span>
-            Generating a one-time deposit address for{" "}
-            {selectedSourceAsset?.assetSymbol} recipient:{" "}
-            <BoldSpan>
-              {getShortenedWord(destinationAddress as string, 5)}
-            </BoldSpan>
-          </span>
-        }
-      />
-      <ListItem
-        className={"joyride-status-step-2"}
-        step={2}
-        activeStep={activeStep}
-        text={
-          activeStep >= 2 ? (
-            <div
-              style={{
-                overflowWrap: `break-word`,
-                overflow: `hidden`,
-                width: `100%`,
-              }}
-            >
-              <div>
+          activeStep === 1 ? (
+            <span>
+              Generating a one-time deposit address for{" "}
+              {selectedSourceAsset?.assetSymbol} recipient:{" "}
+              <BoldSpan>
+                {getShortenedWord(destinationAddress as string, 5)}
+              </BoldSpan>
+            </span>
+          ) : (
+            <FlexColumn style={{ alignItems: `flex-start` }}>
+              <span style={{ marginBottom: `0.5em` }}>
+                {selectedSourceAsset?.assetSymbol} recipient:{" "}
+                <BoldSpan>
+                  {getShortenedWord(destinationAddress as string, 5)}
+                </BoldSpan>
+              </span>
+              <span>
+                {" "}
                 Deposit address:{" "}
                 <BoldSpan style={{ marginRight: `10px` }}>
                   {getShortenedWord(depositAddress?.assetAddress, 5)}
@@ -210,7 +213,31 @@ const StatusList = (props: IStatusListProps) => {
                     "Copied! Please be sure you send the correct assets to this address."
                   }
                 />
-              </div>
+              </span>
+            </FlexColumn>
+          )
+        }
+      />
+      <ListItem
+        className={"joyride-status-step-2"}
+        step={2}
+        activeStep={activeStep}
+        text={
+          activeStep >= 2 ? (
+            <div
+              style={{
+                overflowWrap: `break-word`,
+                overflow: `hidden`,
+                width: `100%`,
+              }}
+            >
+              <DepositFromWallet
+                isWalletConnected={props.isWalletConnected}
+                walletBalance={props.walletBalance}
+                reloadBalance={props.reloadBalance}
+                walletAddress={props.walletAddress}
+                depositAddress={depositAddress as AssetInfo}
+              />
               {activeStep === 2 && renderWalletButton()}
               {activeStep >= 3 &&
                 linkToExplorer(
@@ -219,7 +246,7 @@ const StatusList = (props: IStatusListProps) => {
                 )}
             </div>
           ) : (
-            `Waiting for your deposit into a temporary deposit account.`
+            `Waiting for your deposit into the deposit account.`
           )
         }
       />
@@ -231,11 +258,9 @@ const StatusList = (props: IStatusListProps) => {
           activeStep >= 3 ? (
             <FlexRow style={{ width: `100%`, justifyContent: `space-between` }}>
               <div>
-                {
-                  activeStep === 4
-                    ? "Transaction Complete!"
-                    : `Deposit looks good! Your ${destinationChain?.chainName} balance will be updated shortly`
-                }
+                {activeStep === 4
+                  ? "Transaction Complete!"
+                  : `Your ${destinationChain?.chainName} balance will be updated shortly`}
               </div>
 
               <FlexRow>
@@ -386,9 +411,9 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
   const blockExplorer = getBlockExplorer(sourceChainSelection)
 
   return txHash && blockExplorer ? (
-    <div style={{ marginTop: `0.35em`, width: `100%` }}>
+    <div>
       <span>
-        Deposit txHash: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
+        TX: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
       </span>
       <Link href={`${blockExplorer.url}tx/${txHash}`}>
         <SVGImage

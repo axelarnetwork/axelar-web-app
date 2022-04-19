@@ -48,7 +48,6 @@ import {
 import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
-import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
 import {
   useConnectedWallet,
   useLCDClient,
@@ -338,28 +337,6 @@ const TransactionStatusWindow = ({
   ])
 
   useEffect(() => {
-    if (activeStep !== 2) return
-
-    setCartoonMessage(
-      <Step2InfoForWidget
-        isWalletConnected={isWalletConnected}
-        walletBalance={walletBalance}
-        reloadBalance={updateBalance}
-        walletAddress={walletAddress}
-        depositAddress={depositAddress as AssetInfo}
-      />
-    )
-  }, [
-    activeStep,
-    depositAddress,
-    isWalletConnected,
-    setCartoonMessage,
-    updateBalance,
-    walletAddress,
-    walletBalance,
-  ])
-
-  useEffect(() => {
     ;(async () => {
       if (activeStep !== 2) return
 
@@ -510,7 +487,11 @@ const TransactionStatusWindow = ({
         activeStep={activeStep}
         isWalletConnected={isWalletConnected}
         connectToWallet={connectToWallet}
-      />
+        walletBalance={walletBalance}
+        reloadBalance={updateBalance}
+        walletAddress={walletAddress}
+        depositAddress={depositAddress as AssetInfo}
+/>
       <br />
 
       <StyledButtonContainer>

@@ -1,12 +1,13 @@
 export const getShortenedWord = (
   str: string | undefined,
-  truncation = 5
+  truncationStart = 5,
+  truncationEnd = 5
 ): string => {
   if (!str) return "TBD"
   if (str.length < 10) return str
   return (
-    str.substring(0, truncation) +
+    str.substring(0, truncationStart) +
     "..." +
-    str.substring(str.length - truncation, str.length)
+    str.substring(str.length - truncationEnd, str.length)
   )
 }
