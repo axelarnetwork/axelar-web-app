@@ -16,6 +16,7 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
+  NumberConfirmations,
   SourceDepositAddress,
   SrcChainDepositTxHash,
 } from "state/TransactionStatus"
@@ -78,8 +79,7 @@ const StatusList = (props: IStatusListProps) => {
   const destinationAddress = useRecoilValue(DestinationAddress)
   const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash)
   const [tokenToAdd, setTokenToAdd] = useState(false)
-
-
+  const srcConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY))
 
   useEffect(() => {
     if (tokenToAdd) {
@@ -260,7 +260,7 @@ const StatusList = (props: IStatusListProps) => {
               <div>
                 {activeStep === 4
                   ? "Transaction Complete!"
-                  : `Your ${destinationChain?.chainName} balance will be updated shortly`}
+                  : `${!!srcConfirmStatus?.numberConfirmations ? "Deposit tx confirmed. " : ""}Your ${destinationChain?.chainName} balance will be updated shortly`}
               </div>
 
               <FlexRow>
