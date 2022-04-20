@@ -117,6 +117,7 @@ export class MetaMaskWallet implements WalletInterface {
         }
         // handle other "switch" errors
       }
+      await this.getAddress()
       cb && cb()
       return res
     }

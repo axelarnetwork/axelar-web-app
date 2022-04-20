@@ -87,8 +87,11 @@ const PageHeader = () => {
   )
   const connectedWallet = useConnectedWallet()
   const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false)
-  const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
-  const [isTerraStationWalletConnected, setIsTerraStationWalletConnected] = useState(false)
+  const [isKeplrWalletConnected, setIsKeplrWalletConnected] = useRecoilState(
+    IsKeplrWalletConnected
+  )
+  const [isTerraStationWalletConnected, setIsTerraStationWalletConnected] =
+    useState(false)
 
   useEffect(() => {
     if (!!connectedWallet) setIsTerraStationWalletConnected(true)
@@ -135,7 +138,9 @@ const PageHeader = () => {
         >
           <WalletOption
             onClick={async () => {
-              await new KeplrWallet("terra").connectToWallet(() => setIsKeplrWalletConnected(true));
+              await new KeplrWallet("terra").connectToWallet(() =>
+                setIsKeplrWalletConnected(true)
+              )
             }}
             label={"Keplr Wallet"}
             image={require(`assets/svg/keplr.svg`).default}
@@ -155,7 +160,9 @@ const PageHeader = () => {
           />
           <WalletOption
             onClick={async () =>
-              new MetaMaskWallet("ethereum").connectToWallet(() => setIsMetaMaskConnected(true))
+              await new MetaMaskWallet("ethereum").connectToWallet(() =>
+                setIsMetaMaskConnected(true)
+              )
             }
             label={"MetaMask"}
             image={require(`assets/svg/metamask.svg`).default}
@@ -176,7 +183,7 @@ const PageHeader = () => {
     isMetaMaskConnected,
     isKeplrWalletConnected,
     isTerraStationWalletConnected,
-    setIsKeplrWalletConnected
+    setIsKeplrWalletConnected,
   ])
 
   const pillStyle =
