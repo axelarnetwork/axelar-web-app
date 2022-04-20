@@ -416,15 +416,15 @@ const confirmChainAndAddToken = async (
 const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
   const blockExplorer = getBlockExplorer(sourceChainSelection)
 
-  return txHash && blockExplorer ? (
+  return txHash ? (
     <FlexRow style={{ justifyContent: `space-between` }}>
       <span>
         Deposit TX: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
       </span>
-      {getBlockExplorer(sourceChainSelection as ChainInfo) && (
+      {blockExplorer && (
         <ImprovedTooltip
           anchorContent={
-            <Link href={`${blockExplorer.url}tx/${txHash}`}>
+            <Link href={`${blockExplorer.url}${blockExplorer?.url?.includes("mintscan") ? "txs/" : "tx/"}${txHash}`}>
               <SVGImage
                 style={{ marginLeft: `5px` }}
                 src={

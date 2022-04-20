@@ -48,6 +48,18 @@ const blockExplorers = {
       name: "Coinhippo's block explorer",
       url: "https://axelar.coinhippo.io/",
     },
+    osmosis: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/osmosis/",
+    },
+    "e-money": {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/emoney/",
+    },
+    cosmoshub: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/cosmos/",
+    },
   },
 }
 blockExplorers.testnet = blockExplorers.devnet
