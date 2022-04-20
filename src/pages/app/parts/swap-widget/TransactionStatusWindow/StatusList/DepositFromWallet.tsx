@@ -37,6 +37,7 @@ import LoadingWidget from "components/Widgets/LoadingWidget"
 import { getShortenedWord } from "utils/wordShortener"
 import BoldSpan from "components/StyleComponents/BoldSpan"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { getNumber } from "utils/formatNumber"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -346,6 +347,7 @@ export const DepositFromWallet = ({
 
   const disableTransferButton: boolean =
     !amountToDeposit ||
+    isNaN(parseFloat(amountToDeposit)) ||
     parseFloat(amountToDeposit) <= minDepositAmt ||
     !hasEnoughInWalletForMin ||
     parseFloat(amountToDeposit) > walletBalance ||
@@ -387,11 +389,11 @@ export const DepositFromWallet = ({
           >
             <InputForm
               name={"destination-address-input"}
-              value={amountToDeposit}
+              value={amountToDeposit?.replace(/[^.0-9]/g, '')?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') || ""}
               placeholder={"Amount"}
-              type={"number"}
+              type={"text"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setAmountToDeposit(e.target.value)
+                setAmountToDeposit(e.target.value?.replace(/,/g,''))
               }
             />
             {walletBalance > 0 && (
@@ -427,22 +429,25 @@ export const DepositFromWallet = ({
             display: `flex`,
             boxSizing: `border-box`,
             padding: `0.5em`,
-            margin: `0em -0.5em 0em 2em`,
-            width: `fit-content`,
+            margin: `0em -0.5em 0em 0.5em`,
+            width: `70%`,
           }}
         >
-          <span>Transfer Fee:</span>
-          <BoldSpan style={{ marginBottom: `0.2em` }}>
-            {minDepositAmt} {selectedSourceAsset?.assetSymbol}
-          </BoldSpan>
-          <span>Balance ({getShortenedWord(walletAddress, 2, 3)}):</span>
-          <span style={{ marginBottom: `0.2em` }}>
+          <span style={{ marginBottom: `0.5em` }}>
+            Transfer Fee:{" "}
             <BoldSpan>
-              ~{+walletBalance?.toFixed(2)}{" "}
-              {userHasSelectedNativeAssetForChain
-                ? sourceChainSelection?.chainSymbol
-                : selectedSourceAsset?.assetSymbol}
+              {minDepositAmt} {selectedSourceAsset?.assetSymbol}
             </BoldSpan>
+          </span>
+
+          <span style={{ marginBottom: `0.5em` }}>
+            Wallet: <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
+          </span>
+          <span style={{ marginBottom: `0.5em` }}>
+            {userHasSelectedNativeAssetForChain
+              ? sourceChainSelection?.chainSymbol
+              : selectedSourceAsset?.assetSymbol}{" "}
+            balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
             <LoadingWidget cb={reloadBalance} />
           </span>
         </FlexColumn>

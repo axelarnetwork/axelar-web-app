@@ -23,7 +23,6 @@ import {
 import { getShortenedWord } from "utils/wordShortener"
 import logoKeplr from "assets/svg/keplr.svg"
 import logoMetamask from "assets/svg/metamask.svg"
-import logoAxelar from "assets/svg/logos/AXL.svg"
 import logoTerraStation from "assets/svg/terra-station.svg"
 import { WalletType } from "state/Wallet"
 import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
@@ -231,6 +230,11 @@ const StatusList = (props: IStatusListProps) => {
                 width: `100%`,
               }}
             >
+              {srcChainDepositHash &&
+                linkToExplorer(
+                  sourceChain as ChainInfo,
+                  srcChainDepositHash as string
+                )}
               <DepositFromWallet
                 isWalletConnected={props.isWalletConnected}
                 walletBalance={props.walletBalance}
@@ -239,11 +243,6 @@ const StatusList = (props: IStatusListProps) => {
                 depositAddress={depositAddress as AssetInfo}
               />
               {activeStep === 2 && renderWalletButton()}
-              {activeStep >= 3 &&
-                linkToExplorer(
-                  sourceChain as ChainInfo,
-                  srcChainDepositHash as string
-                )}
             </div>
           ) : (
             `Waiting for your deposit into the deposit account.`
@@ -270,26 +269,6 @@ const StatusList = (props: IStatusListProps) => {
               </div>
 
               <FlexRow>
-                <ImprovedTooltip
-                  anchorContent={
-                    <WalletLogo
-                      src={logoAxelar}
-                      onClick={() =>
-                        window.open(
-                          downstreamServices.axelarScanAccountSearch[
-                            process.env.REACT_APP_STAGE as string
-                          ] + destinationAddress,
-                          "_blank"
-                        )
-                      }
-                      height={`1.5em`}
-                      width={`1.5em`}
-                      margin={`0.5em`}
-                    />
-                  }
-                  tooltipText={"Check Axelarscan for latest transaction status"}
-                  tooltipAltText={""}
-                />
                 {destinationChain?.module === "evm" && (
                   <ImprovedTooltip
                     anchorContent={

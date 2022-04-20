@@ -17,14 +17,14 @@ const LoadingWidget = ({ cb }: { cb: () => void }) => {
           src={require(`assets/svg/refresh-loading.svg`).default}
           width={`1em`}
           height={`1em`}
-          style={{ marginLeft: `0.5em` }}
+          style={{ marginBottom: `-0.1em` }}
         />
       ) : (
         <SVGImage
           src={require(`assets/svg/refresh.svg`).default}
           width={`1em`}
           height={`1em`}
-          style={{ cursor: `pointer`, marginLeft: `0.5em` }}
+          style={{ cursor: `pointer`, marginBottom: `-0.2em` }}
         />
       )}
     </span>
