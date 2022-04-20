@@ -434,7 +434,7 @@ export const DepositFromWallet = ({
           }}
         >
           <span style={{ marginBottom: `0.5em` }}>
-            Transfer Fee:{" "}
+            Fee:{" "}
             <BoldSpan>
               {minDepositAmt} {selectedSourceAsset?.assetSymbol}
             </BoldSpan>
