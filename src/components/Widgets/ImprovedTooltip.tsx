@@ -4,8 +4,8 @@ import { v4 } from "uuid"
 
 interface ITooltip {
   anchorContent: JSX.Element | string
-  tooltipText: string
-  tooltipAltText: string
+  tooltipText: JSX.Element | string
+  tooltipAltText: JSX.Element | string
 }
 
 export const ImprovedTooltip = ({

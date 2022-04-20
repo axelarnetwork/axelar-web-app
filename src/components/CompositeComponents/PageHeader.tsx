@@ -57,7 +57,7 @@ const ByText = styled.span`
   align-items: flex-end;
   padding-bottom: 10px;
 `
-const ConnectWalletButton = styled(FlexRow)`
+const StyledConnectWalletButton = styled(FlexRow)`
   cursor: pointer;
   transition: opacity 0.15s ease-in;
   &:hover {
@@ -208,21 +208,12 @@ const PageHeader = () => {
         </ByText>
       </HeaderText>
       <FlexRow>
-        <div style={{ fontSize: `0.8em` }}>
-          <ConnectWalletButton onClick={() => setShowWalletOptions(true)}>
-            <FlexRow
-              style={{
-                padding: "4px 8px 4px 8px",
-                borderRadius: "10px",
-                backgroundColor: "slategrey",
-                color: "white",
-                fontWeight: "bolder",
-              }}
-            >
-              <p>Connect Wallet</p>
-            </FlexRow>
-          </ConnectWalletButton>
-        </div>
+        {ConnectWalletButton({
+          isKeplrWalletConnected,
+          isMetaMaskConnected,
+          isTerraStationWalletConnected,
+          cb: () => setShowWalletOptions(true),
+        })}
         {HeaderDivider()}
         <div style={pillStyle}>
           {(process.env.REACT_APP_STAGE || "").toUpperCase()}
@@ -233,17 +224,16 @@ const PageHeader = () => {
   )
 }
 
-const StyledWalletOption = styled(ConnectWalletButton)`
+const StyledWalletOption = styled(StyledConnectWalletButton)`
   cursor: pointer;
   padding-bottom: 1em;
   padding-top: 1em;
   flex-direction: column;
   box-sizing: border-box;
-  border: 0.1px solid lightgrey;
+  border: 0.1px solid slategrey;
   width: 50%;
   &:hover {
-    background-color: lightgrey;
-    border-radius: 10px;
+    background-color: slategrey;
   }
 `
 
@@ -266,5 +256,90 @@ const WalletOption = ({ label, onClick, image, isConnected }: any) => {
 const HeaderDivider = () => (
   <div style={{ color: `grey`, margin: `0px 1em 0px 1em` }}>|</div>
 )
+
+interface ConnectedWalletButtonProps {
+  isMetaMaskConnected: boolean
+  isKeplrWalletConnected: boolean
+  isTerraStationWalletConnected: boolean
+  cb: () => void
+}
+const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
+  const {
+    isKeplrWalletConnected,
+    isMetaMaskConnected,
+    isTerraStationWalletConnected,
+    cb,
+  } = props
+  return (
+    <div style={{ fontSize: `0.8em` }}>
+      <StyledConnectWalletButton onClick={cb}>
+        {isKeplrWalletConnected ||
+        isMetaMaskConnected ||
+        isTerraStationWalletConnected ? (
+          <FlexRow
+            style={{
+              padding: "4px",
+              borderRadius: "10px",
+              backgroundColor: "slategrey",
+              color: "black",
+              fontWeight: "bolder",
+            }}
+          >
+            <FlexRow>
+              <span
+                style={{
+                  backgroundColor: `green`,
+                  padding: `0.35em`,
+                  borderRadius: `2px`,
+                  margin: `0.5em`,
+                  border: `0.25px solid lightgrey`,
+                }}
+              ></span>
+              <p style={{ marginRight: `0.5em` }}>Wallets</p>
+            </FlexRow>
+            <FlexRow>
+              {isKeplrWalletConnected && (
+                <SVGImage
+                  height={`1.25em`}
+                  width={`1.25em`}
+                  margin={`0.25em`}
+                  src={require(`assets/svg/keplr.svg`).default}
+                />
+              )}
+              {isTerraStationWalletConnected && (
+                <SVGImage
+                  height={`1.25em`}
+                  width={`1.25em`}
+                  margin={`0.25em`}
+                  src={require(`assets/svg/terra-station.svg`).default}
+                />
+              )}
+              {isMetaMaskConnected && (
+                <SVGImage
+                  height={`1.25em`}
+                  width={`1.25em`}
+                  margin={`0.25em`}
+                  src={require(`assets/svg/metamask.svg`).default}
+                />
+              )}
+            </FlexRow>
+          </FlexRow>
+        ) : (
+          <FlexRow
+            style={{
+              padding: "4px 8px 4px 8px",
+              borderRadius: "10px",
+              backgroundColor: "slategrey",
+              color: "white",
+              fontWeight: "bolder",
+            }}
+          >
+            <p>Connect Wallet</p>
+          </FlexRow>
+        )}
+      </StyledConnectWalletButton>
+    </div>
+  )
+}
 
 export default PageHeader
