@@ -283,6 +283,18 @@ export const SupportWidget = () => {
             />
             <br />
             <NewLink
+              text={"TRANSACTION SEARCH"}
+              onClick={() =>
+                window.open("https://crosschain.axelarscan.io", "_blank")
+              }
+            />
+            <DescriptorText>
+              <div>
+                Search transaction history by destination and/or deposit address.
+              </div>
+            </DescriptorText>
+            <br />
+            <NewLink
               text={"TERMS OF USE"}
               onClick={() => {
                 setShowDisclaimer(true)
