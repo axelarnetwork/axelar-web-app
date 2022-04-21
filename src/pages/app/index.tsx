@@ -31,6 +31,12 @@ export const AppPage = () => {
   useEffect(() => {
     if (underMaintenance === "true" || disclaimerAgreed) return
 
+    //TODO: hack to facilitate hard refresh
+    if (localStorage.getItem("startOver")) {
+      localStorage.removeItem("startOver")
+      return
+    }
+
     const cb: any = () => {
       setDisclaimerAgreed(true)
       setShowDisclaimer(true)

@@ -76,7 +76,10 @@ export default function usePostTransactionToBridge() {
 
   const closeResultsScreen = () => {
     setShowTransactionStatusWindow(false)
-    // window.location.reload()
+
+    //TODO: hack to facilitate hard refresh
+    localStorage.setItem("startOver","true")
+    window.location.reload()
   }
 
   return [
