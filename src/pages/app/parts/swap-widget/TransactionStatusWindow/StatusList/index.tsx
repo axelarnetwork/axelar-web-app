@@ -315,7 +315,7 @@ const StatusList = (props: IStatusListProps) => {
                         margin={`0.5em`}
                       />
                     }
-                    tooltipText={`View your account on ${
+                    tooltipText={`View your ${selectedSourceAsset?.assetSymbol} balance on ${
                       getBlockExplorer(destinationChain as ChainInfo)?.name
                     }`}
                     tooltipAltText={""}

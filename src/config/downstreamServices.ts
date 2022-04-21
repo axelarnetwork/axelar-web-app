@@ -24,7 +24,7 @@ const blockExplorers = {
     polygon: { name: "Polygonscan", url: "https://mumbai.polygonscan.com/" },
     fantom: { name: "FTMScan", url: "https://testnet.ftmscan.com/" },
     terra: {
-      name: "Terra's testnet block explorer",
+      name: "Terra Finder (testnet)",
       url: "https://finder.terra.money/testnet/",
     },
     axelar: {
@@ -41,7 +41,7 @@ const blockExplorers = {
     polygon: { name: "Polygonscan", url: "https://polygonscan.com/" },
     fantom: { name: "FTMScan", url: "https://ftmscan.com/" },
     terra: {
-      name: "Terra's block explorer",
+      name: "Terra Finder",
       url: "https://finder.terra.money/mainnet/",
     },
     axelar: {
