@@ -399,7 +399,7 @@ const UserInputWindow = ({
                   )
                 }
               >
-                Autofill Destination Addr (optional) from:
+                Autofill from:
               </span>
               <StyledSVGImage
                 onClick={() =>
@@ -409,7 +409,7 @@ const UserInputWindow = ({
                 }
                 height={`1.25em`}
                 width={`1.25em`}
-                margin={`0em 0.75em 0em 0.5em`}
+                margin={`0em 0.5em 0em 0.5em`}
                 src={
                   destChainSelection.module === "axelarnet"
                     ? require(`assets/svg/keplr.svg`).default
@@ -423,7 +423,7 @@ const UserInputWindow = ({
                     onClick={getDestinationAddressFromTerraWallet}
                     height={`1.35em`}
                     width={`1.35em`}
-                    margin={`0em 0.75em 0em 0.5em`}
+                    margin={`0em 0.5em 0em 0.5em`}
                     src={require(`assets/svg/terra-station.svg`).default}
                   />
                 </>

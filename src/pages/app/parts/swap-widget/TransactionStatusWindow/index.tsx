@@ -14,7 +14,6 @@ import { SelectedChainLogoAndText } from "components/CompositeComponents/Selecto
 import { opacityAnimation } from "components/StyleComponents/animations/OpacityAnimation"
 import { FlexRow } from "components/StyleComponents/FlexRow"
 import configs from "config/downstreamServices"
-import { StyledButton } from "components/StyleComponents/StyledButton"
 import BoldSpan from "components/StyleComponents/BoldSpan"
 import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
@@ -61,6 +60,7 @@ import {
 import { SocketService } from "api/WaitService/SocketService"
 import { transferEvent } from "api/WaitService"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { popupOptions } from "components/Widgets/PopupOptions"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -134,42 +134,6 @@ const StyledFlexRow = styled(FlexRow)`
   background-color: #fefefe;
 `
 
-const StyledDialogBox = styled.div`
-  width: 25%;
-  min-width: 400px;
-  background-color: white;
-  padding: 2em;
-  box-sizing: border-box;
-  border-radius: 10px;
-  font-size: 0.9em;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
-  border: solid 1px #b9bac8;
-`
-const options = {
-  render: (message: string, onConfirm: () => void, onCancel: () => void) => {
-    return (
-      <StyledDialogBox>
-        <div>{message}</div>
-        <br />
-        <FlexRow>
-          <StyledButton
-            style={{ margin: `0.5em`, backgroundColor: `grey` }}
-            onClick={onCancel}
-          >
-            {" "}
-            Go back{" "}
-          </StyledButton>
-          <br />
-          <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
-            {" "}
-            Confirm{" "}
-          </StyledButton>
-        </FlexRow>
-      </StyledDialogBox>
-    )
-  },
-}
-
 const TransactionStatusWindow = ({
   isOpen,
   closeResultsScreen,
@@ -234,7 +198,7 @@ const TransactionStatusWindow = ({
         {msg}
       </FlexColumn>
     )
-    confirm(message, options as any).then((positiveAffirmation) => {
+    confirm(message, popupOptions as any).then((positiveAffirmation) => {
       if (!positiveAffirmation) {
         resetAllstate()
         closeResultsScreen()
@@ -427,7 +391,7 @@ const TransactionStatusWindow = ({
           />
         </div>
       )
-      confirm(message, options as any).then((positiveAffirmation) => {
+      confirm(message, popupOptions as any).then((positiveAffirmation) => {
         if (positiveAffirmation) {
           setUserconfirmed(true)
         } else {
