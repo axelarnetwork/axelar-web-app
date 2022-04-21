@@ -192,7 +192,7 @@ const StatusList = (props: IStatusListProps) => {
               <span>
                 {" "}
                 Deposit address:{" "}
-                <BoldSpan style={{ marginRight: `10px` }}>
+                <BoldSpan style={{ marginRight: `5px` }}>
                   {getShortenedWord(depositAddress?.assetAddress, 5)}
                 </BoldSpan>
                 <ImprovedTooltip
@@ -315,7 +315,9 @@ const StatusList = (props: IStatusListProps) => {
                         margin={`0.5em`}
                       />
                     }
-                    tooltipText={`View your ${selectedSourceAsset?.assetSymbol} balance on ${
+                    tooltipText={`View ${
+                      selectedSourceAsset?.assetSymbol
+                    } balance on ${
                       getBlockExplorer(destinationChain as ChainInfo)?.name
                     }`}
                     tooltipAltText={""}
@@ -400,7 +402,23 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
   return txHash ? (
     <FlexRow style={{ justifyContent: `space-between` }}>
       <span>
-        Deposit TX: <BoldSpan>{getShortenedWord(txHash)}</BoldSpan>{" "}
+        Deposit TX:{" "}
+        <BoldSpan style={{ marginRight: `5px` }}>
+          {getShortenedWord(txHash)}
+        </BoldSpan>
+        <ImprovedTooltip
+          anchorContent={
+            <CopyToClipboard
+              JSXToShow={<span></span>}
+              height={`12px`}
+              width={`10px`}
+              textToCopy={txHash}
+              showImage={true}
+            />
+          }
+          tooltipText={"Copy TX hash"}
+          tooltipAltText={"Copied!"}
+        />
       </span>
       {blockExplorer && (
         <ImprovedTooltip
@@ -422,7 +440,7 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
               />
             </Link>
           }
-          tooltipText={`Deposit transaction on ${
+          tooltipText={`View deposit transaction on ${
             getBlockExplorer(sourceChainSelection as ChainInfo)?.name
           }`}
           tooltipAltText={""}
