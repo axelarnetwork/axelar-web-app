@@ -76,7 +76,7 @@ export default function usePostTransactionToBridge() {
 
   const closeResultsScreen = () => {
     setShowTransactionStatusWindow(false)
-    window.location.reload()
+    // window.location.reload()
   }
 
   return [
