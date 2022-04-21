@@ -280,7 +280,7 @@ const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
             style={{
               padding: "2px",
               borderRadius: "10px",
-              backgroundColor: "#C1E1C1",
+              backgroundColor: "lightgrey",
               color: "black",
               fontWeight: "bolder",
             }}
