@@ -88,6 +88,7 @@ export const DepositFromWallet = ({
   const terraWallet = useWallet()
   const lcdClient = useLCDClient()
   const connectedWallet = useConnectedWallet()
+  const [inputHasChanged, setInputHasChanged] = useState(false)
 
   useEffect(() => {
     setHasEnoughInWalletForMin(walletBalance >= minDepositAmt)
@@ -392,8 +393,10 @@ export const DepositFromWallet = ({
               value={amountToDeposit?.replace(/[^.0-9]/g, '')?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') || ""}
               placeholder={"Amount"}
               type={"text"}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setAmountToDeposit(e.target.value?.replace(/,/g,''))
+                if (!inputHasChanged) setInputHasChanged(true)
+              }
               }
             />
             {walletBalance > 0 && (
@@ -452,7 +455,7 @@ export const DepositFromWallet = ({
           </span>
         </FlexColumn>
       </FlexRow>
-      {getDisabledText(disableTransferButton)}
+      {inputHasChanged ? getDisabledText(disableTransferButton) : <br/>}
     </FlexColumn>
   ) : null
 }
