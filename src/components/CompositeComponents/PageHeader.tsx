@@ -280,7 +280,7 @@ const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
             style={{
               padding: "4px",
               borderRadius: "10px",
-              backgroundColor: "slategrey",
+              backgroundColor: "#C1E1C1",
               color: "black",
               fontWeight: "bolder",
             }}
@@ -295,7 +295,7 @@ const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
                   border: `0.25px solid lightgrey`,
                 }}
               ></span>
-              <p style={{ marginRight: `0.5em` }}>Wallets</p>
+              <p style={{ marginRight: `0.5em` }}>Connected</p>
             </FlexRow>
             <FlexRow>
               {isKeplrWalletConnected && (
