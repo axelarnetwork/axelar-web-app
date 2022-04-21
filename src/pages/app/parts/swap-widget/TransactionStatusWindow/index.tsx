@@ -27,8 +27,6 @@ import {
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
-  ShowDisclaimer,
-  ShowLargeDisclaimer,
 } from "state/ApplicationStatus"
 import {
   ActiveStep,
@@ -156,8 +154,6 @@ const TransactionStatusWindow = ({
   const [isWalletConnected, setIsWalletConnected] = useState(false)
   const [walletBalance, setWalletBalance] = useState(0)
   const [walletAddress, setWalletAddress] = useState("")
-  const setShowDisclaimer = useSetRecoilState(ShowDisclaimer)
-  const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer)
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
@@ -205,11 +201,6 @@ const TransactionStatusWindow = ({
       }
     })
   }, [selectedWallet, terraWallet, closeResultsScreen, resetAllstate])
-
-  useEffect(() => {
-    setShowDisclaimer(false)
-    setShowLargeDisclaimer(true)
-  }, [setShowDisclaimer, setShowLargeDisclaimer])
 
   const connectToWallet = async (walletType: WalletType) => {
     setSelectedWallet(walletType)
