@@ -259,13 +259,15 @@ const StatusList = (props: IStatusListProps) => {
               <div>
                 {activeStep === 4
                   ? "Transaction Complete!"
-                  : `${
-                      !!srcConfirmStatus?.numberConfirmations
-                        ? "Deposit tx confirmed. "
-                        : ""
-                    }Your ${
+                  : !!srcConfirmStatus?.numberConfirmations
+                  ? `Deposit tx confirmed. Your ${
                       destinationChain?.chainName
-                    } balance will be updated shortly`}
+                    } balance will be updated within the next ${
+                      destinationChain?.chainName?.toLowerCase() === "ethereum"
+                        ? 5
+                        : 3
+                    } minutes`
+                  : `Your ${destinationChain?.chainName} balance will be updated within the next few minutes`}
               </div>
 
               <FlexRow>
@@ -403,7 +405,11 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
       {blockExplorer && (
         <ImprovedTooltip
           anchorContent={
-            <Link href={`${blockExplorer.url}${blockExplorer?.url?.includes("mintscan") ? "txs/" : "tx/"}${txHash}`}>
+            <Link
+              href={`${blockExplorer.url}${
+                blockExplorer?.url?.includes("mintscan") ? "txs/" : "tx/"
+              }${txHash}`}
+            >
               <SVGImage
                 style={{ marginLeft: `5px` }}
                 src={
