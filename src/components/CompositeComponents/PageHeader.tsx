@@ -278,7 +278,7 @@ const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
         isTerraStationWalletConnected ? (
           <FlexRow
             style={{
-              padding: "4px",
+              padding: "2px",
               borderRadius: "10px",
               backgroundColor: "#C1E1C1",
               color: "black",
@@ -327,7 +327,7 @@ const ConnectWalletButton = (props: ConnectedWalletButtonProps) => {
         ) : (
           <FlexRow
             style={{
-              padding: "4px 8px 4px 8px",
+              padding: "2px 8px 2px 8px",
               borderRadius: "10px",
               backgroundColor: "slategrey",
               color: "white",
