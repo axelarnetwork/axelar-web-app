@@ -262,7 +262,7 @@ const StatusList = (props: IStatusListProps) => {
                   : !!srcConfirmStatus?.numberConfirmations
                   ? `Deposit tx confirmed. Your ${
                       destinationChain?.chainName
-                    } balance will be updated within the next ${
+                    } balance will be updated within the next ~${
                       destinationChain?.chainName?.toLowerCase() === "ethereum"
                         ? 5
                         : 3
