@@ -337,6 +337,7 @@ export const DepositFromWallet = ({
   ])
 
   if (sentSuccess) {
+    debugger;
     return sourceChainSelection?.module === "evm" &&
       !hasEnoughDepositConfirmation ? (
       <div>
