@@ -446,7 +446,7 @@ const UserInputWindow = ({
         >
           {isSubmitting
             ? "Please check Metamask..."
-            : "Connect Wallet & Transfer"}
+            : "Initiate Transfer"}
         </PlainButton>
       </StyledButtonContainer>
     </StyledUserInputWindow>
