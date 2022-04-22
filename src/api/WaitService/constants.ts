@@ -25,6 +25,7 @@ const devnetConfigs: ConfigsForEnvironment = {
       providerOptions: {
         provider:
           "https://ropsten.infura.io/v3/467477790bfa4b7684be1336e789a068",
+        network: { chainId: 3, name: "Ropsten" },
       },
     },
     moonbeam: {
@@ -57,6 +58,7 @@ const testnetConfigs: ConfigsForEnvironment = {
       providerOptions: {
         provider:
           "https://ropsten.infura.io/v3/467477790bfa4b7684be1336e789a068",
+        network: { chainId: 3, name: "Ropsten" },
       },
     },
     moonbeam: {
@@ -127,6 +129,7 @@ const mainnetConfigs: ConfigsForEnvironment = {
       providerOptions: {
         provider:
           "https://mainnet.infura.io/v3/467477790bfa4b7684be1336e789a068",
+        network: { chainId: 1, name: "Ethereum Mainnet" },
       },
     },
     moonbeam: {

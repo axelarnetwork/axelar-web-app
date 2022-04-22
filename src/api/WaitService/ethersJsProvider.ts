@@ -18,8 +18,8 @@ const providers: {
   ) => ethers.providers.BaseProvider;
 } = {};
 
-providers.ethereum = (provider: string) =>
-  new ethers.providers.WebSocketProvider(provider);
+providers.ethereum = (provider: string, networkOptions: Network | undefined) =>
+new ethers.providers.StaticJsonRpcProvider(provider, networkOptions);
 providers.avalanche = (provider: string, networkOptions: Network | undefined) =>
   new ethers.providers.StaticJsonRpcProvider(provider, networkOptions);
 providers.moonbeam = (provider: string, networkOptions: Network | undefined) =>
