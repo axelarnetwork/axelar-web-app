@@ -335,9 +335,9 @@ export class MetaMaskWallet implements WalletInterface {
   ) {
     setTimeout(async () => {
       const numConfirmations = (await this.provider.getTransaction(txHash))
-        .confirmations
-      cb({ numConfirmations })
-      if (numConfirmations >= confirmations) return
+        ?.confirmations
+      numConfirmations && cb({ numConfirmations })
+      if (numConfirmations && numConfirmations >= confirmations) return
       return this.confirmEtherTransaction(
         txHash,
         confirmations,
