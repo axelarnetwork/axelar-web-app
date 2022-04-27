@@ -29,6 +29,28 @@ export const AppPage = () => {
   const [showDisclaimer, setShowDisclaimer] = useRecoilState(ShowDisclaimer)
 
   useEffect(() => {
+    //temporary javascript-level redirect put in place in case Vercel-level redirect fails for some reason
+    const { host } = window.location
+    const oldDevnet = "bridge.devnet.axelar.dev"
+    const oldTestnet = "localhost:2620"
+    const oldMainnet = "satellite.axelar.network"
+
+    if (![oldDevnet, oldTestnet, oldMainnet].includes(host)) return
+
+    let redirect = ""
+
+    if (host.includes(oldDevnet)) {
+      redirect = "https://devnet.satellite.money"
+    } else if (host.includes(oldTestnet)) {
+      redirect = "https://testnet.satellite.money"
+    } else if (host.includes(oldMainnet)) {
+      redirect = "https://satellite.money"
+    }
+
+    window.location.replace(redirect + window.location.search)
+  }, [])
+
+  useEffect(() => {
     if (underMaintenance === "true" || disclaimerAgreed) return
 
     //TODO: hack to facilitate hard refresh
