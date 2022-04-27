@@ -32,7 +32,7 @@ export const AppPage = () => {
     //temporary javascript-level redirect put in place in case Vercel-level redirect fails for some reason
     const { host } = window.location
     const oldDevnet = "bridge.devnet.axelar.dev"
-    const oldTestnet = "localhost:2620"
+    const oldTestnet = "bridge.testnet.axelar.dev"
     const oldMainnet = "satellite.axelar.network"
 
     if (![oldDevnet, oldTestnet, oldMainnet].includes(host)) return
