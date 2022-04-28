@@ -156,7 +156,7 @@ export const SupportWidget = () => {
               text={"Instructional Video"}
               onClick={() =>
                 window.open(
-                  "https://www.youtube.com/watch?v=KYmWEbW69LQ",
+                  "https://www.youtube.com/watch?v=_bxEw9Otb20",
                   "_blank"
                 )
               }
