@@ -2,21 +2,14 @@ import { atom } from "recoil"
 import {
   Chain,
   ChainInfo,
-  ChainList as ImportedChains,
-  EnvironmentConfigs,
-  EthersJsConfigs,
-  getConfigs,
+  loadChains,
 } from "@axelar-network/axelarjs-sdk"
+import { ConfigsForEnvironment, EthersJsConfigs, getConfigs } from "api/WaitService/constants";
 
 const environment = process.env.REACT_APP_STAGE as string
-const initialState: ChainInfo[] = ImportedChains
+const initialChainList: ChainInfo[] = loadChains({ environment })
 .filter((chain: Chain) =>
   environment === "mainnet" ? chain.chainInfo.fullySupported : true
-)
-.filter((chain: Chain) =>
-  environment === "mainnet"
-    ? true
-    : chain?.chainInfo?.chainName?.toLowerCase() !== "fantom" // only temporary, given fantom RPC issues
 )
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues
@@ -30,7 +23,7 @@ const initialState: ChainInfo[] = ImportedChains
 
 let bannedAddresses: string[] = []; 
 
-const { ethersJsConfigs } = getConfigs(environment) as EnvironmentConfigs;
+const { ethersJsConfigs } = getConfigs(environment) as ConfigsForEnvironment;
 
 for (const v of Object.values(ethersJsConfigs)) {
   const { tokenAddressMap } = v as EthersJsConfigs;
@@ -42,7 +35,7 @@ list of supported chains as downloaded from the SDK
 */
 export const ChainList = atom<ChainInfo[]>({
   key: "ChainList",
-  default: initialState,
+  default: initialChainList,
 })
 
 export const BannedAddresses = atom<string[]>({

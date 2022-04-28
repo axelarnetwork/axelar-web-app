@@ -1,26 +1,20 @@
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS } from "react-joyride"
-import React, { useState } from "react"
+import { useState } from "react"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import useResetAllState                      from "hooks/useResetAllState"
+import useResetAllState from "hooks/useResetAllState"
 import {
   DismissWalkThrough,
-  MessageShownInCartoon,
   ShowTransactionStatusWindow,
-}                                            from "state/ApplicationStatus"
-import { ActiveStep }                        from "state/TransactionStatus"
-import { BreakIndex, WalkthroughSteps }      from "./WalkthroughSteps"
-import { styles }                            from "./styles"
-import Step2InfoForWidget                    from "pages/app/parts/swap-widget/TransactionStatusWindow/StatusList/Step2InfoForWidget"
-import {AssetInfo}                           from "@axelar-network/axelarjs-sdk";
+} from "state/ApplicationStatus"
+import { ActiveStep } from "state/TransactionStatus"
+import { BreakIndex, WalkthroughSteps } from "./WalkthroughSteps"
+import { styles } from "./styles"
 
 const WalkThrough = () => {
   const setShowTransactionStatusWindow = useSetRecoilState(
     ShowTransactionStatusWindow
   )
   const setActiveStepOnTxStatusWindow = useSetRecoilState(ActiveStep)
-  const [cartoonMessage, setCartoonMessage] = useRecoilState(
-    MessageShownInCartoon
-  )
   const resetAllState = useResetAllState()
   const [currStepIndex, setCurrStepIndex] = useState(0)
   const [breakIndex] = useState(BreakIndex)
@@ -60,17 +54,8 @@ const WalkThrough = () => {
           setShouldRun(true)
           setCurrStepIndex(breakIndex + 1)
         }, 1000)
-      } else if (index > breakIndex)
-        if (!cartoonMessage)
-          setCartoonMessage(
-            <Step2InfoForWidget
-              isWalletConnected={false}
-              walletBalance={0}
-              reloadBalance={() => {}}
-              walletAddress={""}
-              depositAddress={{} as AssetInfo}
-            />
-          )
+      } else {
+      }
 
       /*for the "blue" active buttons on TransactionStatusWindow;
 			there are only four steps in our flow process,

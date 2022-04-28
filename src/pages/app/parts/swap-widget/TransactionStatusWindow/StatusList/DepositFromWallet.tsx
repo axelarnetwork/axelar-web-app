@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import styled from "styled-components"
-import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
+import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
-import downstreamServices from "config/downstreamServices"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import { InputForm } from "components/CompositeComponents/InputForm"
 import { StyledButton } from "components/StyleComponents/StyledButton"
 import { FlexRow } from "components/StyleComponents/FlexRow"
-import Link from "components/Widgets/Link"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
 import {
   MetamaskTransferEvent,
@@ -27,11 +25,26 @@ import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
+import { TerraWallet } from "hooks/wallet/TerraWallet"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+} from "@terra-money/wallet-provider"
+import { SelectedWallet, WalletType } from "state/Wallet"
+import { hasSelectedNativeAssetForChain } from "utils/hasSelectedNativeAssetOnChain"
+import LoadingWidget from "components/Widgets/LoadingWidget"
+import { getShortenedWord } from "utils/wordShortener"
+import BoldSpan from "components/StyleComponents/BoldSpan"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { getNumber } from "utils/formatNumber"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
+  height: 2em;
   cursor: ${(props) => (props.dim ? "not-allowed" : "pointer")};
-  font-size: small;
+  font-size: 0.9em;
+  margin: 0.5em 0em 0em -1em;
 `
 
 interface DepositFromWalletProps {
@@ -46,6 +59,7 @@ export const DepositFromWallet = ({
   walletBalance,
   walletAddress,
   depositAddress,
+  reloadBalance,
 }: DepositFromWalletProps) => {
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const destChainSelection = useRecoilValue(
@@ -54,22 +68,27 @@ export const DepositFromWallet = ({
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [, setDepositAmount] = useRecoilState(DepositAmount)
+  const selectedWallet = useRecoilValue(SelectedWallet)
   const [minDepositAmt] = useState(
-    getMinDepositAmount(selectedSourceAsset, sourceChainSelection, destChainSelection) || 0
+    getMinDepositAmount(
+      selectedSourceAsset,
+      sourceChainSelection,
+      destChainSelection
+    ) || 0
   )
-  const [buttonText, setButtonText] = useState(
-    sourceChainSelection?.chainName.toLowerCase() === "terra"
-      ? "Deposit via IBC Transfer"
-      : "Send Deposit"
-  )
+  const [buttonText, setButtonText] = useState("Send")
   const [sentSuccess, setSentSuccess] = useState(false)
   const [numConfirmations, setNumConfirmations] = useState(0)
   const [hasEnoughInWalletForMin, setHasEnoughInWalletForMin] = useState(true)
   const [hasEnoughDepositConfirmation, setHasEnoughDepositConfirmation] =
     useRecoilState(HasEnoughDepositConfirmation)
-  const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
+  const [, setTxHash] = useRecoilState(SrcChainDepositTxHash)
   const [, setDepositTimestamp] = useRecoilState(DepositTimestamp)
   const transactionTraceId = useRecoilValue(TransactionTraceId)
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient()
+  const connectedWallet = useConnectedWallet()
+  const [inputHasChanged, setInputHasChanged] = useState(false)
 
   useEffect(() => {
     setHasEnoughInWalletForMin(walletBalance >= minDepositAmt)
@@ -90,11 +109,25 @@ export const DepositFromWallet = ({
     let results: MetamaskTransferEvent
     try {
       setDepositAmount(amountToDeposit)
-      results = await wallet.transferTokens(
-        depositAddress?.assetAddress as string,
-        (amountToDeposit || 0).toString(),
-        selectedSourceAsset as AssetInfo
-      )
+      if (
+        hasSelectedNativeAssetForChain(
+          selectedSourceAsset as AssetInfo,
+          sourceChainSelection?.chainName
+        )
+      ) {
+        results = await wallet.transferNativeTokens(
+          depositAddress.assetAddress as string,
+          (amountToDeposit || 0).toString(),
+          selectedSourceAsset as AssetInfo,
+          sourceChainSelection?.chainName as string
+        )
+      } else {
+        results = await wallet.transferTokens(
+          depositAddress.assetAddress as string,
+          (amountToDeposit || 0).toString(),
+          selectedSourceAsset as AssetInfo
+        )
+      }
     } catch (error: any) {
       setDepositAmount("")
       results = error
@@ -109,29 +142,32 @@ export const DepositFromWallet = ({
     )
   }
   const transferKeplr = async () => {
-    const sourceChainName: "axelar" | "terra" =
-      sourceChainSelection?.chainName.toLowerCase() as "axelar" | "terra"
-    let wallet: KeplrWallet = new KeplrWallet(sourceChainName)
-    await wallet.connectToWallet()
+    if (!sourceChainSelection?.chainName) return
+    const sourceChainName = sourceChainSelection.chainName.toLowerCase()
+    let wallet
+    if (selectedWallet === WalletType.KEPLR) {
+      wallet = new KeplrWallet(sourceChainName)
+    } else {
+      wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+    }
+
     setButtonText("Sending...")
 
     let results
     try {
+      if (!depositAddress?.assetAddress) return
+      if (!selectedSourceAsset?.common_key) return
+
+      const recipientAddress = depositAddress.assetAddress
+
       setDepositAmount(amountToDeposit)
       if (sourceChainName === "axelar") {
-        results = await wallet.transferTokens(
-          depositAddress?.assetAddress as string,
-          amountToDeposit || "0"
-        )
+        results = await wallet.transferTokens(recipientAddress, amountToDeposit)
       } else {
         results = await wallet.ibcTransfer(
-          depositAddress?.assetAddress as string,
-          {
-            amount: ethers.utils
-              .parseUnits(amountToDeposit, selectedSourceAsset?.decimals || 6)
-              .toString(),
-            denom: selectedSourceAsset?.common_key?.toString() as string,
-          }
+          recipientAddress,
+          amountToDeposit,
+          selectedSourceAsset.common_key
         )
       }
     } catch (error: any) {
@@ -164,9 +200,15 @@ export const DepositFromWallet = ({
       inSufficientFunds ||
       requestRejected
 
-    if (results && results.transactionHash && results.height && !hasAnyErrors) {
+    if (
+      results &&
+      (results.transactionHash || results.txhash) &&
+      results.height >= 0 &&
+      !hasAnyErrors
+    ) {
       setSentSuccess(true)
-      setTxHash(results.transactionHash)
+      setTxHash(results.transactionHash || results.txhash)
+      setHasEnoughDepositConfirmation(true)
       setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
@@ -174,9 +216,8 @@ export const DepositFromWallet = ({
         transactionTraceId
       )
     } else {
-      setButtonText("Something went wrong, try again?")
+      setButtonText("Hmm, try again")
       const msg = "user failed to send tx: " + results
-      console.log("message", msg)
       SendLogsToServer.info("DEPOSIT_CONFIRMATION", msg, transactionTraceId)
     }
   }
@@ -197,6 +238,8 @@ export const DepositFromWallet = ({
     const hasAnyErrors: boolean =
       userDenied || transactionFailed || gasTooLow || insufficientFunds
 
+    console.log("results", results)
+
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.txHash)
@@ -215,7 +258,7 @@ export const DepositFromWallet = ({
         transactionTraceId
       )
     } else if (results?.error?.length > 0 || hasAnyErrors) {
-      setButtonText("Something went wrong, try again?")
+      setButtonText("Hmm, try again")
       SendLogsToServer.info(
         "DEPOSIT_CONFIRMATION",
         "user failed to send tx: " + JSON.stringify(results),
@@ -228,25 +271,6 @@ export const DepositFromWallet = ({
     return sourceChainSelection?.module === "evm"
       ? await transferMetamask()
       : await transferKeplr()
-  }
-
-  const LinkToExplorer = () => {
-    const blockExplorer: { name: string; url: string } =
-      downstreamServices.blockExplorers[
-        process.env.REACT_APP_STAGE as string
-      ] &&
-      downstreamServices.blockExplorers[process.env.REACT_APP_STAGE as string][
-        sourceChainSelection?.chainName?.toLowerCase() as string
-      ]
-
-    return txHash && blockExplorer ? (
-      <span>
-        See it <Link href={`${blockExplorer.url}${txHash}`}>here</Link> on{" "}
-        {blockExplorer.name}.
-        <br />
-        <br />
-      </span>
-    ) : null
   }
 
   const handleMaxClick = () => {
@@ -312,26 +336,20 @@ export const DepositFromWallet = ({
     sourceChainSelection?.confirmLevel,
   ])
 
-  if (sentSuccess)
-    return (
-      <>
-        <br />
-        <div>
-          {`Deposit transaction found! `}
-          <LinkToExplorer />
-        </div>
-        {sourceChainSelection?.module === "evm" ? (
-          <div>
-            {hasEnoughDepositConfirmation
-              ? `Received (${sourceChainSelection?.confirmLevel}/${sourceChainSelection?.confirmLevel}) confirmations.`
-              : `Waiting on (${numConfirmations}/${sourceChainSelection?.confirmLevel}) required confirmations before forwarding to Axelar...`}
-          </div>
-        ) : null}
-      </>
-    )
+  if (sentSuccess) {
+    debugger;
+    return sourceChainSelection?.module === "evm" &&
+      !hasEnoughDepositConfirmation ? (
+      <div>
+        Waiting on ({numConfirmations}/{sourceChainSelection?.confirmLevel})
+        required confirmations before forwarding to Axelar...
+      </div>
+    ) : null
+  }
 
   const disableTransferButton: boolean =
     !amountToDeposit ||
+    isNaN(parseFloat(amountToDeposit)) ||
     parseFloat(amountToDeposit) <= minDepositAmt ||
     !hasEnoughInWalletForMin ||
     parseFloat(amountToDeposit) > walletBalance ||
@@ -339,85 +357,65 @@ export const DepositFromWallet = ({
     (buttonText || "").toLowerCase().includes("sending")
 
   const getDisabledText = (disableTransferButton: boolean) => {
-    if (!disableTransferButton)
-      return (
-        <span>
-          <br />
-        </span>
-      )
-
     let text = ""
 
     if (
       !hasEnoughInWalletForMin ||
       (amountToDeposit && parseFloat(amountToDeposit) > walletBalance)
     )
-      text = "Not enough funds in this account"
-    else if (!amountToDeposit)
-      return (
-        <span>
-          <br />
-          <br />
-        </span>
-      )
-    else if (parseFloat(amountToDeposit) < minDepositAmt)
-      text = "Amount is below the minimum!"
+      text = "Insufficient funds"
+    else if (!amountToDeposit) return <br />
+    else if (parseFloat(amountToDeposit) <= minDepositAmt)
+      text = "Amount should be greater than the fee"
     else if (!isValidDecimal(amountToDeposit.toString()))
       text = "Too many decimal points"
 
-    return (
-      <div>
-        <br />
-        {text}
-        <br />
-        <br />
-      </div>
-    )
+    return text.length > 0 ? <div style={{ width: `98%` }}>{text}</div> : <br />
   }
 
-  return (
-    <div>
-      <br />
-      {isWalletConnected ? (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <FlexRow>
-            <div style={{ width: `100%`, position: `relative` }}>
-              <InputForm
-                name={"destination-address-input"}
-                value={amountToDeposit}
-                placeholder={"Amount to deposit"}
-                type={"number"}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setAmountToDeposit(e.target.value)
-                }
-              />
-              {walletBalance > 0 && (
-                <div
-                  style={{
-                    position: `absolute`,
-                    color: "grey",
-                    right: `0.5em`,
-                    bottom: `0.25em`,
-                    fontSize: `0.8em`,
-                    cursor: "pointer",
-                  }}
-                  onClick={handleMaxClick}
-                >
-                  {getMaxButtonText()}
-                </div>
-              )}
-            </div>
-            <div style={{ marginLeft: `0.5em` }}>
-              {selectedSourceAsset?.assetSymbol}
-            </div>
-          </FlexRow>
-          {getDisabledText(disableTransferButton)}
-          {depositTxDetails(
-            disableTransferButton,
-            sourceChainSelection as ChainInfo,
-            amountToDeposit
-          )}
-          <br />
+  const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
+    selectedSourceAsset as AssetInfo,
+    sourceChainSelection?.chainName
+  )
+
+  return isWalletConnected ? (
+    <FlexColumn>
+      <FlexRow style={{ justifyContent: `flex-start`, width: `95%` }}>
+        <FlexColumn>
+          <div
+            style={{
+              width: `100%`,
+              position: `relative`,
+              marginRight: `1em`,
+            }}
+          >
+            <InputForm
+              name={"destination-address-input"}
+              value={amountToDeposit?.replace(/[^.0-9]/g, '')?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') || ""}
+              placeholder={"Amount"}
+              type={"text"}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setAmountToDeposit(e.target.value?.replace(/,/g,''))
+                if (!inputHasChanged) setInputHasChanged(true)
+              }
+              }
+            />
+            {walletBalance > 0 && (
+              <div
+                style={{
+                  position: `absolute`,
+                  color: "grey",
+                  right: `0.5em`,
+                  bottom: `0.25em`,
+                  fontSize: `0.8em`,
+                  cursor: "pointer",
+                }}
+                onClick={handleMaxClick}
+              >
+                {getMaxButtonText()}
+              </div>
+            )}
+          </div>
           <TransferButton
             dim={disableTransferButton}
             disabled={disableTransferButton}
@@ -425,23 +423,40 @@ export const DepositFromWallet = ({
           >
             {buttonText}
           </TransferButton>
-        </div>
-      ) : null}
-    </div>
-  )
-}
+        </FlexColumn>
+        <FlexColumn
+          style={{
+            alignItems: `flex-start`,
+            fontSize: `0.8em`,
+            border: `1px solid lightgrey`,
+            borderRadius: `5px`,
+            display: `flex`,
+            boxSizing: `border-box`,
+            padding: `0.5em`,
+            margin: `0em -0.5em 0em 0.5em`,
+            width: `70%`,
+          }}
+        >
+          <span style={{ marginBottom: `0.5em` }}>
+            Fee:{" "}
+            <BoldSpan>
+              {minDepositAmt} {selectedSourceAsset?.assetSymbol}
+            </BoldSpan>
+          </span>
 
-const depositTxDetails = (
-  disableTransferButton: boolean,
-  sourceChain: ChainInfo,
-  amt: string
-) => {
-  if (disableTransferButton || !amt) return null
-
-  return (
-    <div style={{ fontSize: `0.9em` }}>
-      Confirm all of the above info before sending funds. Funds will be lost
-      otherwise.
-    </div>
-  )
+          <span style={{ marginBottom: `0.5em` }}>
+            Wallet: <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
+          </span>
+          <span style={{ marginBottom: `0.5em` }}>
+            {userHasSelectedNativeAssetForChain
+              ? sourceChainSelection?.chainSymbol
+              : selectedSourceAsset?.assetSymbol}{" "}
+            balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
+            <LoadingWidget cb={reloadBalance} />
+          </span>
+        </FlexColumn>
+      </FlexRow>
+      {inputHasChanged ? getDisabledText(disableTransferButton) : <br/>}
+    </FlexColumn>
+  ) : null
 }

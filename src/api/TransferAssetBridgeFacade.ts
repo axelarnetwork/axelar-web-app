@@ -1,35 +1,32 @@
 import {
-  AssetInfoWithTrace,
-  AssetTransferObject,
-  CallbackStatus,
-  TransferAssetBridge,
+  AxelarAssetTransfer,
+  Environment
 } from "@axelar-network/axelarjs-sdk"
 
 export class TransferAssetBridgeFacade {
   private static environment: string
-  private static transferAssetBridge: TransferAssetBridge
+  private static transferAssetBridge: AxelarAssetTransfer
 
   constructor(environment: string) {
     TransferAssetBridgeFacade.environment = environment
-    TransferAssetBridgeFacade.transferAssetBridge = new TransferAssetBridge(
-      TransferAssetBridgeFacade.environment
+    TransferAssetBridgeFacade.transferAssetBridge = new AxelarAssetTransfer(
+      { environment: Environment[process.env.REACT_APP_STAGE?.toUpperCase() as keyof typeof Environment] }
     )
   }
 
-  public static async transferAssets(
-    message: AssetTransferObject,
-    sourceCbs: CallbackStatus,
-    destCbs: CallbackStatus
-  ): Promise<AssetInfoWithTrace> {
+  public static async getDepositAddress(
+    fromChain: string,
+    toChain: string,
+    destinationAddress: string,
+    asset: string,
+    options?: {
+      _traceId: string;
+    }
+  ): Promise<string> {
     try {
-      return TransferAssetBridgeFacade.transferAssetBridge.transferAssets(
-        message,
-        sourceCbs,
-        destCbs,
-        false
-      )
+      return TransferAssetBridgeFacade.transferAssetBridge.getDepositAddress(fromChain, toChain, destinationAddress, asset, options)
     } catch (e: any) {
-      sourceCbs?.failCb()
+      // sourceCbs?.failCb()
       // SendLogsToServer.error("TransferAssetBridgeFacade_FRONTEND_ERROR_1", JSON.stringify(e), "NO_UUID");
       throw e
     }
@@ -40,13 +37,21 @@ export class TransferAssetBridgeFacade {
     asset: string
   ): Promise<any> {
     try {
-      return TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
+      return await TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
         chain,
         asset
       )
     } catch (e: any) {
-      console.log("eee in facade",e)
+      console.log("eee in facade", e)
       throw e
     }
+  }
+
+  public static async getTxFee(
+    srcChain: string,
+    destChain: string,
+    asset: string
+  ) {
+    // return await TransferAssetBridgeFacade.transferAssetBridge.getTransferFee(srcChain, destChain, asset)
   }
 }

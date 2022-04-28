@@ -10,7 +10,7 @@ import styled from "styled-components"
 import {
   AssetInfo,
   ChainInfo,
-  validateDestinationAddress,
+  validateDestinationAddressByChainName,
 } from "@axelar-network/axelarjs-sdk"
 import { InputForm } from "components/CompositeComponents/InputForm"
 import ChainSelector from "components/CompositeComponents/Selectors/ChainSelector"
@@ -43,6 +43,18 @@ import {
   ROUTE_PARAM_TOKEN,
 } from "config/route"
 import useSearchParams from "hooks/useSearchParams"
+import {
+  terraConfigMainnet,
+  terraConfigTestnet,
+  TerraWallet,
+} from "hooks/wallet/TerraWallet"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+  WalletLCDClientConfig,
+} from "@terra-money/wallet-provider"
+import { IsKeplrWalletConnected } from "state/Wallet"
 
 interface IUserInputWindowProps {
   handleTransactionSubmission: () => Promise<string>
@@ -131,6 +143,14 @@ const UserInputWindow = ({
   const bannedAddresses = useRecoilValue<string[]>(BannedAddresses)
   const chainList = useRecoilValue(ChainList)
   const [isSubmitting, setIsSubmitting] = useRecoilState(IsTxSubmitting)
+  const terraWallet = useWallet()
+  const lcdClient = useLCDClient(
+    (process.env.REACT_APP_STAGE === "mainnet"
+      ? terraConfigMainnet
+      : terraConfigTestnet) as WalletLCDClientConfig
+  )
+  const connectedWallet = useConnectedWallet()
+  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
   const srcChainComponentRef = createRef()
   const destChainComponentRef = createRef()
   const resetDestinationChain = useResetRecoilState(
@@ -215,16 +235,16 @@ const UserInputWindow = ({
       assetAddress: destAddr as string,
       assetSymbol: destChainSelection?.chainSymbol,
     }
-    const validAddr: boolean = validateDestinationAddress(
-      destChainSelection?.chainSymbol as string,
-      destToken
+    const validAddr: boolean = !!validateDestinationAddressByChainName(
+      destChainSelection?.chainName || "",
+      destToken.assetAddress || "",
+      process.env.REACT_APP_STAGE as string
     )
     setIsValidDestinationAddress(validAddr)
   }, [destAddr, destChainSelection, setIsValidDestinationAddress])
 
   const onInitiateTransfer = useCallback(async () => {
     if (!(destAddr && isValidDestinationAddress)) return
-
     setIsSubmitting(true)
     try {
       await handleTransactionSubmission()
@@ -300,7 +320,17 @@ const UserInputWindow = ({
     wallet = isEvm
       ? new MetaMaskWallet(destinationChain.chainName.toLowerCase())
       : new KeplrWallet(destinationChain.chainName.toLowerCase())
-    if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet()
+    if (!wallet.isWalletInstalled() || !isEvm) await wallet.connectToWallet(() => setIsKeplrWalletConnected(true))
+    wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
+  }
+
+  const getDestinationAddressFromTerraWallet = async () => {
+    let wallet: WalletInterface = new TerraWallet(
+      terraWallet,
+      lcdClient,
+      connectedWallet
+    )
+    if (!wallet.isWalletInstalled()) await wallet.connectToWallet()
     wallet.isWalletInstalled() && setDestAddr(await wallet.getAddress())
   }
 
@@ -369,7 +399,7 @@ const UserInputWindow = ({
                   )
                 }
               >
-                Autofill Destination Address (optional)
+                Autofill from:
               </span>
               <StyledSVGImage
                 onClick={() =>
@@ -379,13 +409,25 @@ const UserInputWindow = ({
                 }
                 height={`1.25em`}
                 width={`1.25em`}
-                margin={`0em 0.75em 0em 0.5em`}
+                margin={`0em 0.5em 0em 0.5em`}
                 src={
                   destChainSelection.module === "axelarnet"
                     ? require(`assets/svg/keplr.svg`).default
                     : require(`assets/svg/metamask.svg`).default
                 }
               />
+              {destChainSelection?.chainName?.toLowerCase() === "terra" && (
+                <>
+                  <span>OR</span>
+                  <StyledSVGImage
+                    onClick={getDestinationAddressFromTerraWallet}
+                    height={`1.35em`}
+                    width={`1.35em`}
+                    margin={`0em 0.5em 0em 0.5em`}
+                    src={require(`assets/svg/terra-station.svg`).default}
+                  />
+                </>
+              )}
             </div>
           )}
         </StyledInputFormSection>
@@ -404,7 +446,7 @@ const UserInputWindow = ({
         >
           {isSubmitting
             ? "Please check Metamask..."
-            : "Connect Wallet & Transfer"}
+            : "Initiate Transfer"}
         </PlainButton>
       </StyledButtonContainer>
     </StyledUserInputWindow>

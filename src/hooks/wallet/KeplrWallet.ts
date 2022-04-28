@@ -37,7 +37,7 @@ export class KeplrWallet implements WalletInterface {
     return !!window.keplr
   }
 
-  public async connectToWallet(): Promise<"added" | "exists" | "error" | null> {
+  public async connectToWallet(cb?: any): Promise<"added" | "exists" | "error" | null> {
     let text: "added" | "exists" | "error" | null = "error"
 
     if (!this.isWalletInstalled()) {
@@ -69,6 +69,8 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
+    cb && cb();
+    // localStorage.setItem("IsKeplrWalletConnected", "true")
     const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
@@ -77,7 +79,7 @@ export class KeplrWallet implements WalletInterface {
 
   public installWallet(): void {
     const confirm = window.confirm(
-      "Click OK to be brought to the Chrome Store to download the Keplr Wallet. Please (1) set up an Keplr account and (2) refresh this Satellite page before trying this again."
+      "Click OK to be brought to the Chrome Store to download the Keplr Wallet. Please ensure your Keplr account is set up before returning to Satellite."
     )
     if (confirm) {
       window.open(
@@ -159,14 +161,18 @@ export class KeplrWallet implements WalletInterface {
     console.log("results", result)
   }
 
-  public async ibcTransfer(recipient: any, coinToSend: Coin) {
+  public async ibcTransfer(
+    recipient: any,
+    amount: string,
+    _denom: string
+  ) {
     const senderAddress = await this.getAddress()
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    coinToSend.denom = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
-      ? this.CONFIG_FOR_CHAIN.denomMap[coinToSend.denom]
-      : coinToSend.denom
+    const denom = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN.denomMap[_denom]
+      ? this.CONFIG_FOR_CHAIN.denomMap[_denom]
+      : _denom
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
       amount: [{ denom: this.CONFIG_FOR_CHAIN.chainInfo.feeCurrencies[0].coinMinimalDenom, amount: "30000" }],
@@ -181,7 +187,10 @@ export class KeplrWallet implements WalletInterface {
       const res = await cosmjs.sendIbcTokens(
         senderAddress,
         recipient,
-        coinToSend,
+        Coin.fromPartial({
+          denom,
+          amount: ethers.utils.parseUnits(amount, 6).toString(),
+        }),
         PORT,
         AXELAR_CHANNEL_ID,
         timeoutHeight,

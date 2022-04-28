@@ -1,6 +1,10 @@
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import {
+  AssetInfo,
+  ChainInfo,
+  getConfigs,
+} from "@axelar-network/axelarjs-sdk"
 import styled, { ThemedStyledProps } from "styled-components"
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { confirm } from "react-confirm-box"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
@@ -10,30 +14,51 @@ import { SelectedChainLogoAndText } from "components/CompositeComponents/Selecto
 import { opacityAnimation } from "components/StyleComponents/animations/OpacityAnimation"
 import { FlexRow } from "components/StyleComponents/FlexRow"
 import configs from "config/downstreamServices"
-import { StyledButton } from "components/StyleComponents/StyledButton"
 import BoldSpan from "components/StyleComponents/BoldSpan"
 import { PopoutLink } from "components/Widgets/PopoutLink"
 import useResetAllState from "hooks/useResetAllState"
 import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { KeplrWallet } from "hooks/wallet/KeplrWallet"
+import {
+  terraConfigMainnet,
+  terraConfigTestnet,
+  TerraWallet,
+} from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
 import {
   MessageShownInCartoon,
-  ShowDisclaimer,
-  ShowLargeDisclaimer,
 } from "state/ApplicationStatus"
 import {
   ActiveStep,
   DidWaitingForDepositTimeout,
-  IsRecaptchaAuthenticated,
+  HasEnoughDepositConfirmation,
+  IConfirmationStatus,
   NumberConfirmations,
   SourceDepositAddress,
+  SrcChainDepositTxHash,
 } from "state/TransactionStatus"
-import { ChainSelection, SourceAsset } from "state/ChainSelection"
+import {
+  ChainSelection,
+  DestinationAddress,
+  SourceAsset,
+} from "state/ChainSelection"
 import StyledButtonContainer from "../StyledComponents/StyledButtonContainer"
 import PlainButton from "../StyledComponents/PlainButton"
 import StatusList from "./StatusList"
-import Step2InfoForWidget from "./StatusList/Step2InfoForWidget"
+import {
+  useConnectedWallet,
+  useLCDClient,
+  useWallet,
+  WalletLCDClientConfig,
+} from "@terra-money/wallet-provider"
+import { IsKeplrWalletConnected, SelectedWallet, WalletType } from "state/Wallet"
+import {
+  buildDepositConfirmationRoomId,
+} from "api/AxelarEventListener"
+import { SocketService } from "api/WaitService/SocketService"
+import { transferEvent } from "api/WaitService"
+import { FlexColumn } from "components/StyleComponents/FlexColumn"
+import { popupOptions } from "components/Widgets/PopupOptions"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -107,55 +132,79 @@ const StyledFlexRow = styled(FlexRow)`
   background-color: #fefefe;
 `
 
-const StyledDialogBox = styled.div`
-  height: 50%;
-  width: 50%;
-  min-width: 400px;
-  background-color: white;
-  padding: 2em;
-  box-sizing: border-box;
-  border-radius: 10px;
-  font-size: 0.9em;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22), inset 0 0 3px 0 #262426;
-  border: solid 1px #b9bac8;
-`
-
 const TransactionStatusWindow = ({
   isOpen,
   closeResultsScreen,
 }: ITransactionStatusWindowProps) => {
-  const sourceConfirmStatus = useRecoilValue(
+  const [sourceConfirmStatus, setSourceConfirmStatus] = useRecoilState(
     NumberConfirmations(SOURCE_TOKEN_KEY)
   )
-  const destinationConfirmStatus = useRecoilValue(
-    NumberConfirmations(DESTINATION_TOKEN_KEY)
-  )
+  const [destinationConfirmStatus, setDestinationConfirmStatus] =
+    useRecoilState(NumberConfirmations(DESTINATION_TOKEN_KEY))
   const destinationChain = useRecoilValue(ChainSelection(DESTINATION_TOKEN_KEY))
+  const destinationAddress = useRecoilValue(DestinationAddress)
   const sourceChain = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
   const depositAddress = useRecoilValue(SourceDepositAddress)
   const setCartoonMessage = useSetRecoilState(MessageShownInCartoon)
-  const isRecaptchaAuthenticated = useRecoilValue(IsRecaptchaAuthenticated)
   const [activeStep, setActiveStep] = useRecoilState(ActiveStep)
+  const [selectedWallet, setSelectedWallet] =
+    useRecoilState<WalletType>(SelectedWallet)
   const resetAllstate = useResetAllState()
   const selectedSourceAsset = useRecoilValue(SourceAsset)
   const [isWalletConnected, setIsWalletConnected] = useState(false)
   const [walletBalance, setWalletBalance] = useState(0)
   const [walletAddress, setWalletAddress] = useState("")
-  const setShowDisclaimer = useSetRecoilState(ShowDisclaimer)
-  const setShowLargeDisclaimer = useSetRecoilState(ShowLargeDisclaimer)
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
+  const terraWallet = useWallet()
+  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
+  const txHash = useRecoilValue(SrcChainDepositTxHash)
+  const [hasEnoughDepositConfirmation,] =
+    useRecoilState(HasEnoughDepositConfirmation)
+  const lcdClient = useLCDClient(
+    (process.env.REACT_APP_STAGE === "mainnet"
+      ? terraConfigMainnet
+      : terraConfigTestnet) as WalletLCDClientConfig
+  )
+  const connectedWallet = useConnectedWallet()
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
   )
 
   useEffect(() => {
-    setShowDisclaimer(false)
-    setShowLargeDisclaimer(true)
-  }, [setShowDisclaimer, setShowLargeDisclaimer])
+    if (selectedWallet !== WalletType.TERRA) return
 
-  const connectToWallet = async () => {
-    if (sourceChain?.module === "evm") {
+    let msg = ""
+
+    const isMainnet = process.env.REACT_APP_STAGE === "mainnet"
+
+    if (isMainnet && terraWallet?.network?.chainID !== "columbus-5") {
+      msg =
+        "Your Terra Station extension is not set to mainnet. Please switch those settings before trying to send any funds."
+    } else if (!isMainnet && terraWallet?.network?.chainID !== "bombay-12") {
+      msg =
+        "Your Terra Station extension is not set to testnet. Please switch those settings before trying to send any funds."
+    } else return
+
+    const message: any = (
+      <FlexColumn>
+        <h3>
+          <BoldSpan>Warning</BoldSpan>
+        </h3>
+        {msg}
+      </FlexColumn>
+    )
+    confirm(message, popupOptions as any).then((positiveAffirmation) => {
+      if (!positiveAffirmation) {
+        resetAllstate()
+        closeResultsScreen()
+      }
+    })
+  }, [selectedWallet, terraWallet, closeResultsScreen, resetAllstate])
+
+  const connectToWallet = async (walletType: WalletType) => {
+    setSelectedWallet(walletType)
+    if (walletType === WalletType.METAMASK) {
       let wallet: MetaMaskWallet = new MetaMaskWallet(
         sourceChain?.chainName.toLowerCase() as string
       )
@@ -164,43 +213,45 @@ const TransactionStatusWindow = ({
       setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
-      const tokenAddress: string = await wallet.getOrFetchTokenAddress(
-        selectedSourceAsset as AssetInfo
-      )
-      const balance = await wallet.getBalance(tokenAddress)
+      const balance = await wallet.getBalance(selectedSourceAsset as AssetInfo, sourceChain?.chainName)
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
-      let wallet: KeplrWallet = new KeplrWallet(
-        sourceChain?.chainName.toLowerCase() as "axelar" | "terra"
-      )
-      setWalletToUse(wallet)
+      let wallet: WalletInterface
+      if (!sourceChain?.chainName) return
+
+      if (walletType === WalletType.TERRA) {
+        wallet = new TerraWallet(terraWallet, lcdClient, connectedWallet)
+      } else {
+        wallet = new KeplrWallet(sourceChain?.chainName.toLowerCase())
+      }
+
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
-      setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
-      await wallet.connectToWallet()
+      await wallet.connectToWallet(walletType === WalletType.KEPLR ? () => setIsKeplrWalletConnected(true) : null)
+
+      const address = await wallet.getAddress()
+      if (!address) return
+      setWalletToUse(wallet)
+      setIsWalletConnected(isWalletInstalled)
       const balance: number = await wallet.getBalance(
         selectedSourceAsset as AssetInfo
       )
       setWalletBalance(balance)
-      setWalletAddress(await wallet.getAddress())
+      setWalletAddress(address)
     }
   }
 
   const updateBalance = useCallback(async () => {
     if (!walletToUse) return
-    if (sourceChain?.module === "evm") {
-      const tokenAddress: string = await (
-        walletToUse as MetaMaskWallet
-      ).getOrFetchTokenAddress(selectedSourceAsset as AssetInfo)
-      const balance = await walletToUse.getBalance(tokenAddress)
-      setWalletBalance(balance)
-    } else {
-      const balance: number = await walletToUse.getBalance(selectedSourceAsset as AssetInfo)
-      setWalletBalance(balance)
-    }
+
+    const balance = await walletToUse.getBalance(
+      selectedSourceAsset as AssetInfo,
+      sourceChain?.chainName
+    )
+    setWalletBalance(balance)
     setWalletAddress(await walletToUse.getAddress())
-  }, [walletToUse, selectedSourceAsset, sourceChain?.module])
+  }, [walletToUse, selectedSourceAsset, sourceChain?.chainName])
 
   const {
     numberConfirmations: sNumConfirms,
@@ -216,29 +267,15 @@ const TransactionStatusWindow = ({
     console.log("render transaction status screen")
     switch (true) {
       case didWaitingForDepositTimeout:
-        setCartoonMessage(null)
         break
       case !!(dNumConfirms && dReqNumConfirms):
         setActiveStep(4)
         break
-      case depositAddress &&
-        sNumConfirms &&
-        sReqNumConfirms &&
-        sNumConfirms >= sReqNumConfirms:
+      case (txHash && txHash.length > 0 && hasEnoughDepositConfirmation) || !!(sNumConfirms && sReqNumConfirms):
         setActiveStep(3)
-        setCartoonMessage(null)
         break
       case depositAddress !== null:
         setActiveStep(2)
-        setCartoonMessage(
-          <Step2InfoForWidget
-            isWalletConnected={isWalletConnected}
-            walletBalance={walletBalance}
-            reloadBalance={updateBalance}
-            walletAddress={walletAddress}
-            depositAddress={depositAddress as AssetInfo}
-          />
-        )
         break
       default:
         setActiveStep(1)
@@ -248,47 +285,78 @@ const TransactionStatusWindow = ({
     dNumConfirms,
     dReqNumConfirms,
     depositAddress,
-    isWalletConnected,
-    sNumConfirms,
-    sReqNumConfirms,
     setCartoonMessage,
     setActiveStep,
-    walletBalance,
-    updateBalance,
-    walletAddress,
     didWaitingForDepositTimeout,
+    txHash,
+    hasEnoughDepositConfirmation,
+    sNumConfirms,
+    sReqNumConfirms
   ])
 
   useEffect(() => {
-    const options = {
-      render: (
-        message: string,
-        onConfirm: () => void,
-        onCancel: () => void
-      ) => {
-        return (
-          <StyledDialogBox>
-            <div>{message}</div>
-            <br />
-            <FlexRow>
-              <StyledButton
-                style={{ margin: `0.5em`, backgroundColor: `grey` }}
-                onClick={onCancel}
-              >
-                {" "}
-                Go back{" "}
-              </StyledButton>
-              <br />
-              <StyledButton style={{ margin: `0.5em` }} onClick={onConfirm}>
-                {" "}
-                Confirm{" "}
-              </StyledButton>
-            </FlexRow>
-          </StyledDialogBox>
-        )
-      },
-    }
-    if (sourceChain?.module === "evm" && activeStep === 2 && !userConfirmed && sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain) {
+    ;(async () => {
+      if (activeStep !== 2) return
+
+      const roomId = buildDepositConfirmationRoomId(
+        sourceChain?.module as string,
+        depositAddress?.assetAddress as string,
+        sourceChain?.chainName as string,
+        destinationChain?.chainName as string,
+        selectedSourceAsset?.common_key as string
+      )
+
+      const res = await new SocketService(
+        getConfigs(process.env.REACT_APP_STAGE as string).resourceUrl
+      ).joinRoomAndWaitForEvent(roomId)
+
+      const confirms: IConfirmationStatus = {
+        numberConfirmations: 1,
+        numberRequiredConfirmations: 1,
+        transactionHash: "",
+        amountConfirmedString: res?.Attributes?.amount,
+      }
+      setSourceConfirmStatus(confirms)
+    })()
+  }, [
+    activeStep,
+    depositAddress,
+    selectedSourceAsset,
+    sourceChain,
+    destinationChain,
+    setSourceConfirmStatus,
+  ])
+
+  useEffect(() => {
+    ;(async () => {
+      if (activeStep !== 3) return
+
+      const res = await transferEvent(destinationChain as ChainInfo, selectedSourceAsset as AssetInfo, destinationAddress as string)
+
+      const confirms: IConfirmationStatus = {
+        numberConfirmations: 1,
+        numberRequiredConfirmations: 1,
+        transactionHash: res.transactionHash,
+        amountConfirmedString: "",
+      }
+      setDestinationConfirmStatus(confirms)
+    })()
+  }, [
+    activeStep,
+    destinationChain,
+    sourceChain,
+    selectedSourceAsset,
+    destinationAddress,
+    setDestinationConfirmStatus,
+  ])
+
+  useEffect(() => {
+    if (
+      sourceChain?.module === "evm" &&
+      activeStep === 2 &&
+      !userConfirmed &&
+      sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain
+    ) {
       const message: any = (
         <div>
           Be sure to send only the{" "}
@@ -314,7 +382,7 @@ const TransactionStatusWindow = ({
           />
         </div>
       )
-      confirm(message, options as any).then((positiveAffirmation) => {
+      confirm(message, popupOptions as any).then((positiveAffirmation) => {
         if (positiveAffirmation) {
           setUserconfirmed(true)
         } else {
@@ -337,7 +405,7 @@ const TransactionStatusWindow = ({
   return (
     <StyledTransactionStatusWindow>
       <FlexRow style={{ color: `white` }}>
-        {activeStep < 4 ? "Transferring" : "Complete!"}
+        {activeStep < 3 ? "Transferring" : "Complete!"}
       </FlexRow>
       <br />
       <br />
@@ -373,19 +441,15 @@ const TransactionStatusWindow = ({
           <SelectedChainLogoAndText chainInfo={destinationChain} />
         </StyledChainSelectionIconWidget>
       </StyledFlexRow>
-      {isRecaptchaAuthenticated ? (
-        <StatusList
-          activeStep={activeStep}
-          isWalletConnected={isWalletConnected}
-          connectToWallet={connectToWallet}
-        />
-      ) : (
-        <FlexRow>
-          <br />
-          The transaction was not initiated. Some error occurred, potentially
-          including a failed recaptcha authentication
-        </FlexRow>
-      )}
+      <StatusList
+        activeStep={activeStep}
+        isWalletConnected={isWalletConnected}
+        connectToWallet={connectToWallet}
+        walletBalance={walletBalance}
+        reloadBalance={updateBalance}
+        walletAddress={walletAddress}
+        depositAddress={depositAddress as AssetInfo}
+/>
       <br />
 
       <StyledButtonContainer>

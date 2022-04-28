@@ -7,6 +7,7 @@ import {
 } from "state/ChainSelection"
 import {
   DidWaitingForDepositTimeout,
+  HasEnoughDepositConfirmation,
   NumberConfirmations,
   SourceDepositAddress,
 } from "state/TransactionStatus"
@@ -27,6 +28,7 @@ const useResetUserInputs = () => {
   const resetSourceDepositAddress = useResetRecoilState(SourceDepositAddress)
   const resetDestAddress = useResetRecoilState(DestinationAddress)
   const resetSourceAsset = useResetRecoilState(SourceAsset)
+  const resetHasEnoughDepositonfirmation = useResetRecoilState(HasEnoughDepositConfirmation)
   const resetTransactionTimeout = useResetRecoilState(
     DidWaitingForDepositTimeout
   )
@@ -40,6 +42,7 @@ const useResetUserInputs = () => {
     resetDestNumConfirmations()
     resetSourceDepositAddress()
     resetTransactionTimeout()
+    resetHasEnoughDepositonfirmation()
   }
 }
 

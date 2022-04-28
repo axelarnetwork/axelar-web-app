@@ -156,7 +156,7 @@ export const SupportWidget = () => {
               text={"Instructional Video"}
               onClick={() =>
                 window.open(
-                  "https://www.youtube.com/watch?v=VsfCJl1A9QI",
+                  "https://www.youtube.com/watch?v=_bxEw9Otb20",
                   "_blank"
                 )
               }
@@ -254,23 +254,46 @@ export const SupportWidget = () => {
           </StyledHeader>
           <SupportSection>
             <StyledBoldText>AXELAR SOCIAL LINKS</StyledBoldText>
-            <br/>
-              <SubLink 
-                text="Discord" 
-                onClick={() => window.open("https://discord.com/invite/aRZ3Ra6f7D", "_blank")} 
-                description={<><BoldSpan>#satellite-cross-chain-chat</BoldSpan> for general support.</>}
-              />
-              <SubLink 
-                text="Twitter (@axl_satellite)" 
-                onClick={() => window.open("https://twitter.com/axl_satellite", "_blank")} 
-                description={<>Latest updates on Satellite.</>}
-              />
-              <SubLink 
-                text="Twitter (@axl_status)" 
-                onClick={() => window.open("https://twitter.com/axl_status", "_blank")} 
-                description={<>Latest updates on Axelar.</>}
-              />
-              <br/>
+            <br />
+            <SubLink
+              text="Discord"
+              onClick={() =>
+                window.open("https://discord.com/invite/aRZ3Ra6f7D", "_blank")
+              }
+              description={
+                <>
+                  <BoldSpan>#satellite-cross-chain-chat</BoldSpan> for general
+                  support.
+                </>
+              }
+            />
+            <SubLink
+              text="Twitter (@axl_satellite)"
+              onClick={() =>
+                window.open("https://twitter.com/axl_satellite", "_blank")
+              }
+              description={<>Latest updates on Satellite.</>}
+            />
+            <SubLink
+              text="Twitter (@axl_status)"
+              onClick={() =>
+                window.open("https://twitter.com/axl_status", "_blank")
+              }
+              description={<>Latest updates on Axelar.</>}
+            />
+            <br />
+            <NewLink
+              text={"TRANSACTION SEARCH"}
+              onClick={() =>
+                window.open("https://crosschain.axelarscan.io", "_blank")
+              }
+            />
+            <DescriptorText>
+              <div>
+                Search transaction history by destination and/or deposit address.
+              </div>
+            </DescriptorText>
+            <br />
             <NewLink
               text={"TERMS OF USE"}
               onClick={() => {
@@ -289,11 +312,26 @@ export const SupportWidget = () => {
           {transactionTraceId && (
             <ContactUsSection>
               <h3>Issues with a live transaction?</h3>
-              <div style={{ marginBottom: `5px` }}>
-                Find more support or submit a request {" "}
+              <h4>Manual Deposit Confirmation</h4>
+              <div style={{ marginBottom: `1em` }}>
+                Open our {" "}
+                <StyledLink
+                  href={
+                    configs.txConfirmationTool[
+                      process.env.REACT_APP_STAGE as string
+                    ]
+                  }
+                >
+                  <BoldSpan>Deposit Recovery Tool</BoldSpan>
+                </StyledLink>{" "}
+                to manually confirm your deposit transaction, or:
+              </div>
+              <h4>Create a Zendesk ticket</h4>
+              <div style={{ marginBottom: `1em` }}>
                 <StyledLink href="https://axelar.zendesk.com/hc/en-us">
-                  <BoldSpan>HERE</BoldSpan>
-                </StyledLink> and make sure to mention these Support Details:
+                  <BoldSpan>Open Zendesk</BoldSpan>
+                </StyledLink>{" "}
+                and include these Support Details:
               </div>
               <Tooltip
                 anchorContent={
@@ -305,16 +343,16 @@ export const SupportWidget = () => {
                           {getShortenedWord(transactionTraceId, 5)}
                         </div>
                         {activeStep > 0 && (
-                            <div>
-                              <BoldSpan>Stuck on Step: </BoldSpan>
-                              {activeStep}
-                            </div>
+                          <div>
+                            <BoldSpan>Stuck on Step: </BoldSpan>
+                            {activeStep}
+                          </div>
                         )}
                         {srcChain && (
-                            <div>
-                              <BoldSpan>Source Chain: </BoldSpan>
-                              {srcChain.chainName}
-                            </div>
+                          <div>
+                            <BoldSpan>Source Chain: </BoldSpan>
+                            {srcChain.chainName}
+                          </div>
                         )}
                         {depositAddress && (
                           <div>
@@ -323,18 +361,18 @@ export const SupportWidget = () => {
                           </div>
                         )}
                         {srcChainDepositTxHash && (
-                            <div>
-                              <BoldSpan>
-                                Deposit TxHash on {srcChain?.chainName}:{" "}
-                              </BoldSpan>
-                              {getShortenedWord(srcChainDepositTxHash, 5)}
-                            </div>
+                          <div>
+                            <BoldSpan>
+                              Deposit TxHash on {srcChain?.chainName}:{" "}
+                            </BoldSpan>
+                            {getShortenedWord(srcChainDepositTxHash, 5)}
+                          </div>
                         )}
                         {destChain && (
-                            <div>
-                              <BoldSpan>Destination Chain: </BoldSpan>
-                              {destChain.chainName}
-                            </div>
+                          <div>
+                            <BoldSpan>Destination Chain: </BoldSpan>
+                            {destChain.chainName}
+                          </div>
                         )}
                         {destAddr && (
                           <div>
@@ -401,17 +439,19 @@ const StyledText = styled(FlexRow)`
   margin-bottom: 0.25em;
 `
 const Italics = css`
-font-style: italic;
-margin-bottom: 1em;
-color: #898994;
-font-size: 0.9em;
-`;
+  font-style: italic;
+  margin-bottom: 1em;
+  color: #898994;
+  font-size: 0.9em;
+`
 
-const DescriptorText = styled(StyledText)`${Italics}`;
+const DescriptorText = styled(StyledText)`
+  ${Italics}
+`
 
 const StyledBoldText = styled(StyledText)`
   font-weight: bold;
-`;
+`
 
 const LinkStyles = css`
   cursor: pointer;
@@ -422,8 +462,10 @@ const LinkStyles = css`
   &:active {
     text-decoration: underline;
   }
-`;
-const StyledNewLink = styled(StyledBoldText)`${LinkStyles}`;
+`
+const StyledNewLink = styled(StyledBoldText)`
+  ${LinkStyles}
+`
 
 export const NewLink = ({
   text,
@@ -448,22 +490,27 @@ export const NewLink = ({
   )
 }
 
-const StyledAnchor = styled.span`${LinkStyles}`;
-const StyledDescription = styled.span`${Italics}`;
+const StyledAnchor = styled.span`
+  ${LinkStyles}
+`
+const StyledDescription = styled.span`
+  ${Italics}
+`
 export const SubLink = ({
   text,
   onClick,
-  description
+  description,
 }: {
   text: string
   onClick?: any
   description: string | ReactElement
 }) => {
   return (
-    <div style={{ marginBottom: `0.5em`}}>
-      <StyledAnchor onClick={onClick} style={{ marginRight: `0.25em` }}><BoldSpan>{text}</BoldSpan></StyledAnchor>
+    <div style={{ marginBottom: `0.5em` }}>
+      <StyledAnchor onClick={onClick} style={{ marginRight: `0.25em` }}>
+        <BoldSpan>{text}</BoldSpan>
+      </StyledAnchor>
       <StyledDescription>{description}</StyledDescription>
-
     </div>
   )
 }

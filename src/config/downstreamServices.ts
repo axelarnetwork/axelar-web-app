@@ -13,39 +13,52 @@ interface IConfig {
   }
   tokenContracts: { [environment: string]: string }
   txConfirmationTool: { [environment: string]: string }
+  axelarScanAccountSearch: { [environment: string]: string }
 }
 
 const blockExplorers = {
   devnet: {
-    ethereum: { name: "Etherscan", url: "https://ropsten.etherscan.io/tx/" },
-    moonbeam: { name: "Moonscan", url: "https://moonbase.moonscan.io/tx/" },
-    avalanche: { name: "Snowtrace", url: "https://testnet.snowtrace.io/tx/" },
-    polygon: { name: "Polygonscan", url: "https://mumbai.polygonscan.com/tx/" },
-    fantom: { name: "FTMScan", url: "https://testnet.ftmscan.com/tx/" },
+    ethereum: { name: "Etherscan", url: "https://ropsten.etherscan.io/" },
+    moonbeam: { name: "Moonscan", url: "https://moonbase.moonscan.io/" },
+    avalanche: { name: "Snowtrace", url: "https://testnet.snowtrace.io/" },
+    polygon: { name: "Polygonscan", url: "https://mumbai.polygonscan.com/" },
+    fantom: { name: "FTMScan", url: "https://testnet.ftmscan.com/" },
     terra: {
-      name: "Terra's testnet block explorer",
-      url: "https://finder.terra.money/testnet/tx/",
+      name: "Terra Finder (testnet)",
+      url: "https://finder.terra.money/testnet/",
     },
     axelar: {
       name: "Coinhippo's testnet block explorer",
-      url: "https://axelar-testnet.coinhippo.io/tx/",
+      url: "https://axelar-testnet.coinhippo.io/",
     },
   },
   testnet: {},
   local: {},
   mainnet: {
-    ethereum: { name: "Etherscan", url: "https://etherscan.io/tx/" },
-    moonbeam: { name: "Moonscan", url: "https://moonbeam.moonscan.io/tx/" },
-    avalanche: { name: "Snowtrace", url: "https://snowtrace.io/tx/" },
-    polygon: { name: "Polygonscan", url: "https://polygonscan.com/tx/" },
-    fantom: { name: "FTMScan", url: "https://ftmscan.com/tx/" },
+    ethereum: { name: "Etherscan", url: "https://etherscan.io/" },
+    moonbeam: { name: "Moonscan", url: "https://moonbeam.moonscan.io/" },
+    avalanche: { name: "Snowtrace", url: "https://snowtrace.io/" },
+    polygon: { name: "Polygonscan", url: "https://polygonscan.com/" },
+    fantom: { name: "FTMScan", url: "https://ftmscan.com/" },
     terra: {
-      name: "Terra's block explorer",
-      url: "https://finder.terra.money/mainnet/tx/",
+      name: "Terra Finder",
+      url: "https://finder.terra.money/mainnet/",
     },
     axelar: {
       name: "Coinhippo's block explorer",
-      url: "https://axelar.coinhippo.io/tx/",
+      url: "https://axelar.coinhippo.io/",
+    },
+    osmosis: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/osmosis/",
+    },
+    "e-money": {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/emoney/",
+    },
+    cosmoshub: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/cosmos/",
     },
   },
 }
@@ -66,13 +79,21 @@ const txConfirmationTool = {
   mainnet: "https://transaction-confirmation.axelar.dev",
 }
 
+const axelarScanAccountSearch = {
+  local: "https://testnet.crosschain.axelarscan.io/account/",
+  devnet: "https://testnet.crosschain.axelarscan.io/account/",
+  testnet: "https://testnet.crosschain.axelarscan.io/account/",
+  mainnet: "https://crosschain.axelarscan.io/account/",
+}
+
 const configs: IConfig = {
   GITHUB_LINK,
   RECAPTCHA_V3_SITE_KEY: RECAPTCHA_V3_SITE_KEY,
   RECAPTCHA_V2_SITE_KEY: RECAPTCHA_V2_SITE_KEY,
   blockExplorers,
   tokenContracts,
-  txConfirmationTool
+  txConfirmationTool,
+  axelarScanAccountSearch
 }
 
 export default configs

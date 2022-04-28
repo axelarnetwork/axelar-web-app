@@ -3,13 +3,13 @@ import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 export interface WalletInterface {
   isWalletInstalled(): Boolean
 
-  connectToWallet(): void
+  connectToWallet(cb?: any): void
 
   installWallet(): void
 
   getAddress(): Promise<string>
 
-  getBalance(assetSymbol?: string | AssetInfo): Promise<any>
+  getBalance(assetInfo: AssetInfo, sourceChainName?: string): Promise<any>
 
   getSigner(): any
 

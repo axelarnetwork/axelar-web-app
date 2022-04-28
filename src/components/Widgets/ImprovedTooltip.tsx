@@ -1,10 +1,11 @@
 import { cloneElement, useCallback, useState } from "react"
 import ReactTooltip from "react-tooltip"
+import { v4 } from "uuid"
 
 interface ITooltip {
   anchorContent: JSX.Element | string
-  tooltipText: string
-  tooltipAltText: string
+  tooltipText: JSX.Element | string
+  tooltipAltText: JSX.Element | string
 }
 
 export const ImprovedTooltip = ({
@@ -13,28 +14,31 @@ export const ImprovedTooltip = ({
   tooltipAltText,
 }: ITooltip) => {
   const [clicked, setClicked] = useState(false)
+  const [id,] = useState(v4())
 
   const updateTextToShow = useCallback(() => {
     setClicked(true)
-    setTimeout(() => setClicked(false), 2000)
+    setTimeout(() => setClicked(false), 5000)
   }, [setClicked])
 
   return (
-    <div>
-      <div
+    <span>
+      <span
         style={{ cursor: `pointer`, display: `inline-block` }}
         data-tip={tooltipText}
+        data-for={id}
       >
         {cloneElement(anchorContent as JSX.Element, {
           cbOnClick: updateTextToShow,
         })}
-      </div>
+      </span>
       <ReactTooltip
         className={"width-override"}
+        id={id}
         getContent={() => {
           return clicked ? tooltipAltText : tooltipText
         }}
       />
-    </div>
+    </span>
   )
 }
