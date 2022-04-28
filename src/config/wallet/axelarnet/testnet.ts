@@ -4,9 +4,9 @@ import { KeplrWalletChainConfig } from "./interface"
 
 const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
 const OSMOSIS_RPC: string =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
+  "https://osmosistest-rpc.quickapi.com"
 const OSMOSIS_REST =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
+  "https://osmosistest-lcd.quickapi.com"
 const OSMOSIS_CHANNEL_MAP = {
   axelar: "channel-240",
 }
