@@ -31,6 +31,10 @@ const blockExplorers = {
       name: "Coinhippo's testnet block explorer",
       url: "https://axelar-testnet.coinhippo.io/",
     },
+    osmosis: {
+      name: "Big Dipper",
+      url: "https://bigdipper.testnet.osmo.mp20.net/",
+    },
   },
   testnet: {},
   local: {},
