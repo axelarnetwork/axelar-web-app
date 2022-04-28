@@ -17,4 +17,3 @@ jobs:
           vercel-args: "--prod"
           alias-domains: |
             canh-testing.vercel.app
-            satellite.money
