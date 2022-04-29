@@ -329,7 +329,7 @@ const TransactionStatusWindow = ({
 
   useEffect(() => {
     ;(async () => {
-      if (activeStep !== 3) return
+      if (!depositAddress) return
 
       const res = await transferEvent(destinationChain as ChainInfo, selectedSourceAsset as AssetInfo, destinationAddress as string)
 
@@ -339,6 +339,8 @@ const TransactionStatusWindow = ({
         transactionHash: res.transactionHash,
         amountConfirmedString: "",
       }
+      if (res) setActiveStep(3)
+
       setDestinationConfirmStatus(confirms)
     })()
   }, [
@@ -348,6 +350,8 @@ const TransactionStatusWindow = ({
     selectedSourceAsset,
     destinationAddress,
     setDestinationConfirmStatus,
+    depositAddress,
+    setActiveStep
   ])
 
   useEffect(() => {
