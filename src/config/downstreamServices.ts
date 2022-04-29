@@ -35,6 +35,10 @@ const blockExplorers = {
       name: "Big Dipper",
       url: "https://bigdipper.testnet.osmo.mp20.net/",
     },
+    crescent: {
+      name: "Crescent Explorer",
+      url: "https://testnet.crescent.explorers.guru/",
+    },
   },
   testnet: {},
   local: {},
