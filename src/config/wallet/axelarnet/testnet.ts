@@ -332,8 +332,8 @@ export const cosmoshub: KeplrWalletChainConfig = {
 }
 
 const CRESCENT_CHAIN_ID: string = "mooncat-1-1"
-const CRESCENT_RPC: string = "https://testnet-rpc.crescent.network"
-const CRESCENT_REST = "https://testnet-api.crescent.network"
+const CRESCENT_RPC: string = "https://testnet-endpoint.crescent.network/rpc/crescent"
+const CRESCENT_REST = "https://testnet-endpoint.crescent.network/api/crescent"
 const CRESCENT_CHANNEL_MAP = {
   axelar: "channel-3",
 }
