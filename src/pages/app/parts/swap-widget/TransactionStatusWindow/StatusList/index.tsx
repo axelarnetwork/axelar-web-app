@@ -235,13 +235,18 @@ const StatusList = (props: IStatusListProps) => {
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
                 )}
-              <DepositFromWallet
-                isWalletConnected={props.isWalletConnected}
-                walletBalance={props.walletBalance}
-                reloadBalance={props.reloadBalance}
-                walletAddress={props.walletAddress}
-                depositAddress={depositAddress as AssetInfo}
-              />
+              {!srcChainDepositHash && activeStep === 3 && (
+                <span style={{ fontStyle: `italic`}}>Detected a deposit tx made to {getShortenedWord(depositAddress?.assetAddress)} outside Satellite</span>
+              )}
+              {activeStep === 2 && (
+                <DepositFromWallet
+                  isWalletConnected={props.isWalletConnected}
+                  walletBalance={props.walletBalance}
+                  reloadBalance={props.reloadBalance}
+                  walletAddress={props.walletAddress}
+                  depositAddress={depositAddress as AssetInfo}
+                />
+              )}
               {activeStep === 2 && renderWalletButton()}
             </div>
           ) : (

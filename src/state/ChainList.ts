@@ -9,7 +9,7 @@ import { ConfigsForEnvironment, EthersJsConfigs, getConfigs } from "api/WaitServ
 const environment = process.env.REACT_APP_STAGE as string
 const initialChainList: ChainInfo[] = loadChains({ environment })
 .filter((chain: Chain) =>
-  environment === "mainnet" ? chain.chainInfo.fullySupported : true
+  (environment === "mainnet" ? chain.chainInfo.fullySupported : true) && !!chain?.chainInfo?.assets?.length
 )
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues

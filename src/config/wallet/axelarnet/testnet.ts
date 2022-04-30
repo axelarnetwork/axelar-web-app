@@ -4,26 +4,25 @@ import { KeplrWalletChainConfig } from "./interface"
 
 const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
 const OSMOSIS_RPC: string =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://rpc.osmo-test.ccvalidators.com"
+  "https://testnet-rpc.osmosis.zone"
 const OSMOSIS_REST =
-  "https://axelar-cors-redirect-testnet.herokuapp.com/https://lcd.osmo-test.ccvalidators.com"
+  "https://testnet-rest.osmosis.zone"
 const OSMOSIS_CHANNEL_MAP = {
-  axelar: "channel-184",
+  axelar: "channel-240",
 }
 const OSMOSIS_DENOM_MAP = {
-  uusdc: "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F",
   "wdev-wei":
-    "ibc/D3AF2C7986FA1191157529F68609887103EBBD0B9CAFAD615CF19B419E2F5566",
+    "ibc/BDEB81D8E81910D832AFCDEE9822923DB84ECD8981D10A2282D202EAAD2A6C0C",
   "wmatic-wei":
-    "ibc/67D0DAF8D504ED1616A1886CCECB4E366DC81A8EF48BD22AEA1F44BE87ED19AE",
+    "ibc/4E84944734F09DEAEC84882F5CF6ECD0F48CA9400F07ED355F6502C67930A3DD",
   "wftm-wei":
-    "ibc/033C5FCE2C549920B75CC794D12BC3407F638421C982CE9B48D4E5D986F4EFCE",
+    "ibc/6625132ACE6721012E7359AF2FF0F20B28E4122FB60673D17D4FC1D8D9D04559",
   "weth-wei":
-    "ibc/A8C7A5D5767DECBAF96AFDE4C2D99D95BE9FF38CA75BE3A1CD31E3D20264EFF9",
+    "ibc/E3BDEB883AA9A48F52E3677A1167E0C10D8F9FEF4F56CA7D065551BF00B24B84",
   "wavax-wei":
-    "ibc/9534907D2838E2134F21CC286A4CD0FF3CA96AA032F9F695ABF5621CC98AB17F",
+    "ibc/E49693D492828B1ACE243BBEC6FEC3ED036305CA06479DE8273FE9C7A94AADD6",
   uausdc:
-    "ibc/423FB88C7D1D4FCA2F7E67F07473DB4BB14282AE6F7B1A41B220A1AD9A762254",
+    "ibc/DB39478B7315836EB481DE311182D882BEC8E232E9586F1D4FF509079901B27E",
 }
 
 const osmosisChainInfo: ChainInfo = {
@@ -67,37 +66,37 @@ const osmosisChainInfo: ChainInfo = {
     {
       coinDenom: "WDEV",
       coinMinimalDenom:
-        "ibc/D3AF2C7986FA1191157529F68609887103EBBD0B9CAFAD615CF19B419E2F5566",
+        "ibc/BDEB81D8E81910D832AFCDEE9822923DB84ECD8981D10A2282D202EAAD2A6C0C",
       coinDecimals: 18,
     },
     {
       coinDenom: "WMATIC",
       coinMinimalDenom:
-        "ibc/67D0DAF8D504ED1616A1886CCECB4E366DC81A8EF48BD22AEA1F44BE87ED19AE",
+        "ibc/4E84944734F09DEAEC84882F5CF6ECD0F48CA9400F07ED355F6502C67930A3DD",
       coinDecimals: 18,
     },
     {
       coinDenom: "WFTM",
       coinMinimalDenom:
-        "ibc/033C5FCE2C549920B75CC794D12BC3407F638421C982CE9B48D4E5D986F4EFCE",
+        "ibc/6625132ACE6721012E7359AF2FF0F20B28E4122FB60673D17D4FC1D8D9D04559",
       coinDecimals: 18,
     },
     {
       coinDenom: "WETH",
       coinMinimalDenom:
-        "ibc/A8C7A5D5767DECBAF96AFDE4C2D99D95BE9FF38CA75BE3A1CD31E3D20264EFF9",
+        "ibc/E3BDEB883AA9A48F52E3677A1167E0C10D8F9FEF4F56CA7D065551BF00B24B84",
       coinDecimals: 18,
     },
     {
       coinDenom: "WAVAX",
       coinMinimalDenom:
-        "ibc/9534907D2838E2134F21CC286A4CD0FF3CA96AA032F9F695ABF5621CC98AB17F",
+        "ibc/E49693D492828B1ACE243BBEC6FEC3ED036305CA06479DE8273FE9C7A94AADD6",
       coinDecimals: 18,
     },
     {
       coinDenom: "aUSDC",
       coinMinimalDenom:
-        "ibc/423FB88C7D1D4FCA2F7E67F07473DB4BB14282AE6F7B1A41B220A1AD9A762254",
+        "ibc/DB39478B7315836EB481DE311182D882BEC8E232E9586F1D4FF509079901B27E",
       coinDecimals: 6,
     },
   ],
@@ -333,8 +332,8 @@ export const cosmoshub: KeplrWalletChainConfig = {
 }
 
 const CRESCENT_CHAIN_ID: string = "mooncat-1-1"
-const CRESCENT_RPC: string = "https://testnet-rpc.crescent.network"
-const CRESCENT_REST = "https://testnet-api.crescent.network"
+const CRESCENT_RPC: string = "https://testnet-endpoint.crescent.network/rpc/crescent"
+const CRESCENT_REST = "https://testnet-endpoint.crescent.network/api/crescent"
 const CRESCENT_CHANNEL_MAP = {
   axelar: "channel-3",
 }
