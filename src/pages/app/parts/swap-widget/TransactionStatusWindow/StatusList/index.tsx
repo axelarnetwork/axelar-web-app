@@ -235,7 +235,7 @@ const StatusList = (props: IStatusListProps) => {
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
                 )}
-              {!srcChainDepositHash && activeStep === 3 && (
+              {!srcChainDepositHash && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic`}}>Detected a deposit tx made to {getShortenedWord(depositAddress?.assetAddress)} outside Satellite</span>
               )}
               {activeStep === 2 && (
