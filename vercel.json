@@ -14,7 +14,20 @@
           {
             "key" : "X-XSS-Protection",
             "value" : "1; mode=block"
+          },
+          {
+            "key" : "Content-Security-Policy",
+            "value" : "src https://* 'self'; img-src https://* 'self';"
+          },
+          {
+            "key" : "Referrer-Policy",
+            "value" : "strict-origin-when-cross-origin"
+          },
+          {
+            "key" : "Permissions-Policy",
+            "value" : "microphone 'none'; geolocation 'none'"
           }
+          
         ]
       },
       {
