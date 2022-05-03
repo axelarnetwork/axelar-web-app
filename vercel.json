@@ -1,0 +1,48 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers" : [
+        {
+          "key" : "X-Content-Type-Options",
+          "value" : "nosniff"
+        }, 
+        {
+          "key" : "X-Frame-Options",
+          "value" : "SAMEORIGIN"
+        },
+        {
+          "key" : "X-XSS-Protection",
+          "value" : "1; mode=block"
+        },
+        {
+          "key" : "Content-Security-Policy",
+          "value" : "upgrade-insecure-requests;"
+        },
+        {
+          "key" : "Referrer-Policy",
+          "value" : "strict-origin-when-cross-origin"
+        },
+        {
+          "key" : "Permissions-Policy",
+          "value" : "geolocation=()"
+        }       
+      ]
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "query",
+          "key": "authorized"
+        }
+      ],
+      "headers": [
+        {
+          "key": "x-authorized",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}

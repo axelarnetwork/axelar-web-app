@@ -339,7 +339,6 @@ const TransactionStatusWindow = ({
         transactionHash: res.transactionHash,
         amountConfirmedString: "",
       }
-      if (res) setActiveStep(3)
 
       setDestinationConfirmStatus(confirms)
     })()
