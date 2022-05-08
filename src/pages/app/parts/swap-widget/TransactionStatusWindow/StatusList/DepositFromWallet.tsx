@@ -167,7 +167,8 @@ export const DepositFromWallet = ({
         results = await wallet.ibcTransfer(
           recipientAddress,
           amountToDeposit,
-          selectedSourceAsset.common_key
+          selectedSourceAsset.common_key,
+          selectedSourceAsset.decimals || 6
         )
       }
     } catch (error: any) {
