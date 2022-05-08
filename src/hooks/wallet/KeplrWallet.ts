@@ -164,7 +164,8 @@ export class KeplrWallet implements WalletInterface {
   public async ibcTransfer(
     recipient: any,
     amount: string,
-    _denom: string
+    _denom: string,
+    decimals: number
   ) {
     const senderAddress = await this.getAddress()
     const cosmjs = await this.getSigningClient()
@@ -189,7 +190,7 @@ export class KeplrWallet implements WalletInterface {
         recipient,
         Coin.fromPartial({
           denom,
-          amount: ethers.utils.parseUnits(amount, 6).toString(),
+          amount: ethers.utils.parseUnits(amount, decimals).toString(),
         }),
         PORT,
         AXELAR_CHANNEL_ID,
