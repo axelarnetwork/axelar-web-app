@@ -72,10 +72,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
   }
   const chainDropdownOptions: ISearchItem[] = filteredChainList.map(
     (supportedChain: ChainInfo) => ({
-      title:
-        supportedChain?.chainName?.toLowerCase() === "osmosis-2"
-          ? "Osmosis"
-          : supportedChain.chainName,
+      title: supportedChain?.chainName?.toLowerCase() === "osmosis-2" ? "Osmosis" : supportedChain.chainName,
       active: false,
       icon: require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)
         ?.default,
