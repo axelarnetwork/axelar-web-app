@@ -15,17 +15,17 @@ export const nativeAssetMap: {
   [env: string]: { [chainName: string]: string }
 } = {
   testnet: {
-    ethereum: "weth-wei",
-    avalanche: "wavax-wei",
-    polygon: "wmatic-wei",
-    fantom: "wftm-wei",
-    moonbeam: "wdev-wei",
+    // ethereum: "weth-wei",
+    // avalanche: "wavax-wei",
+    // polygon: "wmatic-wei",
+    // fantom: "wftm-wei",
+    // moonbeam: "wdev-wei",
   },
   mainnet: {
-    ethereum: "weth-wei",
-    avalanche: "wavax-wei",
-    polygon: "wmatic-wei",
-    fantom: "wftm-wei",
-    moonbeam: "wglmr-wei",
+    // ethereum: "weth-wei",
+    // avalanche: "wavax-wei",
+    // polygon: "wmatic-wei",
+    // fantom: "wftm-wei",
+    // moonbeam: "wglmr-wei",
   },
 }
