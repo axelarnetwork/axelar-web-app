@@ -2,16 +2,16 @@ export const topFlowOptions =
   process.env.REACT_APP_STAGE === "mainnet"
     ? [
         {
-          common_key: "uusdt",
-          assetSymbol: "USDT",
+          common_key: "weth-wei",
+          assetSymbol: "WETH",
           sourceChainName: "Ethereum",
           destinationChainName: "Osmosis",
           sourceChainSymbol: "ETH",
           destinationChainSymbol: "OSMO",
         },
         {
-          common_key: "frax-wei",
-          assetSymbol: "FRAX",
+          common_key: "uusdt",
+          assetSymbol: "USDT",
           sourceChainName: "Ethereum",
           destinationChainName: "Osmosis",
           sourceChainSymbol: "ETH",
