@@ -209,7 +209,7 @@ export const SupportWidget = () => {
               document lists all of them in a table.{" "}
             </DescriptorText>
             <NewLink
-              text={`Transaction Fees`}
+              text={`Transaction Relayer Gas Fees`}
               onClick={() =>
                 window.open(
                   configs.tokenContracts[
@@ -254,7 +254,6 @@ export const SupportWidget = () => {
           </StyledHeader>
           <SupportSection>
             <StyledBoldText>AXELAR SOCIAL LINKS</StyledBoldText>
-            <br />
             <SubLink
               text="Discord"
               onClick={() =>
@@ -293,7 +292,29 @@ export const SupportWidget = () => {
                 Search transaction history by destination and/or deposit address.
               </div>
             </DescriptorText>
-            <br />
+            {/* <br /> */}
+            <NewLink
+              text={"DEPOSIT RECOVERY TOOL"}
+              onClick={() =>
+                window.open("https://transaction-confirmation.axelar.dev", "_blank")
+              }
+            />
+            <DescriptorText>
+              <div>
+                Transaction stuck? Try this Deposit Recovery Tool to confirm your deposit transasction on the Axelar network.
+              </div>
+            </DescriptorText>
+            <NewLink
+              text={"ISSUES / FEEDBACK"}
+              onClick={() =>
+                window.open("https://axelar.zendesk.com/hc/en-us", "_blank")
+              }
+            />
+            <DescriptorText>
+              <div>
+                For general help, submit your questions/feedback via Zendesk. Any and all thoughts welcome!
+              </div>
+            </DescriptorText>
             <NewLink
               text={"TERMS OF USE"}
               onClick={() => {
@@ -312,26 +333,12 @@ export const SupportWidget = () => {
           {transactionTraceId && (
             <ContactUsSection>
               <h3>Issues with a live transaction?</h3>
-              <h4>Manual Deposit Confirmation</h4>
-              <div style={{ marginBottom: `1em` }}>
-                Open our {" "}
-                <StyledLink
-                  href={
-                    configs.txConfirmationTool[
-                      process.env.REACT_APP_STAGE as string
-                    ]
-                  }
-                >
-                  <BoldSpan>Deposit Recovery Tool</BoldSpan>
-                </StyledLink>{" "}
-                to manually confirm your deposit transaction, or:
-              </div>
-              <h4>Create a Zendesk ticket</h4>
+              {/* <h4>Create a Zendesk ticket</h4> */}
               <div style={{ marginBottom: `1em` }}>
                 <StyledLink href="https://axelar.zendesk.com/hc/en-us">
-                  <BoldSpan>Open Zendesk</BoldSpan>
+                  <BoldSpan>Create a Zendesk ticket</BoldSpan>
                 </StyledLink>{" "}
-                and include these Support Details:
+                with these Support Details:
               </div>
               <Tooltip
                 anchorContent={
