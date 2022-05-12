@@ -11,6 +11,7 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
 .filter((chain: Chain) =>
   (environment === "mainnet" ? chain.chainInfo.fullySupported : true) && !!chain?.chainInfo?.assets?.length
 )
+.filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "terra")
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues
   const newChainInfo = chain.chainInfo;
