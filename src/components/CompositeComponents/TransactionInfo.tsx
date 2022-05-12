@@ -71,7 +71,7 @@ const TransactionInfo = () => {
     >
       <div style={{ display: `flex`, flexDirection: `column` }}>
         {generateInfoLine(
-          "Fee",
+          "Relayer Gas Fee",
           `${minDeposit} ${selectedSrcAsset?.assetSymbol}`
         )}
         {generateInfoLine(
