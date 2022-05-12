@@ -25,14 +25,14 @@ export const topFlowOptions =
           sourceChainSymbol: "ETH",
           destinationChainSymbol: "OSMO",
         },
-        {
-          common_key: "uusd",
-          assetSymbol: "UST",
-          sourceChainName: "Terra",
-          destinationChainName: "Avalanche",
-          sourceChainSymbol: "Terra",
-          destinationChainSymbol: "AVAX",
-        },
+        // {
+        //   common_key: "uusd",
+        //   assetSymbol: "UST",
+        //   sourceChainName: "Terra",
+        //   destinationChainName: "Avalanche",
+        //   sourceChainSymbol: "Terra",
+        //   destinationChainSymbol: "AVAX",
+        // },
       ]
     : [
         {
@@ -51,12 +51,12 @@ export const topFlowOptions =
           sourceChainSymbol: "AVAX",
           destinationChainSymbol: "OSMO",
         },
-        {
-          common_key: "uusd",
-          assetSymbol: "UST",
-          sourceChainName: "Terra",
-          destinationChainName: "Avalanche",
-          sourceChainSymbol: "Terra",
-          destinationChainSymbol: "AVAX",
-        },
+        // {
+        //   common_key: "uusd",
+        //   assetSymbol: "UST",
+        //   sourceChainName: "Terra",
+        //   destinationChainName: "Avalanche",
+        //   sourceChainSymbol: "Terra",
+        //   destinationChainSymbol: "AVAX",
+        // },
       ]
