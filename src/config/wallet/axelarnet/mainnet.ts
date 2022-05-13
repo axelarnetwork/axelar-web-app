@@ -57,7 +57,7 @@ const terraMainnetConfigs: ChainInfo = {
       coinGeckoId: "terrausd",
     },
   ],
-  gasPriceStep: { low: 0.015, average: 0.015, high: 0.015 },
+  gasPriceStep: { low: 5.665, average: 5.665, high: 7 },
   features: ["stargate", "ibc-transfer", "no-legacy-stdTx"],
 }
 
