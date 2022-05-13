@@ -179,7 +179,13 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
           )
           .map((asset: AssetInfo) => {
             return {
-              title: asset.assetName as string,
+              /**
+               * For the title, if source chain is cosmos and token is native to the destination chain, 
+               * then use the symbol representation for the destination chain
+               */
+              title: sourceChain?.module === "axelarnet" && asset.native_chain === destinationChain?.chainName.toLowerCase() 
+              ? destinationChain?.assets?.find(destAsset => destAsset.common_key === asset.common_key)?.assetName || ""
+              : asset.assetName || "",
               symbol: asset.assetSymbol as string,
               active: false,
               icon: require(`assets/svg/tokenAssets/${asset?.common_key}.svg`)
