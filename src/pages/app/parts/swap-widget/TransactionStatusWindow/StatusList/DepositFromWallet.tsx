@@ -385,10 +385,10 @@ export const DepositFromWallet = ({
     return text.length > 0 ? <div style={{ width: `98%` }}>{text}</div> : <br />
   }
 
-  const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
-    selectedSourceAsset as AssetInfo,
-    sourceChainSelection?.chainName
-  )
+  // const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
+  //   selectedSourceAsset as AssetInfo,
+  //   sourceChainSelection?.chainName
+  // )
 
   return isWalletConnected ? (
     <FlexColumn>
