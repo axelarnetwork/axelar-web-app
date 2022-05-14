@@ -405,8 +405,8 @@ export const DepositFromWallet = ({
               name={"destination-address-input"}
               value={
                 amountToDeposit
-                  ?.replace(/[^.0-9]/g, "")
-                  ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",") || ""
+                  ?.replace(/[^.0-9]/g, "") || ""
+                  // ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "" //TODO: want the thousands separator but need to get this working for small decimals
               }
               placeholder={"Amount"}
               type={"text"}
