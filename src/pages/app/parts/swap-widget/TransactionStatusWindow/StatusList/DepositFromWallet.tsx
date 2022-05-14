@@ -463,10 +463,7 @@ export const DepositFromWallet = ({
             Wallet: <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
           </span>
           <span style={{ marginBottom: `0.5em` }}>
-            {userHasSelectedNativeAssetForChain
-              ? sourceChainSelection?.chainSymbol
-              : assetSymbolToShow}{" "}
-            balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
+            Balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
             <LoadingWidget cb={reloadBalance} />
           </span>
         </FlexColumn>
