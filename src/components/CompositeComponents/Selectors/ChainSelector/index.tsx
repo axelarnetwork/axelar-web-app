@@ -13,6 +13,7 @@ import { ChainList } from "state/ChainList"
 import { StyledChainSelectionComponent } from "./StyleComponents/StyledChainSelectionComponent"
 import { StyledChainSelectionIconWidget } from "./StyleComponents/StyledChainSelectionIconWidget"
 import { SelectedChainLogoAndText } from "./SelectedChainLogoAndText"
+import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 
 interface IChainSelectorProps {
   id: string
@@ -183,9 +184,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
                * For the title, if source chain is cosmos and token is native to the destination chain, 
                * then use the symbol representation for the destination chain
                */
-              title: sourceChain?.module === "axelarnet" && asset.native_chain === destinationChain?.chainName.toLowerCase() 
-              ? destinationChain?.assets?.find(destAsset => destAsset.common_key === asset.common_key)?.assetName || ""
-              : asset.assetName || "",
+              title: getAssetSymbolToShow(sourceChain as ChainInfo, destinationChain as ChainInfo, asset, asset.assetName || "",),
               symbol: asset.assetSymbol as string,
               active: false,
               icon: require(`assets/svg/tokenAssets/${asset?.common_key}.svg`)
