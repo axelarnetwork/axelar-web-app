@@ -316,7 +316,7 @@ export const DepositFromWallet = ({
       setAmountToDeposit(roundedMax)
     } else {
       const roundedMax = (Math.floor(walletBalance * 100) / 100).toFixed(2)
-      setAmountToDeposit(roundedMax)
+      setAmountToDeposit(walletBalance * 1000 >= 1 ? roundedMax : walletBalance?.toFixed(Math.min(6, selectedSourceAsset?.decimals || 6)))
     }
   }
   const getMaxButtonText = () => {
@@ -463,7 +463,7 @@ export const DepositFromWallet = ({
             Wallet: <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
           </span>
           <span style={{ marginBottom: `0.5em` }}>
-            Balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
+            Balance: <BoldSpan>~{getNumber(walletBalance, selectedSourceAsset?.decimals)} </BoldSpan>
             <LoadingWidget cb={reloadBalance} />
           </span>
         </FlexColumn>
