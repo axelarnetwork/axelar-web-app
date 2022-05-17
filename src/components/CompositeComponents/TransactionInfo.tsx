@@ -83,7 +83,7 @@ const TransactionInfo = () => {
           )}`
         )}
         {generateInfoLine(
-          "Total Approximate Wait Time",
+          "Wait Time",
           `~${waitTime}-${waitTime + 5} minutes`
         )}
       </div>
