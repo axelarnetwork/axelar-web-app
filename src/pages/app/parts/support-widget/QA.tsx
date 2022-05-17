@@ -75,10 +75,6 @@ const QAs: IQA[] = [
     ),
   },
   {
-    question: `Can I use Ledger with Keplr to send my assets?`,
-    answer: `Not at this moment. We’re actively investigating this problem and hope to resolve it as soon as possible.`,
-  },
-  {
     question: `How can I ask for help?`,
     answer: (
       <div>
