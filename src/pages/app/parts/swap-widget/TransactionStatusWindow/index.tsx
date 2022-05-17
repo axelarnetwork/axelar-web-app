@@ -1,8 +1,4 @@
-import {
-  AssetInfo,
-  ChainInfo,
-  getConfigs,
-} from "@axelar-network/axelarjs-sdk"
+import { AssetInfo, ChainInfo, getConfigs } from "@axelar-network/axelarjs-sdk"
 import styled, { ThemedStyledProps } from "styled-components"
 import { useCallback, useEffect, useState } from "react"
 import { confirm } from "react-confirm-box"
@@ -25,9 +21,7 @@ import {
   TerraWallet,
 } from "hooks/wallet/TerraWallet"
 import { WalletInterface } from "hooks/wallet/WalletInterface"
-import {
-  MessageShownInCartoon,
-} from "state/ApplicationStatus"
+import { MessageShownInCartoon } from "state/ApplicationStatus"
 import {
   ActiveStep,
   DidWaitingForDepositTimeout,
@@ -51,14 +45,20 @@ import {
   useWallet,
   WalletLCDClientConfig,
 } from "@terra-money/wallet-provider"
-import { IsKeplrWalletConnected, SelectedWallet, WalletType } from "state/Wallet"
 import {
-  buildDepositConfirmationRoomId,
-} from "api/AxelarEventListener"
+  IsKeplrWalletConnected,
+  SelectedWallet,
+  WalletType,
+} from "state/Wallet"
+import { buildDepositConfirmationRoomId } from "api/AxelarEventListener"
 import { SocketService } from "api/WaitService/SocketService"
 import { transferEvent } from "api/WaitService"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { popupOptions } from "components/Widgets/PopupOptions"
+import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { BigNumber, ethers } from "ethers"
+import decimaljs from "decimal.js"
+import debounce from "lodash.debounce"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -157,10 +157,11 @@ const TransactionStatusWindow = ({
   const [userConfirmed, setUserconfirmed] = useState(false)
   const [walletToUse, setWalletToUse] = useState<WalletInterface | null>()
   const terraWallet = useWallet()
-  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected);
-  const txHash = useRecoilValue(SrcChainDepositTxHash)
-  const [hasEnoughDepositConfirmation,] =
-    useRecoilState(HasEnoughDepositConfirmation)
+  const [, setIsKeplrWalletConnected] = useRecoilState(IsKeplrWalletConnected)
+  const [txHash, setTxHash] = useRecoilState(SrcChainDepositTxHash)
+  const [hasEnoughDepositConfirmation] = useRecoilState(
+    HasEnoughDepositConfirmation
+  )
   const lcdClient = useLCDClient(
     (process.env.REACT_APP_STAGE === "mainnet"
       ? terraConfigMainnet
@@ -170,6 +171,40 @@ const TransactionStatusWindow = ({
   const didWaitingForDepositTimeout = useRecoilValue(
     DidWaitingForDepositTimeout
   )
+
+  const [cumDepAmt, setCumDepAmt] = useState(0)
+  const [minDepositAmt] = useState(
+    getMinDepositAmount(selectedSourceAsset, sourceChain, destinationChain) || 0
+  )
+
+  const [socketService] = useState(
+    new SocketService(
+      getConfigs(process.env.REACT_APP_STAGE as string).resourceUrl
+    )
+  )
+  const [depositListenerEstablished, setDepositListenerEstablished] =
+    useState(false)
+
+  useEffect(() => {
+    if (!sourceConfirmStatus?.amountConfirmedString) return
+    const amountConfirmedAtomicUnits: number = parseFloat(
+      sourceConfirmStatus.amountConfirmedString.replace(/[^\d.]*/g, "")
+    )
+    if (!amountConfirmedAtomicUnits) return
+    const amountConfirmedAdjusted: number = +ethers.utils.formatUnits(
+      BigNumber.from(amountConfirmedAtomicUnits.toString()),
+      selectedSourceAsset?.decimals
+    )
+    if (amountConfirmedAdjusted)
+      setCumDepAmt((cumDepAmt) =>
+        new decimaljs(amountConfirmedAdjusted).add(cumDepAmt).toNumber()
+      )
+  }, [
+    sourceConfirmStatus,
+    sourceConfirmStatus?.amountConfirmedString,
+    selectedSourceAsset,
+    setCumDepAmt,
+  ])
 
   useEffect(() => {
     if (selectedWallet !== WalletType.TERRA) return
@@ -213,7 +248,10 @@ const TransactionStatusWindow = ({
       setIsWalletConnected(isWalletInstalled)
       if (!isWalletInstalled) return
       await wallet.connectToWallet()
-      const balance = await wallet.getBalance(selectedSourceAsset as AssetInfo, sourceChain?.chainName)
+      const balance = await wallet.getBalance(
+        selectedSourceAsset as AssetInfo,
+        sourceChain?.chainName
+      )
       setWalletBalance(balance)
       setWalletAddress(await wallet.getAddress())
     } else {
@@ -228,7 +266,11 @@ const TransactionStatusWindow = ({
 
       const isWalletInstalled: boolean = wallet.isWalletInstalled() as boolean
       if (!isWalletInstalled) return
-      await wallet.connectToWallet(walletType === WalletType.KEPLR ? () => setIsKeplrWalletConnected(true) : null)
+      await wallet.connectToWallet(
+        walletType === WalletType.KEPLR
+          ? () => setIsKeplrWalletConnected(true)
+          : null
+      )
 
       const address = await wallet.getAddress()
       if (!address) return
@@ -271,7 +313,8 @@ const TransactionStatusWindow = ({
       case !!(dNumConfirms && dReqNumConfirms):
         setActiveStep(4)
         break
-      case (txHash && txHash.length > 0 && hasEnoughDepositConfirmation) || !!(sNumConfirms && sReqNumConfirms):
+      case (txHash && txHash.length > 0 && hasEnoughDepositConfirmation) ||
+        !!(sNumConfirms && sReqNumConfirms):
         setActiveStep(3)
         break
       case depositAddress !== null:
@@ -291,13 +334,33 @@ const TransactionStatusWindow = ({
     txHash,
     hasEnoughDepositConfirmation,
     sNumConfirms,
-    sReqNumConfirms
+    sReqNumConfirms,
   ])
+
+  const cb = useCallback(
+    (res: any) => {
+      const incomingTxHash: string = res?.Attributes?.txID || ""
+      const confirms: IConfirmationStatus = {
+        numberConfirmations: 1,
+        numberRequiredConfirmations: 1,
+        transactionHash: incomingTxHash,
+        amountConfirmedString: res?.Attributes?.amount,
+        height: res?.Height,
+      }
+      incomingTxHash?.length > 0 &&
+        txHash !== incomingTxHash &&
+        setTxHash(incomingTxHash)
+      sourceConfirmStatus?.height !== confirms.height &&
+        setSourceConfirmStatus(confirms)
+    },
+    [sourceConfirmStatus, setSourceConfirmStatus, setTxHash, txHash]
+  )
 
   useEffect(() => {
     ;(async () => {
-      if (activeStep !== 2) return
-
+      if (cumDepAmt > minDepositAmt) socketService.disconnect()
+      if (activeStep < 2 || depositListenerEstablished) return
+      setDepositListenerEstablished(true)
       const roomId = buildDepositConfirmationRoomId(
         sourceChain?.module as string,
         depositAddress?.assetAddress as string,
@@ -305,39 +368,38 @@ const TransactionStatusWindow = ({
         destinationChain?.chainName as string,
         selectedSourceAsset?.common_key as string
       )
-
-      const res = await new SocketService(
-        getConfigs(process.env.REACT_APP_STAGE as string).resourceUrl
-      ).joinRoomAndWaitForEvent(roomId)
-
-      const confirms: IConfirmationStatus = {
-        numberConfirmations: 1,
-        numberRequiredConfirmations: 1,
-        transactionHash: "",
-        amountConfirmedString: res?.Attributes?.amount,
-      }
-      setSourceConfirmStatus(confirms)
+      await socketService.joinRoomAndWaitForEvent(roomId, debounce(cb, 2000))
     })()
   }, [
     activeStep,
-    depositAddress,
-    selectedSourceAsset,
-    sourceChain,
-    destinationChain,
-    setSourceConfirmStatus,
+    depositListenerEstablished,
+    depositAddress?.assetAddress,
+    selectedSourceAsset?.common_key,
+    socketService,
+    sourceChain?.chainName,
+    sourceChain?.module,
+    destinationChain?.chainName,
+    cb,
+    cumDepAmt,
+    minDepositAmt,
   ])
 
   useEffect(() => {
     ;(async () => {
       if (!depositAddress) return
 
-      const res = await transferEvent(destinationChain as ChainInfo, selectedSourceAsset as AssetInfo, destinationAddress as string)
+      const res = await transferEvent(
+        destinationChain as ChainInfo,
+        selectedSourceAsset as AssetInfo,
+        destinationAddress as string
+      )
 
       const confirms: IConfirmationStatus = {
         numberConfirmations: 1,
         numberRequiredConfirmations: 1,
         transactionHash: res.transactionHash,
         amountConfirmedString: "",
+        height: res.Height,
       }
 
       setDestinationConfirmStatus(confirms)
@@ -350,7 +412,7 @@ const TransactionStatusWindow = ({
     destinationAddress,
     setDestinationConfirmStatus,
     depositAddress,
-    setActiveStep
+    setActiveStep,
   ])
 
   useEffect(() => {
@@ -452,7 +514,9 @@ const TransactionStatusWindow = ({
         reloadBalance={updateBalance}
         walletAddress={walletAddress}
         depositAddress={depositAddress as AssetInfo}
-/>
+        cumDepAmt={cumDepAmt}
+        minDepositAmt={minDepositAmt}
+      />
       <br />
 
       <StyledButtonContainer>

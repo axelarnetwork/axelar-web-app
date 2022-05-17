@@ -32,6 +32,11 @@ export const HasEnoughDepositConfirmation = atom<boolean>({
   default: false,
 })
 
+export const DepositMadeInApp = atom<boolean>({
+  key: "DepositMadeInApp",
+  default: false,
+})
+
 /*
 TODO: NumberConfirmations is (potentially) deprecated
 It had been used to follow the number of confirmations
@@ -43,6 +48,7 @@ export interface IConfirmationStatus {
   numberRequiredConfirmations: Nullable<number>
   transactionHash: Nullable<string>
   amountConfirmedString: Nullable<string>
+  height: Nullable<number>
 }
 
 export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
@@ -52,6 +58,7 @@ export const NumberConfirmations = atomFamily<IConfirmationStatus, string>({
     numberRequiredConfirmations: null,
     transactionHash: null,
     amountConfirmedString: null,
+    height: null
   },
 })
 

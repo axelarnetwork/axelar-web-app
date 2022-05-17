@@ -20,8 +20,8 @@ import {
   DepositAmount,
   DepositTimestamp,
   HasEnoughDepositConfirmation,
+  DepositMadeInApp,
 } from "state/TransactionStatus"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
@@ -53,6 +53,7 @@ interface DepositFromWalletProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  minDepositAmt: number
   depositAddress: AssetInfo
 }
 export const DepositFromWallet = ({
@@ -60,6 +61,7 @@ export const DepositFromWallet = ({
   walletBalance,
   walletAddress,
   depositAddress,
+  minDepositAmt,
   reloadBalance,
 }: DepositFromWalletProps) => {
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
@@ -70,13 +72,6 @@ export const DepositFromWallet = ({
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [, setDepositAmount] = useRecoilState(DepositAmount)
   const selectedWallet = useRecoilValue(SelectedWallet)
-  const [minDepositAmt] = useState(
-    getMinDepositAmount(
-      selectedSourceAsset,
-      sourceChainSelection,
-      destChainSelection
-    ) || 0
-  )
   const [buttonText, setButtonText] = useState("Send")
   const [sentSuccess, setSentSuccess] = useState(false)
   const [numConfirmations, setNumConfirmations] = useState(0)
@@ -90,6 +85,8 @@ export const DepositFromWallet = ({
   const lcdClient = useLCDClient()
   const connectedWallet = useConnectedWallet()
   const [inputHasChanged, setInputHasChanged] = useState(false)
+  const [, setDepositMadeInApp] =
+    useRecoilState(DepositMadeInApp)
 
   const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
 
@@ -221,6 +218,7 @@ export const DepositFromWallet = ({
     ) {
       setSentSuccess(true)
       setTxHash(results.transactionHash || results.txhash)
+      setDepositMadeInApp(true)
       setHasEnoughDepositConfirmation(true)
       setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
@@ -256,6 +254,7 @@ export const DepositFromWallet = ({
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.txHash)
+      setDepositMadeInApp(true)
       setDepositTimestamp(new Date().getTime())
       const confirmInterval: number =
         sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2
