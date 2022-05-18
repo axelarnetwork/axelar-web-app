@@ -32,6 +32,7 @@ import { MetaMaskWallet } from "hooks/wallet/MetaMaskWallet"
 import { useEffect, useState } from "react"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { DepositFromWallet } from "./DepositFromWallet"
+import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -79,6 +80,16 @@ const StatusList = (props: IStatusListProps) => {
   const srcChainDepositHash = useRecoilValue(SrcChainDepositTxHash)
   const [tokenToAdd, setTokenToAdd] = useState(false)
   const srcConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY))
+  const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
+
+  useEffect(() => {
+    setAssetSymbolToShow(getAssetSymbolToShow(
+      sourceChain as ChainInfo,
+      destinationChain as ChainInfo,
+      selectedSourceAsset as AssetInfo,
+      selectedSourceAsset?.assetSymbol
+    ))
+  }, [selectedSourceAsset, sourceChain, destinationChain]);
 
   useEffect(() => {
     if (tokenToAdd) {
@@ -176,7 +187,8 @@ const StatusList = (props: IStatusListProps) => {
           activeStep === 1 ? (
             <span>
               Generating a one-time deposit address for{" "}
-              {selectedSourceAsset?.assetSymbol} recipient:{" "}
+              {assetSymbolToShow}{" "}
+              recipient:{" "}
               <BoldSpan>
                 {getShortenedWord(destinationAddress as string, 5)}
               </BoldSpan>
@@ -184,7 +196,7 @@ const StatusList = (props: IStatusListProps) => {
           ) : (
             <FlexColumn style={{ alignItems: `flex-start` }}>
               <span style={{ marginBottom: `0.5em` }}>
-                {selectedSourceAsset?.assetSymbol} recipient:{" "}
+                {assetSymbolToShow} recipient:{" "}
                 <BoldSpan>
                   {getShortenedWord(destinationAddress as string, 5)}
                 </BoldSpan>
@@ -236,7 +248,11 @@ const StatusList = (props: IStatusListProps) => {
                   srcChainDepositHash as string
                 )}
               {!srcChainDepositHash && activeStep >= 3 && (
-                <span style={{ fontStyle: `italic`}}>Detected a deposit tx made to {getShortenedWord(depositAddress?.assetAddress)} outside Satellite</span>
+                <span style={{ fontStyle: `italic` }}>
+                  Detected a deposit tx made to{" "}
+                  {getShortenedWord(depositAddress?.assetAddress)} outside
+                  Satellite
+                </span>
               )}
               {activeStep === 2 && (
                 <DepositFromWallet

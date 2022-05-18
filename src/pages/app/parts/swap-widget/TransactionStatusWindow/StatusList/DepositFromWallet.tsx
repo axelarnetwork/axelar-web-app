@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import styled from "styled-components"
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { SendLogsToServer } from "api/SendLogsToServer"
 import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
@@ -38,6 +38,7 @@ import { getShortenedWord } from "utils/wordShortener"
 import BoldSpan from "components/StyleComponents/BoldSpan"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { getNumber } from "utils/formatNumber"
+import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -89,6 +90,17 @@ export const DepositFromWallet = ({
   const lcdClient = useLCDClient()
   const connectedWallet = useConnectedWallet()
   const [inputHasChanged, setInputHasChanged] = useState(false)
+
+  const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
+
+  useEffect(() => {
+    setAssetSymbolToShow(getAssetSymbolToShow(
+      sourceChainSelection as ChainInfo,
+      destChainSelection as ChainInfo,
+      selectedSourceAsset as AssetInfo,
+      selectedSourceAsset?.assetSymbol
+    ))
+  }, [selectedSourceAsset, sourceChainSelection, destChainSelection]);
 
   useEffect(() => {
     setHasEnoughInWalletForMin(walletBalance >= minDepositAmt)
@@ -304,7 +316,7 @@ export const DepositFromWallet = ({
       setAmountToDeposit(roundedMax)
     } else {
       const roundedMax = (Math.floor(walletBalance * 100) / 100).toFixed(2)
-      setAmountToDeposit(roundedMax)
+      setAmountToDeposit(walletBalance * 1000 >= 1 ? roundedMax : walletBalance?.toFixed(Math.min(6, selectedSourceAsset?.decimals || 6)))
     }
   }
   const getMaxButtonText = () => {
@@ -338,7 +350,6 @@ export const DepositFromWallet = ({
   ])
 
   if (sentSuccess) {
-    debugger;
     return sourceChainSelection?.module === "evm" &&
       !hasEnoughDepositConfirmation ? (
       <div>
@@ -374,10 +385,10 @@ export const DepositFromWallet = ({
     return text.length > 0 ? <div style={{ width: `98%` }}>{text}</div> : <br />
   }
 
-  const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
-    selectedSourceAsset as AssetInfo,
-    sourceChainSelection?.chainName
-  )
+  // const userHasSelectedNativeAssetForChain = hasSelectedNativeAssetForChain(
+  //   selectedSourceAsset as AssetInfo,
+  //   sourceChainSelection?.chainName
+  // )
 
   return isWalletConnected ? (
     <FlexColumn>
@@ -392,14 +403,17 @@ export const DepositFromWallet = ({
           >
             <InputForm
               name={"destination-address-input"}
-              value={amountToDeposit?.replace(/[^.0-9]/g, '')?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') || ""}
+              value={
+                amountToDeposit
+                  ?.replace(/[^.0-9]/g, "") || ""
+                  // ?.replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "" //TODO: want the thousands separator but need to get this working for small decimals
+              }
               placeholder={"Amount"}
               type={"text"}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setAmountToDeposit(e.target.value?.replace(/,/g,''))
+                setAmountToDeposit(e.target.value?.replace(/,/g, ""))
                 if (!inputHasChanged) setInputHasChanged(true)
-              }
-              }
+              }}
             />
             {walletBalance > 0 && (
               <div
@@ -441,7 +455,7 @@ export const DepositFromWallet = ({
           <span style={{ marginBottom: `0.5em` }}>
             Fee:{" "}
             <BoldSpan>
-              {minDepositAmt} {selectedSourceAsset?.assetSymbol}
+              {minDepositAmt} {assetSymbolToShow}
             </BoldSpan>
           </span>
 
@@ -449,15 +463,12 @@ export const DepositFromWallet = ({
             Wallet: <BoldSpan>{getShortenedWord(walletAddress)}</BoldSpan>
           </span>
           <span style={{ marginBottom: `0.5em` }}>
-            {userHasSelectedNativeAssetForChain
-              ? sourceChainSelection?.chainSymbol
-              : selectedSourceAsset?.assetSymbol}{" "}
-            balance: <BoldSpan>~{getNumber(walletBalance)} </BoldSpan>
+            Balance: <BoldSpan>~{getNumber(walletBalance, selectedSourceAsset?.decimals)} </BoldSpan>
             <LoadingWidget cb={reloadBalance} />
           </span>
         </FlexColumn>
       </FlexRow>
-      {inputHasChanged ? getDisabledText(disableTransferButton) : <br/>}
+      {inputHasChanged ? getDisabledText(disableTransferButton) : <br />}
     </FlexColumn>
   ) : null
 }

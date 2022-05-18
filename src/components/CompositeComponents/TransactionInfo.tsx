@@ -5,6 +5,8 @@ import { DESTINATION_TOKEN_KEY, SOURCE_TOKEN_KEY } from "config/consts"
 import screenConfigs from "config/screenConfigs"
 import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
+import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
+import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
 
 interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
   nextState?: boolean
@@ -72,10 +74,16 @@ const TransactionInfo = () => {
       <div style={{ display: `flex`, flexDirection: `column` }}>
         {generateInfoLine(
           "Relayer Gas Fee",
-          `${minDeposit} ${selectedSrcAsset?.assetSymbol}`
+          `${minDeposit} 
+          ${getAssetSymbolToShow(
+            srcChainSelection as ChainInfo,
+            destChainSelection as ChainInfo,
+            selectedSrcAsset as AssetInfo,
+            selectedSrcAsset?.assetSymbol
+          )}`
         )}
         {generateInfoLine(
-          "Total Approximate Wait Time",
+          "Wait Time",
           `~${waitTime}-${waitTime + 5} minutes`
         )}
       </div>

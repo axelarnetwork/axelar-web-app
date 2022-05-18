@@ -1,4 +1,7 @@
-export function getNumber(num: number) {
+export function getNumber(num: number, decimals?: number) {
+
+  if (num * 1000 < 1) return num?.toFixed(Math.min(6, decimals || 6));
+
   const units: string[] = ["K", "M", "B", "T", "Q"]
   const unit: number = Math.floor((num / 1.0e1).toFixed(0).toString().length)
   const r: number = unit % 3

@@ -36,15 +36,7 @@ export class TransferAssetBridgeFacade {
     chain: string,
     asset: string
   ): Promise<any> {
-    try {
-      return await TransferAssetBridgeFacade.transferAssetBridge.getFeeForChainAndAsset(
-        chain,
-        asset
-      )
-    } catch (e: any) {
-      console.log("eee in facade", e)
-      throw e
-    }
+    return null; //TODO
   }
 
   public static async getTxFee(
