@@ -254,7 +254,7 @@ const StatusList = (props: IStatusListProps) => {
                 )}
               {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
-                  Detected a deposit tx of {props.cumDepAmt} made to{" "}
+                  Detected transfer/s of {props.cumDepAmt} {assetSymbolToShow} (total) made to{" "}
                   {getShortenedWord(depositAddress?.assetAddress)} outside
                   Satellite
                   {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, but that does not meet the {props.minDepositAmt} {assetSymbolToShow} minimum.</BoldSpan>}
