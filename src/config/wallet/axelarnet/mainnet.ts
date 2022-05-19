@@ -176,10 +176,82 @@ export const eMoney: KeplrWalletChainConfig = {
   denomMap: {},
 }
 
+const CRESCENT_CHAIN_ID: string = "crescent-1"
+const CRESCENT_RPC: string = "https://mainnet.crescent.network:26657"
+const CRESCENT_REST = "https://mainnet.crescent.network:1317"
+const CRESCENT_CHANNEL_MAP = {
+  axelar: "channel-X",
+}
+const CRESCENT_DENOM_MAP = {
+  "weth-wei":
+    "ibc/XXXXXXX",
+}
+const crescentChainInfo: ChainInfo = {
+  rpc: CRESCENT_RPC,
+  rest: CRESCENT_REST,
+  chainId: CRESCENT_CHAIN_ID,
+  chainName: "Crescent Testnet",
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: "cre",
+    bech32PrefixAccPub: "crepub",
+    bech32PrefixValAddr: "crevaloper",
+    bech32PrefixValPub: "crevaloperpub",
+    bech32PrefixConsAddr: "crevalcons",
+    bech32PrefixConsPub: "crevalconspub",
+  },
+  currencies: [
+    {
+      coinDenom: "CRE",
+      coinMinimalDenom: "ucre",
+      coinDecimals: 6,
+      coinGeckoId: "crescent",
+    },
+    {
+      coinDenom: "WETH",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 18,
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "CRE",
+      coinMinimalDenom: "ucre",
+      coinDecimals: 6,
+      coinGeckoId: "crescent",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "CRE",
+    coinMinimalDenom: "ucre",
+    coinDecimals: 6,
+    coinGeckoId: "crescent",
+  },
+  coinType: 118,
+  gasPriceStep: {
+    low: 1,
+    average: 1,
+    high: 1,
+  },
+  features: ["stargate", "ibc-transfer", "no-legacy-stdTx"],
+}
+export const crescent: KeplrWalletChainConfig = {
+  restEndpoint: CRESCENT_REST,
+  chainId: CRESCENT_CHAIN_ID,
+  rpcEndpoint: CRESCENT_RPC,
+  chainInfo: crescentChainInfo,
+  channelMap: CRESCENT_CHANNEL_MAP,
+  denomMap: CRESCENT_DENOM_MAP
+}
+
 export const allChains = {
   axelar,
   terra,
   cosmoshub,
+  crescent,
   juno,
   "e-money": eMoney,
   osmosis
