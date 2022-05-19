@@ -68,6 +68,10 @@ const blockExplorers = {
       name: "Mintscan",
       url: "https://www.mintscan.io/cosmos/",
     },
+    juno: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/juno/",
+    },
   },
 }
 blockExplorers.testnet = blockExplorers.devnet
