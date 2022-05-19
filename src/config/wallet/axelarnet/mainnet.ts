@@ -173,14 +173,21 @@ export const eMoney: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-26" },
-  denomMap: {},
+  denomMap: {
+    uusdc: "ibc/XXXXXXXX",
+    "frax-wei": "ibc/XXXXXXXX",
+    uusdt: "ibc/XXXXXXXX",
+    "dai-wei": "ibc/XXXXXXXX",
+    "weth-wei": "ibc/XXXXXXXX",
+    "wbtc-satoshi": "ibc/XXXXXXXX"
+  },
 }
 
 const CRESCENT_CHAIN_ID: string = "crescent-1"
 const CRESCENT_RPC: string = "https://mainnet.crescent.network:26657"
 const CRESCENT_REST = "https://mainnet.crescent.network:1317"
 const CRESCENT_CHANNEL_MAP = {
-  axelar: "channel-X",
+  axelar: "XXXXXXX",
 }
 const CRESCENT_DENOM_MAP = {
   "weth-wei":
@@ -210,10 +217,40 @@ const crescentChainInfo: ChainInfo = {
       coinGeckoId: "crescent",
     },
     {
+      coinDenom: "UUSDC",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 6,
+    },
+    {
       coinDenom: "WETH",
       coinMinimalDenom:
         "ibc/XXXXXXX",
       coinDecimals: 18,
+    },
+    {
+      coinDenom: "DAI",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 18,
+    },
+    {
+      coinDenom: "WBTC",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 8,
+    },
+    {
+      coinDenom: "FRAX",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 18,
+    },
+    {
+      coinDenom: "USDT",
+      coinMinimalDenom:
+        "ibc/XXXXXXX",
+      coinDecimals: 6,
     },
   ],
   feeCurrencies: [
