@@ -145,7 +145,7 @@ export const cosmoshub: KeplrWalletChainConfig = {
 
 export const juno: KeplrWalletChainConfig = {
   restEndpoint: "https://lcd-juno.itastakers.com",
-  rpcEndpoint: "https://rpc-juno.nodes.guru",
+  rpcEndpoint: "https://rpc.junomint.com",
   chainId: "juno-1",
   chainInfo: {
     feeCurrencies: [
@@ -153,7 +153,14 @@ export const juno: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-71" },
-  denomMap: {},
+  denomMap: {
+    uusdc: "ibc/EAC38D55372F38F1AFD68DF7FE9EF762DCF69F26520643CF3F9D292A738D8034",
+    "frax-wei": "ibc/1CE15165C83F70C7DB18B19C417321B02512A85BCB9FB8E553FC10070D122036",
+    uusdt: "ibc/B22D08F0E3D08968FB3CBEE2C1E993581A99AAAA60D0490C1AF7DCE567D5FDDA",
+    "dai-wei": "ibc/171E8F6687D290D378678310F9F15D367DCD245BF06184532B703A92054A8A4F",
+    "weth-wei": "ibc/95A45A81521EAFDBEDAEEB6DA975C02E55B414C95AD3CE50709272366A90CA17",
+    "wbtc-satoshi": "ibc/5EF597EA4E863132BFD3E051AC6BAA0175F00913D3256A41F11DC425C39527D6"
+  },
 }
 
 export const eMoney: KeplrWalletChainConfig = {
