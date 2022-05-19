@@ -5,6 +5,7 @@ export const hasSelectedNativeAssetForChain = (
   assetInfo: AssetInfo,
   sourceChainName?: string
 ): boolean => {
+  if (!assetInfo || !sourceChainName) return false
   const env = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet"
   return (
     nativeAssetMap[env][sourceChainName?.toLowerCase() || ""] ===
