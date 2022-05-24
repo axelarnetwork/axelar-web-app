@@ -444,7 +444,7 @@ const TransactionStatusWindow = ({
         ) {
           message.push(
             <div>
-              Only send Axelar-wrapped{" "}
+              Only send {" "}
               {<BoldSpan>{selectedSourceAsset?.assetSymbol}</BoldSpan>} to this{" "}
               {sourceChain.chainName} deposit address. Native{" "}
               {nativeAsset[sourceChain.chainName.toLowerCase()]} or any other
