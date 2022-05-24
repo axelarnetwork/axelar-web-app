@@ -254,10 +254,10 @@ const StatusList = (props: IStatusListProps) => {
                 )}
               {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
-                  Detected transfer/s of {props.cumDepAmt} {assetSymbolToShow} (total) made to{" "}
-                  {getShortenedWord(depositAddress?.assetAddress)} outside
+                  {props.cumDepAmt} {assetSymbolToShow} deposit detected in {" "}
+                  {getShortenedWord(depositAddress?.assetAddress)} from outside
                   Satellite
-                  {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, but that does not meet the {props.minDepositAmt} {assetSymbolToShow} minimum.</BoldSpan>}
+                  {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, which is NOT larger than the {props.minDepositAmt} {assetSymbolToShow} fee.</BoldSpan>}
                 </span>
               )}
               {activeStep === 2 && (
@@ -296,7 +296,7 @@ const StatusList = (props: IStatusListProps) => {
                         ? 5
                         : 3
                     } minutes`
-                    : `Send an additional amount greater than ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
+                    : `Deposit more than ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
                   : `Your ${destinationChain?.chainName} balance will be updated within the next few minutes`}
               </div>
 
