@@ -59,6 +59,8 @@ import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { BigNumber, ethers } from "ethers"
 import decimaljs from "decimal.js"
 import debounce from "lodash.debounce"
+import { hasSelectedWrappedNativeAsset } from "utils/hasSelectedWrappedNativeAsset"
+import { nativeAsset } from "config/contracts/deployedContractAddresses"
 
 interface ITransactionStatusWindowProps {
   isOpen: boolean
@@ -416,37 +418,93 @@ const TransactionStatusWindow = ({
   ])
 
   useEffect(() => {
-    if (
-      sourceChain?.module === "evm" &&
-      activeStep === 2 &&
-      !userConfirmed &&
-      sourceChain.chainName.toLowerCase() !== selectedSourceAsset?.native_chain
-    ) {
-      const message: any = (
-        <div>
-          Be sure to send only the{" "}
-          {
-            <BoldSpan>
-              Axelar version of {selectedSourceAsset?.assetSymbol}
-            </BoldSpan>
-          }{" "}
-          to the deposit address on {sourceChain.chainName}. Any other tokens
-          sent to this address will be lost.
-          <br />
-          <br />
-          The correct ERC20 contract address for the Axelar version of{" "}
-          {selectedSourceAsset?.assetSymbol} can be verified{" "}
-          <PopoutLink
-            text={"here"}
-            onClick={() =>
-              window.open(
-                configs.tokenContracts[process.env.REACT_APP_STAGE as string],
-                "_blank"
-              )
-            }
-          />
-        </div>
-      )
+    if (activeStep === 2 && !userConfirmed) {
+      let message: any = []
+
+      if (sourceChain?.module === "evm") {
+        if (
+          sourceChain.chainName.toLowerCase() !==
+          selectedSourceAsset?.native_chain
+        ) {
+          message.push(
+            <div>
+              Only send Axelar-wrapped{" "}
+              {<BoldSpan>{selectedSourceAsset?.assetSymbol}</BoldSpan>} to this
+              deposit address on {sourceChain.chainName}. Any other tokens sent
+              to this address will be lost.
+              <br />
+              <br />
+            </div>
+          )
+        } else if (
+          hasSelectedWrappedNativeAsset(
+            selectedSourceAsset,
+            sourceChain?.chainName?.toLowerCase()
+          )
+        ) {
+          message.push(
+            <div>
+              Only send Axelar-wrapped{" "}
+              {<BoldSpan>{selectedSourceAsset?.assetSymbol}</BoldSpan>} to this{" "}
+              {sourceChain.chainName} deposit address. Native{" "}
+              {nativeAsset[sourceChain.chainName.toLowerCase()]} or any other
+              tokens sent to this address will be lost.
+              <br />
+              <br />
+            </div>
+          )
+        }
+      }
+
+      if (destinationChain?.module === "evm") {
+        const destAssetSymbol: string = destinationChain.assets?.find(
+          (asset) =>
+            asset.common_key === selectedSourceAsset?.common_key
+        )?.assetSymbol || "";
+        if (
+          destinationChain.chainName.toLowerCase() !==
+          selectedSourceAsset?.native_chain
+        ) {
+          message.push(
+            <span>
+              The recipient will receive Axelar-wrapped{" "}
+              {
+                <BoldSpan>{destAssetSymbol}</BoldSpan>
+              }{" "}
+              on {destinationChain.chainName}.{" "}
+            </span>
+          )
+        }
+        message.push(
+          <span>
+            If your recipient doesn’t support {destAssetSymbol}, the funds will be
+            lost.
+            <br />
+            <br />
+          </span>
+        )
+      }
+
+      if (message?.length > 0) {
+        message.push(
+          <div>
+            The correct ERC20 token addresses can be
+            verified{" "}
+            <PopoutLink
+              text={"here"}
+              onClick={() =>
+                window.open(
+                  configs.tokenContracts[process.env.REACT_APP_STAGE as string],
+                  "_blank"
+                )
+              }
+            />
+          </div>
+        )
+      } else {
+        return;
+      }
+
       confirm(message, popupOptions as any).then((positiveAffirmation) => {
         if (positiveAffirmation) {
           setUserconfirmed(true)
@@ -460,6 +518,7 @@ const TransactionStatusWindow = ({
     resetAllstate,
     selectedSourceAsset,
     sourceChain,
+    destinationChain,
     userConfirmed,
     closeResultsScreen,
     activeStep,
