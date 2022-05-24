@@ -318,7 +318,7 @@ const StatusList = (props: IStatusListProps) => {
                         margin={`0.5em`}
                       />
                     }
-                    tooltipText={`Add ${selectedSourceAsset?.assetSymbol} token to Metamask`}
+                    tooltipText={`Add ${assetSymbolToShow} token to Metamask`}
                     tooltipAltText={""}
                   />
                 )}
@@ -346,7 +346,7 @@ const StatusList = (props: IStatusListProps) => {
                       />
                     }
                     tooltipText={`View ${
-                      selectedSourceAsset?.assetSymbol
+                      assetSymbolToShow
                     } balance on ${
                       getBlockExplorer(destinationChain as ChainInfo)?.name
                     }`}
