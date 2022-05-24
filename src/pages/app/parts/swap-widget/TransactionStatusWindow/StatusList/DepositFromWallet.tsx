@@ -39,6 +39,7 @@ import BoldSpan from "components/StyleComponents/BoldSpan"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { getNumber } from "utils/formatNumber"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
+import decimaljs from "decimal.js"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -311,11 +312,11 @@ export const DepositFromWallet = ({
         )
       )
       const maxWithFee = walletBalance - fee
-      const roundedMax = (Math.floor(maxWithFee * 100) / 100).toFixed(2)
-      setAmountToDeposit(roundedMax)
+      const roundedMax = (Math.floor(maxWithFee * 10000) / 10000)
+      setAmountToDeposit(new decimaljs(roundedMax).toString())
     } else {
-      const roundedMax = (Math.floor(walletBalance * 100) / 100).toFixed(2)
-      setAmountToDeposit(walletBalance * 1000 >= 1 ? roundedMax : walletBalance?.toFixed(Math.min(6, selectedSourceAsset?.decimals || 6)))
+      const roundedMax = (Math.floor(walletBalance * 10000) / 10000)
+      setAmountToDeposit(new decimaljs(roundedMax).toString())
     }
   }
   const getMaxButtonText = () => {
