@@ -16,6 +16,7 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
+  DepositMadeInApp,
   NumberConfirmations,
   SourceDepositAddress,
   SrcChainDepositTxHash,
@@ -33,6 +34,7 @@ import { useEffect, useState } from "react"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { DepositFromWallet } from "./DepositFromWallet"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
+import decimaljs from "decimal.js";
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -68,6 +70,8 @@ interface IStatusListProps {
   reloadBalance: () => void
   walletAddress: string
   depositAddress: AssetInfo
+  cumDepAmt: number
+  minDepositAmt: number
 }
 
 const StatusList = (props: IStatusListProps) => {
@@ -81,7 +85,8 @@ const StatusList = (props: IStatusListProps) => {
   const [tokenToAdd, setTokenToAdd] = useState(false)
   const srcConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY))
   const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
-
+  const depositMadeInApp = useRecoilValue(DepositMadeInApp);
+    
   useEffect(() => {
     setAssetSymbolToShow(getAssetSymbolToShow(
       sourceChain as ChainInfo,
@@ -247,11 +252,12 @@ const StatusList = (props: IStatusListProps) => {
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
                 )}
-              {!srcChainDepositHash && activeStep >= 3 && (
+              {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
-                  Detected a deposit tx made to{" "}
+                  Detected transfer/s of {props.cumDepAmt} {assetSymbolToShow} (total) made to{" "}
                   {getShortenedWord(depositAddress?.assetAddress)} outside
                   Satellite
+                  {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, but that does not meet the {props.minDepositAmt} {assetSymbolToShow} minimum.</BoldSpan>}
                 </span>
               )}
               {activeStep === 2 && (
@@ -261,6 +267,7 @@ const StatusList = (props: IStatusListProps) => {
                   reloadBalance={props.reloadBalance}
                   walletAddress={props.walletAddress}
                   depositAddress={depositAddress as AssetInfo}
+                  minDepositAmt={props.minDepositAmt}
                 />
               )}
               {activeStep === 2 && renderWalletButton()}
@@ -281,13 +288,15 @@ const StatusList = (props: IStatusListProps) => {
                 {activeStep === 4
                   ? "Transaction Complete!"
                   : !!srcConfirmStatus?.numberConfirmations
-                  ? `Deposit tx confirmed. Your ${
+                  ? props.cumDepAmt > props.minDepositAmt
+                    ? `Deposit tx confirmed. Your ${
                       destinationChain?.chainName
                     } balance will be updated within the next ~${
                       destinationChain?.chainName?.toLowerCase() === "ethereum"
                         ? 5
                         : 3
                     } minutes`
+                    : `Send an additional amount greater than ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
                   : `Your ${destinationChain?.chainName} balance will be updated within the next few minutes`}
               </div>
 
