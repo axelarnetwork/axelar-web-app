@@ -176,10 +176,89 @@ export const eMoney: KeplrWalletChainConfig = {
   denomMap: {},
 }
 
+const CRESCENT_CHAIN_ID: string = "crescent-1"
+const CRESCENT_RPC: string = "https://mainnet.crescent.network:26657"
+const CRESCENT_REST = "https://mainnet.crescent.network:1317"
+const CRESCENT_CHANNEL_MAP = {
+  axelar: "channel-4",
+}
+const CRESCENT_DENOM_MAP = {
+  uusdc: "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
+  "weth-wei":
+    "ibc/F1806958CA98757B91C3FA1573ECECD24F6FA3804F074A6977658914A49E65A3",
+}
+const crescentChainInfo: ChainInfo = {
+  rpc: CRESCENT_RPC,
+  rest: CRESCENT_REST,
+  chainId: CRESCENT_CHAIN_ID,
+  chainName: "Crescent Testnet",
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: "cre",
+    bech32PrefixAccPub: "crepub",
+    bech32PrefixValAddr: "crevaloper",
+    bech32PrefixValPub: "crevaloperpub",
+    bech32PrefixConsAddr: "crevalcons",
+    bech32PrefixConsPub: "crevalconspub",
+  },
+  currencies: [
+    {
+      coinDenom: "CRE",
+      coinMinimalDenom: "ucre",
+      coinDecimals: 6,
+      coinGeckoId: "crescent",
+    },
+    {
+      coinDenom: "UUSDC",
+      coinMinimalDenom:
+        "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
+      coinDecimals: 6,
+    },
+    {
+      coinDenom: "WETH",
+      coinMinimalDenom:
+        "ibc/F1806958CA98757B91C3FA1573ECECD24F6FA3804F074A6977658914A49E65A3",
+      coinDecimals: 18,
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "CRE",
+      coinMinimalDenom: "ucre",
+      coinDecimals: 6,
+      coinGeckoId: "crescent",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "CRE",
+    coinMinimalDenom: "ucre",
+    coinDecimals: 6,
+    coinGeckoId: "crescent",
+  },
+  coinType: 118,
+  gasPriceStep: {
+    low: 1,
+    average: 1,
+    high: 1,
+  },
+  features: ["stargate", "ibc-transfer", "no-legacy-stdTx"],
+}
+export const crescent: KeplrWalletChainConfig = {
+  restEndpoint: CRESCENT_REST,
+  chainId: CRESCENT_CHAIN_ID,
+  rpcEndpoint: CRESCENT_RPC,
+  chainInfo: crescentChainInfo,
+  channelMap: CRESCENT_CHANNEL_MAP,
+  denomMap: CRESCENT_DENOM_MAP
+}
+
 export const allChains = {
   axelar,
   terra,
   cosmoshub,
+  crescent,
   juno,
   "e-money": eMoney,
   osmosis
