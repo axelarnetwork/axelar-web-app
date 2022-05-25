@@ -252,6 +252,12 @@ const StatusList = (props: IStatusListProps) => {
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
                 )}
+
+              {/* TODO: this below is only temporary for crescent */}
+              {srcChainDepositHash !== null && activeStep === 2 &&
+                `Waiting for your deposit to be confirmed.`}
+              {/* TODO: this above is only temporary for crescent */}
+              
               {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
                   {props.cumDepAmt} {assetSymbolToShow} deposit detected in {" "}
