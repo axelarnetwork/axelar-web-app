@@ -428,8 +428,8 @@ const TransactionStatusWindow = ({
         ) {
           message.push(
             <div>
-              Only send Axelar-wrapped{" "}
-              {<BoldSpan>{selectedSourceAsset?.assetSymbol}</BoldSpan>} to this
+              Only send{" "}
+              {<BoldSpan>{selectedSourceAsset?.assetName}</BoldSpan>} to this
               deposit address on {sourceChain.chainName}. Any other tokens sent
               to this address will be lost.
               <br />
@@ -445,11 +445,22 @@ const TransactionStatusWindow = ({
           message.push(
             <div>
               Only send {" "}
-              {<BoldSpan>{selectedSourceAsset?.assetSymbol}</BoldSpan>} to this{" "}
+              {<BoldSpan>{selectedSourceAsset?.assetName}</BoldSpan>} to this{" "}
               {sourceChain.chainName} deposit address. Native{" "}
               {nativeAsset[sourceChain.chainName.toLowerCase()]} or any other
               tokens sent to this address will be lost.
-              <br />
+              <br /><br/>
+              <div>Find out how to convert {nativeAsset[sourceChain.chainName.toLowerCase()]} to {selectedSourceAsset?.assetName} {" "}
+              <PopoutLink
+              text={"here"}
+              onClick={() =>
+                window.open(
+                  "https://docs.axelar.dev/resources/weth",
+                  "_blank"
+                )
+              }
+            />
+              </div>
               <br />
             </div>
           )
@@ -457,19 +468,19 @@ const TransactionStatusWindow = ({
       }
 
       if (destinationChain?.module === "evm") {
-        const destAssetSymbol: string = destinationChain.assets?.find(
+        const destAssetName: string = destinationChain.assets?.find(
           (asset) =>
             asset.common_key === selectedSourceAsset?.common_key
-        )?.assetSymbol || "";
+        )?.assetName || "";
         if (
           destinationChain.chainName.toLowerCase() !==
           selectedSourceAsset?.native_chain
         ) {
           message.push(
             <span>
-              The recipient will receive Axelar-wrapped{" "}
+              The recipient will receive{" "}
               {
-                <BoldSpan>{destAssetSymbol}</BoldSpan>
+                <BoldSpan>{destAssetName}</BoldSpan>
               }{" "}
               on {destinationChain.chainName}.{" "}
             </span>
@@ -477,7 +488,7 @@ const TransactionStatusWindow = ({
         }
         message.push(
           <span>
-            If your recipient doesn’t support {destAssetSymbol}, the funds will be
+            If your recipient doesn’t support {destAssetName}, the funds will be
             lost.
             <br />
             <br />

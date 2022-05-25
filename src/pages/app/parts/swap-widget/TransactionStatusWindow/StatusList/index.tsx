@@ -255,8 +255,7 @@ const StatusList = (props: IStatusListProps) => {
               {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
                   {props.cumDepAmt} {assetSymbolToShow} deposit detected in {" "}
-                  {getShortenedWord(depositAddress?.assetAddress)} from outside
-                  Satellite
+                  {getShortenedWord(depositAddress?.assetAddress)}
                   {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, which is NOT larger than the {props.minDepositAmt} {assetSymbolToShow} fee.</BoldSpan>}
                 </span>
               )}
@@ -296,7 +295,7 @@ const StatusList = (props: IStatusListProps) => {
                         ? 5
                         : 3
                     } minutes`
-                    : `Deposit more than ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
+                    : `Deposit ${<BoldSpan>more than</BoldSpan>} ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
                   : `Your ${destinationChain?.chainName} balance will be updated within the next few minutes`}
               </div>
 
