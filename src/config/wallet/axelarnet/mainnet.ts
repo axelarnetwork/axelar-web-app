@@ -191,7 +191,7 @@ const crescentChainInfo: ChainInfo = {
   rpc: CRESCENT_RPC,
   rest: CRESCENT_REST,
   chainId: CRESCENT_CHAIN_ID,
-  chainName: "Crescent Testnet",
+  chainName: "Crescent Network",
   bip44: {
     coinType: 118,
   },
