@@ -254,7 +254,7 @@ const StatusList = (props: IStatusListProps) => {
                 )}
 
               {/* TODO: this below is only temporary for crescent */}
-              {srcChainDepositHash !== null && activeStep === 2 &&
+              {srcChainDepositHash === "" && activeStep === 2 &&
                 `Waiting for your deposit to be confirmed.`}
               {/* TODO: this above is only temporary for crescent */}
               
