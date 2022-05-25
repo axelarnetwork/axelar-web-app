@@ -211,7 +211,7 @@ const crescentChainInfo: ChainInfo = {
       coinGeckoId: "crescent",
     },
     {
-      coinDenom: "UUSDC",
+      coinDenom: "USDC",
       coinMinimalDenom:
         "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
       coinDecimals: 6,
