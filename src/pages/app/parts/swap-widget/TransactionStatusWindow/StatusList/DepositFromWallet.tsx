@@ -211,7 +211,15 @@ export const DepositFromWallet = ({
       inSufficientFunds ||
       requestRejected
 
-    if (
+    //TODO: temporary workaround for crescent RPC issues we see for in-app deposits
+    console.log("stringified results",stringifiedResults);
+    if (sourceChainSelection?.chainName.toLowerCase() === "crescent" && stringifiedResults.includes("transaction indexing is disabled")) {
+      setSentSuccess(true)
+      setDepositMadeInApp(true)
+      setHasEnoughDepositConfirmation(true)
+      setDepositTimestamp(new Date().getTime())
+      
+    } else if (
       results &&
       (results.transactionHash || results.txhash) &&
       results.height >= 0 &&
