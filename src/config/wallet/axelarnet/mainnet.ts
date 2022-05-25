@@ -173,6 +173,7 @@ export const eMoney: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-26" },
+  denomMap: {},
 }
 
 const CRESCENT_CHAIN_ID: string = "crescent-1"
