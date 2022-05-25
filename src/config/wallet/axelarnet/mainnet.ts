@@ -173,25 +173,18 @@ export const eMoney: KeplrWalletChainConfig = {
     ],
   } as ChainInfo,
   channelMap: { "axelar": "channel-26" },
-  denomMap: {
-    uusdc: "ibc/XXXXXXXX",
-    "frax-wei": "ibc/XXXXXXXX",
-    uusdt: "ibc/XXXXXXXX",
-    "dai-wei": "ibc/XXXXXXXX",
-    "weth-wei": "ibc/XXXXXXXX",
-    "wbtc-satoshi": "ibc/XXXXXXXX"
-  },
 }
 
 const CRESCENT_CHAIN_ID: string = "crescent-1"
 const CRESCENT_RPC: string = "https://mainnet.crescent.network:26657"
 const CRESCENT_REST = "https://mainnet.crescent.network:1317"
 const CRESCENT_CHANNEL_MAP = {
-  axelar: "XXXXXXX",
+  axelar: "channel-4",
 }
 const CRESCENT_DENOM_MAP = {
+  uusdc: "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
   "weth-wei":
-    "ibc/XXXXXXX",
+    "ibc/F1806958CA98757B91C3FA1573ECECD24F6FA3804F074A6977658914A49E65A3",
 }
 const crescentChainInfo: ChainInfo = {
   rpc: CRESCENT_RPC,
@@ -219,38 +212,14 @@ const crescentChainInfo: ChainInfo = {
     {
       coinDenom: "UUSDC",
       coinMinimalDenom:
-        "ibc/XXXXXXX",
+        "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
       coinDecimals: 6,
     },
     {
       coinDenom: "WETH",
       coinMinimalDenom:
-        "ibc/XXXXXXX",
+        "ibc/F1806958CA98757B91C3FA1573ECECD24F6FA3804F074A6977658914A49E65A3",
       coinDecimals: 18,
-    },
-    {
-      coinDenom: "DAI",
-      coinMinimalDenom:
-        "ibc/XXXXXXX",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WBTC",
-      coinMinimalDenom:
-        "ibc/XXXXXXX",
-      coinDecimals: 8,
-    },
-    {
-      coinDenom: "FRAX",
-      coinMinimalDenom:
-        "ibc/XXXXXXX",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "USDT",
-      coinMinimalDenom:
-        "ibc/XXXXXXX",
-      coinDecimals: 6,
     },
   ],
   feeCurrencies: [
