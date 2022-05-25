@@ -1,14 +1,14 @@
 import { AssetInfo } from "@axelar-network/axelarjs-sdk"
-import { nativeAssetMap } from "config/contracts/deployedContractAddresses"
+import { wrappedAssetMap } from "config/contracts/deployedContractAddresses"
 
-export const hasSelectedNativeAssetForChain = (
+export const hasSelectedWrappedNativeAsset = (
   assetInfo: AssetInfo,
   sourceChainName?: string
 ): boolean => {
   if (!assetInfo || !sourceChainName) return false
   const env = process.env.REACT_APP_STAGE === "mainnet" ? "mainnet" : "testnet"
   return (
-    nativeAssetMap[env][sourceChainName?.toLowerCase() || ""] ===
+    wrappedAssetMap[env][sourceChainName?.toLowerCase() || ""] ===
     assetInfo.common_key
   )
 }

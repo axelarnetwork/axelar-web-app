@@ -16,6 +16,7 @@ import {
   SourceAsset,
 } from "state/ChainSelection"
 import {
+  DepositMadeInApp,
   NumberConfirmations,
   SourceDepositAddress,
   SrcChainDepositTxHash,
@@ -33,6 +34,7 @@ import { useEffect, useState } from "react"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { DepositFromWallet } from "./DepositFromWallet"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
+import decimaljs from "decimal.js";
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -68,6 +70,8 @@ interface IStatusListProps {
   reloadBalance: () => void
   walletAddress: string
   depositAddress: AssetInfo
+  cumDepAmt: number
+  minDepositAmt: number
 }
 
 const StatusList = (props: IStatusListProps) => {
@@ -81,7 +85,8 @@ const StatusList = (props: IStatusListProps) => {
   const [tokenToAdd, setTokenToAdd] = useState(false)
   const srcConfirmStatus = useRecoilValue(NumberConfirmations(SOURCE_TOKEN_KEY))
   const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
-
+  const depositMadeInApp = useRecoilValue(DepositMadeInApp);
+    
   useEffect(() => {
     setAssetSymbolToShow(getAssetSymbolToShow(
       sourceChain as ChainInfo,
@@ -247,11 +252,17 @@ const StatusList = (props: IStatusListProps) => {
                   sourceChain as ChainInfo,
                   srcChainDepositHash as string
                 )}
-              {!srcChainDepositHash && activeStep >= 3 && (
+
+              {/* TODO: this below is only temporary for crescent */}
+              {srcChainDepositHash === "" && activeStep === 2 &&
+                `Waiting for your deposit to be confirmed.`}
+              {/* TODO: this above is only temporary for crescent */}
+              
+              {!depositMadeInApp && activeStep >= 3 && (
                 <span style={{ fontStyle: `italic` }}>
-                  Detected a deposit tx made to{" "}
-                  {getShortenedWord(depositAddress?.assetAddress)} outside
-                  Satellite
+                  {props.cumDepAmt} {assetSymbolToShow} deposit detected in {" "}
+                  {getShortenedWord(depositAddress?.assetAddress)}
+                  {(props.cumDepAmt <= props.minDepositAmt) && <BoldSpan>, which is NOT larger than the {props.minDepositAmt} {assetSymbolToShow} fee.</BoldSpan>}
                 </span>
               )}
               {activeStep === 2 && (
@@ -261,6 +272,7 @@ const StatusList = (props: IStatusListProps) => {
                   reloadBalance={props.reloadBalance}
                   walletAddress={props.walletAddress}
                   depositAddress={depositAddress as AssetInfo}
+                  minDepositAmt={props.minDepositAmt}
                 />
               )}
               {activeStep === 2 && renderWalletButton()}
@@ -281,13 +293,15 @@ const StatusList = (props: IStatusListProps) => {
                 {activeStep === 4
                   ? "Transaction Complete!"
                   : !!srcConfirmStatus?.numberConfirmations
-                  ? `Deposit tx confirmed. Your ${
+                  ? props.cumDepAmt > props.minDepositAmt
+                    ? `Deposit tx confirmed. Your ${
                       destinationChain?.chainName
                     } balance will be updated within the next ~${
                       destinationChain?.chainName?.toLowerCase() === "ethereum"
                         ? 5
                         : 3
                     } minutes`
+                    : `Deposit ${<BoldSpan>more than</BoldSpan>} ${(new decimaljs(props.minDepositAmt)).minus(props.cumDepAmt)} ${assetSymbolToShow} to continue.`
                   : `Your ${destinationChain?.chainName} balance will be updated within the next few minutes`}
               </div>
 
@@ -309,7 +323,7 @@ const StatusList = (props: IStatusListProps) => {
                         margin={`0.5em`}
                       />
                     }
-                    tooltipText={`Add ${selectedSourceAsset?.assetSymbol} token to Metamask`}
+                    tooltipText={`Add ${assetSymbolToShow} token to Metamask`}
                     tooltipAltText={""}
                   />
                 )}
@@ -337,7 +351,7 @@ const StatusList = (props: IStatusListProps) => {
                       />
                     }
                     tooltipText={`View ${
-                      selectedSourceAsset?.assetSymbol
+                      assetSymbolToShow
                     } balance on ${
                       getBlockExplorer(destinationChain as ChainInfo)?.name
                     }`}

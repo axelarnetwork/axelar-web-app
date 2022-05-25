@@ -20,8 +20,8 @@ import {
   DepositAmount,
   DepositTimestamp,
   HasEnoughDepositConfirmation,
+  DepositMadeInApp,
 } from "state/TransactionStatus"
-import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { isValidDecimal } from "utils/isValidDecimal"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { ImprovedTooltip } from "components/Widgets/ImprovedTooltip"
@@ -39,6 +39,7 @@ import BoldSpan from "components/StyleComponents/BoldSpan"
 import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { getNumber } from "utils/formatNumber"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
+import decimaljs from "decimal.js"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -53,6 +54,7 @@ interface DepositFromWalletProps {
   walletBalance: number
   reloadBalance: () => void
   walletAddress: string
+  minDepositAmt: number
   depositAddress: AssetInfo
 }
 export const DepositFromWallet = ({
@@ -60,6 +62,7 @@ export const DepositFromWallet = ({
   walletBalance,
   walletAddress,
   depositAddress,
+  minDepositAmt,
   reloadBalance,
 }: DepositFromWalletProps) => {
   const sourceChainSelection = useRecoilValue(ChainSelection(SOURCE_TOKEN_KEY))
@@ -70,13 +73,6 @@ export const DepositFromWallet = ({
   const [amountToDeposit, setAmountToDeposit] = useState<string>("")
   const [, setDepositAmount] = useRecoilState(DepositAmount)
   const selectedWallet = useRecoilValue(SelectedWallet)
-  const [minDepositAmt] = useState(
-    getMinDepositAmount(
-      selectedSourceAsset,
-      sourceChainSelection,
-      destChainSelection
-    ) || 0
-  )
   const [buttonText, setButtonText] = useState("Send")
   const [sentSuccess, setSentSuccess] = useState(false)
   const [numConfirmations, setNumConfirmations] = useState(0)
@@ -90,6 +86,8 @@ export const DepositFromWallet = ({
   const lcdClient = useLCDClient()
   const connectedWallet = useConnectedWallet()
   const [inputHasChanged, setInputHasChanged] = useState(false)
+  const [, setDepositMadeInApp] =
+    useRecoilState(DepositMadeInApp)
 
   const [assetSymbolToShow, setAssetSymbolToShow] = useState("");
 
@@ -213,7 +211,14 @@ export const DepositFromWallet = ({
       inSufficientFunds ||
       requestRejected
 
-    if (
+    //TODO: temporary workaround for crescent RPC issues we see for in-app deposits
+    if (sourceChainSelection?.chainName.toLowerCase() === "crescent" && stringifiedResults.includes("transaction indexing is disabled")) {
+      setSentSuccess(true)
+      setTxHash("")
+      setHasEnoughDepositConfirmation(true)
+      setDepositTimestamp(new Date().getTime())
+      
+    } else if (
       results &&
       (results.transactionHash || results.txhash) &&
       results.height >= 0 &&
@@ -221,6 +226,7 @@ export const DepositFromWallet = ({
     ) {
       setSentSuccess(true)
       setTxHash(results.transactionHash || results.txhash)
+      setDepositMadeInApp(true)
       setHasEnoughDepositConfirmation(true)
       setDepositTimestamp(new Date().getTime())
       SendLogsToServer.info(
@@ -256,6 +262,7 @@ export const DepositFromWallet = ({
     if (results.txHash && results.blockNumber && !hasAnyErrors) {
       setSentSuccess(true)
       setTxHash(results.txHash)
+      setDepositMadeInApp(true)
       setDepositTimestamp(new Date().getTime())
       const confirmInterval: number =
         sourceChainSelection?.chainName.toLowerCase() === "ethereum" ? 15 : 2
@@ -312,11 +319,11 @@ export const DepositFromWallet = ({
         )
       )
       const maxWithFee = walletBalance - fee
-      const roundedMax = (Math.floor(maxWithFee * 100) / 100).toFixed(2)
-      setAmountToDeposit(roundedMax)
+      const roundedMax = (Math.floor(maxWithFee * 10000) / 10000)
+      setAmountToDeposit(new decimaljs(roundedMax).toString())
     } else {
-      const roundedMax = (Math.floor(walletBalance * 100) / 100).toFixed(2)
-      setAmountToDeposit(walletBalance * 1000 >= 1 ? roundedMax : walletBalance?.toFixed(Math.min(6, selectedSourceAsset?.decimals || 6)))
+      const roundedMax = (Math.floor(walletBalance * 10000) / 10000)
+      setAmountToDeposit(new decimaljs(roundedMax).toString())
     }
   }
   const getMaxButtonText = () => {
