@@ -19,8 +19,18 @@ const useSearchParams = () => {
     },
     [history, pathname, searchParams]
   )
+  const deleteSearchParam = useCallback(
+    (key: string) => {
+      searchParams.delete(key)
+      history.replace({
+        pathname,
+        search: searchParams.toString(),
+      })
+    },
+    [history, pathname, searchParams]
+  )
 
-  return [searchParams, setSearchParams] as const
+  return [searchParams, setSearchParams, deleteSearchParam] as const
 }
 
 export default useSearchParams

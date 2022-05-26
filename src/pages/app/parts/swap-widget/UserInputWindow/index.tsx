@@ -38,6 +38,8 @@ import { SendLogsToServer } from "api/SendLogsToServer"
 import { BannedAddresses, ChainList } from "state/ChainList"
 import { IsTxSubmitting } from "state/TransactionStatus"
 import {
+  ROUTE_PARAM_ASSET,
+  ROUTE_PARAM_DESTINATION_ADDRESS,
   ROUTE_PARAM_DST_CHAIN,
   ROUTE_PARAM_SRC_CHAIN,
   ROUTE_PARAM_TOKEN,
@@ -126,7 +128,7 @@ const StyledSVGImage = styled(SVGImage)`
 const UserInputWindow = ({
   handleTransactionSubmission,
 }: IUserInputWindowProps) => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams, deleteSearchParam] = useSearchParams()
   const [sourceChainSelection, setSourceChainSelection] = useRecoilState(
     ChainSelection(SOURCE_TOKEN_KEY)
   )
@@ -165,6 +167,10 @@ const UserInputWindow = ({
       searchParams.get(ROUTE_PARAM_DST_CHAIN)?.toLowerCase() || ""
     const tokenName: string =
       searchParams.get(ROUTE_PARAM_TOKEN)?.toLowerCase() || ""
+    const assetDenom: string =
+      searchParams.get(ROUTE_PARAM_ASSET)?.toLowerCase() || ""
+    const destinationAddress: string =
+      searchParams.get(ROUTE_PARAM_DESTINATION_ADDRESS)?.toLowerCase() || ""
 
     const srcChain = chainList.find(
       (chain) => chain.chainName.toLowerCase() === srcChainName
@@ -173,20 +179,28 @@ const UserInputWindow = ({
       (chain) => chain.chainName.toLowerCase() === dstChainName
     )
     if (srcChain) {
-      const token = srcChain?.assets?.find(
-        (asset) => asset.assetSymbol?.toLowerCase() === tokenName.toLowerCase()
-      )
-      if (token) {
-        setSelectedSourceAsset(token)
+      let selectedAsset: AssetInfo | undefined;
+      if (assetDenom) {
+        selectedAsset = srcChain?.assets?.find(
+          (asset) => asset.common_key === assetDenom.toLowerCase()
+        )
+      } else if (tokenName) {
+        selectedAsset = srcChain?.assets?.find(
+          (asset) => asset.assetSymbol?.toLowerCase() === tokenName.toLowerCase()
+        )
+      }
+
+      if (selectedAsset) {
+        setSelectedSourceAsset(selectedAsset)
       }
       setSourceChainSelection(srcChain)
     }
-    if (dstChain) {
-      setDestChainSelection(dstChain)
-    }
+    dstChain && setDestChainSelection(dstChain)
+    destinationAddress && setDestAddr(destinationAddress);
   }, [
     chainList,
     searchParams,
+    setDestAddr,
     setDestChainSelection,
     setSelectedSourceAsset,
     setSourceChainSelection,
@@ -215,18 +229,23 @@ const UserInputWindow = ({
         destChainSelection?.chainName.toString().toLowerCase()
       )
     }
-    if (selectedSourceAsset?.assetSymbol) {
+    if (selectedSourceAsset?.common_key) {
       setSearchParams(
-        ROUTE_PARAM_TOKEN,
-        selectedSourceAsset?.assetSymbol?.toString().toLowerCase()
+        ROUTE_PARAM_ASSET,
+        selectedSourceAsset?.common_key
       )
+      searchParams.get(ROUTE_PARAM_TOKEN) && deleteSearchParam(ROUTE_PARAM_TOKEN)
     }
+    destAddr && setSearchParams(ROUTE_PARAM_DESTINATION_ADDRESS, destAddr)
   }, [
+    destAddr,
     destChainSelection,
     selectedSourceAsset?.assetSymbol,
     selectedSourceAsset?.common_key,
     resetDestinationChain,
+    deleteSearchParam,
     setSearchParams,
+    searchParams,
     sourceChainSelection,
   ])
 
