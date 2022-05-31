@@ -180,6 +180,12 @@ const TopFlowsSelector = ({
     map.Avalanche = chainList.find(
       (chainInfo) => chainInfo.chainName === "Avalanche"
     ) as ChainInfo
+    map.Moonbeam = chainList.find(
+      (chainInfo) => chainInfo.chainName === "Moonbeam"
+    ) as ChainInfo
+    map.Polygon = chainList.find(
+      (chainInfo) => chainInfo.chainName === "Polygon"
+    ) as ChainInfo
     return map
   }, [chainList])
 
