@@ -1,7 +1,15 @@
 export const topFlowOptions =
   process.env.REACT_APP_STAGE === "mainnet"
     ? [
-        {
+      {
+        common_key: "uusdc",
+        assetSymbol: "USDC",
+        sourceChainName: "Ethereum",
+        destinationChainName: "Osmosis",
+        sourceChainSymbol: "ETH",
+        destinationChainSymbol: "OSMO",
+      },
+      {
           common_key: "weth-wei",
           assetSymbol: "WETH",
           sourceChainName: "Ethereum",
@@ -10,29 +18,21 @@ export const topFlowOptions =
           destinationChainSymbol: "OSMO",
         },
         {
-          common_key: "uusdt",
-          assetSymbol: "USDT",
-          sourceChainName: "Ethereum",
+          common_key: "dot-planck",
+          assetSymbol: "DOT",
+          sourceChainName: "Moonbeam",
           destinationChainName: "Osmosis",
-          sourceChainSymbol: "ETH",
+          sourceChainSymbol: "MOONBEAM",
           destinationChainSymbol: "OSMO",
         },
         {
-          common_key: "uusdc",
-          assetSymbol: "USDC",
-          sourceChainName: "Ethereum",
+          common_key: "wmatic-wei",
+          assetSymbol: "MATIC",
+          sourceChainName: "Polygon",
           destinationChainName: "Osmosis",
-          sourceChainSymbol: "ETH",
+          sourceChainSymbol: "POLYGON",
           destinationChainSymbol: "OSMO",
         },
-        // {
-        //   common_key: "uusd",
-        //   assetSymbol: "UST",
-        //   sourceChainName: "Terra",
-        //   destinationChainName: "Avalanche",
-        //   sourceChainSymbol: "Terra",
-        //   destinationChainSymbol: "AVAX",
-        // },
       ]
     : [
         {
