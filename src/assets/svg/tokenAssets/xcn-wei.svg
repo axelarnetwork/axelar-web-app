@@ -1,0 +1,37 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient cx="51.559%" cy="35.04%" fx="51.559%" fy="35.04%" r="116.452%" id="a">
+            <stop stop-color="#FFF" offset="0%"/>
+            <stop stop-color="#858689" offset="54.67%"/>
+            <stop stop-color="#AEAEAF" offset="77.55%"/>
+        </radialGradient>
+        <radialGradient cx="44.018%" cy="21.177%" fx="44.018%" fy="21.177%" r="120.928%" id="c">
+            <stop stop-color="#FFF" offset="2.843%"/>
+            <stop stop-color="#858689" offset="55.18%"/>
+            <stop stop-color="#AEAEAF" offset="78.53%"/>
+            <stop stop-color="#5F6063" offset="99.89%"/>
+        </radialGradient>
+        <radialGradient cx="-186.039%" cy="492.217%" fx="-186.039%" fy="492.217%" r="50.052%" id="b">
+            <stop stop-color="#B8B9C7" offset="0%"/>
+            <stop stop-color="#A5A7B5" offset="100%"/>
+        </radialGradient>
+        <radialGradient cx="50%" cy="50%" fx="50%" fy="50%" r="50.01%" id="d">
+            <stop stop-color="#FFF" offset="0%"/>
+            <stop stop-color="#F7F7F7" offset="15.35%"/>
+            <stop stop-color="#64DDF9" offset="33.25%"/>
+            <stop stop-color="#54D4FC" offset="53.77%"/>
+            <stop stop-color="#1D1B1B" offset="99.86%"/>
+        </radialGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g fill-rule="nonzero">
+            <circle fill="url(#a)" cx="12" cy="12" r="12"/>
+            <circle stroke="url(#b)" stroke-width=".388" fill="url(#c)" cx="12" cy="12" r="11.465"/>
+            <circle fill="#1D1B1B" cx="12" cy="12" r="10.995"/>
+            <circle fill="url(#d)" cx="12" cy="12" r="9.784"/>
+        </g>
+        <g opacity=".21" stroke="#1D1B1B" stroke-linecap="round" stroke-width="3.878">
+            <path d="m17.342 7.437 1.12-.96M16.468 6.578l.939-1.135M15.459 5.882l.727-1.277M14.343 5.377l.49-1.388M13.157 5.069l.242-1.45M12.015 4.973l-.037-1.47M10.718 5.094l-.272-1.45M9.537 5.417l-.515-1.373M8.43 5.947 7.685 4.68M7.437 6.659l-.954-1.121M6.573 7.533l-1.135-.934M5.882 8.542 4.6 7.82M5.377 9.658l-1.388-.495M5.069 10.844l-1.45-.242M4.973 12.12l-1.474.037M5.089 13.283l-1.444.272M5.422 14.464l-1.383.515M5.942 15.57l-1.262.747M6.659 16.564l-1.115.959M7.533 17.427l-.934 1.13M8.542 18.119 7.82 19.4M9.658 18.624l-.49 1.388M10.844 18.937l-.242 1.449M12.12 19.028l.037 1.474M13.283 18.912l.267 1.443M14.464 18.584l.515 1.378M15.57 18.058l.747 1.263M16.569 17.347l.954 1.115M17.427 16.473l1.136.929M18.119 15.464l1.282.716M18.629 14.348l1.383.49M18.932 13.162l1.449.242M19.028 12.027l1.469-.055M18.912 10.718l1.449-.267M18.584 9.537l1.373-.51M18.053 8.43l1.268-.746"/>
+        </g>
+    </g>
+</svg>
