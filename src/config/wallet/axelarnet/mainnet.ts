@@ -254,7 +254,7 @@ const INJECTIVE_CHAIN_ID: string = "injective-1"
 const INJECTIVE_RPC: string = "https://tm.injective.network"
 const INJECTIVE_REST = "https://lcd.injective.network"
 const INJECTIVE_CHANNEL_MAP = {
-  axelar: "channel-XXX",
+  axelar: "channel-10",
 }
 const INJECTIVE_DENOM_MAP = {
 
@@ -297,7 +297,7 @@ const injectiveChainInfo: ChainInfo = {
     average: 25000000000,
     high: 40000000000,
   },
-  features: ['stargate', 'ibc-transfer', 'no-legacy-stdTx', 'ibc-go'],
+  features: ['ibc-transfer', 'ibc-go'],
 }
 export const injective: KeplrWalletChainConfig = {
   restEndpoint: INJECTIVE_REST,
