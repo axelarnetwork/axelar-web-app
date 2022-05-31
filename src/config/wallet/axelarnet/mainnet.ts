@@ -2,22 +2,22 @@ import { Bech32Address } from "@keplr-wallet/cosmos"
 import { ChainInfo } from "@keplr-wallet/types"
 import { KeplrWalletChainConfig } from "./interface"
 
-const TERRA_CHAIN_ID: string = "columbus-5"
-const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
-const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string
+const TERRA_CHAIN_ID: string = "phoenix-1"
+const TERRA_RPC: string = "https://rpc.terrav2.ccvalidators.com"
+const TERRA_REST = "https://phoenix-lcd.terra.dev"
 const TERRA_CHANNEL_MAP = {
-  axelar: "channel-19",
+  axelar: "channel-XXX",
 }
 const terraMainnetConfigs: ChainInfo = {
   rpc: TERRA_RPC,
   rest: TERRA_REST,
   chainId: TERRA_CHAIN_ID,
-  chainName: "Terra",
+  chainName: "Terra 2.0",
   stakeCurrency: {
     coinDenom: "LUNA",
     coinMinimalDenom: "uluna",
     coinDecimals: 6,
-    coinGeckoId: "terra-luna",
+    coinGeckoId: "terra-luna-2",
   },
   bip44: {
     coinType: 330,
@@ -28,19 +28,7 @@ const terraMainnetConfigs: ChainInfo = {
       coinDenom: "LUNA",
       coinMinimalDenom: "uluna",
       coinDecimals: 6,
-      coinGeckoId: "terra-luna",
-    },
-    {
-      coinDenom: "UST",
-      coinMinimalDenom: "uusd",
-      coinDecimals: 6,
-      coinGeckoId: "terrausd",
-    },
-    {
-      coinDenom: "KRT",
-      coinMinimalDenom: "ukrw",
-      coinDecimals: 6,
-      coinGeckoId: "terrakrw",
+      coinGeckoId: "terra-luna-2",
     },
   ],
   feeCurrencies: [
@@ -48,13 +36,7 @@ const terraMainnetConfigs: ChainInfo = {
       coinDenom: "LUNA",
       coinMinimalDenom: "uluna",
       coinDecimals: 6,
-      coinGeckoId: "terra-luna",
-    },
-    {
-      coinDenom: "UST",
-      coinMinimalDenom: "uusd",
-      coinDecimals: 6,
-      coinGeckoId: "terrausd",
+      coinGeckoId: "terra-luna-2",
     },
   ],
   gasPriceStep: { low: 5.665, average: 5.665, high: 7 },
@@ -266,6 +248,67 @@ export const crescent: KeplrWalletChainConfig = {
   denomMap: CRESCENT_DENOM_MAP
 }
 
+//******injective */
+
+const INJECTIVE_CHAIN_ID: string = "injective-1"
+const INJECTIVE_RPC: string = "https://tm.injective.network"
+const INJECTIVE_REST = "https://lcd.injective.network"
+const INJECTIVE_CHANNEL_MAP = {
+  axelar: "channel-XXX",
+}
+const INJECTIVE_DENOM_MAP = {
+
+}
+const injectiveChainInfo: ChainInfo = {
+  rpc: INJECTIVE_RPC,
+  rest: INJECTIVE_REST,
+  chainId: INJECTIVE_CHAIN_ID,
+  chainName: 'Injective',
+  stakeCurrency: {
+    coinDenom: 'INJ',
+    coinMinimalDenom: 'inj',
+    coinDecimals: 18,
+    coinGeckoId: 'injective-protocol',
+  },
+  walletUrl: 'https://hub.injective.network/',
+  walletUrlForStaking: 'https://hub.injective.network/',
+  bip44: {
+    coinType: 60,
+  },
+  bech32Config: Bech32Address.defaultBech32Config('inj'),
+  currencies: [
+    {
+      coinDenom: 'INJ',
+      coinMinimalDenom: 'inj',
+      coinDecimals: 18,
+      coinGeckoId: 'injective-protocol',
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: 'INJ',
+      coinMinimalDenom: 'inj',
+      coinDecimals: 18,
+      coinGeckoId: 'injective-protocol',
+    },
+  ],
+  gasPriceStep: {
+    low: 5000000000,
+    average: 25000000000,
+    high: 40000000000,
+  },
+  features: ['stargate', 'ibc-transfer', 'no-legacy-stdTx', 'ibc-go'],
+}
+export const injective: KeplrWalletChainConfig = {
+  restEndpoint: INJECTIVE_REST,
+  chainId: INJECTIVE_CHAIN_ID,
+  rpcEndpoint: INJECTIVE_RPC,
+  chainInfo: injectiveChainInfo,
+  channelMap: INJECTIVE_CHANNEL_MAP,
+  denomMap: INJECTIVE_DENOM_MAP
+}
+//****** end injective */
+
 export const allChains = {
   axelar,
   terra,
@@ -273,6 +316,7 @@ export const allChains = {
   crescent,
   juno,
   "e-money": eMoney,
+  injective,
   osmosis
 }
 export default allChains

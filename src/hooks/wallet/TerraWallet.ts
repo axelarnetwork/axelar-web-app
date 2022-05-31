@@ -9,13 +9,13 @@ import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
 import { AssetInfo } from "@axelar-network/axelarjs-sdk"
 
 export const terraConfigMainnet = {
-  URL: "https://lcd.terra.dev",
-  chainId: "columbus-5",
+  URL: "https://phoenix-lcd.terra.dev",
+  chainId: "phoenix-1",
 }
 
 export const terraConfigTestnet = {
-  URL: "https://bombay-lcd.terra.dev",
-  chainId: "bombay-12",
+  URL: "https://pisco-lcd.terra.dev",
+  chainId: "pisco-1",
 }
 export class TerraWallet implements WalletInterface {
   public wallet: Wallet

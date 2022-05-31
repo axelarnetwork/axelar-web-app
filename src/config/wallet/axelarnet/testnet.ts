@@ -223,17 +223,17 @@ const cosmosChainInfo: ChainInfo = {
   features: ["stargate", "ibc-transfer", "no-legacy-stdTx", "ibc-go"],
 }
 
-const TERRA_CHAIN_ID: string = "bombay-12"
+const TERRA_CHAIN_ID: string = "pisco-1"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
-const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string
+const TERRA_REST = "https://pisco-lcd.terra.dev"
 const TERRA_CHANNEL_MAP = {
-  axelar: "channel-78",
+  axelar: "channel-XXX",
 }
 const terraChainInfo: ChainInfo = {
   rpc: TERRA_RPC,
   rest: TERRA_REST,
   chainId: TERRA_CHAIN_ID,
-  chainName: "Terra Bombay-12",
+  chainName: "Terra Pisco-1",
   stakeCurrency: {
     coinDenom: "LUNA",
     coinMinimalDenom: "uluna",
@@ -243,21 +243,14 @@ const terraChainInfo: ChainInfo = {
   walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
   bip44: { coinType: 330 },
   currencies: [
-    { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
-    { coinDenom: "UST", coinMinimalDenom: "uusd", coinDecimals: 6 },
+    { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 }
   ],
   feeCurrencies: [
     {
       coinDenom: "LUNA",
       coinMinimalDenom: "uluna",
       coinDecimals: 6,
-      coinGeckoId: "terra-luna",
-    },
-    {
-      coinDenom: "UST",
-      coinMinimalDenom: "uusd",
-      coinDecimals: 6,
-      coinGeckoId: "terrausd",
+      coinGeckoId: "terra-luna-2",
     },
   ],
   gasPriceStep: { low: 0.05, average: 0.125, high: 0.2 },

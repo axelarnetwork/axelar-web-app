@@ -11,7 +11,7 @@
 		"@keplr-wallet/types": "0.9.9",
 		"@metamask/onboarding": "^1.0.1",
 		"@terra-money/terra.js": "^3.0.8",
-		"@terra-money/wallet-provider": "^3.6.5",
+		"@terra-money/wallet-provider": "^3.9.4",
 		"@types/react-google-recaptcha": "^2.1.2",
 		"animate.css": "^4.1.1",
 		"axios": "^0.24.0",
