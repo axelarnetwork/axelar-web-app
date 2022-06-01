@@ -22,7 +22,7 @@ const terraMainnetConfigs: ChainInfo = {
   rpc: TERRA_RPC,
   rest: TERRA_REST,
   chainId: TERRA_CHAIN_ID,
-  chainName: "Terra 2.0",
+  chainName: "Terra",
   stakeCurrency: {
     coinDenom: "LUNA",
     coinMinimalDenom: "uluna",
