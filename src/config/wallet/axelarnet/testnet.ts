@@ -10,21 +10,6 @@ const OSMOSIS_REST =
 const OSMOSIS_CHANNEL_MAP = {
   axelar: "channel-240",
 }
-const OSMOSIS_DENOM_MAP = {
-  "wdev-wei":
-    "ibc/BDEB81D8E81910D832AFCDEE9822923DB84ECD8981D10A2282D202EAAD2A6C0C",
-  "wmatic-wei":
-    "ibc/4E84944734F09DEAEC84882F5CF6ECD0F48CA9400F07ED355F6502C67930A3DD",
-  "wftm-wei":
-    "ibc/6625132ACE6721012E7359AF2FF0F20B28E4122FB60673D17D4FC1D8D9D04559",
-  "weth-wei":
-    "ibc/E3BDEB883AA9A48F52E3677A1167E0C10D8F9FEF4F56CA7D065551BF00B24B84",
-  "wavax-wei":
-    "ibc/E49693D492828B1ACE243BBEC6FEC3ED036305CA06479DE8273FE9C7A94AADD6",
-  uausdc:
-    "ibc/DB39478B7315836EB481DE311182D882BEC8E232E9586F1D4FF509079901B27E",
-  "wbtc-satoshi": "ibc/8DF7319B304D91E491408FAEECB205E6E7043E3FE759553EAD07566CE1822FE0"
-}
 
 const osmosisChainInfo: ChainInfo = {
   rpc: OSMOSIS_RPC,
@@ -130,20 +115,6 @@ const COSMOS_RPC: string = "https://vega-rpc.interchain.io"
 const COSMOS_REST = "https://vega-rest.interchain.io"
 const COSMOS_CHANNEL_MAP = {
   axelar: "channel-238",
-}
-const COSMOS_DENOM_MAP = {
-  "wdev-wei":
-    "ibc/12B944E03F3E2197589129CB359E1BD5FA3F06841792FFE46852EAFE31EEB20A",
-  "wmatic-wei":
-    "ibc/1BE5BF73F50D2D82C74628C6290834E66C5467F231B7FBC7DD45E217EE1D42A5",
-  "wftm-wei":
-    "ibc/947B84E653CBEC9386287883173A40D3C0A284AB554557342C50378219ECE147",
-  "weth-wei":
-    "ibc/DEC3B614DEA87E77AFABE3EDA1F95A7E1A429080950AD9B0AF257FE01706CA0B",
-  "wavax-wei":
-    "ibc/88C2DE3AE63A443385CDFE54A18B0FC48402DDF3FE5AC532A663F9C3A1144462",
-  uausdc:
-    "ibc/3DC20E9A12C8F19A92CDEBC37116C26EADF4C65E7498193791A3DAAD0B263556",
 }
 const cosmosChainInfo: ChainInfo = {
   rpc: COSMOS_RPC,
@@ -318,8 +289,7 @@ export const osmosis: KeplrWalletChainConfig = {
   rpcEndpoint: OSMOSIS_RPC,
   chainId: OSMOSIS_CHAIN_ID,
   chainInfo: osmosisChainInfo,
-  channelMap: OSMOSIS_CHANNEL_MAP,
-  denomMap: OSMOSIS_DENOM_MAP,
+  channelMap: OSMOSIS_CHANNEL_MAP
 }
 
 export const cosmoshub: KeplrWalletChainConfig = {
@@ -327,8 +297,7 @@ export const cosmoshub: KeplrWalletChainConfig = {
   rpcEndpoint: COSMOS_RPC,
   chainId: COSMOS_CHAIN_ID,
   chainInfo: cosmosChainInfo,
-  channelMap: COSMOS_CHANNEL_MAP,
-  denomMap: COSMOS_DENOM_MAP,
+  channelMap: COSMOS_CHANNEL_MAP
 }
 
 const CRESCENT_CHAIN_ID: string = "mooncat-1-1"
@@ -398,8 +367,7 @@ export const crescent: KeplrWalletChainConfig = {
   chainId: CRESCENT_CHAIN_ID,
   rpcEndpoint: CRESCENT_RPC,
   chainInfo: crescentChainInfo,
-  channelMap: CRESCENT_CHANNEL_MAP,
-  denomMap: CRESCENT_DENOM_MAP
+  channelMap: CRESCENT_CHANNEL_MAP
 }
 
 export const allChains = {
