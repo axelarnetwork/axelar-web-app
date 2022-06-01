@@ -4,7 +4,7 @@ import { KeplrWalletChainConfig } from "./interface"
 
 const TERRA_CHAIN_ID: string = "phoenix-1"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
-const TERRA_REST = "https://phoenix-lcd.terra.dev"
+const TERRA_REST = process.env.REACT_APP_TERRA_LCD as string 
 const TERRA_CHANNEL_MAP = {
   axelar: "channel-6",
 }
