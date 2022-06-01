@@ -202,12 +202,6 @@ const axelarChainInfo: ChainInfo = {
   },
   currencies: [
     { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
-    {
-      coinDenom: "UST",
-      coinMinimalDenom:
-        "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F",
-      coinDecimals: 6,
-    },
     ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["axelar"]).map(assetConfig => {
       const asset = assetConfig.chain_aliases["axelar"]
       return {
