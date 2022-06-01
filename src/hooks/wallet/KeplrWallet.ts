@@ -68,6 +68,7 @@ export class KeplrWallet implements WalletInterface {
         getShortenedWord(this.RPC_ENDPOINT, 20)
       )
       try {
+        console.log("chai info",this.CHAIN_INFO)
         await window.keplr.experimentalSuggestChain(this.CHAIN_INFO)
         await window.keplr.enable(this.CHAIN_ID)
         text = "added"

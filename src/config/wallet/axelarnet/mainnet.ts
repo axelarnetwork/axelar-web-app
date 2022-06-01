@@ -1,6 +1,15 @@
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { ChainInfo } from "@keplr-wallet/types"
 import { KeplrWalletChainConfig } from "./interface"
+import {
+  AssetConfig,
+  loadAssets,
+} from "@axelar-network/axelarjs-sdk"
+
+const environment: string = process.env.REACT_APP_STAGE === "local"
+? "testnet"
+: (process.env.REACT_APP_STAGE as string)
+const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
 const TERRA_CHAIN_ID: string = "phoenix-1"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
@@ -31,6 +40,15 @@ const terraMainnetConfigs: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "terra-luna-2",
     },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["terra"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["terra"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
@@ -165,18 +183,15 @@ const crescentChainInfo: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "crescent",
     },
-    {
-      coinDenom: "USDC",
-      coinMinimalDenom:
-        "ibc/BFF0D3805B50D93E2FA5C0B2DDF7E0B30A631076CD80BC12A48C0E95404B4A41",
-      coinDecimals: 6,
-    },
-    {
-      coinDenom: "WETH",
-      coinMinimalDenom:
-        "ibc/F1806958CA98757B91C3FA1573ECECD24F6FA3804F074A6977658914A49E65A3",
-      coinDecimals: 18,
-    },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["crescent"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["crescent"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
@@ -240,6 +255,15 @@ const injectiveChainInfo: ChainInfo = {
       coinDecimals: 18,
       coinGeckoId: 'injective-protocol',
     },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["injective"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["injective"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
