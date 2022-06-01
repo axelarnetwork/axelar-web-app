@@ -63,12 +63,10 @@ export class TerraWallet implements WalletInterface {
   }
 
   public async getAddress(): Promise<string> {
-    console.log("this wallet",this.wallet)
     return this.wallet?.wallets[0]?.terraAddress
   }
 
   public async getBalance(assetInfo: AssetInfo): Promise<number> {
-    // const denom = assetInfo.common_key || "";
     const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases["terra"])?.ibcDenom;
     if (!denom) throw new Error("asset not found: " + assetInfo.common_key);
     const address = await this.getAddress()
@@ -93,9 +91,6 @@ export class TerraWallet implements WalletInterface {
   ): Promise<any> {
     const sourcePort = "transfer"
     const senderAddress = await this.getAddress()
-    // const denom = this.chainConfig?.denomMap
-    //   ? this.chainConfig.denomMap[_denom]
-    //   : _denom
     const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === _denom)?.chain_aliases["terra"])?.ibcDenom;
     if (!denom) throw new Error("asset not found: " + _denom);
     const fee = new Fee(parseInt(TERRA_IBC_GAS_LIMIT), "30000uluna")

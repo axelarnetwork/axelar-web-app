@@ -68,7 +68,6 @@ export class KeplrWallet implements WalletInterface {
         getShortenedWord(this.RPC_ENDPOINT, 20)
       )
       try {
-        console.log("chai info",this.CHAIN_INFO)
         await window.keplr.experimentalSuggestChain(this.CHAIN_INFO)
         await window.keplr.enable(this.CHAIN_ID)
         text = "added"
@@ -83,7 +82,6 @@ export class KeplrWallet implements WalletInterface {
       }
     }
     cb && cb()
-    // localStorage.setItem("IsKeplrWalletConnected", "true")
     const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
@@ -185,10 +183,6 @@ export class KeplrWallet implements WalletInterface {
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
     const denom = (KeplrWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === _denom)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
     console.log("derived denom for ibc transfer",denom);
-    // const denom = 
-    //   this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN.denomMap[_denom]
-    //     ? this.CONFIG_FOR_CHAIN.denomMap[_denom]
-    //     : _denom
     if (!denom) throw new Error("asset not found: " + _denom);
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
