@@ -3,7 +3,7 @@ import { ChainInfo } from "@keplr-wallet/types"
 import { KeplrWalletChainConfig } from "./interface"
 
 const TERRA_CHAIN_ID: string = "phoenix-1"
-const TERRA_RPC: string = "https://rpc.terrav2.ccvalidators.com"
+const TERRA_RPC: string = "https://terra-rpc.polkachu.com"
 const TERRA_REST = "https://phoenix-lcd.terra.dev"
 const TERRA_CHANNEL_MAP = {
   axelar: "channel-6",
