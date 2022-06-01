@@ -1,6 +1,15 @@
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
+import {
+  AssetConfig,
+  loadAssets,
+} from "@axelar-network/axelarjs-sdk"
+
+const environment: string = process.env.REACT_APP_STAGE === "local"
+? "testnet"
+: (process.env.REACT_APP_STAGE as string)
+const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
 const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
 const OSMOSIS_RPC: string =
@@ -43,54 +52,15 @@ const osmosisChainInfo: ChainInfo = {
       coinImageUrl:
         "https://dhj8dql1kzq2v.cloudfront.net/white/osmosis-ion.png",
     },
-    {
-      coinDenom: "USDC_fake",
-      coinMinimalDenom:
-        "ibc/68D8E3DC65A940AD5F38D07DE07E6A8F653435FCA226EB458610DCB40513BF8F",
-      coinDecimals: 6,
-    },
-    {
-      coinDenom: "WDEV",
-      coinMinimalDenom:
-        "ibc/BDEB81D8E81910D832AFCDEE9822923DB84ECD8981D10A2282D202EAAD2A6C0C",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WMATIC",
-      coinMinimalDenom:
-        "ibc/4E84944734F09DEAEC84882F5CF6ECD0F48CA9400F07ED355F6502C67930A3DD",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WFTM",
-      coinMinimalDenom:
-        "ibc/6625132ACE6721012E7359AF2FF0F20B28E4122FB60673D17D4FC1D8D9D04559",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WETH",
-      coinMinimalDenom:
-        "ibc/E3BDEB883AA9A48F52E3677A1167E0C10D8F9FEF4F56CA7D065551BF00B24B84",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WAVAX",
-      coinMinimalDenom:
-        "ibc/E49693D492828B1ACE243BBEC6FEC3ED036305CA06479DE8273FE9C7A94AADD6",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "aUSDC",
-      coinMinimalDenom:
-        "ibc/DB39478B7315836EB481DE311182D882BEC8E232E9586F1D4FF509079901B27E",
-      coinDecimals: 6,
-    },
-    {
-      coinDenom: "WBTC",
-      coinMinimalDenom:
-        "ibc/8DF7319B304D91E491408FAEECB205E6E7043E3FE759553EAD07566CE1822FE0",
-      coinDecimals: 8,
-    },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["osmosis"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["osmosis"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
@@ -139,42 +109,15 @@ const cosmosChainInfo: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "cosmos",
     },
-    {
-      coinDenom: "WDEV",
-      coinMinimalDenom:
-        "ibc/12B944E03F3E2197589129CB359E1BD5FA3F06841792FFE46852EAFE31EEB20A",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WMATIC",
-      coinMinimalDenom:
-        "ibc/1BE5BF73F50D2D82C74628C6290834E66C5467F231B7FBC7DD45E217EE1D42A5",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WFTM",
-      coinMinimalDenom:
-        "ibc/947B84E653CBEC9386287883173A40D3C0A284AB554557342C50378219ECE147",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WETH",
-      coinMinimalDenom:
-        "ibc/DEC3B614DEA87E77AFABE3EDA1F95A7E1A429080950AD9B0AF257FE01706CA0B",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "WAVAX",
-      coinMinimalDenom:
-        "ibc/88C2DE3AE63A443385CDFE54A18B0FC48402DDF3FE5AC532A663F9C3A1144462",
-      coinDecimals: 18,
-    },
-    {
-      coinDenom: "aUSDC",
-      coinMinimalDenom:
-        "ibc/3DC20E9A12C8F19A92CDEBC37116C26EADF4C65E7498193791A3DAAD0B263556",
-      coinDecimals: 6,
-    },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["cosmoshub"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["cosmoshub"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
@@ -214,7 +157,16 @@ const terraChainInfo: ChainInfo = {
   walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
   bip44: { coinType: 330 },
   currencies: [
-    { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 }
+    { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["terra"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["terra"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
@@ -256,11 +208,15 @@ const axelarChainInfo: ChainInfo = {
         "ibc/6F4968A73F90CF7DE6394BF937D6DF7C7D162D74D839C13F53B41157D315E05F",
       coinDecimals: 6,
     },
-    {
-      coinDenom: "USDC_fake",
-      coinMinimalDenom: "uusdc",
-      coinDecimals: 6,
-    },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["axelar"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["axelar"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
@@ -333,12 +289,15 @@ const crescentChainInfo: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "crescent",
     },
-    {
-      coinDenom: "WETH",
-      coinMinimalDenom:
-        "ibc/AAD7136DD626569C3DDE7C5F764968BB2E939875EFC568AE5712B62081850814",
-      coinDecimals: 18,
-    },
+    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["crescent"]).map(assetConfig => {
+      const asset = assetConfig.chain_aliases["crescent"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    })
   ],
   feeCurrencies: [
     {
