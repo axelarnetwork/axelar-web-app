@@ -215,10 +215,10 @@ const TransactionStatusWindow = ({
 
     const isMainnet = process.env.REACT_APP_STAGE === "mainnet"
 
-    if (isMainnet && terraWallet?.network?.chainID !== "columbus-5") {
+    if (isMainnet && terraWallet?.network?.chainID !== "phoenix-1") {
       msg =
         "Your Terra Station extension is not set to mainnet. Please switch those settings before trying to send any funds."
-    } else if (!isMainnet && terraWallet?.network?.chainID !== "bombay-12") {
+    } else if (!isMainnet && terraWallet?.network?.chainID !== "pisco-1") {
       msg =
         "Your Terra Station extension is not set to testnet. Please switch those settings before trying to send any funds."
     } else return
