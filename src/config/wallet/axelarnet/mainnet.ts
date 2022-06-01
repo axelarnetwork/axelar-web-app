@@ -229,7 +229,7 @@ const INJECTIVE_CHAIN_ID: string = "injective-1"
 const INJECTIVE_RPC: string = "https://tm.injective.network"
 const INJECTIVE_REST = "https://lcd.injective.network"
 const INJECTIVE_CHANNEL_MAP = {
-  axelar: "channel-10",
+  axelar: "channel-84",
 }
 const injectiveChainInfo: ChainInfo = {
   rpc: INJECTIVE_RPC,
