@@ -32,7 +32,6 @@ const theme = {
   headerBackgroundColor: `rgba(0, 0, 0, 0.82)`,
 }
 getChainOptions().then((_chainOptions) => {
-  console.log("chain options",_chainOptions)
   const defaultNetwork =
     process.env.REACT_APP_STAGE === "mainnet"
       ? _chainOptions.walletConnectChainIds[1]

@@ -6,8 +6,10 @@ const TERRA_CHAIN_ID: string = "phoenix-1"
 const TERRA_RPC: string = "https://rpc.terrav2.ccvalidators.com"
 const TERRA_REST = "https://phoenix-lcd.terra.dev"
 const TERRA_CHANNEL_MAP = {
-  axelar: "channel-XXX",
+  axelar: "channel-6",
 }
+const TERRA_DENOM_MAP = {}
+
 const terraMainnetConfigs: ChainInfo = {
   rpc: TERRA_RPC,
   rest: TERRA_REST,
@@ -85,6 +87,7 @@ export const terra: KeplrWalletChainConfig = {
   chainId: TERRA_CHAIN_ID,
   chainInfo: terraMainnetConfigs,
   channelMap: TERRA_CHANNEL_MAP,
+  denomMap: TERRA_DENOM_MAP
 }
 
 export const osmosis: KeplrWalletChainConfig = {
