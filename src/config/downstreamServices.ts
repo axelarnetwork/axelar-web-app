@@ -28,8 +28,8 @@ const blockExplorers = {
       url: "https://finder.terra.money/testnet/",
     },
     axelar: {
-      name: "Coinhippo's testnet block explorer",
-      url: "https://axelar-testnet.coinhippo.io/",
+      name: "Axelarscan",
+      url: "https://testnet.axelarscan.io/",
     },
     osmosis: {
       name: "Big Dipper",
@@ -53,8 +53,8 @@ const blockExplorers = {
       url: "https://finder.terra.money/mainnet/",
     },
     axelar: {
-      name: "Coinhippo's block explorer",
-      url: "https://axelar.coinhippo.io/",
+      name: "Axelarscan",
+      url: "https://axelarscan.io/",
     },
     osmosis: {
       name: "Mintscan",
