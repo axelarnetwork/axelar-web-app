@@ -35,13 +35,7 @@ getChainOptions().then((_chainOptions) => {
   const defaultNetwork =
     process.env.REACT_APP_STAGE === "mainnet"
       ? _chainOptions.walletConnectChainIds[1]
-      : {
-        chainID: "bombay-12",
-        lcd: "https://bombay-lcd.terra.dev",
-        mantle: "https://mantle.terra.dev",
-        name: "testnet",
-        walletconnectID: 1
-      } // TODO: we are no longer getting bombay from https://assets.terra.money/chains.json, so hard-coding in these configs
+      : _chainOptions.walletConnectChainIds[0]
   const chainOptions = { ..._chainOptions, defaultNetwork }
   ReactDOM.render(
     <WalletProvider {...chainOptions}>

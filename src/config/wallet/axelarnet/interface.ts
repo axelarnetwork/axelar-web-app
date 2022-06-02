@@ -6,5 +6,4 @@ export interface KeplrWalletChainConfig {
   rpcEndpoint: string
   chainInfo: ChainInfo
   channelMap: { [key: string]: string }
-  denomMap?: { [key: string]: string }
 }

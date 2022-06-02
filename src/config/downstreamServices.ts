@@ -76,6 +76,10 @@ const blockExplorers = {
       name: "Mintscan",
       url: "https://www.mintscan.io/crescent/",
     },
+    injective: {
+      name: "Mintscan",
+      url: "https://www.mintscan.io/injective/"
+    }
   },
 }
 blockExplorers.testnet = blockExplorers.devnet

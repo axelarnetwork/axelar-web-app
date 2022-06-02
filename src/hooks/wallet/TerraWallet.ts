@@ -6,22 +6,26 @@ import { ethers } from "ethers"
 import { TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import { AssetConfig, AssetInfo, loadAssets } from "@axelar-network/axelarjs-sdk"
 
 export const terraConfigMainnet = {
-  URL: "https://lcd.terra.dev",
-  chainId: "columbus-5",
+  URL: "https://phoenix-lcd.terra.dev",
+  chainId: "phoenix-1",
 }
 
 export const terraConfigTestnet = {
-  URL: "https://bombay-lcd.terra.dev",
-  chainId: "bombay-12",
+  URL: "https://pisco-lcd.terra.dev",
+  chainId: "pisco-1",
 }
 export class TerraWallet implements WalletInterface {
   public wallet: Wallet
   public connectedWallet?: ConnectedWallet
   public lcdClient: LCDClient
   public chainConfig: KeplrWalletChainConfig
+  public static ENVIRONMENT: string = process.env.REACT_APP_STAGE === "local"
+  ? "testnet"
+  : (process.env.REACT_APP_STAGE as string)
+  public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: TerraWallet.ENVIRONMENT })
 
   public constructor(
     wallet: Wallet,
@@ -63,7 +67,8 @@ export class TerraWallet implements WalletInterface {
   }
 
   public async getBalance(assetInfo: AssetInfo): Promise<number> {
-    const denom = assetInfo.common_key || "";
+    const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases["terra"])?.ibcDenom;
+    if (!denom) throw new Error("asset not found: " + assetInfo.common_key);
     const address = await this.getAddress()
     const balance = await this.lcdClient.bank
       .balance(address)
@@ -86,9 +91,8 @@ export class TerraWallet implements WalletInterface {
   ): Promise<any> {
     const sourcePort = "transfer"
     const senderAddress = await this.getAddress()
-    const denom = this.chainConfig?.denomMap
-      ? this.chainConfig.denomMap[_denom]
-      : _denom
+    const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === _denom)?.chain_aliases["terra"])?.ibcDenom;
+    if (!denom) throw new Error("asset not found: " + _denom);
     const fee = new Fee(parseInt(TERRA_IBC_GAS_LIMIT), "30000uluna")
     const transferMsg: MsgTransfer = new MsgTransfer(
       sourcePort,

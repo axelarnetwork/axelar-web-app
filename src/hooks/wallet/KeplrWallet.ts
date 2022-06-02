@@ -10,7 +10,11 @@ import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { getShortenedWord } from "utils/wordShortener"
 import { SendLogsToServer } from "../../api/SendLogsToServer"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
-import { AssetInfo } from "@axelar-network/axelarjs-sdk"
+import {
+  AssetConfig,
+  AssetInfo,
+  loadAssets,
+} from "@axelar-network/axelarjs-sdk"
 
 declare const window: Window &
   typeof globalThis & {
@@ -22,6 +26,11 @@ export class KeplrWallet implements WalletInterface {
   public RPC_ENDPOINT: string
   public CHAIN_INFO: ChainInfo
   public CONFIG_FOR_CHAIN: KeplrWalletChainConfig
+  public CHAIN_NAME: string
+  public static ENVIRONMENT: string = process.env.REACT_APP_STAGE === "local"
+  ? "testnet"
+  : (process.env.REACT_APP_STAGE as string)
+  public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: KeplrWallet.ENVIRONMENT })
 
   public constructor(chainName: string) {
     const configs =
@@ -30,6 +39,7 @@ export class KeplrWallet implements WalletInterface {
     this.CHAIN_ID = configForChain?.chainId
     this.RPC_ENDPOINT = configForChain?.rpcEndpoint
     this.CHAIN_INFO = configForChain?.chainInfo
+    this.CHAIN_NAME = chainName
     this.CONFIG_FOR_CHAIN = configForChain
   }
 
@@ -37,7 +47,9 @@ export class KeplrWallet implements WalletInterface {
     return !!window.keplr
   }
 
-  public async connectToWallet(cb?: any): Promise<"added" | "exists" | "error" | null> {
+  public async connectToWallet(
+    cb?: any
+  ): Promise<"added" | "exists" | "error" | null> {
     let text: "added" | "exists" | "error" | null = "error"
 
     if (!this.isWalletInstalled()) {
@@ -69,8 +81,7 @@ export class KeplrWallet implements WalletInterface {
         return text
       }
     }
-    cb && cb();
-    // localStorage.setItem("IsKeplrWalletConnected", "true")
+    cb && cb()
     const _signer = await window.keplr.getOfflineSignerAuto(this.CHAIN_ID)
     const [account] = await _signer.getAccounts()
     console.log(account)
@@ -96,11 +107,10 @@ export class KeplrWallet implements WalletInterface {
   }
 
   public async getBalance(assetInfo: AssetInfo): Promise<number> {
-    const { common_key: denom, decimals} = assetInfo;
-    const derivedDenom: string = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN?.denomMap[denom as string]
-      ? this.CONFIG_FOR_CHAIN.denomMap[denom as string]
-      : (denom as string)
-      console.log("derived denom",assetInfo, derivedDenom)
+    const { decimals } = assetInfo
+    const derivedDenom = (KeplrWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
+    if (!derivedDenom) throw new Error("asset not found: " + assetInfo?.common_key);
+    console.log("derived denom", assetInfo, derivedDenom)
     const cosmjs = await this.getSigningClient()
     const balanceResponse: Coin = await cosmjs.getBalance(
       await this.getAddress(),
@@ -171,12 +181,18 @@ export class KeplrWallet implements WalletInterface {
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    const denom = this.CONFIG_FOR_CHAIN?.denomMap && this.CONFIG_FOR_CHAIN.denomMap[_denom]
-      ? this.CONFIG_FOR_CHAIN.denomMap[_denom]
-      : _denom
+    const denom = (KeplrWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === _denom)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
+    console.log("derived denom for ibc transfer",denom);
+    if (!denom) throw new Error("asset not found: " + _denom);
     const fee: StdFee = {
       gas: TERRA_IBC_GAS_LIMIT,
-      amount: [{ denom: this.CONFIG_FOR_CHAIN.chainInfo.feeCurrencies[0].coinMinimalDenom, amount: "30000" }],
+      amount: [
+        {
+          denom:
+            this.CONFIG_FOR_CHAIN.chainInfo.feeCurrencies[0].coinMinimalDenom,
+          amount: "30000",
+        },
+      ],
     }
     const timeoutHeight: Height = {
         revisionHeight: Long.fromNumber(10),
