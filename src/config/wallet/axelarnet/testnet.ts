@@ -256,10 +256,6 @@ const CRESCENT_REST = "https://testnet-endpoint.crescent.network/api/crescent"
 const CRESCENT_CHANNEL_MAP = {
   axelar: "channel-3",
 }
-const CRESCENT_DENOM_MAP = {
-  "weth-wei":
-    "ibc/AAD7136DD626569C3DDE7C5F764968BB2E939875EFC568AE5712B62081850814",
-}
 const crescentChainInfo: ChainInfo = {
   rpc: CRESCENT_RPC,
   rest: CRESCENT_REST,
