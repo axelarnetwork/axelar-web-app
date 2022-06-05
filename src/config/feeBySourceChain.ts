@@ -8,5 +8,5 @@ export const feeBySourceChain = (sourceChain: ChainInfo) => {
   if (["ethereum", "polygon"].includes(sourceChain?.chainName.toLowerCase()))
     return "~15-20 minutes"
 
-  return "~3-5 minutes"
+  return "~3 minutes"
 }
