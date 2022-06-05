@@ -1,6 +1,6 @@
 import { ChainInfo } from "@axelar-network/axelarjs-sdk"
 
-export const feeBySourceChain = (sourceChain: ChainInfo) => {
+export const waitBySourceChain = (sourceChain: ChainInfo) => {
   if (!sourceChain) return ""
 
   if (sourceChain?.module === "axelarnet") return "~2 minutes"
