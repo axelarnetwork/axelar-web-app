@@ -7,7 +7,7 @@ import { ChainSelection, SourceAsset } from "state/ChainSelection"
 import { getMinDepositAmount } from "utils/getMinDepositAmount"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 import { AssetInfo, ChainInfo } from "@axelar-network/axelarjs-sdk"
-import { feeBySourceChain } from "config/feeBySourceChain"
+import { waitBySourceChain } from "config/waitBySourceChain"
 
 interface IStyledTransferFeeDividerProps extends ThemedStyledProps<any, any> {
   nextState?: boolean
@@ -84,7 +84,7 @@ const TransactionInfo = () => {
         )}
         {generateInfoLine(
           "Wait Time",
-          feeBySourceChain(srcChainSelection as ChainInfo)
+          waitBySourceChain(srcChainSelection as ChainInfo)
         )}
       </div>
     </StyledTransferFeeDivider>
