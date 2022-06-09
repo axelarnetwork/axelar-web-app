@@ -172,13 +172,13 @@ export const DepositFromWallet = ({
 
       setDepositAmount(amountToDeposit)
       if (sourceChainName === "axelar") {
-        results = await wallet.transferTokens(recipientAddress, amountToDeposit)
+        results = await wallet.transferTokens(recipientAddress, amountToDeposit, selectedSourceAsset as AssetInfo)
       } else {
         results = await wallet.ibcTransfer(
           recipientAddress,
           amountToDeposit,
           selectedSourceAsset.common_key,
-          selectedSourceAsset.decimals || 6
+          selectedSourceAsset.decimals as number
         )
       }
     } catch (error: any) {

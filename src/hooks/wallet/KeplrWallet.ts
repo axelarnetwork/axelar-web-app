@@ -142,14 +142,17 @@ export class KeplrWallet implements WalletInterface {
 
   public async transferTokens(
     depositAddress: string,
-    amount: string
-  ): Promise<any> {
+    amount: string,
+    asset: AssetInfo,
+    ): Promise<any> {
+    const { ibcDenom, decimals } = asset;
     const senderAddress = await this.getAddress(),
       cosmjs = await this.getSigningClient()
+    if (!ibcDenom) throw new Error("asset not found: " + asset);
 
     const sendCoin = {
-      denom: "uaxl",
-      amount: ethers.utils.parseUnits(amount, 6).toString(),
+      denom: ibcDenom,
+      amount: ethers.utils.parseUnits(amount, decimals).toString(),
     }
     const fee: StdFee = {
       gas: AXELAR_TRANSFER_GAS_LIMIT,
@@ -169,6 +172,7 @@ export class KeplrWallet implements WalletInterface {
     }
 
     console.log("results", result)
+    return result;
   }
 
   public async ibcTransfer(

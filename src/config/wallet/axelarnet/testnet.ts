@@ -154,7 +154,6 @@ const terraChainInfo: ChainInfo = {
     coinDecimals: 6,
   },
   bech32Config: Bech32Address.defaultBech32Config("terra"),
-  walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
   bip44: { coinType: 330 },
   currencies: [
     { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
@@ -196,6 +195,7 @@ const axelarChainInfo: ChainInfo = {
     coinMinimalDenom: "uaxl",
     coinDecimals: 6,
   },
+  walletUrlForStaking: "https://www.testnet.keplr.app/#/axelar/stake",
   bech32Config: Bech32Address.defaultBech32Config("axelar"),
   bip44: {
     coinType: 118,
@@ -215,7 +215,7 @@ const axelarChainInfo: ChainInfo = {
   feeCurrencies: [
     { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
   ],
-  gasPriceStep: { low: 5.665, average: 5.665, high: 7 },
+  gasPriceStep: { low: 0.05, average: 0.125, high: 0.2 },
   features: ["stargate", "no-legacy-stdTx", "ibc-transfer"],
 }
 export const axelar: KeplrWalletChainConfig = {
@@ -255,10 +255,6 @@ const CRESCENT_RPC: string = "https://testnet-endpoint.crescent.network/rpc/cres
 const CRESCENT_REST = "https://testnet-endpoint.crescent.network/api/crescent"
 const CRESCENT_CHANNEL_MAP = {
   axelar: "channel-3",
-}
-const CRESCENT_DENOM_MAP = {
-  "weth-wei":
-    "ibc/AAD7136DD626569C3DDE7C5F764968BB2E939875EFC568AE5712B62081850814",
 }
 const crescentChainInfo: ChainInfo = {
   rpc: CRESCENT_RPC,
