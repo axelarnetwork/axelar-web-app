@@ -12,7 +12,6 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
   (environment === "mainnet" ? chain.chainInfo.fullySupported : true) && !!chain?.chainInfo?.assets?.length
 )
 .filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "injective")
-.filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "osmosis")
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues
   const newChainInfo = chain.chainInfo;
