@@ -120,7 +120,7 @@ export const osmosis: KeplrWalletChainConfig = {
 
 export const cosmoshub: KeplrWalletChainConfig = {
   restEndpoint: "https://api.cosmos.network",
-  rpcEndpoint: "https://rpc-cosmoshub.blockapsis.com",
+  rpcEndpoint: "https://cosmoshub-4--rpc--full.datahub.figment.io/apikey/6d8baa3d3e97e427db4bd7ffcfb21be4",
   chainId: "cosmoshub-4",
   chainInfo: {
     feeCurrencies: [
