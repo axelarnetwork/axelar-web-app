@@ -85,7 +85,7 @@ const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
 const OSMOSIS_RPC: string = "https://testnet-rpc.osmosis.zone"
 const OSMOSIS_REST = "https://testnet-rest.osmosis.zone"
 const OSMOSIS_CHANNEL_MAP = {
-  axelar: "channel-240",
+  axelar: "channel-312",
 }
 
 const osmosisChainInfo: ChainInfo = {
