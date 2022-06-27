@@ -41,19 +41,26 @@ const seiChainInfo: ChainInfo = {
   coinType: 118,
 }
 
+const KUJIRA_CHAIN_ID: string = "harpoon-4"
+const KUJIRA_RPC: string = "https://rpc-harpoon.kujira.app"
+const KUJIRA_REST = "https://lcd-harpoon.kujira.app"
+const KUJIRA_CHANNEL_MAP = {
+  axelar: "channel-8",
+}
+
 const kujiraChainInfo: ChainInfo = {
-  chainId: "harpoon-4",
+  chainId: KUJIRA_CHAIN_ID,
   chainName: "Kujira Testnet",
-  rpc: "https://rpc-harpoon.kujira.app",
-  rest: "https://lcd-harpoon.kujira.app",
+  rpc: KUJIRA_RPC,
+  rest: KUJIRA_REST,
   bip44: { coinType: 118 },
   bech32Config: {
     bech32PrefixAccAddr: "kujira",
-    bech32PrefixAccPub: "kujira" + "pub",
-    bech32PrefixValAddr: "kujira" + "valoper",
-    bech32PrefixValPub: "kujira" + "valoperpub",
-    bech32PrefixConsAddr: "kujira" + "valcons",
-    bech32PrefixConsPub: "kujira" + "valconspub",
+    bech32PrefixAccPub: "kujirapub",
+    bech32PrefixValAddr: "kujiravaloper",
+    bech32PrefixValPub: "kujiravaloperpub",
+    bech32PrefixConsAddr: "kujiravalcons",
+    bech32PrefixConsPub: "kujiravalconspub",
   },
   currencies: [
     {
@@ -326,6 +333,22 @@ export const cosmoshub: KeplrWalletChainConfig = {
   channelMap: COSMOS_CHANNEL_MAP,
 }
 
+export const sei: KeplrWalletChainConfig = {
+  restEndpoint: SEI_REST,
+  rpcEndpoint: SEI_RPC,
+  chainId: SEI_CHAIN_ID,
+  chainInfo: seiChainInfo,
+  channelMap: SEI_CHANNEL_MAP,
+}
+
+export const kujira: KeplrWalletChainConfig = {
+  restEndpoint: KUJIRA_REST,
+  rpcEndpoint: KUJIRA_RPC,
+  chainId: KUJIRA_CHAIN_ID,
+  chainInfo: kujiraChainInfo,
+  channelMap: KUJIRA_CHANNEL_MAP,
+}
+
 const CRESCENT_CHAIN_ID: string = "mooncat-1-1"
 const CRESCENT_RPC: string =
   "https://testnet-endpoint.crescent.network/rpc/crescent"
@@ -402,7 +425,9 @@ export const allChains = {
   axelar,
   cosmoshub,
   crescent,
+  kujira,
   osmosis,
+  sei,
   terra,
 }
 export default allChains
