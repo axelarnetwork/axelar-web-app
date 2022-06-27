@@ -13,6 +13,7 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
 )
 .filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "injective")
 .filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "osmosis")
+.filter((chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "moonbeam")
 .map((chain: Chain) => {
   // this is temporary given polygon RPC issues
   const newChainInfo = chain.chainInfo;
