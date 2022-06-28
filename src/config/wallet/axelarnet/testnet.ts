@@ -1,23 +1,98 @@
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
-import {
-  AssetConfig,
-  loadAssets,
-} from "@axelar-network/axelarjs-sdk"
+import { AssetConfig, loadAssets } from "@axelar-network/axelarjs-sdk"
 
-const environment: string = process.env.REACT_APP_STAGE === "local"
-? "testnet"
-: (process.env.REACT_APP_STAGE as string)
+const environment: string =
+  process.env.REACT_APP_STAGE === "local"
+    ? "testnet"
+    : (process.env.REACT_APP_STAGE as string)
 const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
+const SEI_CHAIN_ID: string = "sei-testnet-2"
+const SEI_RPC: string = "https://sei-testnet-rpc.polkachu.com"
+const SEI_REST = "https://sei-testnet-api.polkachu.com"
+const SEI_CHANNEL_MAP = {
+  axelar: "channel-3",
+}
+const seiChainInfo: ChainInfo = {
+  chainId: SEI_CHAIN_ID,
+  chainName: "Sei Testnet 2",
+  rpc: SEI_RPC,
+  rest: SEI_REST,
+  bip44: { coinType: 118 },
+  bech32Config: {
+    bech32PrefixAccAddr: "sei",
+    bech32PrefixAccPub: "seipub",
+    bech32PrefixValAddr: "seivaloper",
+    bech32PrefixValPub: "seivaloperpub",
+    bech32PrefixConsAddr: "seivalcons",
+    bech32PrefixConsPub: "seivalconspub",
+  },
+  currencies: [{ coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 }],
+  feeCurrencies: [
+    { coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 },
+  ],
+  stakeCurrency: {
+    coinDenom: "SEI",
+    coinMinimalDenom: "usei",
+    coinDecimals: 6,
+  },
+  coinType: 118,
+}
+
+const KUJIRA_CHAIN_ID: string = "harpoon-4"
+const KUJIRA_RPC: string = "https://rpc-harpoon.kujira.app"
+const KUJIRA_REST = "https://lcd-harpoon.kujira.app"
+const KUJIRA_CHANNEL_MAP = {
+  axelar: "channel-8",
+}
+
+const kujiraChainInfo: ChainInfo = {
+  chainId: KUJIRA_CHAIN_ID,
+  chainName: "Kujira Testnet",
+  rpc: KUJIRA_RPC,
+  rest: KUJIRA_REST,
+  bip44: { coinType: 118 },
+  bech32Config: {
+    bech32PrefixAccAddr: "kujira",
+    bech32PrefixAccPub: "kujirapub",
+    bech32PrefixValAddr: "kujiravaloper",
+    bech32PrefixValPub: "kujiravaloperpub",
+    bech32PrefixConsAddr: "kujiravalcons",
+    bech32PrefixConsPub: "kujiravalconspub",
+  },
+  currencies: [
+    {
+      coinDenom: "KUJI",
+      coinMinimalDenom: "ukuji",
+      coinDecimals: 6,
+      coinGeckoId: "kujira",
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "KUJI",
+      coinMinimalDenom: "ukuji",
+      coinDecimals: 6,
+      coinGeckoId: "kujira",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "KUJI",
+    coinMinimalDenom: "ukuji",
+    coinDecimals: 6,
+    coinGeckoId: "kujira",
+  },
+  coinType: 118,
+  gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
+}
+
 const OSMOSIS_CHAIN_ID: string = "osmo-test-4"
-const OSMOSIS_RPC: string =
-  "https://testnet-rpc.osmosis.zone"
-const OSMOSIS_REST =
-  "https://testnet-rest.osmosis.zone"
+const OSMOSIS_RPC: string = "https://testnet-rpc.osmosis.zone"
+const OSMOSIS_REST = "https://testnet-rest.osmosis.zone"
 const OSMOSIS_CHANNEL_MAP = {
-  axelar: "channel-240",
+  axelar: "channel-312",
 }
 
 const osmosisChainInfo: ChainInfo = {
@@ -52,7 +127,9 @@ const osmosisChainInfo: ChainInfo = {
       coinImageUrl:
         "https://dhj8dql1kzq2v.cloudfront.net/white/osmosis-ion.png",
     },
-    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["osmosis"]).map(assetConfig => {
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["osmosis"]
+    ).map((assetConfig) => {
       const asset = assetConfig.chain_aliases["osmosis"]
       return {
         coinDenom: asset.assetSymbol as string,
@@ -60,7 +137,7 @@ const osmosisChainInfo: ChainInfo = {
         coinDecimals: assetConfig.decimals,
         coinGeckoId: asset.assetSymbol as string,
       }
-    })
+    }),
   ],
   feeCurrencies: [
     {
@@ -109,7 +186,9 @@ const cosmosChainInfo: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "cosmos",
     },
-    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["cosmoshub"]).map(assetConfig => {
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["cosmoshub"]
+    ).map((assetConfig) => {
       const asset = assetConfig.chain_aliases["cosmoshub"]
       return {
         coinDenom: asset.assetSymbol as string,
@@ -117,7 +196,7 @@ const cosmosChainInfo: ChainInfo = {
         coinDecimals: assetConfig.decimals,
         coinGeckoId: asset.assetSymbol as string,
       }
-    })
+    }),
   ],
   feeCurrencies: [
     {
@@ -141,7 +220,7 @@ const TERRA_CHAIN_ID: string = "pisco-1"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string
 const TERRA_REST = "https://pisco-lcd.terra.dev"
 const TERRA_CHANNEL_MAP = {
-  axelar: "channel-XXX",
+  axelar: "channel-8",
 }
 const terraChainInfo: ChainInfo = {
   rpc: TERRA_RPC,
@@ -157,7 +236,9 @@ const terraChainInfo: ChainInfo = {
   bip44: { coinType: 330 },
   currencies: [
     { coinDenom: "LUNA", coinMinimalDenom: "uluna", coinDecimals: 6 },
-    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["terra"]).map(assetConfig => {
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["terra"]
+    ).map((assetConfig) => {
       const asset = assetConfig.chain_aliases["terra"]
       return {
         coinDenom: asset.assetSymbol as string,
@@ -165,7 +246,7 @@ const terraChainInfo: ChainInfo = {
         coinDecimals: assetConfig.decimals,
         coinGeckoId: asset.assetSymbol as string,
       }
-    })
+    }),
   ],
   feeCurrencies: [
     {
@@ -202,7 +283,9 @@ const axelarChainInfo: ChainInfo = {
   },
   currencies: [
     { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
-    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["axelar"]).map(assetConfig => {
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["axelar"]
+    ).map((assetConfig) => {
       const asset = assetConfig.chain_aliases["axelar"]
       return {
         coinDenom: asset.assetSymbol as string,
@@ -210,7 +293,7 @@ const axelarChainInfo: ChainInfo = {
         coinDecimals: assetConfig.decimals,
         coinGeckoId: asset.assetSymbol as string,
       }
-    })
+    }),
   ],
   feeCurrencies: [
     { coinDenom: "AXL", coinMinimalDenom: "uaxl", coinDecimals: 6 },
@@ -239,7 +322,7 @@ export const osmosis: KeplrWalletChainConfig = {
   rpcEndpoint: OSMOSIS_RPC,
   chainId: OSMOSIS_CHAIN_ID,
   chainInfo: osmosisChainInfo,
-  channelMap: OSMOSIS_CHANNEL_MAP
+  channelMap: OSMOSIS_CHANNEL_MAP,
 }
 
 export const cosmoshub: KeplrWalletChainConfig = {
@@ -247,11 +330,28 @@ export const cosmoshub: KeplrWalletChainConfig = {
   rpcEndpoint: COSMOS_RPC,
   chainId: COSMOS_CHAIN_ID,
   chainInfo: cosmosChainInfo,
-  channelMap: COSMOS_CHANNEL_MAP
+  channelMap: COSMOS_CHANNEL_MAP,
+}
+
+export const sei: KeplrWalletChainConfig = {
+  restEndpoint: SEI_REST,
+  rpcEndpoint: SEI_RPC,
+  chainId: SEI_CHAIN_ID,
+  chainInfo: seiChainInfo,
+  channelMap: SEI_CHANNEL_MAP,
+}
+
+export const kujira: KeplrWalletChainConfig = {
+  restEndpoint: KUJIRA_REST,
+  rpcEndpoint: KUJIRA_RPC,
+  chainId: KUJIRA_CHAIN_ID,
+  chainInfo: kujiraChainInfo,
+  channelMap: KUJIRA_CHANNEL_MAP,
 }
 
 const CRESCENT_CHAIN_ID: string = "mooncat-1-1"
-const CRESCENT_RPC: string = "https://testnet-endpoint.crescent.network/rpc/crescent"
+const CRESCENT_RPC: string =
+  "https://testnet-endpoint.crescent.network/rpc/crescent"
 const CRESCENT_REST = "https://testnet-endpoint.crescent.network/api/crescent"
 const CRESCENT_CHANNEL_MAP = {
   axelar: "channel-3",
@@ -279,7 +379,9 @@ const crescentChainInfo: ChainInfo = {
       coinDecimals: 6,
       coinGeckoId: "crescent",
     },
-    ...ALL_ASSETS.filter(assetConfig => assetConfig.chain_aliases["crescent"]).map(assetConfig => {
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["crescent"]
+    ).map((assetConfig) => {
       const asset = assetConfig.chain_aliases["crescent"]
       return {
         coinDenom: asset.assetSymbol as string,
@@ -287,7 +389,7 @@ const crescentChainInfo: ChainInfo = {
         coinDecimals: assetConfig.decimals,
         coinGeckoId: asset.assetSymbol as string,
       }
-    })
+    }),
   ],
   feeCurrencies: [
     {
@@ -316,14 +418,16 @@ export const crescent: KeplrWalletChainConfig = {
   chainId: CRESCENT_CHAIN_ID,
   rpcEndpoint: CRESCENT_RPC,
   chainInfo: crescentChainInfo,
-  channelMap: CRESCENT_CHANNEL_MAP
+  channelMap: CRESCENT_CHANNEL_MAP,
 }
 
 export const allChains = {
   axelar,
   cosmoshub,
   crescent,
+  kujira,
   osmosis,
+  sei,
   terra,
 }
 export default allChains
