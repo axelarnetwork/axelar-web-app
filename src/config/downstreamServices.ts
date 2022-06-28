@@ -39,6 +39,14 @@ const blockExplorers = {
       name: "Crescent Explorer",
       url: "https://testnet.crescent.explorers.guru/",
     },
+    sei: {
+      name: "SEI Explorer",
+      url: "https://sei.explorers.guru/",
+    },
+    kujira: {
+      name: "Kujira Finder",
+      url: "https://finder.kujira.app/harpoon-4/",
+    },
   },
   testnet: {},
   local: {},
