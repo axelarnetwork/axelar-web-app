@@ -3,7 +3,7 @@
 	"version": "0.6.0",
 	"private": true,
 	"dependencies": {
-		"@axelar-network/axelarjs-sdk": "0.6.1",
+		"@axelar-network/axelarjs-sdk": "0.6.2",
 		"@cosmjs/launchpad": "^0.26.5",
 		"@cosmjs/stargate": "^0.26.5",
 		"@datadog/browser-logs": "^4.7.1",
