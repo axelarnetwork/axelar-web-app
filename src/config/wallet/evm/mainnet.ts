@@ -89,5 +89,6 @@ const walletParamsForChains = {
   fantom,
   moonbeam,
   polygon,
+  binance
 }
 export default walletParamsForChains
