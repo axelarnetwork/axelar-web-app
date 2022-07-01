@@ -55,6 +55,7 @@ const blockExplorers = {
     moonbeam: { name: "Moonscan", url: "https://moonbeam.moonscan.io/" },
     avalanche: { name: "Snowtrace", url: "https://snowtrace.io/" },
     polygon: { name: "Polygonscan", url: "https://polygonscan.com/" },
+    binance: { name: "BscScan", url: "https://bscscan.com/" },
     fantom: { name: "FTMScan", url: "https://ftmscan.com/" },
     terra: {
       name: "Terra Finder",
