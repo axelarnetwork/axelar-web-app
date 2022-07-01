@@ -142,6 +142,18 @@ export const juno: KeplrWalletChainConfig = {
   channelMap: { "axelar": "channel-71" }
 }
 
+export const secret: KeplrWalletChainConfig = {
+  restEndpoint: "https://secret-4.api.trivium.network:1317",
+  rpcEndpoint: "https://secret-4.api.trivium.network:26657",
+  chainId: "secret-4",
+  chainInfo: {
+    feeCurrencies: [
+      { coinDenom: "SCRT", coinMinimalDenom: "uscrt", coinDecimals: 6 },
+    ],
+  } as ChainInfo,
+  channelMap: { "axelar": "channel-20" }
+}
+
 export const eMoney: KeplrWalletChainConfig = {
   restEndpoint: "https://emoney.validator.network/api",
   rpcEndpoint: "https://emoney.validator.network",
@@ -297,6 +309,7 @@ export const allChains = {
   juno,
   "e-money": eMoney,
   injective,
-  osmosis
+  osmosis,
+  secret
 }
 export default allChains
