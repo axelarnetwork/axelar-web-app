@@ -29,7 +29,6 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_BRIDGE_MAINNET_PROJECT_ID }}
           vercel-args: "--prod --build-env REACT_APP_UNDER_MAINTENANCE=${{github.event.inputs.maintenance}}"
           alias-domains: |
-            satellite.axelar.network
             satellite.money
         env:
           REACT_APP_UNDER_MAINTENANCE: ${{github.event.inputs.maintenance}}
