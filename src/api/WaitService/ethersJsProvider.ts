@@ -28,6 +28,8 @@ providers.polygon = (provider: string, networkOptions: Network | undefined) =>
   new ethers.providers.StaticJsonRpcProvider(provider, networkOptions);
 providers.fantom = (provider: string, networkOptions: Network | undefined) =>
   new ethers.providers.StaticJsonRpcProvider(provider, networkOptions);
+providers.binance = (provider: string, networkOptions: Network | undefined) =>
+  new ethers.providers.StaticJsonRpcProvider(provider, networkOptions);
 
 export const getEthersJsProvider = (
   providerType: ProviderType,
