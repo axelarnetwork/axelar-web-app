@@ -16,9 +16,6 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
       !!chain?.chainInfo?.assets?.length &&
       !disabledChains?.includes(chain.chainInfo.chainName.toLowerCase())
   )
-  .filter(
-    (chain: Chain) => chain.chainInfo.chainName?.toLowerCase() !== "injective"
-  )
   .map((chain: Chain) => {
     // this is temporary given polygon RPC issues
     const newChainInfo = chain.chainInfo
