@@ -93,6 +93,10 @@ const blockExplorers = {
       name: "Mintscan",
       url: "https://www.mintscan.io/secret/",
     },
+    kujira: {
+      name: "Kujira Finder",
+      url: "https://finder.kujira.app/kaiyo-1/",
+    },
   },
 }
 blockExplorers.testnet = blockExplorers.devnet
