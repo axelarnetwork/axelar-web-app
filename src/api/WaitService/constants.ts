@@ -177,6 +177,14 @@ const mainnetConfigs: ConfigsForEnvironment = {
         network: { chainId: 137, name: "polygon-mainnet" },
       },
     },
+    binance: {
+      tokenAddressMap: {},
+      providerOptions: {
+        provider:
+          "https://bsc-dataseed.binance.org",
+        network: { chainId: 56, name: "binance-mainnet" },
+      },
+    },
   },
   resourceUrl: `https://nest-server-mainnet.axelar.dev`,
 };
