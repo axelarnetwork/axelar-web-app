@@ -504,6 +504,8 @@ const getBlockExplorerLink = (
   const blockExplorer = getBlockExplorer(destinationChain)
 
   if (!blockExplorer) return ""
+  if (destinationChain?.chainName?.toLowerCase() === "kujira")
+    return blockExplorer.url + "address/" + destinationAddress
 
   if (destinationChain.module === "axelarnet")
     return blockExplorer.url + "account/" + destinationAddress
