@@ -301,6 +301,73 @@ export const injective: KeplrWalletChainConfig = {
 }
 //****** end injective */
 
+//**kujira */
+const KUJIRA_CHAIN_ID: string = "kaiyo-1"
+const KUJIRA_RPC: string = "https://rpc.kaiyo.kujira.setten.io"
+const KUJIRA_REST = "https://lcd.kaiyo.kujira.setten.io"
+const KUJIRA_CHANNEL_MAP = {
+  axelar: "channel-9",
+}
+
+const kujiraChainInfo: ChainInfo = {
+  chainId: KUJIRA_CHAIN_ID,
+  chainName: "Kujira Mainnet",
+  rpc: KUJIRA_RPC,
+  rest: KUJIRA_REST,
+  bip44: { coinType: 118 },
+  bech32Config: {
+    bech32PrefixAccAddr: "kujira",
+    bech32PrefixAccPub: "kujirapub",
+    bech32PrefixValAddr: "kujiravaloper",
+    bech32PrefixValPub: "kujiravaloperpub",
+    bech32PrefixConsAddr: "kujiravalcons",
+    bech32PrefixConsPub: "kujiravalconspub",
+  },
+  currencies: [
+    {
+      coinDenom: "KUJI",
+      coinMinimalDenom: "ukuji",
+      coinDecimals: 6,
+      coinGeckoId: "kujira",
+    },
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["kujira"]
+    ).map((assetConfig) => {
+      const asset = assetConfig.chain_aliases["kujira"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    }),
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "KUJI",
+      coinMinimalDenom: "ukuji",
+      coinDecimals: 6,
+      coinGeckoId: "kujira",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "KUJI",
+    coinMinimalDenom: "ukuji",
+    coinDecimals: 6,
+    coinGeckoId: "kujira",
+  },
+  coinType: 118,
+  gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
+}
+export const kujira: KeplrWalletChainConfig = {
+  restEndpoint: KUJIRA_REST,
+  rpcEndpoint: KUJIRA_RPC,
+  chainId: KUJIRA_CHAIN_ID,
+  chainInfo: kujiraChainInfo,
+  channelMap: KUJIRA_CHANNEL_MAP,
+}
+//**end kujira */
+
 export const allChains = {
   axelar,
   terra,
@@ -310,6 +377,7 @@ export const allChains = {
   "e-money": eMoney,
   injective,
   osmosis,
-  secret
+  secret,
+  kujira
 }
 export default allChains
