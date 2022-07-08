@@ -1,0 +1,2 @@
+docker-image:
+	docker build --build-arg npm_token=${NPM_TOKEN} --build-arg react_app_login_password=${REACT_APP_LOGIN_PASSWORD} --build-arg react_app_stage=${REACT_APP_STAGE} -t axelar-web-app:devnet .
