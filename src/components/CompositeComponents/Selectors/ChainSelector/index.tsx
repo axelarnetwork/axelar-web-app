@@ -175,9 +175,9 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
         allItems={initialAssetList
           .filter(
             (asset: AssetInfo) =>
-              !process.env.REACT_APP_DISABLED_ASSETS?.includes(
+              (!process.env.REACT_APP_DISABLED_ASSETS?.includes(
                 asset.common_key as string
-              ) &&
+              )) &&
               (process.env.REACT_APP_STAGE === "mainnet"
                 ? asset.fullySupported
                 : true)
