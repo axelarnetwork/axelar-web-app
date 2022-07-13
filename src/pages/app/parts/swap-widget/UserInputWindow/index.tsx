@@ -190,7 +190,7 @@ const UserInputWindow = ({
         )
       }
 
-      if (selectedAsset) {
+      if (selectedAsset && (!process.env.REACT_APP_DISABLED_ASSETS?.includes(selectedAsset.common_key as string))) {
         setSelectedSourceAsset(selectedAsset)
       }
       setSourceChainSelection(srcChain)
