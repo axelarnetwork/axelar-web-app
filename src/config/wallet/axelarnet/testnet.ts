@@ -32,9 +32,9 @@ const seiChainInfo: ChainInfo = {
   currencies: [
     { coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 },
     ...ALL_ASSETS.filter(
-      (assetConfig) => assetConfig.chain_aliases["osmosis"]
+      (assetConfig) => assetConfig.chain_aliases["sei"]
     ).map((assetConfig) => {
-      const asset = assetConfig.chain_aliases["osmosis"]
+      const asset = assetConfig.chain_aliases["sei"]
       return {
         coinDenom: asset.assetSymbol as string,
         coinMinimalDenom: asset.ibcDenom as string,
