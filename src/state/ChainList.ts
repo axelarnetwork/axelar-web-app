@@ -1,12 +1,12 @@
 import { atom } from "recoil"
-import { Chain, ChainInfo, loadChains } from "@axelar-network/axelarjs-sdk"
+import { Chain, ChainInfo, Environment, loadChains } from "@axelar-network/axelarjs-sdk"
 import {
   ConfigsForEnvironment,
   EthersJsConfigs,
   getConfigs,
 } from "api/WaitService/constants"
 
-const environment = process.env.REACT_APP_STAGE as string
+const environment = process.env.REACT_APP_STAGE as Environment
 const disabledChains = (process.env.REACT_APP_DISABLED_CHAINS as string) || ""
 
 const initialChainList: ChainInfo[] = loadChains({ environment })

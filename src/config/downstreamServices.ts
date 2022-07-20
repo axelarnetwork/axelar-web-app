@@ -23,6 +23,7 @@ const blockExplorers = {
     avalanche: { name: "Snowtrace", url: "https://testnet.snowtrace.io/" },
     polygon: { name: "Polygonscan", url: "https://mumbai.polygonscan.com/" },
     fantom: { name: "FTMScan", url: "https://testnet.ftmscan.com/" },
+    aurora: { name: "Aurora Explorer", url: "https://testnet.aurorascan.dev/" },
     terra: {
       name: "Terra Finder (testnet)",
       url: "https://finder.terra.money/testnet/",

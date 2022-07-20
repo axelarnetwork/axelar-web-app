@@ -3,12 +3,13 @@ import { ChainInfo } from "@keplr-wallet/types"
 import { KeplrWalletChainConfig } from "./interface"
 import {
   AssetConfig,
+  Environment,
   loadAssets,
 } from "@axelar-network/axelarjs-sdk"
 
-const environment: string = process.env.REACT_APP_STAGE === "local"
-? "testnet"
-: (process.env.REACT_APP_STAGE as string)
+const environment: Environment = process.env.REACT_APP_STAGE === "local"
+? "testnet" as Environment
+: (process.env.REACT_APP_STAGE as Environment)
 const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
 const TERRA_CHAIN_ID: string = "phoenix-1"

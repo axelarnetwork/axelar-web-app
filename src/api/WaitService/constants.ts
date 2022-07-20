@@ -110,6 +110,15 @@ const testnetConfigs: ConfigsForEnvironment = {
         network: { chainId: 80001, name: "polygon-testnet" },
       },
     },
+    aurora: {
+      tokenAddressMap: {
+      },
+      providerOptions: {
+        provider:
+          "https://testnet.aurora.dev",
+        network: { chainId: 1313161555, name: "aurora-testnet" },
+      },
+    },
   },
   resourceUrl: `https://nest-server-testnet.axelar.dev`,
 };
