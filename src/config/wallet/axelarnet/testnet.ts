@@ -10,7 +10,7 @@ const environment: Environment =
 const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
 const SEI_CHAIN_ID: string = "atlantic-1"
-const SEI_RPC: string = "https://sei-testnet-rpc.polkachu.com"
+const SEI_RPC: string = "https://rpc-sei-ia.notional.ventures"
 const SEI_REST = "https://sei-testnet-api.polkachu.com"
 const SEI_CHANNEL_MAP = {
   axelar: "channel-29",
