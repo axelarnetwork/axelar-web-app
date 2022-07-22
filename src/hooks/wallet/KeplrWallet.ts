@@ -13,6 +13,7 @@ import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import {
   AssetConfig,
   AssetInfo,
+  Environment,
   loadAssets,
 } from "@axelar-network/axelarjs-sdk"
 
@@ -27,9 +28,9 @@ export class KeplrWallet implements WalletInterface {
   public CHAIN_INFO: ChainInfo
   public CONFIG_FOR_CHAIN: KeplrWalletChainConfig
   public CHAIN_NAME: string
-  public static ENVIRONMENT: string = process.env.REACT_APP_STAGE === "local"
-  ? "testnet"
-  : (process.env.REACT_APP_STAGE as string)
+  public static ENVIRONMENT: Environment = process.env.REACT_APP_STAGE === "local"
+  ? "testnet" as Environment
+  : (process.env.REACT_APP_STAGE as Environment)
   public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: KeplrWallet.ENVIRONMENT })
 
   public constructor(chainName: string) {

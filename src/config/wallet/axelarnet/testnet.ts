@@ -1,23 +1,23 @@
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
-import { AssetConfig, loadAssets } from "@axelar-network/axelarjs-sdk"
+import { AssetConfig, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 
-const environment: string =
+const environment: Environment =
   process.env.REACT_APP_STAGE === "local"
-    ? "testnet"
-    : (process.env.REACT_APP_STAGE as string)
+    ? "testnet" as Environment
+    : (process.env.REACT_APP_STAGE as Environment)
 const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
-const SEI_CHAIN_ID: string = "sei-testnet-2"
-const SEI_RPC: string = "https://sei-testnet-rpc.polkachu.com"
+const SEI_CHAIN_ID: string = "atlantic-1"
+const SEI_RPC: string = "https://rpc-sei-ia.notional.ventures"
 const SEI_REST = "https://sei-testnet-api.polkachu.com"
 const SEI_CHANNEL_MAP = {
-  axelar: "channel-3",
+  axelar: "channel-29",
 }
 const seiChainInfo: ChainInfo = {
   chainId: SEI_CHAIN_ID,
-  chainName: "Sei Testnet 2",
+  chainName: "SEI Testnet",
   rpc: SEI_RPC,
   rest: SEI_REST,
   bip44: { coinType: 118 },
@@ -29,7 +29,20 @@ const seiChainInfo: ChainInfo = {
     bech32PrefixConsAddr: "seivalcons",
     bech32PrefixConsPub: "seivalconspub",
   },
-  currencies: [{ coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 }],
+  currencies: [
+    { coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 },
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["sei"]
+    ).map((assetConfig) => {
+      const asset = assetConfig.chain_aliases["sei"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    }),
+  ],
   feeCurrencies: [
     { coinDenom: "SEI", coinMinimalDenom: "usei", coinDecimals: 6 },
   ],

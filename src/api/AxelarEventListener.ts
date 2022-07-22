@@ -1,4 +1,4 @@
-import { loadAssets } from "@axelar-network/axelarjs-sdk"
+import { Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 
 export function buildDepositConfirmationRoomId(
   module: string,
@@ -22,8 +22,8 @@ export function buildTransferCompletedRoomId(
 ): string {
   const environment =
     process.env.REACT_APP_STAGE === "local"
-      ? "testnet"
-      : (process.env.REACT_APP_STAGE as string)
+      ? "testnet" as Environment
+      : (process.env.REACT_APP_STAGE as Environment)
   const asset = loadAssets({ environment }).find(
     (asset: any) => asset.common_key[environment] === assetCommonKey
   )

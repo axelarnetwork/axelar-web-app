@@ -6,7 +6,7 @@ import { ethers } from "ethers"
 import { TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
-import { AssetConfig, AssetInfo, loadAssets } from "@axelar-network/axelarjs-sdk"
+import { AssetConfig, AssetInfo, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 
 export const terraConfigMainnet = {
   URL: "https://phoenix-lcd.terra.dev",
@@ -22,9 +22,9 @@ export class TerraWallet implements WalletInterface {
   public connectedWallet?: ConnectedWallet
   public lcdClient: LCDClient
   public chainConfig: KeplrWalletChainConfig
-  public static ENVIRONMENT: string = process.env.REACT_APP_STAGE === "local"
-  ? "testnet"
-  : (process.env.REACT_APP_STAGE as string)
+  public static ENVIRONMENT: Environment = process.env.REACT_APP_STAGE === "local"
+  ? "testnet" as Environment
+  : (process.env.REACT_APP_STAGE as Environment)
   public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: TerraWallet.ENVIRONMENT })
 
   public constructor(

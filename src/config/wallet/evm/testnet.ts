@@ -71,7 +71,20 @@ export const polygon: ChainParam = {
   blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
 }
 
+export const aurora: ChainParam = {
+  chainId: "0x4E454153",
+  chainName: "Aurora Testnet",
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: ["https://testnet.aurora.dev"],
+  blockExplorerUrls: ["https://testnet.aurorascan.dev/"],
+}
+
 const walletParamsForChains = {
+  aurora,
   avalanche,
   ethereum,
   fantom,

@@ -10,6 +10,7 @@ import styled from "styled-components"
 import {
   AssetInfo,
   ChainInfo,
+  Environment,
   validateDestinationAddressByChainName,
 } from "@axelar-network/axelarjs-sdk"
 import { InputForm } from "components/CompositeComponents/InputForm"
@@ -190,7 +191,7 @@ const UserInputWindow = ({
         )
       }
 
-      if (selectedAsset) {
+      if (selectedAsset && (!process.env.REACT_APP_DISABLED_ASSETS?.includes(selectedAsset.common_key as string))) {
         setSelectedSourceAsset(selectedAsset)
       }
       setSourceChainSelection(srcChain)
@@ -257,7 +258,7 @@ const UserInputWindow = ({
     const validAddr: boolean = !!validateDestinationAddressByChainName(
       destChainSelection?.chainName || "",
       destToken.assetAddress || "",
-      process.env.REACT_APP_STAGE as string
+      process.env.REACT_APP_STAGE as Environment
     )
     setIsValidDestinationAddress(validAddr)
   }, [destAddr, destChainSelection, setIsValidDestinationAddress])
