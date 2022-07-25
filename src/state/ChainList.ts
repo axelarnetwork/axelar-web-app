@@ -23,6 +23,9 @@ const initialChainList: ChainInfo[] = loadChains({ environment })
       newChainInfo.confirmLevel = 225
       newChainInfo.estimatedWaitTime = 15
     }
+    if (newChainInfo?.chainName?.toLowerCase() === "binance") { //temporary override
+      newChainInfo.confirmLevel = 15
+    }
     return newChainInfo
   })
 
