@@ -457,9 +457,9 @@ const fetchChainInfo: ChainInfo = {
       coinGeckoId: "fetch-ai",
     },
     ...ALL_ASSETS.filter(
-      (assetConfig) => assetConfig.chain_aliases["crescent"]
+      (assetConfig) => assetConfig.chain_aliases["fetch"]
     ).map((assetConfig) => {
-      const asset = assetConfig.chain_aliases["crescent"]
+      const asset = assetConfig.chain_aliases["fetch"]
       return {
         coinDenom: asset.assetSymbol as string,
         coinMinimalDenom: asset.ibcDenom as string,
