@@ -434,10 +434,76 @@ export const crescent: KeplrWalletChainConfig = {
   channelMap: CRESCENT_CHANNEL_MAP,
 }
 
+const FETCH_CHAIN_ID: string = "dorado-1"
+const FETCH_RPC: string = "https://rpc-dorado.fetch.ai:443"
+const FETCH_REST = "https://rest-dorado.fetch.ai:443"
+const FETCH_CHANNEL_MAP = {
+  axelar: "channel-6",
+}
+const fetchChainInfo: ChainInfo = {
+  rpc: FETCH_RPC,
+  rest: FETCH_REST,
+  chainId: FETCH_CHAIN_ID,
+  chainName: "FetchHub Testnet",
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: Bech32Address.defaultBech32Config("fetch"),
+  currencies: [
+    {
+      coinDenom: "FET",
+      coinMinimalDenom: "atestfet",
+      coinDecimals: 18,
+      coinGeckoId: "fetch-ai",
+    },
+    ...ALL_ASSETS.filter(
+      (assetConfig) => assetConfig.chain_aliases["fetch"]
+    ).map((assetConfig) => {
+      const asset = assetConfig.chain_aliases["fetch"]
+      return {
+        coinDenom: asset.assetSymbol as string,
+        coinMinimalDenom: asset.ibcDenom as string,
+        coinDecimals: assetConfig.decimals,
+        coinGeckoId: asset.assetSymbol as string,
+      }
+    }),
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: "FET",
+      coinMinimalDenom: "atestfet",
+      coinDecimals: 18,
+      coinGeckoId: "fetch-ai",
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: "FET",
+    coinMinimalDenom: "atestfet",
+    coinDecimals: 18,
+    coinGeckoId: "fetch-ai",
+  },
+  coinType: 118,
+  gasPriceStep: {
+    low: 0,
+    average: 5000000000,
+    high: 6250000000,
+  },
+  features: ["stargate", "ibc-transfer", "no-legacy-stdTx"],
+}
+export const fetch: KeplrWalletChainConfig = {
+  restEndpoint: FETCH_REST,
+  chainId: FETCH_CHAIN_ID,
+  rpcEndpoint: FETCH_RPC,
+  chainInfo: fetchChainInfo,
+  channelMap: FETCH_CHANNEL_MAP,
+}
+
+
 export const allChains = {
   axelar,
   cosmoshub,
   crescent,
+  fetch,
   kujira,
   osmosis,
   sei,

@@ -460,7 +460,13 @@ const linkToExplorer = (sourceChainSelection: ChainInfo, txHash: string) => {
           anchorContent={
             <Link
               href={`${blockExplorer.url}${
-                blockExplorer?.url?.includes("mintscan") ? "txs/" : "tx/"
+                blockExplorer?.url?.includes("mintscan") 
+                  ? "txs/" 
+                  : ["sei"].includes(sourceChainSelection?.chainName?.toLowerCase())
+                    ? "transaction/"
+                    : ["fetch"].includes(sourceChainSelection?.chainName?.toLowerCase())
+                      ? "transactions/"
+                      : "tx/"
               }${txHash}`}
             >
               <SVGImage

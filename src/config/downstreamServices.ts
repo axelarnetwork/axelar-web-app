@@ -48,6 +48,10 @@ const blockExplorers = {
       name: "Kujira Finder",
       url: "https://finder.kujira.app/harpoon-4/",
     },
+    fetch: {
+      name: "Fetch Explorer",
+      url: "https://explore-dorado.fetch.ai/",
+    },
   },
   testnet: {},
   local: {},
