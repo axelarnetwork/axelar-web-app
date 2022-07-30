@@ -108,8 +108,8 @@ export const terra: KeplrWalletChainConfig = {
 }
 
 export const osmosis: KeplrWalletChainConfig = {
-  restEndpoint: "https://osmosis-lcd.quickapi.com",
-  rpcEndpoint: "https://rpc-osmosis.blockapsis.com",
+  restEndpoint: "https://osmosis-1--lcd--full.datahub.figment.io/apikey/6d8baa3d3e97e427db4bd7ffcfb21be4",
+  rpcEndpoint: "https://osmosis-1--rpc--full.datahub.figment.io/apikey/6d8baa3d3e97e427db4bd7ffcfb21be4",
   chainId: "osmosis-1",
   chainInfo: {
     feeCurrencies: [
