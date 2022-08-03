@@ -1,7 +1,6 @@
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
-import { AssetConfig, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 import { ALL_ASSETS } from "index"
 
 const SEI_CHAIN_ID: string = "atlantic-1"

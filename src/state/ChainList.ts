@@ -17,16 +17,15 @@ const filterInitialChainList = (inputChains: ChainInfo[]) => (inputChains)
       !disabledChains?.includes(chainInfo.chainName.toLowerCase())
   )
   .map((chainInfo: ChainInfo) => {
-    // this is temporary given polygon RPC issues
     const newChainInfo = {...chainInfo}
+
     newChainInfo.chainSymbol = chainInfo.chainSymbol.toUpperCase()
     newChainInfo.chainName = chainInfo.chainSymbol.charAt(0).toUpperCase() + chainInfo.chainSymbol.slice(1);
+
+    // this is temporary given polygon RPC issues
     if (newChainInfo?.chainName?.toLowerCase() === "polygon") {
       newChainInfo.confirmLevel = 225
       newChainInfo.estimatedWaitTime = 15
-    }
-    if (newChainInfo?.chainName?.toLowerCase() === "binance") { //temporary override
-      newChainInfo.confirmLevel = 15
     }
     return newChainInfo
   })
@@ -36,14 +35,12 @@ const getChains = async () => {
   ? "testnet" as Environment
   : (process.env.REACT_APP_STAGE as Environment)
   return await loadChains({ environment })
-  // ALL_CHAINS = chains;
 }
 export const allChainsState = selector<ChainInfo[]>({
   key: "allChains",
   get: async ({ get }) => {
     try {
       const response = filterInitialChainList(await getChains());
-      // console.log("getUsers called...");
       return response || [];
     } catch (error) {
       console.error(`allChains -> getChains() ERROR: \n${error}`);
