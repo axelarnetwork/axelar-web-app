@@ -15,7 +15,7 @@ export const transferEvent = async (
   const env: string = process.env.REACT_APP_STAGE as string
 
   if (module === "axelarnet") {
-    const roomId = buildTransferCompletedRoomId(
+    const roomId = await buildTransferCompletedRoomId(
       address,
       assetInfo?.common_key as string
     )

@@ -6,7 +6,8 @@ import { ethers } from "ethers"
 import { TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
 import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
-import { AssetConfig, AssetInfo, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
+import { AssetInfo, Environment } from "@axelar-network/axelarjs-sdk"
+import { ALL_ASSETS } from "index"
 
 export const terraConfigMainnet = {
   URL: "https://phoenix-lcd.terra.dev",
@@ -25,7 +26,6 @@ export class TerraWallet implements WalletInterface {
   public static ENVIRONMENT: Environment = process.env.REACT_APP_STAGE === "local"
   ? "testnet" as Environment
   : (process.env.REACT_APP_STAGE as Environment)
-  public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: TerraWallet.ENVIRONMENT })
 
   public constructor(
     wallet: Wallet,
@@ -67,7 +67,7 @@ export class TerraWallet implements WalletInterface {
   }
 
   public async getBalance(assetInfo: AssetInfo): Promise<number> {
-    const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases["terra"])?.ibcDenom;
+    const denom = (ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases["terra"])?.ibcDenom;
     if (!denom) throw new Error("asset not found: " + assetInfo.common_key);
     const address = await this.getAddress()
     const balance = await this.lcdClient.bank
@@ -91,7 +91,7 @@ export class TerraWallet implements WalletInterface {
   ): Promise<any> {
     const sourcePort = "transfer"
     const senderAddress = await this.getAddress()
-    const denom = (TerraWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === _denom)?.chain_aliases["terra"])?.ibcDenom;
+    const denom = (ALL_ASSETS.find( assetConfig => assetConfig.common_key[TerraWallet.ENVIRONMENT] === _denom)?.chain_aliases["terra"])?.ibcDenom;
     if (!denom) throw new Error("asset not found: " + _denom);
     const fee = new Fee(parseInt(TERRA_IBC_GAS_LIMIT), "30000uluna")
     const transferMsg: MsgTransfer = new MsgTransfer(

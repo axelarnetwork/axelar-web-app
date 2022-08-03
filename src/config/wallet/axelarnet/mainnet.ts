@@ -1,16 +1,7 @@
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { ChainInfo } from "@keplr-wallet/types"
+import { ALL_ASSETS } from "index"
 import { KeplrWalletChainConfig } from "./interface"
-import {
-  AssetConfig,
-  Environment,
-  loadAssets,
-} from "@axelar-network/axelarjs-sdk"
-
-const environment: Environment = process.env.REACT_APP_STAGE === "local"
-? "testnet" as Environment
-: (process.env.REACT_APP_STAGE as Environment)
-const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
 
 const TERRA_CHAIN_ID: string = "phoenix-1"
 const TERRA_RPC: string = process.env.REACT_APP_TERRA_RPC as string

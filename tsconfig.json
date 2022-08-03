@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,5 +21,9 @@
     "jsx": "react-jsx",
     "baseUrl": "src"
   },
-  "include": ["src", "typings/**/*.d.ts", "typings/*.d.ts"]
+  "include": [
+    "src",
+    "typings/**/*.d.ts",
+    "typings/*.d.ts"
+  ]
 }
