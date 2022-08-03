@@ -16,15 +16,15 @@ export function buildDepositConfirmationRoomId(
   return JSON.stringify(topic, Object.keys(topic).sort())
 }
 
-export function buildTransferCompletedRoomId(
+export async function buildTransferCompletedRoomId(
   destinationAddress: string,
   assetCommonKey: string
-): string {
+): Promise<string> {
   const environment =
     process.env.REACT_APP_STAGE === "local"
       ? "testnet" as Environment
       : (process.env.REACT_APP_STAGE as Environment)
-  const asset = loadAssets({ environment }).find(
+  const asset = (await loadAssets({ environment })).find(
     (asset: any) => asset.common_key[environment] === assetCommonKey
   )
   if (asset) {

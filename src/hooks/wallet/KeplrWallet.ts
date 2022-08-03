@@ -11,11 +11,10 @@ import { getShortenedWord } from "utils/wordShortener"
 import { SendLogsToServer } from "../../api/SendLogsToServer"
 import { AXELAR_TRANSFER_GAS_LIMIT, TERRA_IBC_GAS_LIMIT } from "config/gas"
 import {
-  AssetConfig,
   AssetInfo,
   Environment,
-  loadAssets,
 } from "@axelar-network/axelarjs-sdk"
+import { ALL_ASSETS } from "index"
 
 declare const window: Window &
   typeof globalThis & {
@@ -31,7 +30,6 @@ export class KeplrWallet implements WalletInterface {
   public static ENVIRONMENT: Environment = process.env.REACT_APP_STAGE === "local"
   ? "testnet" as Environment
   : (process.env.REACT_APP_STAGE as Environment)
-  public static ALL_ASSETS: AssetConfig[] = loadAssets({ environment: KeplrWallet.ENVIRONMENT })
 
   public constructor(chainName: string) {
     const configs =
@@ -109,7 +107,7 @@ export class KeplrWallet implements WalletInterface {
 
   public async getBalance(assetInfo: AssetInfo): Promise<number> {
     const { decimals } = assetInfo
-    const derivedDenom = (KeplrWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
+    const derivedDenom = (ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === assetInfo.common_key)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
     if (!derivedDenom) throw new Error("asset not found: " + assetInfo?.common_key);
     console.log("derived denom", assetInfo, derivedDenom)
     const cosmjs = await this.getSigningClient()
@@ -186,7 +184,7 @@ export class KeplrWallet implements WalletInterface {
     const cosmjs = await this.getSigningClient()
     const PORT: string = "transfer"
     const AXELAR_CHANNEL_ID: string = this.CONFIG_FOR_CHAIN.channelMap["axelar"]
-    const denom = (KeplrWallet.ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === _denom)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
+    const denom = (ALL_ASSETS.find( assetConfig => assetConfig.common_key[KeplrWallet.ENVIRONMENT] === _denom)?.chain_aliases[this.CHAIN_NAME])?.ibcDenom;
     console.log("derived denom for ibc transfer",denom);
     if (!denom) throw new Error("asset not found: " + _denom);
     const fee: StdFee = {
