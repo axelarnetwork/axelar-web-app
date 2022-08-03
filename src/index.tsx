@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import { Suspense } from "react"
 import ReactDOM from "react-dom"
 import { ThemeProvider } from "styled-components"
 import ReactNotification from "react-notifications-component"
@@ -10,7 +10,7 @@ import { WalletProvider, getChainOptions } from "@terra-money/wallet-provider"
 import "react-notifications-component/dist/theme.css"
 import { datadogLogs } from "@datadog/browser-logs"
 import "./index.css"
-import { AssetConfig, ChainInfo, Environment, loadAssets, loadChains } from "@axelar-network/axelarjs-sdk"
+import { AssetConfig, ChainInfo, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 
 new TransferAssetBridgeFacade(process.env.REACT_APP_STAGE as string)
 
@@ -24,10 +24,7 @@ const getAssets = async () => {
   ALL_ASSETS = assets;
 }
 
-(async () => {
-  await getAssets();
-  // await getChains();
-})()
+(async () => await getAssets())()
 
 datadogLogs.init({
   clientToken: process.env.REACT_APP_DD_CLIENT_TOKEN as string,
@@ -53,12 +50,10 @@ getChainOptions().then(async (_chainOptions) => {
       ? _chainOptions.walletConnectChainIds[1]
       : _chainOptions.walletConnectChainIds[0]
   const chainOptions = { ..._chainOptions, defaultNetwork }
-  // await getAssets();
-  // await getChains();
   ReactDOM.render(
     <WalletProvider {...chainOptions}>
       <RecoilRoot>
-        <Suspense fallback={<div>Loading whale types...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
           <ThemeProvider theme={theme}>
             <ReactNotification />
             <RoutesWithTransitions />
