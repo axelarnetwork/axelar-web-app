@@ -5,6 +5,7 @@ import {
   EthersJsConfigs,
   getConfigs,
 } from "api/WaitService/constants"
+import { restrictedAccounts } from "config/restrictedAccounts"
 
 const environment = process.env.REACT_APP_STAGE as Environment
 const disabledChains = (process.env.REACT_APP_DISABLED_CHAINS as string) || ""
@@ -37,6 +38,9 @@ for (const v of Object.values(ethersJsConfigs)) {
   const { tokenAddressMap } = v as EthersJsConfigs
   bannedAddresses = bannedAddresses.concat(Object.values(tokenAddressMap))
 }
+bannedAddresses = bannedAddresses.concat(restrictedAccounts)
+
+console.log("banned addresses",bannedAddresses);
 
 /*
 list of supported chains as downloaded from the SDK

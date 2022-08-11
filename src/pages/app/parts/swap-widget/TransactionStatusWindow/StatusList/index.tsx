@@ -35,6 +35,7 @@ import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { DepositFromWallet } from "./DepositFromWallet"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 import decimaljs from "decimal.js";
+import { restrictedAccounts } from "config/restrictedAccounts"
 
 const StyledStatusList = styled.div`
   width: 100%;
@@ -212,7 +213,7 @@ const StatusList = (props: IStatusListProps) => {
                 <BoldSpan style={{ marginRight: `5px` }}>
                   {getShortenedWord(depositAddress?.assetAddress, 5)}
                 </BoldSpan>
-                <ImprovedTooltip
+                {!restrictedAccounts?.includes(props.walletAddress?.toLowerCase()) && <ImprovedTooltip
                   anchorContent={
                     <CopyToClipboard
                       JSXToShow={<span></span>}
@@ -228,7 +229,7 @@ const StatusList = (props: IStatusListProps) => {
                   tooltipAltText={
                     "Copied! Please be sure you send the correct assets to this address."
                   }
-                />
+                />}
               </span>
             </FlexColumn>
           )

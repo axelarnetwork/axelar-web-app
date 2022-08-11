@@ -40,6 +40,7 @@ import { FlexColumn } from "components/StyleComponents/FlexColumn"
 import { getNumber } from "utils/formatNumber"
 import { getAssetSymbolToShow } from "utils/getAssetSymbolToShow"
 import decimaljs from "decimal.js"
+import { restrictedAccounts } from "config/restrictedAccounts"
 
 const TransferButton = styled(StyledButton)`
   color: ${(props) => (props.dim ? "#565656" : "white")};
@@ -373,7 +374,8 @@ export const DepositFromWallet = ({
     !hasEnoughInWalletForMin ||
     parseFloat(amountToDeposit) > walletBalance ||
     !isValidDecimal(amountToDeposit.toString()) ||
-    (buttonText || "").toLowerCase().includes("sending")
+    (buttonText || "").toLowerCase().includes("sending") || 
+    restrictedAccounts?.includes(walletAddress?.toLowerCase())
 
   const getDisabledText = (disableTransferButton: boolean) => {
     let text = ""
@@ -388,6 +390,8 @@ export const DepositFromWallet = ({
       text = "Amount should be greater than the fee"
     else if (!isValidDecimal(amountToDeposit.toString()))
       text = "Too many decimal points"
+    else if (restrictedAccounts?.includes(walletAddress?.toLowerCase()))
+      text = "Invalid sender address"
 
     return text.length > 0 ? <div style={{ width: `98%` }}>{text}</div> : <br />
   }
