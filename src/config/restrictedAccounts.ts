@@ -43,6 +43,5 @@ export const restrictedAccounts: string[] = [
   "0xdd4c48c0b24039969fc16d1cdf626eab821d3384",
   "0xd90e2f925da726b50c4ed8d0fb90ad053324f31b",
   "0xd96f2b1c14db8458374d9aca76e26c3d18364307",
-  "0x4736dcf1b7a3d580672cce6e7c65cd5cc9cfba9d",
-  "0xa57adce1d2fe72949e4308867d894cd7e7de0ef2" //team account
+  "0x4736dcf1b7a3d580672cce6e7c65cd5cc9cfba9d"
 ];
