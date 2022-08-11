@@ -40,8 +40,6 @@ for (const v of Object.values(ethersJsConfigs)) {
 }
 bannedAddresses = bannedAddresses.concat(restrictedAccounts)
 
-console.log("banned addresses",bannedAddresses);
-
 /*
 list of supported chains as downloaded from the SDK
 */
