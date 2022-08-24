@@ -305,8 +305,8 @@ const UserInputWindow = ({
           text={`Invalid input address for ${destChainSelection.chainName}.`}
         />
       )
-    if (destAddr && bannedAddresses.includes(destAddr))
-      return <ValidationErrorWidget text={`Cannot send to a Token Contract`} />
+    if (destAddr && bannedAddresses.includes(destAddr.toLowerCase()))
+      return <ValidationErrorWidget text={`Cannot send to this address`} />
   }, [
     sourceChainSelection,
     destChainSelection,
