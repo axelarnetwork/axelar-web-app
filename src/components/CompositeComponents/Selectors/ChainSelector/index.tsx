@@ -78,7 +78,7 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
         icon =
           require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)?.default
       } catch (e) {
-        icon = require(`assets/svg/select-asset-eyes.svg`)?.default
+        icon = require(`assets/svg/select-chain-eye.svg`)?.default
       }
       return {
         title: supportedChain?.chainName?.toLowerCase() === "terra" ? "Terra 2.0" : supportedChain.chainName,  //TODO: Terra 2.0 is temporary
