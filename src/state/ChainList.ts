@@ -23,11 +23,6 @@ const filterInitialChainList = (inputChains: ChainInfo[]) => (inputChains)
     newChainInfo.chainSymbol = chainInfo.chainSymbol.toUpperCase()
     newChainInfo.chainName = chainInfo.chainSymbol.charAt(0).toUpperCase() + chainInfo.chainSymbol.slice(1);
 
-    // this is temporary given polygon RPC issues
-    if (newChainInfo?.chainName?.toLowerCase() === "polygon") {
-      newChainInfo.confirmLevel = 225
-      newChainInfo.estimatedWaitTime = 15
-    }
     return newChainInfo
   })
 
