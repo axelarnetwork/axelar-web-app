@@ -5,7 +5,7 @@ import { ConnectType } from "@terra-money/wallet-provider"
 import { ethers } from "ethers"
 import { TERRA_IBC_GAS_LIMIT } from "config/gas"
 import { KeplrWalletChainConfig } from "config/wallet/axelarnet/interface"
-import { Height } from "@terra-money/terra.js/dist/core/ibc/msgs/client/Height"
+import { Height } from "@terra-money/terra.js/dist/core/ibc/core/client/Height"
 import { AssetConfig, AssetInfo, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
 
 export const terraConfigMainnet = {
