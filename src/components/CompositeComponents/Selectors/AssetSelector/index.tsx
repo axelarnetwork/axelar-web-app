@@ -26,7 +26,7 @@ const AssetSelector = () => {
    */
   return (
     <BaseSelector
-      image={<SVGImage height={"1.75em"} width={"1.75em"} src={image} />}
+      image={<SVGImage height={"1.55em"} width={"1.55em"} src={image} />}
       label={
         selectedToken
           ? getAssetSymbolToShow(
