@@ -58,10 +58,6 @@ const PageFooter = () => {
         style={{ marginLeft: `1em`, cursor: `pointer`, width: `25%` }}
         onClick={() => window.open("https://axelar.network", "_blank")}
       >
-        <img
-          src={require(`assets/svg/axelar-logo-horizontal-white.svg`)?.default}
-          alt=""
-        />
       </div>
       <FlexRow
         style={{
