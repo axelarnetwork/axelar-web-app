@@ -1,13 +1,7 @@
 import { ChainInfo } from "@keplr-wallet/types"
 import { Bech32Address } from "@keplr-wallet/cosmos"
 import { KeplrWalletChainConfig } from "./interface"
-import { AssetConfig, Environment, loadAssets } from "@axelar-network/axelarjs-sdk"
-
-const environment: Environment =
-  process.env.REACT_APP_STAGE === "local"
-    ? "testnet" as Environment
-    : (process.env.REACT_APP_STAGE as Environment)
-const ALL_ASSETS: AssetConfig[] = loadAssets({ environment })
+import { ALL_ASSETS } from "index"
 
 const SEI_CHAIN_ID: string = "atlantic-1"
 const SEI_RPC: string = "https://rpc-sei-ia.notional.ventures"

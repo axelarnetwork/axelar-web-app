@@ -1,5 +1,5 @@
-import { atom } from "recoil"
-import { Chain, ChainInfo, Environment, loadChains } from "@axelar-network/axelarjs-sdk"
+import { atom, selector } from "recoil"
+import { ChainInfo, Environment, loadChains } from "@axelar-network/axelarjs-sdk"
 import {
   ConfigsForEnvironment,
   EthersJsConfigs,
@@ -10,26 +10,40 @@ import { restrictedAccounts } from "config/restrictedAccounts"
 const environment = process.env.REACT_APP_STAGE as Environment
 const disabledChains = (process.env.REACT_APP_DISABLED_CHAINS as string) || ""
 
-const initialChainList: ChainInfo[] = loadChains({ environment })
+const filterInitialChainList = (inputChains: ChainInfo[]) => (inputChains)
   .filter(
-    (chain: Chain) =>
-      (environment === "mainnet" ? chain.chainInfo.fullySupported : true) &&
-      !!chain?.chainInfo?.assets?.length &&
-      !disabledChains?.includes(chain.chainInfo.chainName.toLowerCase())
+    (chainInfo: ChainInfo) =>
+      (environment === "mainnet" ? chainInfo.fullySupported : true) &&
+      !!chainInfo?.assets?.length &&
+      !disabledChains?.includes(chainInfo.chainName.toLowerCase())
   )
-  .map((chain: Chain) => {
-    // this is temporary given polygon RPC issues
-    const newChainInfo = chain.chainInfo
-    if (newChainInfo?.chainName?.toLowerCase() === "polygon") {
-      newChainInfo.confirmLevel = 225
-      newChainInfo.estimatedWaitTime = 15
-    }
-    if (newChainInfo?.chainName?.toLowerCase() === "binance") { //temporary override
-      newChainInfo.confirmLevel = 15
-    }
+  .map((chainInfo: ChainInfo) => {
+    const newChainInfo = {...chainInfo}
+
+    newChainInfo.chainSymbol = chainInfo.chainSymbol.toUpperCase()
+    newChainInfo.chainName = chainInfo.chainSymbol.charAt(0).toUpperCase() + chainInfo.chainSymbol.slice(1);
+
     return newChainInfo
   })
 
+const getChains = async () => {
+  const environment: Environment = process.env.REACT_APP_STAGE === "local"
+  ? "testnet" as Environment
+  : (process.env.REACT_APP_STAGE as Environment)
+  return await loadChains({ environment })
+}
+export const allChainsState = selector<ChainInfo[]>({
+  key: "allChains",
+  get: async ({ get }) => {
+    try {
+      const response = filterInitialChainList(await getChains());
+      return response || [];
+    } catch (error) {
+      console.error(`allChains -> getChains() ERROR: \n${error}`);
+      return [];
+    }
+  }
+});
 let bannedAddresses: string[] = []
 
 const { ethersJsConfigs } = getConfigs(environment) as ConfigsForEnvironment
@@ -45,7 +59,7 @@ list of supported chains as downloaded from the SDK
 */
 export const ChainList = atom<ChainInfo[]>({
   key: "ChainList",
-  default: initialChainList,
+  default: allChainsState,
 })
 
 export const BannedAddresses = atom<string[]>({

@@ -72,24 +72,32 @@ const ChainSelector = React.forwardRef((props: IChainSelectorProps, ref) => {
     })
   }
   const chainDropdownOptions: ISearchItem[] = filteredChainList.map(
-    (supportedChain: ChainInfo) => ({
-      title: supportedChain?.chainName?.toLowerCase() === "terra" ? "Terra 2.0" : supportedChain.chainName,  //TODO: Terra 2.0 is temporary
-      active: false,
-      icon: require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)
-        ?.default,
-      disabled: false,
-      onClick: () => {
-        setSelectedChain(supportedChain)
+    (supportedChain: ChainInfo) => { 
+      let icon; 
+      try {
+        icon =
+          require(`assets/svg/logos/${supportedChain?.chainSymbol}.svg`)?.default
+      } catch (e) {
+        icon = require(`assets/svg/select-chain-eye.svg`)?.default
+      }
+      return {
+        title: supportedChain?.chainName?.toLowerCase() === "terra" ? "Terra 2.0" : supportedChain.chainName,  //TODO: Terra 2.0 is temporary
+        active: false,
+        icon,
+        disabled: false,
+        onClick: () => {
+          setSelectedChain(supportedChain)
 
-        /* if the selected chain is the source token and the chain only
-			has a single asset, select that asset */
-        if (isSourceChain) {
-          supportedChain?.assets?.length === 1
-            ? setSourceAsset(supportedChain.assets[0])
-            : resetSourceAsset()
-        }
-      },
-    })
+          /* if the selected chain is the source token and the chain only
+        has a single asset, select that asset */
+          if (isSourceChain) {
+            supportedChain?.assets?.length === 1
+              ? setSourceAsset(supportedChain.assets[0])
+              : resetSourceAsset()
+          }
+        },
+      }
+  }
   )
 
   /*only show the chain selector widget if the asset selector search box is not open*/
