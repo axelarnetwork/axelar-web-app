@@ -20,6 +20,8 @@ const filterInitialChainList = (inputChains: ChainInfo[]) => (inputChains)
   .map((chainInfo: ChainInfo) => {
     const newChainInfo = {...chainInfo}
 
+    if (newChainInfo?.chainSymbol?.toLowerCase() === "axelar") newChainInfo.assets = chainInfo.assets?.filter(asset => asset.common_key === "uaxl")
+
     newChainInfo.chainSymbol = chainInfo.chainSymbol.toUpperCase()
     newChainInfo.chainName = chainInfo.chainSymbol.charAt(0).toUpperCase() + chainInfo.chainSymbol.slice(1);
 
