@@ -17,7 +17,7 @@ export const SelectedChainLogoAndText = (props: IChainComponentProps) => {
   return (
     <BaseSelector
       image={<SVGImage height={`1.5em`} width={`1.5em`} src={image} />}
-      label={(props.chainInfo?.chainName?.toLowerCase() === "terra" && "Terra 2.0") || props.chainInfo?.chainName || "Select Chain"} //TODO: Terra 2.0 is temporary
+      label={props.chainInfo?.chainName || "Select Chain"}
     />
   )
 }
